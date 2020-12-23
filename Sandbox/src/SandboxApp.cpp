@@ -10,8 +10,6 @@ public:
 	~Sandbox()
 	{
 	}
-
-
 };
 
 Hedron::Application* Hedron::CreateApplication()
