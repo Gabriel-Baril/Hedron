@@ -26,7 +26,8 @@ project "Hedron"      -- Name of the project
 
 	includedirs -- Adds additional include folders
 	{
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/vendor/spdlog/include",
+		"%{prj.name}/src"
 	}
 
 	filter "system:windows" -- The instructions downward are only applied for windows users
