@@ -1,5 +1,4 @@
 #pragma once
-
 #ifdef HDR_PLATFORM_WINDOWS
 	#ifdef HDR_BUILD_DLL
 		#define HEDRON_API __declspec(dllexport)
