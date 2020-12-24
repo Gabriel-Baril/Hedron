@@ -12,7 +12,7 @@ public:
 	}
 };
 
-Hedron::Application* Hedron::CreateApplication()
+Hedron::Application* Hedron::create_application()
 {
 	return new Sandbox();
 }

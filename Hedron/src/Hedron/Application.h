@@ -15,6 +15,6 @@ namespace Hedron
 	};
 
 	// To be defined in the client
-	Application* CreateApplication();
+	Application* create_application();
 }
 
