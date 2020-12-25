@@ -1,3 +1,6 @@
 [submodule "Hedron/vendor/spdlog"]
 	path = Hedron/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "Hedron/vendor/GLFW"]
+	path = Hedron/vendor/GLFW
+	url = https://github.com/TheCherno/GLFW

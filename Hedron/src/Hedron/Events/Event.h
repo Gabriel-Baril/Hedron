@@ -1,5 +1,7 @@
 #pragma once
 
+#include "hdrpch.h"
+
 #include "Hedron/Core.h"
 
 namespace Hedron

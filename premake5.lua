@@ -10,6 +10,12 @@ workspace "Hedron"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+-- Include directories relative to the root folder (solution directory)
+includeDir = {}
+includeDir["GLFW"] = "Hedron/vendor/GLFW/include"
+
+include "Hedron/vendor/GLFW" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLFW" in this premake file
+
 project "Hedron"      -- Name of the project
 	location "Hedron" -- Location of our stuff
 	kind "SharedLib"  -- Type of project (in that case a dll (dynamic library))
@@ -21,6 +27,11 @@ project "Hedron"      -- Name of the project
 	pchheader "hdrpch.h"   -- What are our precompiled header
 	pchsource "Hedron/src/hdrpch.cpp"
 
+	disablewarnings
+	{
+		"4251"
+	}
+
 	files -- Chooses the files that we want to add in our project
 	{
 		"%{prj.name}/src/**.h",
@@ -30,7 +41,14 @@ project "Hedron"      -- Name of the project
 	includedirs -- Adds additional include folders
 	{
 		"%{prj.name}/vendor/spdlog/include",
-		"%{prj.name}/src"
+		"%{prj.name}/src",
+		"%{includeDir.GLFW}"
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows" -- The instructions downward are only applied for windows users
@@ -50,7 +68,11 @@ project "Hedron"      -- Name of the project
 		}
 
 	filter "configurations:Debug"
-		defines "HDR_DEBUG"
+		defines 
+		{
+			"HDR_DEBUG",
+			"HDR_ENABLE_ASSERTS"
+		}
 		symbols "On"
 		
 	filter "configurations:Release"
@@ -68,6 +90,11 @@ project "Sandbox"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
 	objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
+
+	disablewarnings
+	{
+		"4251"
+	}
 
 	files -- Chooses the files that we want to add in our project
 	{

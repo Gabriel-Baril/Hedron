@@ -2,12 +2,14 @@
 #include "Application.h"
 
 #include "Hedron/Events/ApplicationEvent.h"
-#include "Hedron/Log.h"
+
+#include <GLFW/glfw3.h>
 
 namespace Hedron
 {
 	Application::Application()
 	{
+		m_window = std::unique_ptr<Window>(Window::create());
 	}
 
 	Application::~Application()
@@ -16,9 +18,11 @@ namespace Hedron
 
 	void Application::run()
 	{
-		WindowResizeEvent windowResizeEvent(1200, 720);
-		HDR_TRACE(windowResizeEvent.to_string())
-
-		while (true);
+		while (m_running)
+		{
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_window->on_update();
+		}
 	}
 }

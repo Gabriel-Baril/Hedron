@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Event.h"
 
 // TODO: Refactor file layout to create one (.h, .cpp) file per class
