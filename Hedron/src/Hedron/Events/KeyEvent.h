@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 // TODO: Refactor file layout to create one (.h, .cpp) file per class
 // TODO: Create documentation for all of those classes
 namespace Hedron

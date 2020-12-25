@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 // TODO: Refactor file layout to create one (.h, .cpp) file per class
 // TODO: Create documentation for all of those classes
 namespace Hedron
@@ -23,7 +21,7 @@ namespace Hedron
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(MOUSE_MOVED);
+		EVENT_CLASS_TYPE(MOUSE_MOVE);
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT);
 	private:
 		float m_mouseX;

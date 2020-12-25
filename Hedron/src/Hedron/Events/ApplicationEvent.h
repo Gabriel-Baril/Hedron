@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 // TODO: Refactor file layout to create one (.h, .cpp) file per class
 // TODO: Create documentation for all of those classes
 namespace Hedron
@@ -14,7 +12,7 @@ namespace Hedron
 		WindowResizeEvent(uint32_t width, uint32_t height) : m_width(width), m_height(height) {}
 
 		inline uint32_t get_width() const { return m_width; }
-		inline uint32_t get_height() const { return m_width; }
+		inline uint32_t get_height() const { return m_height; }
 
 		std::string to_string()
 		{

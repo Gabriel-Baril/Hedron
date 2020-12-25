@@ -2,9 +2,6 @@
 
 #include "Hedron/Core.h"
 
-#include <string>
-#include <functional>
-
 namespace Hedron
 {
 	// Events are currently blocking, in the future we might want to do an event bus
@@ -15,7 +12,7 @@ namespace Hedron
 		WINDOW_CLOSE, WINDOW_RESIZE, WINDOW_FOCUS, WINDOW_LOST_FOCUS, WINDOW_MOVED,
 		APP_TICK, APP_UPDATE, APP_RENDER,
 		KEY_PRESSED, KEY_RELEASED,
-		MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_MOVED, MOUSE_SCROLLED
+		MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_MOVE, MOUSE_SCROLLED
 	};
 
 	enum EventCategory

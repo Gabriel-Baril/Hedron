@@ -17,6 +17,9 @@ project "Hedron"      -- Name of the project
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
 	objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
+	
+	pchheader "hdrpch.h"   -- What are our precompiled header
+	pchsource "Hedron/src/hdrpch.cpp"
 
 	files -- Chooses the files that we want to add in our project
 	{

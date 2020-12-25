@@ -1,3 +1,4 @@
+#include "hdrpch.h"
 #include "Application.h"
 
 #include "Hedron/Events/ApplicationEvent.h"
