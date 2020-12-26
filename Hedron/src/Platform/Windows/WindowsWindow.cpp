@@ -2,7 +2,7 @@
 #include "WindowsWindow.h"
 
 #include "Hedron/Events/ApplicationEvent.h"
-#include "Hedron/Events/KeyEvent.h"
+#include "Hedron/Events/KeyboardEvent.h"
 #include "Hedron/Events/MouseEvent.h"
 
 
@@ -56,87 +56,12 @@ namespace Hedron
 		this->set_v_sync(true);
 
 		// Set GLFW callbacks
-
-		// Binds our callback function to Window Resize events from GLFW
-		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) 
-		{
-			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
-			windowData.width = width;
-			windowData.height = height;
-
-			WindowResizeEvent windowResizeEvent(width, height);
-			windowData.eventCallback(windowResizeEvent);
-		});
-
-		// Binds our callback function to Window Close events from GLFW
-		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
-		{
-			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
-			WindowCloseEvent windowCloseEvent;
-			windowData.eventCallback(windowCloseEvent);
-		});
-
-		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int keyCode, int scanCode, int action, int mods) 
-		{
-			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
-			
-			switch (action)
-			{
-				case GLFW_PRESS:
-				{
-					KeyPressedEvent keyPressedEvent(keyCode, 0);
-					windowData.eventCallback(keyPressedEvent);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					KeyReleasedEvent keyReleasedEvent(keyCode);
-					windowData.eventCallback(keyReleasedEvent);
-					break;
-				}
-				case GLFW_REPEAT:
-				{
-					KeyPressedEvent keyPressedEvent(keyCode, 1);
-					windowData.eventCallback(keyPressedEvent);
-					break;
-				}
-			}
-		});
-
-		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
-		{
-			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
-
-			switch (action)
-			{
-				case GLFW_PRESS:
-				{
-					MouseButtonPressedEvent mouseButtonPressedEvent(button);
-					windowData.eventCallback(mouseButtonPressedEvent);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					MouseButtonReleasedEvent mouseButtonReleasedEvent(button);
-					windowData.eventCallback(mouseButtonReleasedEvent);
-					break;
-				}
-			}
-		});
-
-		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
-		{
-			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
-			MouseScrolledEvent mouseScrolledEvent((float)xOffset, (float)yOffset);
-			windowData.eventCallback(mouseScrolledEvent);
-		});
-
-		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
-		{
-			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
-			MouseMovedEvent mouseMovedEvent((float)xPos, (float)yPos);
-			windowData.eventCallback(mouseMovedEvent);
-		});
+		this->set_window_resize_callback();
+		this->set_window_close_callback();
+		this->set_keyboard_callback();
+		this->set_mouse_button_callback();
+		this->set_scroll_callback();
+		this->set_mouse_moved_callback();
 	}
 
 	void WindowsWindow::on_update()
@@ -163,5 +88,104 @@ namespace Hedron
 	void WindowsWindow::shutdown()
 	{
 		glfwDestroyWindow(m_window);
+	}
+
+	// Binds our callback function to Window Resize events from GLFW
+	void WindowsWindow::set_window_resize_callback()
+	{
+		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			windowData.width = width;
+			windowData.height = height;
+
+			WindowResizeEvent windowResizeEvent(width, height);
+			windowData.eventCallback(windowResizeEvent);
+		});
+	}
+
+	// Binds our callback function to Window Close events from GLFW
+	void WindowsWindow::set_window_close_callback()
+	{
+		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowCloseEvent windowCloseEvent;
+			windowData.eventCallback(windowCloseEvent);
+		});
+	}
+
+	void WindowsWindow::set_keyboard_callback()
+	{
+		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int keyCode, int scanCode, int action, int mods)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			switch (action)
+			{
+			case GLFW_PRESS:
+			{
+				KeyPressedEvent keyPressedEvent(keyCode, 0);
+				windowData.eventCallback(keyPressedEvent);
+				break;
+			}
+			case GLFW_RELEASE:
+			{
+				KeyReleasedEvent keyReleasedEvent(keyCode);
+				windowData.eventCallback(keyReleasedEvent);
+				break;
+			}
+			case GLFW_REPEAT:
+			{
+				KeyPressedEvent keyPressedEvent(keyCode, 1);
+				windowData.eventCallback(keyPressedEvent);
+				break;
+			}
+			}
+		});
+	}
+
+	void WindowsWindow::set_mouse_button_callback()
+	{
+		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			switch (action)
+			{
+			case GLFW_PRESS:
+			{
+				MouseButtonPressedEvent mouseButtonPressedEvent(button);
+				windowData.eventCallback(mouseButtonPressedEvent);
+				break;
+			}
+			case GLFW_RELEASE:
+			{
+				MouseButtonReleasedEvent mouseButtonReleasedEvent(button);
+				windowData.eventCallback(mouseButtonReleasedEvent);
+				break;
+			}
+			}
+		});
+	}
+
+	void WindowsWindow::set_scroll_callback()
+	{
+		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			MouseScrolledEvent mouseScrolledEvent((float)xOffset, (float)yOffset);
+			windowData.eventCallback(mouseScrolledEvent);
+		});
+	}
+
+	void WindowsWindow::set_mouse_moved_callback()
+	{
+		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			MouseMovedEvent mouseMovedEvent((float)xPos, (float)yPos);
+			windowData.eventCallback(mouseMovedEvent);
+		});
 	}
 }

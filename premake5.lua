@@ -51,6 +51,39 @@ project "Hedron"      -- Name of the project
 		"opengl32.lib"
 	}
 
+
+	vpathdestination = "src/Hedron/Events"
+	vpathfiledestination = "Hedron/src/Hedron/Events"
+	vpaths -- https://github.com/premake/premake-core/wiki/vpaths
+	{ 
+		["%{vpathdestination}/ApplicationEvents/*"] =
+		{ 
+			"%{vpathfiledestination}/AppTickEvent.h",
+			"%{vpathfiledestination}/AppUpdateEvent.h",
+			"%{vpathfiledestination}/AppRenderEvent.h",
+			"%{vpathfiledestination}/WindowCloseEvent.h",
+			"%{vpathfiledestination}/WindowResizeEvent.h"
+		},
+		["%{vpathdestination}/KeyboardEvents/*"] =
+		{ 
+			"%{vpathfiledestination}/KeyPressedEvent.h",
+			"%{vpathfiledestination}/KeyReleasedEvent.h"
+		},
+		["%{vpathdestination}/MouseEvents/*"] =
+		{
+			"%{vpathfiledestination}/MouseMovedEvent.h",
+			"%{vpathfiledestination}/MouseScrolledEvent.h",
+			"%{vpathfiledestination}/MouseButtonPressedEvent.h",
+			"%{vpathfiledestination}/MouseButtonReleasedEvent.h"
+		},
+		["src/Hedron/Events/Common/*"] =
+		{
+			"%{vpathfiledestination}/Event.h",
+			"%{vpathfiledestination}/KeyEvent.h",
+			"%{vpathfiledestination}/MouseButtonEvent.h"
+		}
+	}
+
 	filter "system:windows" -- The instructions downward are only applied for windows users
 		cppdialect "C++17"  -- The version of our C++ used
 		staticruntime "On"  -- Do we want to link runtime libraries (Yes)

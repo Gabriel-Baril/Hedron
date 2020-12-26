@@ -23,6 +23,13 @@ namespace Hedron
 		bool is_v_sync() const override;
 
 	private:
+		void set_window_resize_callback();
+		void set_window_close_callback();
+		void set_keyboard_callback();
+		void set_mouse_button_callback();
+		void set_scroll_callback();
+		void set_mouse_moved_callback();
+
 		virtual void init(const WindowProps& props);
 		virtual void shutdown();
 	private:

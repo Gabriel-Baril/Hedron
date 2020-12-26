@@ -35,7 +35,7 @@ namespace Hedron
 	{
 		while (m_running)
 		{
-			glClearColor(1, 0, 1, 1);
+			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			m_window->on_update();
 		}
