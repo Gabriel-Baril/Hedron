@@ -22,7 +22,22 @@ namespace Hedron
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::on_window_closed));
 
-		HDR_CORE_TRACE("{0}", e);
+		// Maybe replace this with a while loop
+		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
+		{
+			(*--it)->on_event(e);
+			if (e.is_handled()) break;
+		}
+	}
+
+	void Application::push_layer(Layer* layer)
+	{
+		m_layerStack.push_layer(layer);
+	}
+
+	void Application::push_overlay(Layer* overlay)
+	{
+		m_layerStack.push_overlay(overlay);
 	}
 
 	bool Application::on_window_closed(WindowCloseEvent& windowCloseEvent)
@@ -37,6 +52,12 @@ namespace Hedron
 		{
 			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			for (Layer* layer : m_layerStack)
+			{
+				layer->on_update();
+			}
+
 			m_window->on_update();
 		}
 	}

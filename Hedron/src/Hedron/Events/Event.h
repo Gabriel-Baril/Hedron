@@ -42,6 +42,8 @@ namespace Hedron
 		virtual const char* get_name() const = 0;
 		virtual int get_category_flags() const = 0;
 		virtual std::string to_string() const { return get_name(); } // Has to be overrided if you want more specific details about the event
+		virtual void set_handled(bool handled) { this->m_handled = handled; }
+		virtual bool is_handled() { return m_handled; }
 
 		inline bool is_in_category(EventCategory category)
 		{

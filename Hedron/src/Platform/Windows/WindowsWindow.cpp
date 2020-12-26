@@ -1,9 +1,9 @@
 #include "hdrpch.h"
 #include "WindowsWindow.h"
 
-#include "Hedron/Events/ApplicationEvent.h"
-#include "Hedron/Events/KeyboardEvent.h"
-#include "Hedron/Events/MouseEvent.h"
+#include "Hedron/Events/ApplicationEvents.h"
+#include "Hedron/Events/KeyboardEvents.h"
+#include "Hedron/Events/MouseEvents.h"
 
 
 namespace Hedron
