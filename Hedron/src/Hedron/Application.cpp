@@ -1,7 +1,7 @@
 #include "hdrpch.h"
 #include "Application.h"
 
-#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace Hedron
 {
@@ -50,7 +50,7 @@ namespace Hedron
 	{
 		while (m_running)
 		{
-			glClearColor(0, 0, 0, 1);
+			glClearColor(0, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			for (Layer* layer : m_layerStack)

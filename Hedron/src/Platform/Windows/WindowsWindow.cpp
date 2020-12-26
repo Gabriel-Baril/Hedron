@@ -5,6 +5,7 @@
 #include "Hedron/Events/KeyboardEvents.h"
 #include "Hedron/Events/MouseEvents.h"
 
+#include <glad/glad.h>
 
 namespace Hedron
 {
@@ -52,6 +53,10 @@ namespace Hedron
 
 		m_window = glfwCreateWindow((int)props.width, (int)props.height, props.title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_window);
+
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		HDR_CORE_ASSERT(status, "Failed to initialize GLAD");
+
 		glfwSetWindowUserPointer(m_window, &m_data);
 		this->set_v_sync(true);
 
