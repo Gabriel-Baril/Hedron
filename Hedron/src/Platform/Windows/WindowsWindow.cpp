@@ -128,24 +128,24 @@ namespace Hedron
 
 			switch (action)
 			{
-			case GLFW_PRESS:
-			{
-				KeyPressedEvent keyPressedEvent(keyCode, 0);
-				windowData.eventCallback(keyPressedEvent);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				KeyReleasedEvent keyReleasedEvent(keyCode);
-				windowData.eventCallback(keyReleasedEvent);
-				break;
-			}
-			case GLFW_REPEAT:
-			{
-				KeyPressedEvent keyPressedEvent(keyCode, 1);
-				windowData.eventCallback(keyPressedEvent);
-				break;
-			}
+				case GLFW_PRESS:
+				{
+					KeyPressedEvent keyPressedEvent(keyCode, 0);
+					windowData.eventCallback(keyPressedEvent);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					KeyReleasedEvent keyReleasedEvent(keyCode);
+					windowData.eventCallback(keyReleasedEvent);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					KeyPressedEvent keyPressedEvent(keyCode, 1);
+					windowData.eventCallback(keyPressedEvent);
+					break;
+				}
 			}
 		});
 	}
