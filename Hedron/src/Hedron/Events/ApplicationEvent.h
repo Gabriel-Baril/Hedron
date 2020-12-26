@@ -13,7 +13,7 @@ namespace Hedron
 		inline uint32_t get_width() const { return m_width; }
 		inline uint32_t get_height() const { return m_height; }
 
-		std::string to_string()
+		std::string to_string() const override
 		{
 			std::stringstream ss;
 			ss << "WindowResizeEvent: [width: " << get_width() << ", height: " << get_height() << "]";

@@ -1,9 +1,19 @@
 #include "hdrpch.h"
 #include "WindowsWindow.h"
 
+#include "Hedron/Events/ApplicationEvent.h"
+#include "Hedron/Events/KeyEvent.h"
+#include "Hedron/Events/MouseEvent.h"
+
+
 namespace Hedron
 {
 	static bool s_GLFWInitialized = false;
+
+	static void GLFW_error_callback(int errorCode, const char* errorDescription)
+	{
+		HDR_CORE_ERROR("GLFW Error ({0}): {1}", errorCode, errorDescription);
+	}
 
 	Window* Window::create(const WindowProps& props)
 	{
@@ -33,7 +43,9 @@ namespace Hedron
 		{
 			// TODO: glfwTerminate on system shutdown
 			int success = glfwInit();
+			
 			HDR_CORE_ASSERT(success, "Could not initialize GLFW !");
+			glfwSetErrorCallback(GLFW_error_callback);
 
 			s_GLFWInitialized = true;
 		}
@@ -42,6 +54,89 @@ namespace Hedron
 		glfwMakeContextCurrent(m_window);
 		glfwSetWindowUserPointer(m_window, &m_data);
 		this->set_v_sync(true);
+
+		// Set GLFW callbacks
+
+		// Binds our callback function to Window Resize events from GLFW
+		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) 
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			windowData.width = width;
+			windowData.height = height;
+
+			WindowResizeEvent windowResizeEvent(width, height);
+			windowData.eventCallback(windowResizeEvent);
+		});
+
+		// Binds our callback function to Window Close events from GLFW
+		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowCloseEvent windowCloseEvent;
+			windowData.eventCallback(windowCloseEvent);
+		});
+
+		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int keyCode, int scanCode, int action, int mods) 
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			
+			switch (action)
+			{
+				case GLFW_PRESS:
+				{
+					KeyPressedEvent keyPressedEvent(keyCode, 0);
+					windowData.eventCallback(keyPressedEvent);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					KeyReleasedEvent keyReleasedEvent(keyCode);
+					windowData.eventCallback(keyReleasedEvent);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					KeyPressedEvent keyPressedEvent(keyCode, 1);
+					windowData.eventCallback(keyPressedEvent);
+					break;
+				}
+			}
+		});
+
+		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			switch (action)
+			{
+				case GLFW_PRESS:
+				{
+					MouseButtonPressedEvent mouseButtonPressedEvent(button);
+					windowData.eventCallback(mouseButtonPressedEvent);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					MouseButtonReleasedEvent mouseButtonReleasedEvent(button);
+					windowData.eventCallback(mouseButtonReleasedEvent);
+					break;
+				}
+			}
+		});
+
+		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			MouseScrolledEvent mouseScrolledEvent((float)xOffset, (float)yOffset);
+			windowData.eventCallback(mouseScrolledEvent);
+		});
+
+		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			MouseMovedEvent mouseMovedEvent((float)xPos, (float)yPos);
+			windowData.eventCallback(mouseMovedEvent);
+		});
 	}
 
 	void WindowsWindow::on_update()

@@ -16,7 +16,7 @@ namespace Hedron
 		std::string to_string() const override
 		{
 			std::stringstream ss;
-			ss << "MosueMovedEvent: (" << get_x() << ", " << get_y() << ")";
+			ss << "MouseMovedEvent: (" << get_x() << ", " << get_y() << ")";
 			return ss.str();
 		}
 
@@ -35,7 +35,7 @@ namespace Hedron
 		inline float get_x_offset() const { return m_xOffset; }
 		inline float get_y_offset() const { return m_yOffset; }
 
-		std::string to_string()
+		std::string to_string() const override
 		{
 			std::stringstream ss;
 			ss << "MouseScrolledEvent: (" << get_x_offset() << ", " << get_y_offset() << ")";
@@ -53,7 +53,8 @@ namespace Hedron
 	{
 	public:
 		inline int get_mouse_button() const { return m_button; }
-		
+		inline virtual std::string to_string() const = 0;
+
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT);
 	protected:
 		MouseButtonEvent(int button) : m_button(button) {}
@@ -65,10 +66,11 @@ namespace Hedron
 	public:
 		MouseButtonPressedEvent(int button) : MouseButtonEvent(button) {}
 
-		std::string to_string()
+		std::string to_string() const override
 		{
 			std::stringstream ss;
 			ss << "MouseButtonPressedEvent: " << get_mouse_button();
+			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(MOUSE_BUTTON_PRESSED)
@@ -79,10 +81,11 @@ namespace Hedron
 	public:
 		MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
 
-		std::string to_string()
+		std::string to_string() const override
 		{
 			std::stringstream ss;
 			ss << "MouseButtonReleasedEvent: " << get_mouse_button();
+			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(MOUSE_BUTTON_RELEASED)

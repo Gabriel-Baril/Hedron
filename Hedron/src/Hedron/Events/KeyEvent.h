@@ -9,6 +9,7 @@ namespace Hedron
 	{
 	public:
 		inline int get_key_code() const { return m_keyCode; }
+		inline virtual std::string to_string() const = 0;
 
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_KEYBOARD | EVENT_CATEGORY_INPUT)
 	protected:
