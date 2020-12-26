@@ -14,9 +14,13 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 includeDir = {}
 includeDir["GLFW"] = "Hedron/vendor/GLFW/include"
 includeDir["GLAD"] = "Hedron/vendor/GLAD/include"
+includeDir["ImGui"] = "Hedron/vendor/imgui"
+
+
 
 include "Hedron/vendor/GLFW" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLFW" in this premake file
 include "Hedron/vendor/GLAD" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLAD" in this premake file
+include "Hedron/vendor/imgui" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/imgui" in this premake file
 
 project "Hedron"      -- Name of the project
 	location "Hedron" -- Location of our stuff
@@ -45,13 +49,15 @@ project "Hedron"      -- Name of the project
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/src",
 		"%{includeDir.GLFW}",
-		"%{includeDir.GLAD}"
+		"%{includeDir.GLAD}",
+		"%{includeDir.ImGui}"
 	}
 
 	links
 	{
 		"GLFW",
 		"GLAD",
+		"ImGui",
 		"opengl32.lib"
 	}
 

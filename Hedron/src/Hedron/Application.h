@@ -19,12 +19,17 @@ namespace Hedron
 
 		void push_layer(Layer* layer);
 		void push_overlay(Layer* overlay);
+
+		inline static Application& get() { return *s_instance; }
+		inline Window& get_window() { return *m_window; };
 	private:
 		bool on_window_closed(WindowCloseEvent& windowCloseEvent);
 
 		std::unique_ptr<Window> m_window;
 		bool m_running = true;
 		LayerStack m_layerStack;
+	private:
+		static Application* s_instance;
 	};
 
 	// To be defined in the client

@@ -4,3 +4,6 @@
 [submodule "Hedron/vendor/GLFW"]
 	path = Hedron/vendor/GLFW
 	url = https://github.com/TheCherno/GLFW
+[submodule "Hedron/vendor/imgui"]
+	path = Hedron/vendor/imgui
+	url = https://github.com/TheCherno/imgui

@@ -15,7 +15,7 @@ namespace Hedron
 		void on_update() override;
 
 		inline unsigned int get_width() const override { return m_data.width; };
-		inline unsigned int get_height() const override { return m_data.width; };
+		inline unsigned int get_height() const override { return m_data.height; };
 
 		// Window attributes
 		inline void set_event_callback(const EventCallbackFn& callback) override { m_data.eventCallback = callback; }

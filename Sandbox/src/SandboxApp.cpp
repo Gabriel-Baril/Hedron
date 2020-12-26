@@ -24,6 +24,7 @@ public:
 	Sandbox()
 	{
 		push_layer(new ExampleLayer());
+		push_overlay(new Hedron::ImGuiLayer());
 	}
 
 	~Sandbox()

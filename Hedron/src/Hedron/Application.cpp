@@ -7,8 +7,13 @@ namespace Hedron
 {
 #define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
 
+	Application* Application::s_instance = nullptr;
+
 	Application::Application()
 	{
+		HDR_CORE_ASSERT(!s_instance, "Application already exists!");
+		s_instance = this;
+
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->set_event_callback(BIND_EVENT_FN(Application::on_event));
 	}
@@ -33,11 +38,13 @@ namespace Hedron
 	void Application::push_layer(Layer* layer)
 	{
 		m_layerStack.push_layer(layer);
+		layer->on_attach();
 	}
 
 	void Application::push_overlay(Layer* overlay)
 	{
 		m_layerStack.push_overlay(overlay);
+		overlay->on_attach();
 	}
 
 	bool Application::on_window_closed(WindowCloseEvent& windowCloseEvent)
