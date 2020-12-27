@@ -67,7 +67,7 @@ namespace Hedron
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::get();
-		io.DisplaySize = ImVec2(app.get_window().get_width(), app.get_window().get_height());
+		io.DisplaySize = ImVec2((float)app.get_window().get_width(), (float)app.get_window().get_height());
 
 		float time = (float)glfwGetTime();
 		io.DeltaTime = m_time > 0.0 ? (time - m_time) : (1.0f / 60.0f);
@@ -162,7 +162,7 @@ namespace Hedron
 	bool ImGuiLayer::on_window_resize_event(WindowResizeEvent& e)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2(e.get_width(), e.get_height());
+		io.DisplaySize = ImVec2((float)e.get_width(), (float)e.get_height());
 		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 		glViewport(0, 0, e.get_width(), e.get_height());
 

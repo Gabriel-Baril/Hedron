@@ -1,5 +1,6 @@
 workspace "Hedron"
 	architecture "x64" -- Chooses the architecture of our workspace (solution)
+	startproject "Sandbox"
 
 	configurations
 	{
@@ -16,16 +17,17 @@ includeDir["GLFW"] = "Hedron/vendor/GLFW/include"
 includeDir["GLAD"] = "Hedron/vendor/GLAD/include"
 includeDir["ImGui"] = "Hedron/vendor/imgui"
 
-
-
-include "Hedron/vendor/GLFW" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLFW" in this premake file
-include "Hedron/vendor/GLAD" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLAD" in this premake file
-include "Hedron/vendor/imgui" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/imgui" in this premake file
+group "Dependencies"
+	include "Hedron/vendor/GLFW" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLFW" in this premake file
+	include "Hedron/vendor/GLAD" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLAD" in this premake file
+	include "Hedron/vendor/imgui" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/imgui" in this premake file
+group ""
 
 project "Hedron"      -- Name of the project
 	location "Hedron" -- Location of our stuff
 	kind "SharedLib"  -- Type of project (in that case a dll (dynamic library))
 	language "C++"    -- The language in which the project is written
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
 	objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
@@ -35,7 +37,10 @@ project "Hedron"      -- Name of the project
 
 	disablewarnings
 	{
-		"4251"
+		"4251",
+		"4603",
+		"4996",
+		"4098"
 	}
 
 	files -- Chooses the files that we want to add in our project
@@ -97,7 +102,6 @@ project "Hedron"      -- Name of the project
 
 	filter "system:windows" -- The instructions downward are only applied for windows users
 		cppdialect "C++17"  -- The version of our C++ used
-		staticruntime "On"  -- Do we want to link runtime libraries (Yes)
 		systemversion "latest" -- Chooses the windows version of our project
 
 		defines -- Defines preprocessor definition
@@ -109,32 +113,32 @@ project "Hedron"      -- Name of the project
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}
 
 	filter "configurations:Debug"
 		defines 
 		{
-			"HDR_DEBUG",
-			"HDR_ENABLE_ASSERTS"
+			"HDR_DEBUG"
 		}
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 		
 	filter "configurations:Release"
 		defines "HDR_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 		
 	filter "configurations:Dist"
 		defines "HDR_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
 	objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
@@ -173,15 +177,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "HDR_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 		
 	filter "configurations:Release"
 		defines "HDR_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 		
 	filter "configurations:Dist"
 		defines "HDR_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"

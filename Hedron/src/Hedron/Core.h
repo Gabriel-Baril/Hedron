@@ -10,6 +10,10 @@
 	#error Hedron only support Windows!
 #endif
 
+#if defined(HDR_DEBUG)
+	#define HDR_ENABLE_ASSERTS
+#endif
+
 #if defined(HDR_ENABLE_ASSERTS)
 	#define HDR_ASSERT(x, ...) { if(!(x)) { HDR_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 	#define HDR_CORE_ASSERT(x, ...) { if(!(x)) { HDR_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
