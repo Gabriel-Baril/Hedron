@@ -121,17 +121,17 @@ project "Hedron"      -- Name of the project
 		{
 			"HDR_DEBUG"
 		}
-		runtime "Debug"
+		buildoptions "/MDd"
 		symbols "On"
 		
 	filter "configurations:Release"
 		defines "HDR_RELEASE"
-		runtime "Release"
+		buildoptions "/MD"
 		optimize "On"
 		
 	filter "configurations:Dist"
 		defines "HDR_DIST"
-		runtime "Release"
+		buildoptions "/MD"
 		optimize "On"
 
 project "Sandbox"
@@ -177,15 +177,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "HDR_DEBUG"
-		runtime "Debug"
+		buildoptions "/MDd"
 		symbols "On"
 		
 	filter "configurations:Release"
 		defines "HDR_RELEASE"
-		runtime "Release"
+		buildoptions "/MD"
 		optimize "On"
 		
 	filter "configurations:Dist"
 		defines "HDR_DIST"
-		runtime "Release"
+		buildoptions "/MD"
 		optimize "On"

@@ -1,7 +1,9 @@
 #include "hdrpch.h"
 #include "Application.h"
+#include "Input.h"
 
 #include <glad/glad.h>
+#include "GLFW/glfw3.h"
 
 namespace Hedron
 {
@@ -57,6 +59,9 @@ namespace Hedron
 		{
 			glClearColor(0, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			if (Input::is_key_pressed(GLFW_KEY_E) && Input::is_key_pressed(GLFW_KEY_A))
+				HDR_CORE_WARNING("E and A key are being pressed");
 
 			for (Layer* layer : m_layerStack)
 			{

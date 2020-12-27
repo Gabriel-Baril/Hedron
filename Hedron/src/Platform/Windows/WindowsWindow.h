@@ -12,16 +12,17 @@ namespace Hedron
 		WindowsWindow(const WindowProps& props);
 		virtual ~WindowsWindow();
 
-		void on_update() override;
+		virtual void on_update() override;
 
-		inline unsigned int get_width() const override { return m_data.width; };
-		inline unsigned int get_height() const override { return m_data.height; };
+		inline virtual unsigned int get_width() const override { return m_data.width; };
+		inline virtual unsigned int get_height() const override { return m_data.height; };
 
 		// Window attributes
-		inline void set_event_callback(const EventCallbackFn& callback) override { m_data.eventCallback = callback; }
-		void set_v_sync(bool enabled) override;
-		bool is_v_sync() const override;
+		inline virtual void set_event_callback(const EventCallbackFn& callback) override { m_data.eventCallback = callback; }
+		virtual void set_v_sync(bool enabled) override;
+		virtual bool is_v_sync() const override;
 
+		inline virtual void* get_native_window() override { return static_cast<void*>(m_window); }
 	private:
 		void set_window_resize_callback();
 		void set_window_close_callback();
