@@ -10,7 +10,7 @@ namespace Hedron
 		MouseMovedEvent(float x, float y) : m_mouseX(x), m_mouseY(y) {}
 
 		inline float get_x() const { return m_mouseX; }
-		inline float get_y() const { return m_mouseX; }
+		inline float get_y() const { return m_mouseY; }
 
 		std::string to_string() const override
 		{

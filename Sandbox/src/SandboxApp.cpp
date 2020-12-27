@@ -9,7 +9,7 @@ public:
 
 	void on_update() override
 	{
-		HDR_INFO("ExampleLayer::Update");
+		//HDR_INFO("ExampleLayer::Update");
 	}
 
 	void on_event(Hedron::Event& event) override

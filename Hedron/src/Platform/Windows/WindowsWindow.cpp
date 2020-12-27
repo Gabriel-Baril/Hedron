@@ -64,6 +64,7 @@ namespace Hedron
 		this->set_window_resize_callback();
 		this->set_window_close_callback();
 		this->set_keyboard_callback();
+		this->set_char_callback();
 		this->set_mouse_button_callback();
 		this->set_scroll_callback();
 		this->set_mouse_moved_callback();
@@ -147,6 +148,16 @@ namespace Hedron
 					break;
 				}
 			}
+		});
+	}
+
+	void WindowsWindow::set_char_callback()
+	{
+		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keyCode)
+		{
+			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
+			KeyTypedEvent keyTypedEvent(keyCode);
+			windowData.eventCallback(keyTypedEvent);
 		});
 	}
 

@@ -77,7 +77,8 @@ project "Hedron"      -- Name of the project
 		["%{vpathdestination}/KeyboardEvents/*"] =
 		{ 
 			"%{vpathfiledestination}/KeyPressedEvent.h",
-			"%{vpathfiledestination}/KeyReleasedEvent.h"
+			"%{vpathfiledestination}/KeyReleasedEvent.h",
+			"%{vpathfiledestination}/KeyTypedEvent.h"
 		},
 		["%{vpathdestination}/MouseEvents/*"] =
 		{

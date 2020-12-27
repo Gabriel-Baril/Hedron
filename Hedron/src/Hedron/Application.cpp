@@ -5,8 +5,6 @@
 
 namespace Hedron
 {
-#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
-
 	Application* Application::s_instance = nullptr;
 
 	Application::Application()
@@ -15,7 +13,7 @@ namespace Hedron
 		s_instance = this;
 
 		m_window = std::unique_ptr<Window>(Window::create());
-		m_window->set_event_callback(BIND_EVENT_FN(Application::on_event));
+		m_window->set_event_callback(HDR_BIND_EVENT_FN(Application::on_event));
 	}
 
 	Application::~Application()
@@ -25,7 +23,7 @@ namespace Hedron
 	void Application::on_event(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::on_window_closed));
+		dispatcher.dispatch<WindowCloseEvent>(HDR_BIND_EVENT_FN(Application::on_window_closed));
 
 		// Maybe replace this with a while loop
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
