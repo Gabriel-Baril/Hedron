@@ -66,37 +66,44 @@ project "Hedron"      -- Name of the project
 		"opengl32.lib"
 	}
 
-
-	vpathdestination = "src/Hedron/Events"
-	vpathfiledestination = "Hedron/src/Hedron/Events"
+	vpathhdrdest = "src/Hedron"
+	vpathhdrfiledest = "Hedron/src/Hedron"
+	vpatheventdest = "src/Hedron/Events"
+	vpatheventfiledest = "Hedron/src/Hedron/Events"
 	vpaths -- https://github.com/premake/premake-core/wiki/vpaths
 	{ 
-		["%{vpathdestination}/ApplicationEvents/*"] =
+		["%{vpatheventdest}/ApplicationEvents/*"] =
 		{ 
-			"%{vpathfiledestination}/AppTickEvent.h",
-			"%{vpathfiledestination}/AppUpdateEvent.h",
-			"%{vpathfiledestination}/AppRenderEvent.h",
-			"%{vpathfiledestination}/WindowCloseEvent.h",
-			"%{vpathfiledestination}/WindowResizeEvent.h"
+			"%{vpatheventfiledest}/AppTickEvent.h",
+			"%{vpatheventfiledest}/AppUpdateEvent.h",
+			"%{vpatheventfiledest}/AppRenderEvent.h",
+			"%{vpatheventfiledest}/WindowCloseEvent.h",
+			"%{vpatheventfiledest}/WindowResizeEvent.h"
 		},
-		["%{vpathdestination}/KeyboardEvents/*"] =
+		["%{vpatheventdest}/KeyboardEvents/*"] =
 		{ 
-			"%{vpathfiledestination}/KeyPressedEvent.h",
-			"%{vpathfiledestination}/KeyReleasedEvent.h",
-			"%{vpathfiledestination}/KeyTypedEvent.h"
+			"%{vpatheventfiledest}/KeyPressedEvent.h",
+			"%{vpatheventfiledest}/KeyReleasedEvent.h",
+			"%{vpatheventfiledest}/KeyTypedEvent.h"
 		},
-		["%{vpathdestination}/MouseEvents/*"] =
+		["%{vpatheventdest}/MouseEvents/*"] =
 		{
-			"%{vpathfiledestination}/MouseMovedEvent.h",
-			"%{vpathfiledestination}/MouseScrolledEvent.h",
-			"%{vpathfiledestination}/MouseButtonPressedEvent.h",
-			"%{vpathfiledestination}/MouseButtonReleasedEvent.h"
+			"%{vpatheventfiledest}/MouseMovedEvent.h",
+			"%{vpatheventfiledest}/MouseScrolledEvent.h",
+			"%{vpatheventfiledest}/MouseButtonPressedEvent.h",
+			"%{vpatheventfiledest}/MouseButtonReleasedEvent.h"
 		},
-		["src/Hedron/Events/Common/*"] =
+		["%{vpatheventdest}/Common/*"] =
 		{
-			"%{vpathfiledestination}/Event.h",
-			"%{vpathfiledestination}/KeyEvent.h",
-			"%{vpathfiledestination}/MouseButtonEvent.h"
+			"%{vpatheventfiledest}/Event.h",
+			"%{vpatheventfiledest}/KeyEvent.h",
+			"%{vpatheventfiledest}/MouseButtonEvent.h"
+		},
+		["%{vpathhdrdest}/Inputs/*"] =
+		{
+			"%{vpathhdrfiledest}/Input.h",
+			"%{vpathhdrfiledest}/KeyCodes.h",
+			"%{vpathhdrfiledest}/MouseButtonCodes.h"
 		}
 	}
 

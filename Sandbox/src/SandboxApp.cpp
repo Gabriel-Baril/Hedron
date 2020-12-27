@@ -9,12 +9,13 @@ public:
 
 	void on_update() override
 	{
-		//HDR_INFO("ExampleLayer::Update");
+		if (Hedron::Input::is_key_pressed(HDR_KEY_E) && Hedron::Input::is_key_pressed(HDR_KEY_E))
+			HDR_WARNING("E and A key are being pressed");
 	}
 
 	void on_event(Hedron::Event& event) override
 	{
-		HDR_TRACE("{0}", event);
+		//HDR_TRACE("{0}", event);
 	}
 };
 
