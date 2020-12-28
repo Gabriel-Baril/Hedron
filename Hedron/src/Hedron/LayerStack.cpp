@@ -6,7 +6,6 @@ namespace Hedron
 
 	LayerStack::LayerStack()
 	{
-		m_layerInsert = m_layers.begin();
 	}
 
 	LayerStack::~LayerStack()
@@ -19,7 +18,8 @@ namespace Hedron
 
 	void LayerStack::push_layer(Layer* layer)
 	{
-		m_layerInsert = m_layers.emplace(m_layerInsert, layer); // Added after the last layer
+		m_layers.emplace(m_layers.begin() + m_layerInsertIndex, layer); // Added after the last layer
+		m_layerInsertIndex++;
 	}
 
 	void LayerStack::push_overlay(Layer* overlay)
@@ -33,7 +33,7 @@ namespace Hedron
 		if (it != m_layers.end())
 		{
 			m_layers.erase(it);
-			m_layerInsert--;
+			m_layerInsertIndex--;
 		}
 	}
 

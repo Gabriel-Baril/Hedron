@@ -1,4 +1,6 @@
-#include <Hedron.h>
+#include <Hedron.h> 
+
+#include "imgui.h"
 
 class ExampleLayer : public Hedron::Layer
 {
@@ -13,9 +15,16 @@ public:
 			HDR_WARNING("E and A key are being pressed");
 	}
 
+	virtual void on_imgui_render() override
+	{
+		ImGui::Begin("TEST");
+		ImGui::Text("HELLO WORLD");
+		ImGui::End();
+	}
+
 	void on_event(Hedron::Event& event) override
 	{
-		//HDR_TRACE("{0}", event);
+		HDR_TRACE("{0}", event);
 	}
 };
 
@@ -25,7 +34,6 @@ public:
 	Sandbox()
 	{
 		push_layer(new ExampleLayer());
-		push_overlay(new Hedron::ImGuiLayer());
 	}
 
 	~Sandbox()

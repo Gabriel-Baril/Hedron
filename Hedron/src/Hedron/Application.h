@@ -6,6 +6,8 @@
 #include "Events/Event.h"
 #include "Hedron/Events/ApplicationEvents.h"
 
+#include "Hedron/ImGui/ImGuiLayer.h"
+
 namespace Hedron
 {
 	class HEDRON_API Application
@@ -26,6 +28,7 @@ namespace Hedron
 		bool on_window_closed(WindowCloseEvent& windowCloseEvent);
 
 		std::unique_ptr<Window> m_window;
+		ImGuiLayer* m_imGuiLayer;
 		bool m_running = true;
 		LayerStack m_layerStack;
 	private:

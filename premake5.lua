@@ -170,12 +170,14 @@ project "Sandbox"
 	{
 		"Hedron/vendor/spdlog/include",
 		"Hedron/src",
-		"%{includeDir.glm}"
+		"%{includeDir.glm}",
+		"%{includeDir.ImGui}"
 	}
 
 	links
 	{
-		"Hedron"
+		"Hedron",
+		"ImGui"
 	}
 
 	filter "system:windows" -- The instructions downward are only applied for windows users
