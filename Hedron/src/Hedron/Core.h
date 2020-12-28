@@ -1,10 +1,14 @@
 #pragma once
 
 #if defined(HDR_PLATFORM_WINDOWS)
-	#if defined(HDR_BUILD_DLL)
-		#define HEDRON_API __declspec(dllexport)
+	#if HDR_DYNAMIC_LINK
+		#if defined(HDR_BUILD_DLL)
+			#define HEDRON_API __declspec(dllexport)
+		#else
+			#define HEDRON_API __declspec(dllimport)
+		#endif
 	#else
-		#define HEDRON_API __declspec(dllimport)
+		#define HEDRON_API
 	#endif
 #else
 	#error Hedron only support Windows!
