@@ -16,6 +16,7 @@ includeDir = {}
 includeDir["GLFW"] = "Hedron/vendor/GLFW/include"
 includeDir["GLAD"] = "Hedron/vendor/GLAD/include"
 includeDir["ImGui"] = "Hedron/vendor/imgui"
+includeDir["glm"] = "Hedron/vendor/glm"
 
 group "Dependencies"
 	include "Hedron/vendor/GLFW" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLFW" in this premake file
@@ -46,7 +47,9 @@ project "Hedron"      -- Name of the project
 	files -- Chooses the files that we want to add in our project
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	includedirs -- Adds additional include folders
@@ -55,7 +58,9 @@ project "Hedron"      -- Name of the project
 		"%{prj.name}/src",
 		"%{includeDir.GLFW}",
 		"%{includeDir.GLAD}",
-		"%{includeDir.ImGui}"
+		"%{includeDir.ImGui}",
+		"%{includeDir.glm}"
+
 	}
 
 	links
@@ -164,7 +169,8 @@ project "Sandbox"
 	includedirs -- Adds additional include folders
 	{
 		"Hedron/vendor/spdlog/include",
-		"Hedron/src"
+		"Hedron/src",
+		"%{includeDir.glm}"
 	}
 
 	links

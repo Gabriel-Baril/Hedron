@@ -4,6 +4,8 @@
 
 #include <glad/glad.h>
 
+#include <glm/glm.hpp>
+
 namespace Hedron
 {
 	Application* Application::s_instance = nullptr;
