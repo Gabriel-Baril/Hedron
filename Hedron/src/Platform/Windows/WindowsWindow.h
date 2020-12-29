@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hedron/Window.h"
+#include "Hedron/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
 
@@ -36,6 +37,8 @@ namespace Hedron
 		virtual void shutdown();
 	private:
 		GLFWwindow* m_window;
+		GraphicsContext* m_context;
+
 
 		// Custom user data to GLFW
 		struct WindowData

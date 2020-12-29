@@ -19,6 +19,8 @@ public:
 	{
 		ImGui::Begin("TEST");
 		ImGui::Text("HELLO WORLD");
+		ImGui::Text("HELLO WORLD 2");
+		ImGui::Button("BUTTON");
 		ImGui::End();
 	}
 
