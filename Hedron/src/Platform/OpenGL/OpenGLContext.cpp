@@ -3,7 +3,6 @@
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
-#include <gl/GL.h>
 
 namespace Hedron
 {
@@ -18,12 +17,15 @@ namespace Hedron
 		glfwMakeContextCurrent(m_windowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		HDR_CORE_ASSERT(status, "Failed to initialize GLAD");
+
+		HDR_CORE_INFO("OpenGL Info :");
+		HDR_CORE_INFO("  Vendor: {0}", glGetString(GL_VENDOR));
+		HDR_CORE_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
+		HDR_CORE_INFO("  Version: {0}", glGetString(GL_VERSION));
 	}
 
 	void OpenGLContext::swap_buffers()
 	{
-		glBegin();
-
 		glfwSwapBuffers(m_windowHandle);
 	}
 }

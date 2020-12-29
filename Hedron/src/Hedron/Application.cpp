@@ -20,6 +20,25 @@ namespace Hedron
 
 		m_imGuiLayer = new ImGuiLayer;
 		push_overlay(m_imGuiLayer);
+
+		// Vertex Array
+		glGenVertexArrays(1, &m_vertex_array);
+		glBindVertexArray(m_vertex_array);
+
+		// Vertex Buffer
+		glGenBuffers(1, &m_vertex_buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+		// Index Buffer (The order of drawing)
+		glGenBuffers(1, &m_index_buffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index_buffer);
+
+		unsigned int indices[3] = { 0, 1, 2 };
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		// Shader (Vertex shader, Fragment Shader)
+		// Later...
 	}
 
 	Application::~Application()
@@ -30,6 +49,12 @@ namespace Hedron
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<WindowCloseEvent>(HDR_BIND_EVENT_FN(Application::on_window_closed));
+
+		// TODO: To remove
+		if (e.get_event_type() == Hedron::WindowResizeEvent::get_static_type())
+		{
+			glViewport(0, 0, m_window->get_width(), m_window->get_height());
+		}
 
 		// Maybe replace this with a while loop
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
@@ -59,10 +84,29 @@ namespace Hedron
 
 	void Application::run()
 	{
+
+		float vertices[3 * 3] =
+		{
+			-0.5f, -0.5f, 0.0f,
+			0.5f, -0.5f, 0.0f,
+			0.0f, 0.5f, 0.0f
+		};
+
 		while (m_running)
 		{
-			glClearColor(0, 0, 1, 1);
+			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
+			glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
+
+			vertices[0] += 0.001f;
+			vertices[3] += 0.001f;
+			vertices[6] += 0.001f;
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW); // GL_STATIC_DRAW means that the data received will not change
+
+			glBindVertexArray(m_vertex_array);
+
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
 			for (Layer* layer : m_layerStack)
 			{

@@ -31,6 +31,8 @@ namespace Hedron
 		ImGuiLayer* m_imGuiLayer;
 		bool m_running = true;
 		LayerStack m_layerStack;
+
+		unsigned int m_vertex_array, m_vertex_buffer, m_index_buffer;
 	private:
 		static Application* s_instance;
 	};
