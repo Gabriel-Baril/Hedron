@@ -1,6 +1,7 @@
 #include "hdrpch.h"
 #include "Application.h"
 #include "Input.h"
+#include "Renderer/BufferLayout.h"
 
 #include <glad/glad.h>
 
@@ -9,6 +10,27 @@
 namespace Hedron
 {
 	Application* Application::s_instance = nullptr;
+
+	static GLenum shader_data_type_to_opengl_base_type(ShaderDataType type)
+	{
+		switch (type)
+		{
+			case Hedron::ShaderDataType::FLOAT:  return GL_FLOAT;
+			case Hedron::ShaderDataType::FLOAT2: return GL_FLOAT;
+			case Hedron::ShaderDataType::FLOAT3: return GL_FLOAT;
+			case Hedron::ShaderDataType::FLOAT4: return GL_FLOAT;
+			case Hedron::ShaderDataType::MAT3:   return GL_FLOAT;
+			case Hedron::ShaderDataType::MAT4:   return GL_FLOAT;
+			case Hedron::ShaderDataType::INT:    return GL_INT;
+			case Hedron::ShaderDataType::INT2:   return GL_INT;
+			case Hedron::ShaderDataType::INT3:   return GL_INT;
+			case Hedron::ShaderDataType::INT4:   return GL_INT;
+			case Hedron::ShaderDataType::BOOL:   return GL_BOOL;
+		}
+
+		HDR_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		return 0;
+	}
 
 	Application::Application()
 	{
@@ -28,14 +50,39 @@ namespace Hedron
 		// Vertex Buffer
 		float vertices[] =
 		{
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.5f, 0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f, 0.8f, 0.0f, 0.2f, 1.0f,
+			0.5f, -0.5f, 0.0f, 0.0f, 0.7f, 0.3f, 1.0f,
+			0.5f, 0.5f, 0.0f, 0.2f, 0.8f, 0.0f, 1.0f
 		};
 
 		m_vertexBuffer.reset( VertexBuffer::create(vertices, sizeof(vertices)) );
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+		{
+			BufferLayout layout =
+			{
+				{ShaderDataType::FLOAT3, "a_position"},
+				{ShaderDataType::FLOAT4, "a_color"}
+			};
+
+			m_vertexBuffer->set_layout(layout);
+		}
+
+		uint32_t index = 0;
+		const BufferLayout& bufferLayout = m_vertexBuffer->get_layout();
+		for (const auto& element : bufferLayout)
+		{
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(
+				index, 
+				element.get_component_count(), 
+				shader_data_type_to_opengl_base_type(element.type), 
+				element.normalized ? GL_TRUE : GL_FALSE, 
+				bufferLayout.get_stride(),
+				(const void*)element.offset
+			);
+			index++;
+		}
+
 
 		// Index Buffer (The order of drawing)
 		uint32_t indices[] = { 0, 1, 2 };
@@ -48,12 +95,15 @@ namespace Hedron
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_position;
+			layout(location = 1) in vec4 a_color;
 
 			out vec3 v_position;
+			out vec4 v_color;
 
 			void main()
 			{
 				v_position = a_position;
+				v_color = a_color;
 				gl_Position = vec4(a_position, 1.0);
 			}
 		)";
@@ -65,10 +115,12 @@ namespace Hedron
 			layout(location = 0) out vec4 color;
 			
 			in vec3 v_position;
+			in vec4 v_color;
 
 			void main()
 			{
-				color = vec4(v_position, 1.0);
+				color = vec4(v_position , 1.0);
+				color = v_color;
 			}
 		)";
 
