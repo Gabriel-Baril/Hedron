@@ -12,7 +12,7 @@ namespace Hedron
 		inline static bool is_mouse_button_pressed(int mouseButton) { return s_instance->is_mouse_button_pressed_impl(mouseButton); }
 		inline static std::pair<float, float> get_mouse_position() { return s_instance->get_mouse_position_impl(); }
 		inline static float get_mouse_x() { return s_instance->get_mouse_x_impl(); }
-		inline static float get_mouse_y() { return s_instance->get_mouse_x_impl(); }
+		inline static float get_mouse_y() { return s_instance->get_mouse_y_impl(); }
 
 	protected:
 		virtual bool is_key_pressed_impl(int keyCode) = 0;

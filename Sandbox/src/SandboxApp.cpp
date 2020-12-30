@@ -26,7 +26,7 @@ public:
 
 	void on_event(Hedron::Event& event) override
 	{
-		HDR_TRACE("{0}", event);
+		//HDR_TRACE("{0}", event);
 	}
 };
 

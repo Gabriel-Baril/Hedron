@@ -8,6 +8,8 @@
 
 #include "Hedron/ImGui/ImGuiLayer.h"
 
+#include "Hedron/Renderer/Shader.h"
+
 namespace Hedron
 {
 	class HEDRON_API Application
@@ -33,6 +35,7 @@ namespace Hedron
 		LayerStack m_layerStack;
 
 		unsigned int m_vertex_array, m_vertex_buffer, m_index_buffer;
+		std::unique_ptr<Shader> m_shader;
 	private:
 		static Application* s_instance;
 	};
