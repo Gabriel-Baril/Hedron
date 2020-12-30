@@ -26,27 +26,23 @@ namespace Hedron
 		glBindVertexArray(m_vertex_array);
 
 		// Vertex Buffer
-		glGenBuffers(1, &m_vertex_buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
+		float vertices[] =
+		{
+			-0.5f, -0.5f, 0.0f,
+			0.5f, -0.5f, 0.0f,
+			0.5f, 0.5f, 0.0f
+		};
+
+		m_vertexBuffer.reset( VertexBuffer::create(vertices, sizeof(vertices)) );
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
 		// Index Buffer (The order of drawing)
-		glGenBuffers(1, &m_index_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index_buffer);
+		uint32_t indices[] = { 0, 1, 2 };
+		uint32_t indicesCount = sizeof(indices) / sizeof(uint32_t);
+		m_indexBuffer.reset( IndexBuffer::create(indices, indicesCount) );
 
-		unsigned int indices[] = 
-		{ 
-			0, 1,
-			1, 2, 
-			2, 0,
-			2, 3,
-			3, 0,
-		};
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-		
 		// Shader (Vertex shader, Fragment Shader)
-		
 		std::string vertexSource = 
 		R"(
 			#version 330 core
@@ -72,11 +68,11 @@ namespace Hedron
 
 			void main()
 			{
-				color = vec4(v_position * 0.5 + 0.5, 1.0);
+				color = vec4(v_position, 1.0);
 			}
 		)";
 
-		m_shader = std::make_unique<Shader>(vertexSource, fragmentSource); // We can do m_shader.reset()
+		m_shader.reset(Shader::create(vertexSource, fragmentSource)); // We can do m_shader.reset()
 
 	}
 
@@ -123,44 +119,14 @@ namespace Hedron
 
 	void Application::run()
 	{
-
-		float vertices[] =
-		{
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.5f, 0.5f, 0.0f,
-			-0.5f, 0.5f, 0.0f
-		};
-
-		float old_mx = 2 * (Input::get_mouse_x() / get_window().get_width()) - 1;
-		float old_my = 2 * (Input::get_mouse_y() / get_window().get_height()) - 1;
-		float delta_t = 0.01f;
 		while (m_running)
 		{
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
-			glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
-
-			float new_mx = 2 * (Input::get_mouse_x() / get_window().get_width()) - 1;
-			float new_my = 2 * (Input::get_mouse_y() / get_window().get_height()) - 1;
-
-			if (new_mx > -1 && new_my > -1 && new_mx < 1 && new_my < 1)
-			{
-				HDR_CORE_INFO("[{0}, {1}]", new_mx, new_my);
-				vertices[0] += (new_mx - old_mx) * delta_t;
-				vertices[3] += (new_mx - old_mx) * delta_t;
-				vertices[6] += (new_mx - old_mx) * delta_t;
-				vertices[9] += (new_mx - old_mx) * delta_t;
-			}
-
-			old_mx = new_mx;
-			old_mx = new_my;
-
-			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW); // GL_STATIC_DRAW means that the data received will not change
 
 			m_shader->bind();
 			glBindVertexArray(m_vertex_array);
-			glDrawElements(GL_LINES, 10, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_indexBuffer->get_count(), GL_UNSIGNED_INT, nullptr);
 
 			for (Layer* layer : m_layerStack)
 			{

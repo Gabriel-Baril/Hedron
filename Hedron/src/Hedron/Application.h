@@ -10,6 +10,9 @@
 
 #include "Hedron/Renderer/Shader.h"
 
+#include "Hedron/Renderer/VertexBuffer.h"
+#include "Hedron/Renderer/IndexBuffer.h"
+
 namespace Hedron
 {
 	class HEDRON_API Application
@@ -34,8 +37,10 @@ namespace Hedron
 		bool m_running = true;
 		LayerStack m_layerStack;
 
-		unsigned int m_vertex_array, m_vertex_buffer, m_index_buffer;
+		unsigned int m_vertex_array, m_index_buffer;
 		std::unique_ptr<Shader> m_shader;
+		std::unique_ptr<VertexBuffer> m_vertexBuffer;
+		std::unique_ptr<IndexBuffer> m_indexBuffer;
 	private:
 		static Application* s_instance;
 	};
