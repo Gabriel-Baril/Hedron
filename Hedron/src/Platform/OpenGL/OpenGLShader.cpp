@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Hedron
 {
 	OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource)
@@ -113,5 +115,11 @@ namespace Hedron
 	void OpenGLShader::unbind() const
 	{
 		glUseProgram(0); // Unbind the program for the future draw calls
+	}
+
+	void OpenGLShader::upload_uniform_mat4(const std::string& uniformName, const glm::mat4& matrix)
+	{
+		GLint location = glGetUniformLocation(m_rendererID, uniformName.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 }

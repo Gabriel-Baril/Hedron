@@ -9,8 +9,10 @@ namespace Hedron
 		OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource);
 		virtual ~OpenGLShader();
 
-		void bind() const;
-		void unbind() const;
+		virtual void bind() const override;
+		virtual void unbind() const override;
+
+		virtual void upload_uniform_mat4(const std::string& uniformName, const glm::mat4& matrix) override;
 	private:
 		uint32_t m_rendererID;
 	};

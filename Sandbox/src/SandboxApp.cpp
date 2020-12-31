@@ -1,5 +1,7 @@
 #include <Hedron.h> 
 
+#include "Hedron/Renderer/OrthographicCamera.h"
+
 #include "imgui.h"
 
 using namespace Hedron;
@@ -7,7 +9,8 @@ using namespace Hedron;
 class SceneLayer : public Hedron::Layer
 {
 public:
-	SceneLayer() : Layer("Scene")
+	SceneLayer() 
+		: Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		m_vertexArray.reset(VertexArray::create());
 
@@ -43,6 +46,8 @@ public:
 			layout(location = 0) in vec3 a_position;
 			layout(location = 1) in vec4 a_color;
 
+			uniform mat4 u_viewProjection;
+
 			out vec3 v_position;
 			out vec4 v_color;
 
@@ -50,7 +55,7 @@ public:
 			{
 				v_position = a_position;
 				v_color = a_color;
-				gl_Position = vec4(a_position, 1.0);
+				gl_Position = u_viewProjection * vec4(a_position, 1.0);
 			}
 		)";
 
@@ -102,12 +107,14 @@ public:
 			
 			layout(location = 0) in vec3 a_position;
 
+			uniform mat4 u_viewProjection;
+
 			out vec3 v_position;
 
 			void main()
 			{
 				v_position = a_position;
-				gl_Position = vec4(a_position, 1.0);
+				gl_Position = u_viewProjection * vec4(a_position, 1.0);
 			}
 		)";
 
@@ -130,18 +137,16 @@ public:
 
 	void on_update() override
 	{
-		Hedron::RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1.0f });
-		Hedron::RenderCommand::clear();
+		auto& cam_pos = m_camera.get_position();
+		HDR_INFO("[{0}, {1}, {2}] [{3} deg]", cam_pos.x, cam_pos.y, cam_pos.z, m_camera.get_rotation());
 
-		Hedron::Renderer::begin_scene(); // camera, environment
+		RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::clear();
 
-		m_shaderSquare->bind();
-		Hedron::Renderer::submit(m_squareVertexArray);
-
-		m_shader->bind();
-		Hedron::Renderer::submit(m_vertexArray);
-
-		Hedron::Renderer::end_scene();
+		Renderer::begin_scene(m_camera); // camera, environment
+		Renderer::submit(m_squareVertexArray, m_shaderSquare);
+		Renderer::submit(m_vertexArray, m_shader);
+		Renderer::end_scene();
 
 		// Renderer::flush();
 	}
@@ -157,13 +162,42 @@ public:
 
 	void on_event(Hedron::Event& event) override
 	{
+		EventDispatcher dispatcher(event);
+
+		dispatcher.dispatch<KeyPressedEvent>(HDR_BIND_EVENT_FN(SceneLayer::on_key_pressed));
 	}
 private:
+	bool on_key_pressed(KeyPressedEvent& event)
+	{
+		float ds = 0.1f;
+		auto& cam_pos = m_camera.get_position();
+		float cam_rot = m_camera.get_rotation();
+
+		if (event.get_key_code() == HDR_KEY_A)
+			m_camera.set_position({ cam_pos.x + ds, cam_pos.y, cam_pos.z });
+		else if (event.get_key_code() == HDR_KEY_D)
+			m_camera.set_position({ cam_pos.x - ds, cam_pos.y, cam_pos.z});
+
+		if (event.get_key_code() == HDR_KEY_W)
+			m_camera.set_position({ cam_pos.x, cam_pos.y - ds, cam_pos.z });
+		else if (event.get_key_code() == HDR_KEY_S)
+			m_camera.set_position({ cam_pos.x, cam_pos.y + ds, cam_pos.z });
+
+		if (event.get_key_code() == HDR_KEY_E)
+			m_camera.set_rotation(cam_rot + 3.141567 / 36);
+		else if (event.get_key_code() == HDR_KEY_Q)
+			m_camera.set_rotation(cam_rot - 3.141567 / 36);
+
+		return false;
+	}
+
 	std::shared_ptr<Hedron::Shader> m_shader;
 	std::shared_ptr<Hedron::VertexArray> m_vertexArray;
 
 	std::shared_ptr<Hedron::Shader> m_shaderSquare;
 	std::shared_ptr<Hedron::VertexArray> m_squareVertexArray;
+
+	OrthographicCamera m_camera;
 };
 
 class Sandbox : public Hedron::Application
