@@ -17,7 +17,7 @@ namespace Hedron
 			s_rendererAPI->clear();
 		}
 
-		inline static void draw_indexed(const std::shared_ptr<VertexArray>& vertexArray)
+		inline static void draw_indexed(const Ref<VertexArray>& vertexArray)
 		{
 			s_rendererAPI->draw_indexed(vertexArray);
 		}

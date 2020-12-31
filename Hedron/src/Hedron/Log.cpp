@@ -4,8 +4,8 @@
 
 namespace Hedron
 {
-	std::shared_ptr<spdlog::logger> Log::s_coreLogger;
-	std::shared_ptr<spdlog::logger> Log::s_clientLogger;
+	Ref<spdlog::logger> Log::s_coreLogger;
+	Ref<spdlog::logger> Log::s_clientLogger;
 
 	void Log::init()
 	{

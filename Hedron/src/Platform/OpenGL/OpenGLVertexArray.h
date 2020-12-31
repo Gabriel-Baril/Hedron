@@ -12,14 +12,14 @@ namespace Hedron
 		virtual void bind() const override;
 		virtual void unbind() const override;
 
-		virtual void add_vertex_buffer(const std::shared_ptr<VertexBuffer>& vertexBuffer) override;
-		virtual void set_index_buffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
+		virtual void add_vertex_buffer(const Ref<VertexBuffer>& vertexBuffer) override;
+		virtual void set_index_buffer(const Ref<IndexBuffer>& indexBuffer) override;
 
-		virtual const std::vector<std::shared_ptr<VertexBuffer>>& get_vertex_buffers() const override { return m_vertexBuffers; }
-		virtual const std::shared_ptr<IndexBuffer>& get_index_buffer() const override { return m_indexBuffer; }
+		virtual const std::vector<Ref<VertexBuffer>>& get_vertex_buffers() const override { return m_vertexBuffers; }
+		virtual const Ref<IndexBuffer>& get_index_buffer() const override { return m_indexBuffer; }
 	private:
 		uint32_t m_rendererID;
-		std::vector<std::shared_ptr<VertexBuffer>> m_vertexBuffers;
-		std::shared_ptr<IndexBuffer> m_indexBuffer;
+		std::vector<Ref<VertexBuffer>> m_vertexBuffers;
+		Ref<IndexBuffer> m_indexBuffer;
 	};
 }

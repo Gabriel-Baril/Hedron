@@ -21,7 +21,7 @@ public:
 			0.0f, 0.5f, 0.0f, 0.2f, 0.8f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<Hedron::VertexBuffer> vertexBuffer;
+		Hedron::Ref<Hedron::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Hedron::VertexBuffer::create(vertices, sizeof(vertices)));
 		Hedron::BufferLayout layout = {
 			{ Hedron::ShaderDataType::FLOAT3, "a_position" },
@@ -34,7 +34,7 @@ public:
 		// Index Buffer (The order of drawing)
 		uint32_t indices[] = { 0, 1, 2 };
 		uint32_t indicesCount = sizeof(indices) / sizeof(uint32_t);
-		std::shared_ptr<Hedron::IndexBuffer> indexBuffer;
+		Hedron::Ref<Hedron::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Hedron::IndexBuffer::create(indices, indicesCount));
 		m_vertexArray->set_index_buffer(indexBuffer);
 
@@ -86,7 +86,7 @@ public:
 			 0.5f,  0.5f, 0.0f,
 			-0.5f,  0.5f, 0.0f
 		};
-		std::shared_ptr<Hedron::VertexBuffer> squareVertexBuffer;
+		Hedron::Ref<Hedron::VertexBuffer> squareVertexBuffer;
 		squareVertexBuffer.reset(Hedron::VertexBuffer::create(verticesSquare, sizeof(verticesSquare)));
 
 		squareVertexBuffer->set_layout({ {Hedron::ShaderDataType::FLOAT3, "position"} });
@@ -97,7 +97,7 @@ public:
 			2, 3, 0
 		};
 
-		std::shared_ptr<Hedron::IndexBuffer> squareIndexBuffer;
+		Hedron::Ref<Hedron::IndexBuffer> squareIndexBuffer;
 		squareIndexBuffer.reset(Hedron::IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t)));
 		m_squareVertexArray->set_index_buffer(squareIndexBuffer);
 
@@ -141,7 +141,7 @@ public:
 
 	void on_update(Hedron::Timestep ts) override
 	{
-		HDR_INFO("Delta time: {0}s ({1}ms)", ts.get_seconds(), ts.get_milliseconds());
+		HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), 1000.0f / ts.get_milliseconds());
 
 		if (Hedron::Input::is_key_pressed(HDR_KEY_W)) 
 			m_camera.move_y(+m_cameraSpeed * ts);
@@ -209,12 +209,12 @@ public:
 	{
 	}
 private:
+	// Assets
+	Hedron::Ref<Hedron::Shader> m_shader;
+	Hedron::Ref<Hedron::VertexArray> m_vertexArray;
 
-	std::shared_ptr<Hedron::Shader> m_shader;
-	std::shared_ptr<Hedron::VertexArray> m_vertexArray;
-
-	std::shared_ptr<Hedron::Shader> m_flatColorshader;
-	std::shared_ptr<Hedron::VertexArray> m_squareVertexArray;
+	Hedron::Ref<Hedron::Shader> m_flatColorshader;
+	Hedron::Ref<Hedron::VertexArray> m_squareVertexArray;
 
 	Hedron::OrthographicCamera m_camera;
 	float m_cameraSpeed = 5.0f;

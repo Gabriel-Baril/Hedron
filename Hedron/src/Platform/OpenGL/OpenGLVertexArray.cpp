@@ -46,7 +46,7 @@ namespace Hedron
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::add_vertex_buffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
+	void OpenGLVertexArray::add_vertex_buffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
 		glBindVertexArray(m_rendererID); // We can just do this->bind();
 		vertexBuffer->bind();
@@ -75,7 +75,7 @@ namespace Hedron
 		m_vertexBuffers.push_back(vertexBuffer);
 	}
 
-	void OpenGLVertexArray::set_index_buffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+	void OpenGLVertexArray::set_index_buffer(const Ref<IndexBuffer>& indexBuffer)
 	{
 		glBindVertexArray(m_rendererID); // We can just do this->bind();
 		indexBuffer->bind();
