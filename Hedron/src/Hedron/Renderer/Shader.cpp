@@ -12,10 +12,10 @@ namespace Hedron
 	{
 		switch (Renderer::get_renderer_api())
 		{
-			case RendererAPI::NONE:
+			case RendererAPI::API::NONE:
 				HDR_CORE_ASSERT(false, "RendererAPI::NONE not supported !");
 				return nullptr;
-			case RendererAPI::OPEN_GL:
+			case RendererAPI::API::OPEN_GL:
 				return new OpenGLShader(vertexSource, fragmentSource);
 		}
 		HDR_CORE_ASSERT(false, "Unknown RendererAPI !");

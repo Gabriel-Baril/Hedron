@@ -12,6 +12,11 @@
 
 #include "Hedron/ImGui/ImGuiLayer.h"
 
+#include "Hedron/Renderer/VertexArray.h"
+#include "Hedron/Renderer/Shader.h"
+#include "Hedron/Renderer/Renderer.h"
+#include "Hedron/Renderer/RenderCommand.h"
+
 //-Entry-point-------------------
 #include "Hedron/EntryPoint.h"
 //-------------------------------

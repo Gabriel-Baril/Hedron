@@ -1,18 +1,17 @@
 #pragma once
 
+#include "RenderCommand.h"
+
 namespace Hedron
 {
-	enum class RendererAPI
-	{
-		NONE = 0,
-		OPEN_GL = 1
-	};
-
 	class Renderer
 	{
 	public:
-		inline static RendererAPI get_renderer_api() { return s_rendererAPI; }
-	private:
-		static RendererAPI s_rendererAPI;
+		static void begin_scene();
+		static void end_scene();
+
+		static void submit(const std::shared_ptr<VertexArray>& vertexArray);
+
+		inline static RendererAPI::API get_renderer_api() { return RendererAPI::get_api(); }
 	};
 }
