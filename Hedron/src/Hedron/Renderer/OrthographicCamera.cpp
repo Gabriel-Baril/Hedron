@@ -17,6 +17,58 @@ namespace Hedron
 		calculate_view_matrix();
 	}
 
+	void OrthographicCamera::set_position(float x, float y, float z)
+	{
+		m_position.x = x;
+		m_position.y = y;
+		m_position.z = z;
+		calculate_view_matrix();
+	}
+
+	void OrthographicCamera::set_x(float x)
+	{
+		m_position.x = x;
+		calculate_view_matrix();
+	}
+
+	void OrthographicCamera::set_y(float y)
+	{
+		m_position.y = y;
+		calculate_view_matrix();
+	}
+
+	void OrthographicCamera::set_z(float z)
+	{
+		m_position.z = z;
+		calculate_view_matrix();
+	}
+
+	void OrthographicCamera::move(float dx, float dy, float dz)
+	{
+		m_position.x += dx;
+		m_position.y += dy;
+		m_position.z += dz;
+		calculate_view_matrix();
+	}
+
+	void OrthographicCamera::move_x(float dx)
+	{
+		m_position.x += dx;
+		calculate_view_matrix();
+	}
+
+	void OrthographicCamera::move_y(float dy)
+	{
+		m_position.y += dy;
+		calculate_view_matrix();
+	}
+
+	void OrthographicCamera::move_z(float dz)
+	{
+		m_position.z += dz;
+		calculate_view_matrix();
+	}
+
 	void OrthographicCamera::set_rotation(float rotation)
 	{
 		m_rotation = rotation;

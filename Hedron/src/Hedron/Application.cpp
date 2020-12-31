@@ -5,6 +5,8 @@
 #include "Renderer/BufferLayout.h"
 #include "Renderer/Renderer.h"
 
+#include "GLFW/glfw3.h"
+
 namespace Hedron
 {
 	Application* Application::s_instance = nullptr;
@@ -60,8 +62,12 @@ namespace Hedron
 	{
 		while (m_running)
 		{
+			float time = (float)glfwGetTime(); // Should be Platform::GetTime() in the future 
+			Timestep timestep = time - m_lastFrameTime;
+			m_lastFrameTime = time;
+
 			for (Layer* layer : m_layerStack)
-				layer->on_update();
+				layer->on_update(timestep);
 
 			m_imGuiLayer->begin();
 			for (Layer* layer : m_layerStack)

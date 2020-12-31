@@ -4,15 +4,14 @@
 
 #include "imgui.h"
 
-using namespace Hedron;
 
 class SceneLayer : public Hedron::Layer
 {
 public:
 	SceneLayer() 
-		: Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f)
+		: Hedron::Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
-		m_vertexArray.reset(VertexArray::create());
+		m_vertexArray.reset(Hedron::VertexArray::create());
 
 		// Vertex Buffer
 		float vertices[] = {
@@ -21,11 +20,11 @@ public:
 			0.0f, 0.5f, 0.0f, 0.2f, 0.8f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
-		BufferLayout layout = {
-			{ShaderDataType::FLOAT3, "a_position"},
-			{ShaderDataType::FLOAT4, "a_color"}
+		std::shared_ptr<Hedron::VertexBuffer> vertexBuffer;
+		vertexBuffer.reset(Hedron::VertexBuffer::create(vertices, sizeof(vertices)));
+		Hedron::BufferLayout layout = {
+			{Hedron::ShaderDataType::FLOAT3, "a_position"},
+			{Hedron::ShaderDataType::FLOAT4, "a_color"}
 		};
 
 		vertexBuffer->set_layout(layout);
@@ -34,8 +33,8 @@ public:
 		// Index Buffer (The order of drawing)
 		uint32_t indices[] = { 0, 1, 2 };
 		uint32_t indicesCount = sizeof(indices) / sizeof(uint32_t);
-		std::shared_ptr<IndexBuffer> indexBuffer;
-		indexBuffer.reset(IndexBuffer::create(indices, indicesCount));
+		std::shared_ptr<Hedron::IndexBuffer> indexBuffer;
+		indexBuffer.reset(Hedron::IndexBuffer::create(indices, indicesCount));
 		m_vertexArray->set_index_buffer(indexBuffer);
 
 		// Shader (Vertex shader, Fragment Shader)
@@ -75,9 +74,9 @@ public:
 			}
 		)";
 
-		m_shader.reset(Shader::create(vertexSource, fragmentSource));
+		m_shader.reset(Hedron::Shader::create(vertexSource, fragmentSource));
 
-		m_squareVertexArray.reset(VertexArray::create());
+		m_squareVertexArray.reset(Hedron::VertexArray::create());
 		//////////////////////////////////////////////////////////////////////////////////////
 		float verticesSquare[] = {
 			-0.75f, -0.75f, 0.0f,
@@ -85,10 +84,10 @@ public:
 			0.75f, 0.75f, 0.0f,
 			-0.75f, 0.75f, 0.0f
 		};
-		std::shared_ptr<VertexBuffer> squareVertexBuffer;
-		squareVertexBuffer.reset(VertexBuffer::create(verticesSquare, sizeof(verticesSquare)));
+		std::shared_ptr<Hedron::VertexBuffer> squareVertexBuffer;
+		squareVertexBuffer.reset(Hedron::VertexBuffer::create(verticesSquare, sizeof(verticesSquare)));
 
-		squareVertexBuffer->set_layout({ {ShaderDataType::FLOAT3, "position"} });
+		squareVertexBuffer->set_layout({ {Hedron::ShaderDataType::FLOAT3, "position"} });
 		m_squareVertexArray->add_vertex_buffer(squareVertexBuffer);
 
 		uint32_t indicesSquare[] = {
@@ -96,8 +95,8 @@ public:
 			2, 3, 0
 		};
 
-		std::shared_ptr<IndexBuffer> squareIndexBuffer;
-		squareIndexBuffer.reset(IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t)));
+		std::shared_ptr<Hedron::IndexBuffer> squareIndexBuffer;
+		squareIndexBuffer.reset(Hedron::IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t)));
 		m_squareVertexArray->set_index_buffer(squareIndexBuffer);
 
 		// Shader (Vertex shader, Fragment Shader)
@@ -132,21 +131,31 @@ public:
 			}
 		)";
 
-		m_shaderSquare.reset(Shader::create(vertexSourceSquare, fragmentSourceSquare));
+		m_shaderSquare.reset(Hedron::Shader::create(vertexSourceSquare, fragmentSourceSquare));
 	}
 
-	void on_update() override
+	void on_update(Hedron::Timestep ts) override
 	{
-		auto& cam_pos = m_camera.get_position();
-		HDR_INFO("[{0}, {1}, {2}] [{3} deg]", cam_pos.x, cam_pos.y, cam_pos.z, m_camera.get_rotation());
+		HDR_INFO("Delta time: {0}s ({1}ms)", ts.get_seconds(), ts.get_milliseconds());
 
-		RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1.0f });
-		RenderCommand::clear();
+		float camSpeed = 5.0f;
+		if (Hedron::Input::is_key_pressed(HDR_KEY_W)) 
+			m_camera.move_y(-camSpeed * ts);
+		else if (Hedron::Input::is_key_pressed(HDR_KEY_S)) 
+			m_camera.move_y(camSpeed * ts);
+		
+		if (Hedron::Input::is_key_pressed(HDR_KEY_A)) 
+			m_camera.move_x(camSpeed * ts);
+		else if (Hedron::Input::is_key_pressed(HDR_KEY_D)) 
+			m_camera.move_x(-camSpeed * ts);
 
-		Renderer::begin_scene(m_camera); // camera, environment
-		Renderer::submit(m_squareVertexArray, m_shaderSquare);
-		Renderer::submit(m_vertexArray, m_shader);
-		Renderer::end_scene();
+		Hedron::RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1.0f });
+		Hedron::RenderCommand::clear();
+
+		Hedron::Renderer::begin_scene(m_camera); // camera, environment
+		Hedron::Renderer::submit(m_squareVertexArray, m_shaderSquare);
+		Hedron::Renderer::submit(m_vertexArray, m_shader);
+		Hedron::Renderer::end_scene();
 
 		// Renderer::flush();
 	}
@@ -162,34 +171,8 @@ public:
 
 	void on_event(Hedron::Event& event) override
 	{
-		EventDispatcher dispatcher(event);
-
-		dispatcher.dispatch<KeyPressedEvent>(HDR_BIND_EVENT_FN(SceneLayer::on_key_pressed));
 	}
 private:
-	bool on_key_pressed(KeyPressedEvent& event)
-	{
-		float ds = 0.1f;
-		auto& cam_pos = m_camera.get_position();
-		float cam_rot = m_camera.get_rotation();
-
-		if (event.get_key_code() == HDR_KEY_A)
-			m_camera.set_position({ cam_pos.x + ds, cam_pos.y, cam_pos.z });
-		else if (event.get_key_code() == HDR_KEY_D)
-			m_camera.set_position({ cam_pos.x - ds, cam_pos.y, cam_pos.z});
-
-		if (event.get_key_code() == HDR_KEY_W)
-			m_camera.set_position({ cam_pos.x, cam_pos.y - ds, cam_pos.z });
-		else if (event.get_key_code() == HDR_KEY_S)
-			m_camera.set_position({ cam_pos.x, cam_pos.y + ds, cam_pos.z });
-
-		if (event.get_key_code() == HDR_KEY_E)
-			m_camera.set_rotation(cam_rot + 3.141567 / 36);
-		else if (event.get_key_code() == HDR_KEY_Q)
-			m_camera.set_rotation(cam_rot - 3.141567 / 36);
-
-		return false;
-	}
 
 	std::shared_ptr<Hedron::Shader> m_shader;
 	std::shared_ptr<Hedron::VertexArray> m_vertexArray;
@@ -197,7 +180,7 @@ private:
 	std::shared_ptr<Hedron::Shader> m_shaderSquare;
 	std::shared_ptr<Hedron::VertexArray> m_squareVertexArray;
 
-	OrthographicCamera m_camera;
+	Hedron::OrthographicCamera m_camera;
 };
 
 class Sandbox : public Hedron::Application

@@ -58,6 +58,8 @@ namespace Hedron
 		for (const auto& element : bufferLayout)
 		{
 			glEnableVertexAttribArray(index);
+#pragma warning(push)
+#pragma warning(disable:4312)
 			glVertexAttribPointer(
 				index,
 				element.get_component_count(),
@@ -66,6 +68,7 @@ namespace Hedron
 				bufferLayout.get_stride(),
 				(const void*)element.offset
 			);
+#pragma warning(pop)
 			index++;
 		}
 

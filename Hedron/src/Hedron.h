@@ -6,6 +6,8 @@
 #include "Hedron/Layer.h"
 #include "Hedron/Log.h"
 
+#include "Hedron/Core/Timestep.h"
+
 #include "Hedron/Input.h"
 #include "Hedron/KeyCodes.h"
 #include "Hedron/MouseButtonCodes.h"

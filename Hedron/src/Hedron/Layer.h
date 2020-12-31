@@ -2,6 +2,7 @@
 
 #include "Hedron/Core.h"
 #include "Hedron/Events/Event.h"
+#include "Hedron/Core/Timestep.h"
 
 namespace Hedron
 {
@@ -13,7 +14,7 @@ namespace Hedron
 
 		virtual void on_attach() {}
 		virtual void on_detach() {}
-		virtual void on_update() {}
+		virtual void on_update(Timestep ts) {}
 		virtual void on_imgui_render() {}
 		virtual void on_event(Event& event) {}
 	

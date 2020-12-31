@@ -5,14 +5,9 @@
 #include "Hedron/LayerStack.h"
 #include "Events/Event.h"
 #include "Hedron/Events/ApplicationEvents.h"
+#include "Hedron/Core/Timestep.h"
 
 #include "Hedron/ImGui/ImGuiLayer.h"
-
-#include "Hedron/Renderer/Shader.h"
-
-#include "Hedron/Renderer/VertexBuffer.h"
-#include "Hedron/Renderer/IndexBuffer.h"
-#include "Hedron/Renderer/VertexArray.h"
 
 namespace Hedron
 {
@@ -32,11 +27,12 @@ namespace Hedron
 		inline Window& get_window() { return *m_window; };
 	private:
 		bool on_window_closed(WindowCloseEvent& windowCloseEvent);
-
+	private:
 		std::unique_ptr<Window> m_window;
 		ImGuiLayer* m_imGuiLayer;
 		bool m_running = true;
 		LayerStack m_layerStack;
+		float m_lastFrameTime = 0;
 	private:
 		static Application* s_instance;
 	};
