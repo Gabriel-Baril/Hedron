@@ -12,6 +12,7 @@
 
 #include "Hedron/Renderer/VertexBuffer.h"
 #include "Hedron/Renderer/IndexBuffer.h"
+#include "Hedron/Renderer/VertexArray.h"
 
 namespace Hedron
 {
@@ -37,10 +38,11 @@ namespace Hedron
 		bool m_running = true;
 		LayerStack m_layerStack;
 
-		unsigned int m_vertex_array, m_index_buffer;
-		std::unique_ptr<Shader> m_shader;
-		std::unique_ptr<VertexBuffer> m_vertexBuffer;
-		std::unique_ptr<IndexBuffer> m_indexBuffer;
+		std::shared_ptr<Shader> m_shader;
+		std::shared_ptr<VertexArray> m_vertexArray;
+
+		std::shared_ptr<Shader> m_shaderSquare;
+		std::shared_ptr<VertexArray> m_squareVertexArray;
 	private:
 		static Application* s_instance;
 	};

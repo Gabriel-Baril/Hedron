@@ -1,7 +1,5 @@
 #pragma once
 
-#include "hdrpch.h"
-
 namespace Hedron
 {
 	enum class ShaderDataType// : uint8_t

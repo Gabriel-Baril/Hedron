@@ -11,27 +11,6 @@ namespace Hedron
 {
 	Application* Application::s_instance = nullptr;
 
-	static GLenum shader_data_type_to_opengl_base_type(ShaderDataType type)
-	{
-		switch (type)
-		{
-			case Hedron::ShaderDataType::FLOAT:  return GL_FLOAT;
-			case Hedron::ShaderDataType::FLOAT2: return GL_FLOAT;
-			case Hedron::ShaderDataType::FLOAT3: return GL_FLOAT;
-			case Hedron::ShaderDataType::FLOAT4: return GL_FLOAT;
-			case Hedron::ShaderDataType::MAT3:   return GL_FLOAT;
-			case Hedron::ShaderDataType::MAT4:   return GL_FLOAT;
-			case Hedron::ShaderDataType::INT:    return GL_INT;
-			case Hedron::ShaderDataType::INT2:   return GL_INT;
-			case Hedron::ShaderDataType::INT3:   return GL_INT;
-			case Hedron::ShaderDataType::INT4:   return GL_INT;
-			case Hedron::ShaderDataType::BOOL:   return GL_BOOL;
-		}
-
-		HDR_CORE_ASSERT(false, "Unknown ShaderDataType!");
-		return 0;
-	}
-
 	Application::Application()
 	{
 		HDR_CORE_ASSERT(!s_instance, "Application already exists!");
@@ -43,51 +22,31 @@ namespace Hedron
 		m_imGuiLayer = new ImGuiLayer;
 		push_overlay(m_imGuiLayer);
 
-		// Vertex Array
-		glGenVertexArrays(1, &m_vertex_array);
-		glBindVertexArray(m_vertex_array);
+		m_vertexArray.reset(VertexArray::create());
 
 		// Vertex Buffer
-		float vertices[] =
-		{
+		float vertices[] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.0f, 0.2f, 1.0f,
 			0.5f, -0.5f, 0.0f, 0.0f, 0.7f, 0.3f, 1.0f,
-			0.5f, 0.5f, 0.0f, 0.2f, 0.8f, 0.0f, 1.0f
+			0.0f, 0.5f, 0.0f, 0.2f, 0.8f, 0.0f, 1.0f
 		};
 
-		m_vertexBuffer.reset( VertexBuffer::create(vertices, sizeof(vertices)) );
+		std::shared_ptr<VertexBuffer> vertexBuffer;
+		vertexBuffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
+		BufferLayout layout = {
+			{ShaderDataType::FLOAT3, "a_position"},
+			{ShaderDataType::FLOAT4, "a_color"}
+		};
 
-		{
-			BufferLayout layout =
-			{
-				{ShaderDataType::FLOAT3, "a_position"},
-				{ShaderDataType::FLOAT4, "a_color"}
-			};
-
-			m_vertexBuffer->set_layout(layout);
-		}
-
-		uint32_t index = 0;
-		const BufferLayout& bufferLayout = m_vertexBuffer->get_layout();
-		for (const auto& element : bufferLayout)
-		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(
-				index, 
-				element.get_component_count(), 
-				shader_data_type_to_opengl_base_type(element.type), 
-				element.normalized ? GL_TRUE : GL_FALSE, 
-				bufferLayout.get_stride(),
-				(const void*)element.offset
-			);
-			index++;
-		}
-
+		vertexBuffer->set_layout(layout);
+		m_vertexArray->add_vertex_buffer(vertexBuffer);
 
 		// Index Buffer (The order of drawing)
 		uint32_t indices[] = { 0, 1, 2 };
 		uint32_t indicesCount = sizeof(indices) / sizeof(uint32_t);
-		m_indexBuffer.reset( IndexBuffer::create(indices, indicesCount) );
+		std::shared_ptr<IndexBuffer> indexBuffer;
+		indexBuffer.reset( IndexBuffer::create(indices, indicesCount) );
+		m_vertexArray->set_index_buffer(indexBuffer);
 
 		// Shader (Vertex shader, Fragment Shader)
 		std::string vertexSource = 
@@ -124,8 +83,62 @@ namespace Hedron
 			}
 		)";
 
-		m_shader.reset(Shader::create(vertexSource, fragmentSource)); // We can do m_shader.reset()
+		m_shader.reset(Shader::create(vertexSource, fragmentSource));
 
+		m_squareVertexArray.reset(VertexArray::create());
+		//////////////////////////////////////////////////////////////////////////////////////
+		float verticesSquare[] = {
+			-0.75f, -0.75f, 0.0f,
+			0.75f, -0.75f, 0.0f,
+			0.75f, 0.75f, 0.0f,
+			-0.75f, 0.75f, 0.0f
+		};
+		std::shared_ptr<VertexBuffer> squareVertexBuffer;
+		squareVertexBuffer.reset(VertexBuffer::create(verticesSquare, sizeof(verticesSquare)));
+
+		squareVertexBuffer->set_layout( { {ShaderDataType::FLOAT3, "position"} });
+		m_squareVertexArray->add_vertex_buffer(squareVertexBuffer);
+
+		uint32_t indicesSquare[] = { 
+			0, 1, 2,
+			2, 3, 0
+		};
+		
+		std::shared_ptr<IndexBuffer> squareIndexBuffer;
+		squareIndexBuffer.reset(IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t)));
+		m_squareVertexArray->set_index_buffer(squareIndexBuffer);
+
+		// Shader (Vertex shader, Fragment Shader)
+		std::string vertexSourceSquare =
+			R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_position;
+
+			out vec3 v_position;
+
+			void main()
+			{
+				v_position = a_position;
+				gl_Position = vec4(a_position, 1.0);
+			}
+		)";
+
+		std::string fragmentSourceSquare =
+			R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+			
+			in vec3 v_position;
+
+			void main()
+			{
+				color = vec4(0.0, 1.0, 0.0, 1.0);
+			}
+		)";
+
+		m_shaderSquare.reset(Shader::create(vertexSourceSquare, fragmentSourceSquare));
 	}
 
 	Application::~Application()
@@ -176,20 +189,21 @@ namespace Hedron
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+
+			m_shaderSquare->bind();
+			m_squareVertexArray->bind();
+			glDrawElements(GL_TRIANGLES, m_squareVertexArray->get_index_buffer()->get_count(), GL_UNSIGNED_INT, nullptr);
+
 			m_shader->bind();
-			glBindVertexArray(m_vertex_array);
-			glDrawElements(GL_TRIANGLES, m_indexBuffer->get_count(), GL_UNSIGNED_INT, nullptr);
+			m_vertexArray->bind();
+			glDrawElements(GL_TRIANGLES, m_vertexArray->get_index_buffer()->get_count(), GL_UNSIGNED_INT, nullptr);
 
 			for (Layer* layer : m_layerStack)
-			{
 				layer->on_update();
-			}
 
 			m_imGuiLayer->begin();
 			for (Layer* layer : m_layerStack)
-			{
 				layer->on_imgui_render();
-			}
 			m_imGuiLayer->end();
 
 			m_window->on_update();
