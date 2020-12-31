@@ -25,6 +25,8 @@
 
 #include "Hedron/Renderer/OrthographicCamera.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 //-Entry-point-------------------
 #include "Hedron/EntryPoint.h"
 //-------------------------------

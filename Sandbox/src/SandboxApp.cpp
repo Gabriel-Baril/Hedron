@@ -1,16 +1,16 @@
-#include <Hedron.h> 
+#include <Hedron.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Hedron/Renderer/OrthographicCamera.h"
-
 #include "imgui.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+#include "Platform/OpenGL/OpenGLShader.h"
 
 class SceneLayer : public Hedron::Layer
 {
 public:
 	SceneLayer()
-		: Hedron::Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_squarePosition(1.0f)
+		: Hedron::Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_squarePosition(1.0f), m_backgroundColor(0.1f, 0.1f, 0.1f, 1.0f)
 	{
 		m_vertexArray.reset(Hedron::VertexArray::create());
 
@@ -102,7 +102,7 @@ public:
 		m_squareVertexArray->set_index_buffer(squareIndexBuffer);
 
 		// Shader (Vertex shader, Fragment Shader)
-		std::string vertexSourceSquare =
+		std::string flatColorShadervertexSource =
 			R"(
 			#version 330 core
 			
@@ -120,21 +120,23 @@ public:
 			}
 		)";
 
-		std::string fragmentSourceSquare =
+		std::string flatColorShaderfragmentSource =
 			R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
 			
+			uniform vec4 u_color;
+
 			in vec3 v_position;
 
 			void main()
 			{
-				color = vec4(0.0, 1.0, 0.0, 1.0);
+				color = u_color;
 			}
 		)";
 
-		m_shaderSquare.reset(Hedron::Shader::create(vertexSourceSquare, fragmentSourceSquare));
+		m_flatColorshader.reset(Hedron::Shader::create(flatColorShadervertexSource, flatColorShaderfragmentSource));
 	}
 
 	void on_update(Hedron::Timestep ts) override
@@ -162,12 +164,17 @@ public:
 			m_squarePosition.x += (m_squareSpeed * ts);
 
 
-		Hedron::RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1.0f });
+		Hedron::RenderCommand::set_clear_color(m_backgroundColor);
 		Hedron::RenderCommand::clear();
 
 		Hedron::Renderer::begin_scene(m_camera); // camera, environment
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
+		glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
+
+		std::dynamic_pointer_cast<Hedron::OpenGLShader>(m_flatColorshader)->bind();
 
 		for (int i = 0;i < 10;i++)
 		{
@@ -175,7 +182,12 @@ public:
 			{
 				glm::vec3 pos(i * 0.11, j * 0.11, 0);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_squarePosition + pos) * scale;
-				Hedron::Renderer::submit(m_squareVertexArray, m_shaderSquare, transform);
+				if ((i * 10 + j) % 2 == 0)
+					std::dynamic_pointer_cast<Hedron::OpenGLShader>(m_flatColorshader)->upload_uniform_float4("u_color", redColor);
+				else
+					std::dynamic_pointer_cast<Hedron::OpenGLShader>(m_flatColorshader)->upload_uniform_float4("u_color", blueColor);
+
+				Hedron::Renderer::submit(m_squareVertexArray, m_flatColorshader, transform);
 			}
 		}
 		Hedron::Renderer::submit(m_vertexArray, m_shader, glm::translate(glm::mat4(1.0f), { 0.5, -0.2, 0 }));
@@ -186,10 +198,10 @@ public:
 
 	virtual void on_imgui_render() override
 	{
-		ImGui::Begin("TEST");
-		ImGui::Text("HELLO WORLD");
-		ImGui::Text("HELLO WORLD 2");
-		ImGui::Button("BUTTON");
+		ImGui::Begin("Background color control panel");
+		ImGui::SliderFloat("Red background color", &m_backgroundColor.r, 0.0f, 1.0f);
+		ImGui::SliderFloat("Greed background color", &m_backgroundColor.g, 0.0f, 1.0f);
+		ImGui::SliderFloat("Blue background color", &m_backgroundColor.b, 0.0f, 1.0f);
 		ImGui::End();
 	}
 
@@ -201,7 +213,7 @@ private:
 	std::shared_ptr<Hedron::Shader> m_shader;
 	std::shared_ptr<Hedron::VertexArray> m_vertexArray;
 
-	std::shared_ptr<Hedron::Shader> m_shaderSquare;
+	std::shared_ptr<Hedron::Shader> m_flatColorshader;
 	std::shared_ptr<Hedron::VertexArray> m_squareVertexArray;
 
 	Hedron::OrthographicCamera m_camera;
@@ -209,6 +221,8 @@ private:
 
 	glm::vec3 m_squarePosition;
 	float m_squareSpeed = 1.0f;
+
+	glm::vec4 m_backgroundColor;
 };
 
 class Sandbox : public Hedron::Application
