@@ -13,7 +13,7 @@ namespace Hedron
 		static void begin_scene(OrthographicCamera& camera);
 		static void end_scene();
 
-		static void submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform = glm::mat4(1.0f));
+		static void submit(const Ref<Shader>& shader, const glm::mat4& transform, const Ref<VertexArray>& vertexArray);
 
 		inline static RendererAPI::API get_renderer_api() { return RendererAPI::get_api(); }
 	private:

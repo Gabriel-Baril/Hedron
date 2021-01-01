@@ -56,7 +56,7 @@ namespace Hedron
 		m_context->init();
 
 		glfwSetWindowUserPointer(m_window, &m_data);
-		this->set_v_sync(false);
+		this->set_v_sync(true);
 
 		// Set GLFW callbacks
 		this->set_window_resize_callback();

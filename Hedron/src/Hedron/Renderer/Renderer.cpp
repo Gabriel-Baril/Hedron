@@ -17,11 +17,11 @@ namespace Hedron
 
 	}
 
-	void Renderer::submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform)
+	void Renderer::submit(const Ref<Shader>& shader, const glm::mat4& transform, const Ref<VertexArray>& vertexArray)
 	{
 		shader->bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->upload_uniform_mat4("u_viewProjection", m_sceneData->viewProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->upload_uniform_mat4("u_transform", transform);
+		std::static_pointer_cast<OpenGLShader>(shader)->upload_uniform_mat4("u_viewProjection", m_sceneData->viewProjectionMatrix);
+		std::static_pointer_cast<OpenGLShader>(shader)->upload_uniform_mat4("u_transform", transform);
 
 		vertexArray->bind();
 		RenderCommand::draw_indexed(vertexArray);

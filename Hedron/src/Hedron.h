@@ -14,18 +14,19 @@
 
 #include "Hedron/ImGui/ImGuiLayer.h"
 
-//-Rendering-------------------
+//-Rendering---------------------
 #include "Hedron/Renderer/Renderer.h"
 #include "Hedron/Renderer/RenderCommand.h"
 
 #include "Hedron/Renderer/Shader.h"
+#include "Hedron/Renderer/Texture.h"
+#include "Hedron/Renderer/Texture2D.h"
 #include "Hedron/Renderer/VertexArray.h"
 #include "Hedron/Renderer/IndexBuffer.h"
 #include "Hedron/Renderer/VertexBuffer.h"
 
 #include "Hedron/Renderer/OrthographicCamera.h"
-
-#include "Platform/OpenGL/OpenGLShader.h"
+//-------------------------------
 
 //-Entry-point-------------------
 #include "Hedron/EntryPoint.h"

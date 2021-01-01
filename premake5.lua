@@ -17,6 +17,7 @@ includeDir["GLFW"] = "Hedron/vendor/GLFW/include"
 includeDir["GLAD"] = "Hedron/vendor/GLAD/include"
 includeDir["ImGui"] = "Hedron/vendor/imgui"
 includeDir["glm"] = "Hedron/vendor/glm"
+includeDir["stb_image"] = "Hedron/vendor/stb_image"
 
 group "Dependencies"
     include "Hedron/vendor/GLFW" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLFW" in this premake file
@@ -41,6 +42,8 @@ project "Hedron"      -- Name of the project
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/stb_image/**.h",
+        "%{prj.name}/vendor/stb_image/**.cpp",
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
@@ -52,8 +55,8 @@ project "Hedron"      -- Name of the project
         "%{includeDir.GLFW}",
         "%{includeDir.GLAD}",
         "%{includeDir.ImGui}",
-        "%{includeDir.glm}"
-
+        "%{includeDir.glm}",
+        "%{includeDir.stb_image}"
     }
 
     links

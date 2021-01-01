@@ -8,7 +8,7 @@
 
 namespace Hedron
 {
-	Shader* Shader::create(const std::string& vertexSource, const std::string& fragmentSource)
+	Ref<Shader> Shader::create(const std::string& vertexSource, const std::string& fragmentSource)
 	{
 		switch (Renderer::get_renderer_api())
 		{
@@ -16,7 +16,7 @@ namespace Hedron
 				HDR_CORE_ASSERT(false, "RendererAPI::NONE not supported !");
 				return nullptr;
 			case RendererAPI::API::OPEN_GL:
-				return new OpenGLShader(vertexSource, fragmentSource);
+				return std::make_shared<OpenGLShader>(vertexSource, fragmentSource);
 		}
 		HDR_CORE_ASSERT(false, "Unknown RendererAPI !");
 		return nullptr;

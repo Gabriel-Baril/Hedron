@@ -1,7 +1,6 @@
 #include <Hedron.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Hedron/Renderer/OrthographicCamera.h"
 #include "imgui.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
@@ -12,7 +11,7 @@ public:
 	SceneLayer()
 		: Hedron::Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_squarePosition(1.0f), m_backgroundColor(0.1f, 0.1f, 0.1f, 1.0f)
 	{
-		m_vertexArray.reset(Hedron::VertexArray::create());
+		m_vertexArray = Hedron::VertexArray::create();
 
 		// Vertex Buffer
 		float vertices[] = {
@@ -22,7 +21,7 @@ public:
 		};
 
 		Hedron::Ref<Hedron::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Hedron::VertexBuffer::create(vertices, sizeof(vertices)));
+		vertexBuffer = Hedron::VertexBuffer::create(vertices, sizeof(vertices));
 		Hedron::BufferLayout layout = {
 			{ Hedron::ShaderDataType::FLOAT3, "a_position" },
 			{ Hedron::ShaderDataType::FLOAT4, "a_color" }
@@ -35,7 +34,7 @@ public:
 		uint32_t indices[] = { 0, 1, 2 };
 		uint32_t indicesCount = sizeof(indices) / sizeof(uint32_t);
 		Hedron::Ref<Hedron::IndexBuffer> indexBuffer;
-		indexBuffer.reset(Hedron::IndexBuffer::create(indices, indicesCount));
+		indexBuffer = Hedron::IndexBuffer::create(indices, indicesCount);
 		m_vertexArray->set_index_buffer(indexBuffer);
 
 		// Shader (Vertex shader, Fragment Shader)
@@ -76,20 +75,23 @@ public:
 			}
 		)";
 
-		m_shader.reset(Hedron::Shader::create(vertexSource, fragmentSource));
+		m_shader = Hedron::Shader::create(vertexSource, fragmentSource);
 
-		m_squareVertexArray.reset(Hedron::VertexArray::create());
+		m_squareVertexArray = Hedron::VertexArray::create();
 		//////////////////////////////////////////////////////////////////////////////////////
 		float verticesSquare[] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 		Hedron::Ref<Hedron::VertexBuffer> squareVertexBuffer;
-		squareVertexBuffer.reset(Hedron::VertexBuffer::create(verticesSquare, sizeof(verticesSquare)));
+		squareVertexBuffer = Hedron::VertexBuffer::create(verticesSquare, sizeof(verticesSquare));
 
-		squareVertexBuffer->set_layout({ {Hedron::ShaderDataType::FLOAT3, "position"} });
+		squareVertexBuffer->set_layout({ 
+			{Hedron::ShaderDataType::FLOAT3, "a_position"},
+			{Hedron::ShaderDataType::FLOAT2, "a_texCoord"}
+		});
 		m_squareVertexArray->add_vertex_buffer(squareVertexBuffer);
 
 		uint32_t indicesSquare[] = {
@@ -98,7 +100,7 @@ public:
 		};
 
 		Hedron::Ref<Hedron::IndexBuffer> squareIndexBuffer;
-		squareIndexBuffer.reset(Hedron::IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t)));
+		squareIndexBuffer = Hedron::IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t));
 		m_squareVertexArray->set_index_buffer(squareIndexBuffer);
 
 		// Shader (Vertex shader, Fragment Shader)
@@ -136,7 +138,50 @@ public:
 			}
 		)";
 
-		m_flatColorshader.reset(Hedron::Shader::create(flatColorShadervertexSource, flatColorShaderfragmentSource));
+		m_flatColorshader = Hedron::Shader::create(flatColorShadervertexSource, flatColorShaderfragmentSource);
+
+		std::string textureShadervertexSource =
+			R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_position;
+			layout(location = 1) in vec2 a_texCoord;
+
+			uniform mat4 u_viewProjection;
+			uniform mat4 u_transform;
+			
+			out vec2 v_texCoord;
+
+			void main()
+			{
+				v_texCoord = a_texCoord;
+				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
+			}
+		)";
+
+		std::string textureShaderfragmentSource =
+			R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+
+			in vec2 v_texCoord;
+
+			uniform sampler2D u_texture;
+
+			void main()
+			{
+				color = texture(u_texture, v_texCoord);
+			}
+		)";
+
+		m_textureShader = Hedron::Shader::create(textureShadervertexSource, textureShaderfragmentSource);
+	
+		m_texture = Hedron::Texture2D::create("assets/textures/heart_pixel_art_254x254.png");
+
+		std::static_pointer_cast<Hedron::OpenGLShader>(m_textureShader)->bind();
+		std::static_pointer_cast<Hedron::OpenGLShader>(m_textureShader)->upload_uniform_int("u_texture", 0);
+
 	}
 
 	void on_update(Hedron::Timestep ts) override
@@ -174,7 +219,7 @@ public:
 		glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
 		glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
 
-		std::dynamic_pointer_cast<Hedron::OpenGLShader>(m_flatColorshader)->bind();
+		std::static_pointer_cast<Hedron::OpenGLShader>(m_flatColorshader)->bind();
 
 		for (int i = 0;i < 10;i++)
 		{
@@ -183,14 +228,18 @@ public:
 				glm::vec3 pos(i * 0.11, j * 0.11, 0);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_squarePosition + pos) * scale;
 				if ((i * 10 + j) % 2 == 0)
-					std::dynamic_pointer_cast<Hedron::OpenGLShader>(m_flatColorshader)->upload_uniform_float4("u_color", redColor);
+					std::static_pointer_cast<Hedron::OpenGLShader>(m_flatColorshader)->upload_uniform_float4("u_color", redColor);
 				else
-					std::dynamic_pointer_cast<Hedron::OpenGLShader>(m_flatColorshader)->upload_uniform_float4("u_color", blueColor);
+					std::static_pointer_cast<Hedron::OpenGLShader>(m_flatColorshader)->upload_uniform_float4("u_color", blueColor);
 
-				Hedron::Renderer::submit(m_squareVertexArray, m_flatColorshader, transform);
+				Hedron::Renderer::submit(m_flatColorshader, transform, m_squareVertexArray);
 			}
 		}
-		Hedron::Renderer::submit(m_vertexArray, m_shader, glm::translate(glm::mat4(1.0f), { 0.5, -0.2, 0 }));
+
+		m_texture->bind(0);
+		Hedron::Renderer::submit(m_textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)), m_squareVertexArray);
+
+		//Hedron::Renderer::submit(m_vertexArray, m_shader, glm::translate(glm::mat4(1.0f), { 0.5, -0.2, 0 }));
 		Hedron::Renderer::end_scene();
 
 		// Renderer::flush();
@@ -213,8 +262,10 @@ private:
 	Hedron::Ref<Hedron::Shader> m_shader;
 	Hedron::Ref<Hedron::VertexArray> m_vertexArray;
 
-	Hedron::Ref<Hedron::Shader> m_flatColorshader;
+	Hedron::Ref<Hedron::Shader> m_flatColorshader, m_textureShader;
 	Hedron::Ref<Hedron::VertexArray> m_squareVertexArray;
+
+	Hedron::Ref<Hedron::Texture2D> m_texture;
 
 	Hedron::OrthographicCamera m_camera;
 	float m_cameraSpeed = 5.0f;
