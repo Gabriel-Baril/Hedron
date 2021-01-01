@@ -7,6 +7,11 @@ namespace Hedron
 {
 	Renderer::SceneData* Renderer::m_sceneData = new SceneData;
 
+	void Renderer::init()
+	{
+		RenderCommand::init();
+	}
+
 	void Renderer::begin_scene(OrthographicCamera& camera)
 	{
 		m_sceneData->viewProjectionMatrix = camera.get_view_projection_matrix();

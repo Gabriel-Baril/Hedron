@@ -16,6 +16,7 @@ namespace Hedron
 			OPEN_GL = 1
 		};
 	public:
+		virtual void init() = 0;
 		virtual void set_clear_color(const glm::vec4& color) = 0;
 		virtual void clear() = 0;
 

@@ -9,7 +9,7 @@ class SceneLayer : public Hedron::Layer
 {
 public:
 	SceneLayer()
-		: Hedron::Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_squarePosition(1.0f), m_backgroundColor(0.1f, 0.1f, 0.1f, 1.0f)
+		: Hedron::Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_squarePosition(1.0f), m_backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
 	{
 		m_vertexArray = Hedron::VertexArray::create();
 
@@ -237,7 +237,8 @@ public:
 		}
 
 		m_texture->bind(0);
-		Hedron::Renderer::submit(m_textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)), m_squareVertexArray);
+		Hedron::Renderer::submit(m_textureShader, glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, -0.5f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)), m_squareVertexArray);
+		Hedron::Renderer::submit(m_textureShader, glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, 0.5f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.6f)), m_squareVertexArray);
 
 		//Hedron::Renderer::submit(m_vertexArray, m_shader, glm::translate(glm::mat4(1.0f), { 0.5, -0.2, 0 }));
 		Hedron::Renderer::end_scene();

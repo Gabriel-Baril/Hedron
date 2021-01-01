@@ -22,18 +22,29 @@ namespace Hedron
 		m_width = width;
 		m_height = height;
 
+		GLenum internalFormat = 0;
+		GLenum dataFormat = 0;
+		if (channels == 4)
+		{
+			internalFormat = GL_RGBA8;
+			dataFormat = GL_RGBA;
+		}
+		else if (channels == 3)
+		{
+			internalFormat = GL_RGB8;
+			dataFormat = GL_RGB;
+		}
+		
+		
+		HDR_CORE_ASSERT(internalFormat && dataFormat, "Format not supported !")
+
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
-		glTextureStorage2D(m_rendererID, 1, GL_RGB8, m_width, m_height);
+		glTextureStorage2D(m_rendererID, 1, internalFormat, m_width, m_height); // We interpret the image has a GL_RGB8, but the image can be RGBA
 
 		glTextureParameteri(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // What happen when the texture is smaller than it's size, we do linear interpolation
 		glTextureParameteri(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // What happen when the texture is bigger than it's size, we do nearest interpolation
 		
-		if(channels == 3)
-			glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, GL_RGB, GL_UNSIGNED_BYTE, textureData);
-		else if (channels == 4)
-			glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-		else
-			HDR_CORE_ASSERT(false, "Unknown image channel count !")
+		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, dataFormat, GL_UNSIGNED_BYTE, textureData);
 
 		stbi_image_free(textureData); // We no longer need to store texture data on the CPU
 	}

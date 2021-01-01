@@ -19,6 +19,8 @@ namespace Hedron
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->set_event_callback(HDR_BIND_EVENT_FN(Application::on_event));
 
+		Renderer::init();
+
 		m_imGuiLayer = new ImGuiLayer;
 		push_overlay(m_imGuiLayer);
 	}
