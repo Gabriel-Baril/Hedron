@@ -13,15 +13,15 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to the root folder (solution directory)
 includeDir = {}
-includeDir["GLFW"] = "Hedron/vendor/GLFW/include"
-includeDir["GLAD"] = "Hedron/vendor/GLAD/include"
-includeDir["ImGui"] = "Hedron/vendor/imgui"
+includeDir["glfw"] = "Hedron/vendor/glfw/include"
+includeDir["glad"] = "Hedron/vendor/glad/include"
+includeDir["imgui"] = "Hedron/vendor/imgui"
 includeDir["glm"] = "Hedron/vendor/glm"
 includeDir["stb_image"] = "Hedron/vendor/stb_image"
 
 group "Dependencies"
-    include "Hedron/vendor/GLFW" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLFW" in this premake file
-    include "Hedron/vendor/GLAD" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/GLAD" in this premake file
+    include "Hedron/vendor/glfw" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/glfw" in this premake file
+    include "Hedron/vendor/glad" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/glad" in this premake file
     include "Hedron/vendor/imgui" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/imgui" in this premake file
 group ""
 
@@ -52,18 +52,18 @@ project "Hedron"      -- Name of the project
     {
         "%{prj.name}/vendor/spdlog/include",
         "%{prj.name}/src",
-        "%{includeDir.GLFW}",
-        "%{includeDir.GLAD}",
-        "%{includeDir.ImGui}",
+        "%{includeDir.glfw}",
+        "%{includeDir.glad}",
+        "%{includeDir.imgui}",
         "%{includeDir.glm}",
         "%{includeDir.stb_image}"
     }
 
     links
     {
-        "GLFW",
-        "GLAD",
-        "ImGui",
+        "glfw",
+        "glad",
+        "imgui",
         "opengl32.lib"
     }
 
@@ -167,7 +167,7 @@ project "Sandbox"
         "Hedron/vendor/spdlog/include",
         "Hedron/src",
         "%{includeDir.glm}",
-        "%{includeDir.ImGui}"
+        "%{includeDir.imgui}"
     }
 
     links
