@@ -1,13 +1,17 @@
 #pragma once
-#include <glm/glm.hpp>
 
+#include <glm/glm.hpp>
 #include "Hedron/Renderer/Shader.h"
+
+// TODO: remove
+typedef unsigned int GLenum;
 
 namespace Hedron
 {
 	class OpenGLShader : public Shader
 	{
 	public:
+		OpenGLShader(const std::string& filePath);
 		OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource);
 		virtual ~OpenGLShader();
 
@@ -26,6 +30,10 @@ namespace Hedron
 
 		virtual void upload_uniform_mat3(const std::string& uniformName, const glm::mat3& matrix);
 		virtual void upload_uniform_mat4(const std::string& uniformName, const glm::mat4& matrix);
+	private:
+		std::string read_file(const std::string filePath);
+		std::unordered_map<GLenum, std::string> pre_process(const std::string& shaderSource);
+		void compile(const std::unordered_map<GLenum, std::string>& shaderSources);
 	private:
 		uint32_t m_rendererID;
 	};

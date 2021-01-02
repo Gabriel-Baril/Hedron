@@ -1,12 +1,12 @@
-[submodule "Hedron/vendor/spdlog"]
-	path = Hedron/vendor/spdlog
-	url = https://github.com/gabime/spdlog
-[submodule "Hedron/vendor/GLFW"]
-	path = Hedron/vendor/GLFW
-	url = https://github.com/TheCherno/GLFW
-[submodule "Hedron/vendor/imgui"]
-	path = Hedron/vendor/imgui
-	url = https://github.com/TheCherno/imgui
+[submodule "Hedron/vendor/glfw"]
+	path = Hedron/vendor/glfw
+	url = https://github.com/Gabriel-Baril/glfw/
 [submodule "Hedron/vendor/glm"]
 	path = Hedron/vendor/glm
-	url = https://github.com/g-truc/glm
+	url = https://github.com/Gabriel-Baril/glm/
+[submodule "Hedron/vendor/imgui"]
+	path = Hedron/vendor/imgui
+	url = https://github.com/Gabriel-Baril/imgui/
+[submodule "Hedron/vendor/spdlog"]
+	path = Hedron/vendor/spdlog
+	url = https://github.com/Gabriel-Baril/spdlog/

@@ -12,6 +12,7 @@ namespace Hedron
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
 
+		static Ref<Shader> create(const std::string& filePath);
 		static Ref<Shader> create(const std::string& vertexSource, const std::string& fragmentSource);
 	};
 }

@@ -8,8 +8,7 @@
 class SceneLayer : public Hedron::Layer
 {
 public:
-	SceneLayer()
-		: Hedron::Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_squarePosition(1.0f), m_backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
+	SceneLayer() : Hedron::Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_squarePosition(1.0f), m_backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
 	{
 		m_vertexArray = Hedron::VertexArray::create();
 
@@ -139,44 +138,7 @@ public:
 		)";
 
 		m_flatColorshader = Hedron::Shader::create(flatColorShadervertexSource, flatColorShaderfragmentSource);
-
-		std::string textureShadervertexSource =
-			R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_position;
-			layout(location = 1) in vec2 a_texCoord;
-
-			uniform mat4 u_viewProjection;
-			uniform mat4 u_transform;
-			
-			out vec2 v_texCoord;
-
-			void main()
-			{
-				v_texCoord = a_texCoord;
-				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
-			}
-		)";
-
-		std::string textureShaderfragmentSource =
-			R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			in vec2 v_texCoord;
-
-			uniform sampler2D u_texture;
-
-			void main()
-			{
-				color = texture(u_texture, v_texCoord);
-			}
-		)";
-
-		m_textureShader = Hedron::Shader::create(textureShadervertexSource, textureShaderfragmentSource);
-	
+		m_textureShader = Hedron::Shader::create("assets/shaders/texture.shader");
 		m_texture = Hedron::Texture2D::create("assets/textures/heart_pixel_art_254x254.png");
 
 		std::static_pointer_cast<Hedron::OpenGLShader>(m_textureShader)->bind();
