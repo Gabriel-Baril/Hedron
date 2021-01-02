@@ -10,3 +10,4 @@
 [submodule "Hedron/vendor/imgui"]
 	path = Hedron/vendor/imgui
 	url = https://github.com/Gabriel-Baril/imgui/
+	branch = docking
