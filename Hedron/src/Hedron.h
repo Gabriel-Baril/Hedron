@@ -2,6 +2,7 @@
 
 // For use by Hedron applications
 
+#include "Hedron/Core/Core.h"
 #include "Hedron/Core/Application.h"
 #include "Hedron/Core/Layer.h"
 #include "Hedron/Core/Log.h"
@@ -29,5 +30,5 @@
 //-------------------------------
 
 //-Entry-point-------------------
-#include "Hedron/Core/EntryPoint.h"
+//#include "Hedron/Core/EntryPoint.h"
 //-------------------------------

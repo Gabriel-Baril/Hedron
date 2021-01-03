@@ -1,13 +1,20 @@
 #include <Hedron.h>
+#include <Hedron/Core/EntryPoint.h>
+
+#include "Sandbox2D.h"
+#include "imgui.h"
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Platform/OpenGL/OpenGLShader.h"
-#include "imgui.h"
+
 
 class SceneLayer : public Hedron::Layer
 {
 public:
-	SceneLayer() : Hedron::Layer("Scene"), m_cameraController(1280.f / 720.f, true), m_squarePosition(1.0f), m_backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
+	SceneLayer() 
+		: Hedron::Layer("Scene"), m_cameraController(1280.f / 720.f, true), m_squarePosition(1.0f), m_backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
 	{
 		m_vertexArray = Hedron::VertexArray::create();
 
@@ -245,7 +252,8 @@ class Sandbox : public Hedron::Application
 public:
 	Sandbox()
 	{
-		push_layer(new SceneLayer());
+		//push_layer(new SceneLayer());
+		push_layer(new Sandbox2D());
 	}
 
 	~Sandbox()
