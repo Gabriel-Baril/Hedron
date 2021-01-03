@@ -65,6 +65,56 @@ namespace Hedron
 	}
 
 
+	void OpenGLShader::set_int(const std::string& name, int values)
+	{
+		this->upload_uniform_int(name, values);
+	}
+
+	void OpenGLShader::set_int2(const std::string& name, const glm::vec<2, int>& values)
+	{
+		this->upload_uniform_int2(name, values);
+	}
+
+	void OpenGLShader::set_int3(const std::string& name, const glm::vec<3, int>& values)
+	{
+		this->upload_uniform_int3(name, values);
+	}
+
+	void OpenGLShader::set_int4(const std::string& name, const glm::vec<4, int>& values)
+	{
+		this->upload_uniform_int4(name, values);
+	}
+
+	void OpenGLShader::set_float(const std::string& name, float values)
+	{
+		this->upload_uniform_float(name, values);
+	}
+
+	void OpenGLShader::set_float2(const std::string& name, const glm::vec2& values)
+	{
+		this->upload_uniform_float2(name, values);
+	}
+
+	void OpenGLShader::set_float3(const std::string& name, const glm::vec3& values)
+	{
+		this->upload_uniform_float3(name, values);
+	}
+
+	void OpenGLShader::set_float4(const std::string& name, const glm::vec4& values)
+	{
+		this->upload_uniform_float4(name, values);
+	}
+
+	void OpenGLShader::set_mat3(const std::string& name, const glm::mat3& matrix)
+	{
+		this->upload_uniform_mat3(name, matrix);
+	}
+
+	void OpenGLShader::set_mat4(const std::string& name, const glm::mat4& matrix)
+	{
+		this->upload_uniform_mat4(name, matrix);
+	}
+
 	void OpenGLShader::upload_uniform_int(const std::string& uniformName, int values)
 	{
 		GLint location = glGetUniformLocation(m_rendererID, uniformName.c_str());

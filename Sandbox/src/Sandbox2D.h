@@ -13,9 +13,11 @@ public:
 	virtual void on_event(Hedron::Event& event) override;
 private:
 	// TEMP
-	glm::vec3 m_squarePosition = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 m_squarePosition = { 1.0f, 0.25f, 0.0f };
 	float m_squareSpeed = 4.0f;
 
+	float m_rotation = 0;
+	float m_rotationSpeed = 2;
 
 	Hedron::Ref<Hedron::Shader> m_shader;
 	Hedron::Ref<Hedron::Texture2D> m_texture;

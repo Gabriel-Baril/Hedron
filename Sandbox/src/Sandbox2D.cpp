@@ -40,8 +40,14 @@ void Sandbox2D::on_update(Hedron::Timestep ts)
 	Hedron::RenderCommand::clear();
 
 	Hedron::Renderer2D::begin_scene(m_cameraController.get_camera());
-	Hedron::Renderer2D::draw_quad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+	
+	Hedron::Renderer2D::fill_rect({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.2f, 0.8f, 0.5f, 1.0f });
+	Hedron::Renderer2D::fill_rect(m_squarePosition, { 1.0f, 0.5f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Hedron::Renderer2D::fill_rect({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.5f }, m_rotation, { 0.2f, 0.4f, 0.8f, 1.0f });
+
 	Hedron::Renderer2D::end_scene();
+
+	m_rotation += m_rotationSpeed;
 }
 
 void Sandbox2D::on_imgui_render()

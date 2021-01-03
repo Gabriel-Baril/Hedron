@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <unordered_map>
 
 #include "Hedron/Renderer/Shader.h"
@@ -22,19 +21,33 @@ namespace Hedron
 
 		virtual const std::string& get_name() const override { return m_name; }
 
-		virtual void upload_uniform_int(const std::string& uniformName, int values);
-		virtual void upload_uniform_int2(const std::string& uniformName, const glm::vec<2, int>& values);
-		virtual void upload_uniform_int3(const std::string& uniformName, const glm::vec<3, int>& values);
-		virtual void upload_uniform_int4(const std::string& uniformName, const glm::vec<4, int>& values);
+		virtual void set_int(const std::string& name, int values) override;
+		virtual void set_int2(const std::string& name, const glm::vec<2, int>& values) override;
+		virtual void set_int3(const std::string& name, const glm::vec<3, int>& values) override;
+		virtual void set_int4(const std::string& name, const glm::vec<4, int>& values) override;
 
-		virtual void upload_uniform_float(const std::string& uniformName, float values);
-		virtual void upload_uniform_float2(const std::string& uniformName, const glm::vec2& values);
-		virtual void upload_uniform_float3(const std::string& uniformName, const glm::vec3& values);
-		virtual void upload_uniform_float4(const std::string& uniformName, const glm::vec4& values);
+		virtual void set_float(const std::string& name, float values) override;
+		virtual void set_float2(const std::string& name,const glm::vec2& values) override;
+		virtual void set_float3(const std::string& name,const glm::vec3& values) override;
+		virtual void set_float4(const std::string& name,const glm::vec4& values) override;
 
-		virtual void upload_uniform_mat3(const std::string& uniformName, const glm::mat3& matrix);
-		virtual void upload_uniform_mat4(const std::string& uniformName, const glm::mat4& matrix);
+		virtual void set_mat3(const std::string& name, const glm::mat3& matrix) override;
+		virtual void set_mat4(const std::string& name, const glm::mat4& matrix) override;
+
 	private:
+		void upload_uniform_int(const std::string& uniformName, int values);
+		void upload_uniform_int2(const std::string& uniformName, const glm::vec<2, int>& values);
+		void upload_uniform_int3(const std::string& uniformName, const glm::vec<3, int>& values);
+		void upload_uniform_int4(const std::string& uniformName, const glm::vec<4, int>& values);
+
+		void upload_uniform_float(const std::string& uniformName, float values);
+		void upload_uniform_float2(const std::string& uniformName, const glm::vec2& values);
+		void upload_uniform_float3(const std::string& uniformName, const glm::vec3& values);
+		void upload_uniform_float4(const std::string& uniformName, const glm::vec4& values);
+
+		void upload_uniform_mat3(const std::string& uniformName, const glm::mat3& matrix);
+		void upload_uniform_mat4(const std::string& uniformName, const glm::mat4& matrix);
+
 		std::string read_file(const std::string filePath);
 		std::string get_file_name(const std::string& filePath);
 		std::unordered_map<GLenum, std::string> pre_process(const std::string& shaderSource);
