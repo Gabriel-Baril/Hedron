@@ -31,13 +31,16 @@ namespace Hedron
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& filePath)
+		: m_name(get_file_name(filePath))
 	{
 		std::string shaderSource = read_file(filePath);
 		auto shaderSources = pre_process(shaderSource);
+
 		this->compile(shaderSources);
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource)
+		: m_name(name)
 	{
 		std::unordered_map<GLenum, std::string> shaderSources;
 		shaderSources[GL_VERTEX_SHADER] = vertexSource;
@@ -125,7 +128,11 @@ namespace Hedron
 	void OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
 		GLuint program = glCreateProgram(); // Create a program object
-		std::vector<GLuint> glShaderIds(shaderSources.size());
+		
+		HDR_CORE_ASSERT(shaderSources.size() <= 2, "You need to have less than 2 shader in the rendering pipeline !")
+		std::array<GLenum, 2> glShaderIds;
+		int glShaderIdIndex = 0;
+
 		for (auto&& [shaderType, shaderSource] : shaderSources)
 		{
 			GLuint shader = glCreateShader(shaderType);
@@ -158,7 +165,8 @@ namespace Hedron
 
 			glAttachShader(program, shader);
 
-			glShaderIds.push_back(shader);
+			glShaderIds[glShaderIdIndex] = shader;
+			glShaderIdIndex++;
 		}
 
 
@@ -199,7 +207,7 @@ namespace Hedron
 	std::string OpenGLShader::read_file(const std::string filePath)
 	{
 		std::string result;
-		std::ifstream file(filePath, std::ios::in, std::ios::binary);
+		std::ifstream file(filePath, std::ios::in | std::ios::binary);
 		if (file)
 		{
 			file.seekg(0, std::ios::end); // Put the file cursor at the end
@@ -214,6 +222,16 @@ namespace Hedron
 		}
 
 		return result;
+	}
+
+	std::string OpenGLShader::get_file_name(const std::string& filePath)
+	{
+		size_t lastSlashPos = filePath.find_last_of("/\\");
+		lastSlashPos = (lastSlashPos == std::string::npos) ? 0 : lastSlashPos + 1;
+		size_t lastDotPos = filePath.rfind(".");
+		lastDotPos = (lastDotPos == std::string::npos) ? filePath.size() : lastDotPos;
+
+		return filePath.substr(lastSlashPos, lastDotPos - lastSlashPos);
 	}
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::pre_process(const std::string& shaderSource)

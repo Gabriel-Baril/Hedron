@@ -19,6 +19,7 @@
 #include "Hedron/Renderer/RenderCommand.h"
 
 #include "Hedron/Renderer/Shader.h"
+#include "Hedron/Renderer/ShaderLibrary.h"
 #include "Hedron/Renderer/Texture.h"
 #include "Hedron/Renderer/Texture2D.h"
 #include "Hedron/Renderer/VertexArray.h"
@@ -26,6 +27,7 @@
 #include "Hedron/Renderer/VertexBuffer.h"
 
 #include "Hedron/Renderer/OrthographicCamera.h"
+#include "Hedron/OrthographicCameraController.h"
 //-------------------------------
 
 //-Entry-point-------------------

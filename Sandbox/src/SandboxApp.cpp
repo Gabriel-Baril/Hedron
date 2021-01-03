@@ -8,7 +8,7 @@
 class SceneLayer : public Hedron::Layer
 {
 public:
-	SceneLayer() : Hedron::Layer("Scene"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_squarePosition(1.0f), m_backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
+	SceneLayer() : Hedron::Layer("Scene"), m_cameraController(1280.f / 720.f, true), m_squarePosition(1.0f), m_backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
 	{
 		m_vertexArray = Hedron::VertexArray::create();
 
@@ -74,7 +74,7 @@ public:
 			}
 		)";
 
-		m_shader = Hedron::Shader::create(vertexSource, fragmentSource);
+		m_shader = Hedron::Shader::create("basicShader",vertexSource, fragmentSource);
 
 		m_squareVertexArray = Hedron::VertexArray::create();
 		//////////////////////////////////////////////////////////////////////////////////////
@@ -137,28 +137,19 @@ public:
 			}
 		)";
 
-		m_flatColorshader = Hedron::Shader::create(flatColorShadervertexSource, flatColorShaderfragmentSource);
-		m_textureShader = Hedron::Shader::create("assets/shaders/texture.shader");
+		m_flatColorshader = Hedron::Shader::create("flatColorShader", flatColorShadervertexSource, flatColorShaderfragmentSource);
+		auto textureShader = m_shaderLibrary.load("assets/shaders/texture.shader");
 		m_texture = Hedron::Texture2D::create("assets/textures/heart_pixel_art_254x254.png");
 
-		std::static_pointer_cast<Hedron::OpenGLShader>(m_textureShader)->bind();
-		std::static_pointer_cast<Hedron::OpenGLShader>(m_textureShader)->upload_uniform_int("u_texture", 0);
-
+		textureShader->bind();
+		std::static_pointer_cast<Hedron::OpenGLShader>(textureShader)->upload_uniform_int("u_texture", 0);
 	}
 
 	void on_update(Hedron::Timestep ts) override
 	{
 		HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), 1000.0f / ts.get_milliseconds());
 
-		if (Hedron::Input::is_key_pressed(HDR_KEY_W)) 
-			m_camera.move_y(+m_cameraSpeed * ts);
-		else if (Hedron::Input::is_key_pressed(HDR_KEY_S)) 
-			m_camera.move_y(-m_cameraSpeed * ts);
-		
-		if (Hedron::Input::is_key_pressed(HDR_KEY_A)) 
-			m_camera.move_x(-m_cameraSpeed * ts);
-		else if (Hedron::Input::is_key_pressed(HDR_KEY_D)) 
-			m_camera.move_x(m_cameraSpeed * ts);
+		m_cameraController.on_update(ts);
 
 		if (Hedron::Input::is_key_pressed(HDR_KEY_I))
 			m_squarePosition.y += (m_squareSpeed * ts);
@@ -174,7 +165,7 @@ public:
 		Hedron::RenderCommand::set_clear_color(m_backgroundColor);
 		Hedron::RenderCommand::clear();
 
-		Hedron::Renderer::begin_scene(m_camera); // camera, environment
+		Hedron::Renderer::begin_scene(m_cameraController.get_camera()); // camera, environment
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -199,8 +190,9 @@ public:
 		}
 
 		m_texture->bind(0);
-		Hedron::Renderer::submit(m_textureShader, glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, -0.5f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)), m_squareVertexArray);
-		Hedron::Renderer::submit(m_textureShader, glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, 0.5f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.6f)), m_squareVertexArray);
+		auto textureShader = m_shaderLibrary.get("texture");
+		Hedron::Renderer::submit(textureShader, glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, -0.5f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)), m_squareVertexArray);
+		Hedron::Renderer::submit(textureShader, glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, 0.5f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.6f)), m_squareVertexArray);
 
 		//Hedron::Renderer::submit(m_vertexArray, m_shader, glm::translate(glm::mat4(1.0f), { 0.5, -0.2, 0 }));
 		Hedron::Renderer::end_scene();
@@ -219,19 +211,21 @@ public:
 
 	void on_event(Hedron::Event& event) override
 	{
+		m_cameraController.on_event(event);
 	}
 private:
+	Hedron::ShaderLibrary m_shaderLibrary;
+
 	// Assets
 	Hedron::Ref<Hedron::Shader> m_shader;
 	Hedron::Ref<Hedron::VertexArray> m_vertexArray;
 
-	Hedron::Ref<Hedron::Shader> m_flatColorshader, m_textureShader;
+	Hedron::Ref<Hedron::Shader> m_flatColorshader;
 	Hedron::Ref<Hedron::VertexArray> m_squareVertexArray;
 
 	Hedron::Ref<Hedron::Texture2D> m_texture;
 
-	Hedron::OrthographicCamera m_camera;
-	float m_cameraSpeed = 5.0f;
+	Hedron::OrthographicCameraController m_cameraController;
 
 	glm::vec3 m_squarePosition;
 	float m_squareSpeed = 1.0f;

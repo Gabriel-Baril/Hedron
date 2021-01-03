@@ -8,6 +8,7 @@ namespace Hedron
 	{
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top);
+		void set_projection(float left, float right, float bottom, float top);
 
 		
 		const glm::vec3& get_position() const { return m_position; }
@@ -24,6 +25,7 @@ namespace Hedron
 		void move_z(float dz);
 
 		void set_rotation(float rotation);
+
 
 		const glm::mat4& get_projection_matrix() const      { return m_projectionMatrix; }
 		const glm::mat4& get_view_matrix() const            { return m_viewMatrix; }

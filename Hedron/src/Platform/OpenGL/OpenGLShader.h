@@ -12,11 +12,13 @@ namespace Hedron
 	{
 	public:
 		OpenGLShader(const std::string& filePath);
-		OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource);
+		OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource);
 		virtual ~OpenGLShader();
 
 		virtual void bind() const override;
 		virtual void unbind() const override;
+
+		virtual const std::string& get_name() const override { return m_name; }
 
 		virtual void upload_uniform_int(const std::string& uniformName, int values);
 		virtual void upload_uniform_int2(const std::string& uniformName, const glm::vec<2, int>& values);
@@ -32,9 +34,11 @@ namespace Hedron
 		virtual void upload_uniform_mat4(const std::string& uniformName, const glm::mat4& matrix);
 	private:
 		std::string read_file(const std::string filePath);
+		std::string get_file_name(const std::string& filePath);
 		std::unordered_map<GLenum, std::string> pre_process(const std::string& shaderSource);
 		void compile(const std::unordered_map<GLenum, std::string>& shaderSources);
 	private:
 		uint32_t m_rendererID;
+		std::string m_name;
 	};
 }
