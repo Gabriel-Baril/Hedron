@@ -15,36 +15,6 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::on_attach()
 {
-	m_vertexArray = Hedron::VertexArray::create();
-	m_vertexArray->bind();
-
-	float vertices[] =
-	{
-		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f
-	};
-
-	Hedron::Ref<Hedron::VertexBuffer> vertexBuffer = Hedron::VertexBuffer::create(vertices, sizeof(vertices));
-	vertexBuffer->set_layout({
-		{ Hedron::ShaderDataType::FLOAT3, "a_position" },
-		{ Hedron::ShaderDataType::FLOAT3, "a_color" }
-	});
-
-	m_vertexArray->add_vertex_buffer(vertexBuffer);
-
-	uint32_t indices[] = 
-	{ 
-		0, 1, 2,
-		2, 3, 0
-	};
-
-	Hedron::Ref<Hedron::IndexBuffer> indexBuffer = Hedron::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t));
-
-	m_vertexArray->set_index_buffer(indexBuffer);
-
-	m_shader = Hedron::Shader::create("assets/shaders/squareShader.shader");
 }
 
 void Sandbox2D::on_detach()
@@ -69,11 +39,9 @@ void Sandbox2D::on_update(Hedron::Timestep ts)
 	Hedron::RenderCommand::set_clear_color(m_backgroundColor);
 	Hedron::RenderCommand::clear();
 
-	Hedron::Renderer::begin_scene(m_cameraController.get_camera());
-
-	Hedron::Renderer::submit(m_shader, glm::translate(glm::mat4(1.0f), m_squarePosition), m_vertexArray);
-
-	Hedron::Renderer::end_scene();
+	Hedron::Renderer2D::begin_scene(m_cameraController.get_camera());
+	Hedron::Renderer2D::draw_quad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Hedron::Renderer2D::end_scene();
 }
 
 void Sandbox2D::on_imgui_render()

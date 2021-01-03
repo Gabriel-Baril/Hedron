@@ -10,6 +10,7 @@ namespace Hedron
 	{
 	public:
 		static void init();
+		static void shutdown();
 
 		static void begin_scene(OrthographicCamera& camera);
 		static void end_scene();

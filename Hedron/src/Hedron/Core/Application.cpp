@@ -7,6 +7,7 @@
 
 #include "Hedron/Renderer/BufferLayout.h"
 #include "Hedron/Renderer/Renderer.h"
+#include "Hedron/Renderer/Renderer2D.h"
 
 namespace Hedron
 {
@@ -28,6 +29,7 @@ namespace Hedron
 
 	Application::~Application()
 	{
+		Renderer::shutdown();
 	}
 
 	void Application::on_event(Event& e)

@@ -1,6 +1,7 @@
 #include "hdrpch.h"
 
 #include "Hedron/Renderer/Renderer.h"
+#include "Hedron/Renderer/Renderer2D.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -11,6 +12,13 @@ namespace Hedron
 	void Renderer::init()
 	{
 		RenderCommand::init();
+		Renderer2D::init();
+	}
+
+	void Renderer::shutdown()
+	{
+		Renderer2D::shutdown();
+		delete m_sceneData;
 	}
 
 	void Renderer::begin_scene(OrthographicCamera& camera)

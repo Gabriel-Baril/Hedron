@@ -15,6 +15,7 @@
 
 //-Rendering---------------------
 #include "Hedron/Renderer/Renderer.h"
+#include "Hedron/Renderer/Renderer2D.h"
 #include "Hedron/Renderer/RenderCommand.h"
 
 #include "Hedron/Renderer/Shader.h"

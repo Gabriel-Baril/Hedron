@@ -7,9 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Platform/OpenGL/OpenGLShader.h"
-
-
+/*
 class SceneLayer : public Hedron::Layer
 {
 public:
@@ -246,6 +244,7 @@ private:
 
 	glm::vec4 m_backgroundColor;
 };
+*/
 
 class Sandbox : public Hedron::Application
 {
