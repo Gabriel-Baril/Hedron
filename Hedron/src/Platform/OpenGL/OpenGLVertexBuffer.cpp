@@ -1,7 +1,8 @@
 #include "hdrpch.h"
-#include "OpenGLVertexBuffer.h"
 
 #include <glad/glad.h>
+
+#include "Platform/OpenGL/OpenGLVertexBuffer.h"
 
 namespace Hedron
 {

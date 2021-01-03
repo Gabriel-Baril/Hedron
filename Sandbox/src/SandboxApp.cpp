@@ -1,9 +1,8 @@
 #include <Hedron.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "imgui.h"
-
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "imgui.h"
 
 class SceneLayer : public Hedron::Layer
 {
@@ -212,6 +211,14 @@ public:
 	void on_event(Hedron::Event& event) override
 	{
 		m_cameraController.on_event(event);
+
+		if (event.get_event_type() == Hedron::EventType::WINDOW_RESIZE)
+		{
+			auto& e = (Hedron::WindowResizeEvent&)event;
+
+			//float zoom = (float)e.get_width() / 1280.0f;
+			//m_cameraController.set_zoom_level(zoom);
+		}
 	}
 private:
 	Hedron::ShaderLibrary m_shaderLibrary;

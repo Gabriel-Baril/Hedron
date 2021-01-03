@@ -1,5 +1,6 @@
 #pragma once
-#include "Event.h"
+
+#include "Hedron/Events/Event.h"
 
 // TODO: Refactor file layout to create one (.h, .cpp) file per class
 // TODO: Create documentation for all of those classes

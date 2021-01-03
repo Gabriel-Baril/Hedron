@@ -1,7 +1,9 @@
 #include "hdrpch.h"
-#include "OpenGLIndexBuffer.h"
 
 #include <glad/glad.h>
+
+#include "Platform/OpenGL/OpenGLIndexBuffer.h"
+
 
 namespace Hedron
 {

@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Hedron/Log.h"
+#include "Hedron/Core/Log.h"
 
 #ifdef HDR_PLATFORM_WINDOWS
 	#include <Windows.h>

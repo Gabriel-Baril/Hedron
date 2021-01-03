@@ -1,9 +1,9 @@
 #include "hdrpch.h"
-#include "OpenGLTexture2D.h"
-
-#include "stb_image.h"
 
 #include <glad/glad.h>
+#include <stb_image.h>
+
+#include "Platform/OpenGL/OpenGLTexture2D.h"
 
 namespace Hedron
 {

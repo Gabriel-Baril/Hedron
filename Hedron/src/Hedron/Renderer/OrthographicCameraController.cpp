@@ -1,9 +1,9 @@
 #include "hdrpch.h"
 
-#include "OrthographicCameraController.h"
+#include "Hedron/Core/Input.h"
+#include "Hedron/Core/KeyCodes.h"
 
-#include "Hedron/Input.h"
-#include "Hedron/KeyCodes.h"
+#include "Hedron/Renderer/OrthographicCameraController.h"
 
 namespace Hedron
 {

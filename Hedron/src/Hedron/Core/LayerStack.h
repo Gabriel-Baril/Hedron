@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Hedron/Core.h"
-#include "Layer.h"
-
 #include <vector>
+
+#include "Hedron/Core/Core.h"
+#include "Hedron/Core/Layer.h"
 
 namespace Hedron
 {

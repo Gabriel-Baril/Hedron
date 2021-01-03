@@ -1,12 +1,12 @@
 #pragma once
 
+#include "Hedron/Core/Timestep.h"
+
 #include "Hedron/Renderer/OrthographicCamera.h"
 
-#include "Hedron/Core/Timestep.h"
 #include "Hedron/Events/ApplicationEvents.h"
 #include "Hedron/Events/MouseEvents.h"
 #include "Hedron/Events/KeyboardEvents.h"
-
 
 namespace Hedron
 {
@@ -29,6 +29,14 @@ namespace Hedron
 		void on_event(Event& e);
 
 		OrthographicCamera& get_camera() { return m_orthoCamera; }
+		const OrthographicCamera& get_camera() const { return m_orthoCamera; }
+
+		float get_zoom_level() const { return m_zoomLevel; }
+		void set_zoom_level(float zoomLevel)
+		{
+			m_zoomLevel = zoomLevel;
+			//m_orthoCamera.set_projection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
+		}
 
 	private:
 		bool on_mouse_scrolled_event(MouseScrolledEvent& e);

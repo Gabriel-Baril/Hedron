@@ -1,7 +1,7 @@
 #include "hdrpch.h"
-#include "VertexArray.h"
 
-#include "Renderer.h"
+#include "Hedron/Renderer/VertexArray.h"
+#include "Hedron/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 

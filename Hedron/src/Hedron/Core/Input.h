@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hedron/Core.h"
+#include "Hedron/Core/Core.h"
 
 namespace Hedron
 {

@@ -1,5 +1,6 @@
 #include "hdrpch.h"
-#include "ShaderLibrary.h"
+
+#include "Hedron/Renderer/ShaderLibrary.h"
 
 namespace Hedron
 {

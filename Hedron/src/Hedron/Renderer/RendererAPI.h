@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "VertexArray.h"
+#include "Hedron/Renderer/VertexArray.h"
 
 namespace Hedron
 {
@@ -21,6 +21,7 @@ namespace Hedron
 		virtual void clear() = 0;
 
 		virtual void draw_indexed(const Ref<VertexArray>& vertexArray) = 0;
+		virtual void set_viewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 		inline static API get_api() { return s_API; }
 	private:
 		static API s_API;

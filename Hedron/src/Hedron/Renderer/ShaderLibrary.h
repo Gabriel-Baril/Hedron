@@ -3,8 +3,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "Hedron/Core.h"
-#include "Shader.h"
+#include "Hedron/Core/Core.h"
+#include "Hedron/Renderer/Shader.h"
 
 namespace Hedron
 {

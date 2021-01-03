@@ -1,5 +1,5 @@
 #pragma once
 
-#include "KeyPressedEvent.h"
-#include "KeyReleasedEvent.h"
-#include "KeyTypedEvent.h"
+#include "Hedron/Events/KeyPressedEvent.h"
+#include "Hedron/Events/KeyReleasedEvent.h"
+#include "Hedron/Events/KeyTypedEvent.h"

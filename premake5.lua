@@ -35,7 +35,7 @@ project "Hedron"      -- Name of the project
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
     objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
     
-    pchheader "hdrpch.h"   -- What are our precompiled header
+    pchheader "hdrpch.h"   -- What is our precompiled header
     pchsource "Hedron/src/hdrpch.cpp"
 
     files -- Chooses the files that we want to add in our project
@@ -99,12 +99,6 @@ project "Hedron"      -- Name of the project
             "%{vpatheventfiledest}/Event.h",
             "%{vpatheventfiledest}/KeyEvent.h",
             "%{vpatheventfiledest}/MouseButtonEvent.h"
-        },
-        ["%{vpathhdrdest}/Inputs/*"] =
-        {
-            "%{vpathhdrfiledest}/Input.h",
-            "%{vpathhdrfiledest}/KeyCodes.h",
-            "%{vpathhdrfiledest}/MouseButtonCodes.h"
         }
     }
 
@@ -176,7 +170,7 @@ project "Sandbox"
     }
 
     filter "system:windows" -- The instructions downward are only applied for windows users
-        staticruntime "On"  -- Do we want to link runtime libraries (Yes)
+        staticruntime "on"  -- Do we want to link runtime libraries (Yes)
         systemversion "latest" -- Chooses the windows version of our project
 
         defines -- Defines preprocessor definition

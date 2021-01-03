@@ -1,7 +1,9 @@
 #include "hdrpch.h"
-#include "OpenGLRendererAPI.h"
 
-#include "glad/glad.h"
+#include <glad/glad.h>
+
+#include "Platform/OpenGL/OpenGLRendererAPI.h"
+
 
 namespace Hedron
 {
@@ -24,5 +26,10 @@ namespace Hedron
 	void OpenGLRendererAPI::draw_indexed(const Ref<VertexArray>& vertexArray)
 	{
 		glDrawElements(GL_TRIANGLES, vertexArray->get_index_buffer()->get_count(), GL_UNSIGNED_INT, nullptr);
+	}
+
+	void OpenGLRendererAPI::set_viewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+	{
+		glViewport(x, y, width, height);
 	}
 }

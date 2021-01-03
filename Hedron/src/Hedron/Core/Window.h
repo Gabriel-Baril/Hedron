@@ -1,8 +1,6 @@
 #pragma once
 
-#include "hdrpch.h"
-
-#include "Hedron/Core.h"
+#include "Hedron/Core/Core.h"
 #include "Hedron/Events/Event.h"
 
 namespace Hedron

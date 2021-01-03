@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+
 #include "Hedron/Renderer/VertexBuffer.h"
 #include "Hedron/Renderer/IndexBuffer.h"
 

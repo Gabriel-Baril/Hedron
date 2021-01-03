@@ -2,8 +2,9 @@
 
 #include <string>
 
-#include "Hedron/Core.h"
-#include "Texture.h"
+#include "Hedron/Core/Core.h"
+
+#include "Hedron/Renderer/Texture.h"
 
 namespace Hedron
 {

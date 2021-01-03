@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hedron/Window.h"
+#include "Hedron/Core/Window.h"
 #include "Hedron/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>

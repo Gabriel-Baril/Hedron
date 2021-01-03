@@ -1,11 +1,12 @@
 #include "hdrpch.h"
 
-#include "Hedron/Application.h"
-#include "ImGuiLayer.h"
+#include <imgui.h>
+#include <examples/imgui_impl_glfw.h>
+#include <examples/imgui_impl_opengl3.h>
 
-#include "imgui.h"
-#include "examples/imgui_impl_glfw.h"
-#include "examples/imgui_impl_opengl3.h"
+#include "Hedron/Core/Application.h"
+
+#include "Hedron/ImGui/ImGuiLayer.h"
 
 // Tempoary
 #include "GLFW/glfw3.h"

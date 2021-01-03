@@ -2,6 +2,8 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+#include "Hedron/Core/Log.h"
+
 namespace Hedron
 {
 	Ref<spdlog::logger> Log::s_coreLogger;

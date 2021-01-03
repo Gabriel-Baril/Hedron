@@ -1,7 +1,8 @@
 #include "hdrpch.h"
-#include "VertexBuffer.h"
 
-#include "Renderer.h"
+#include "Hedron/Renderer/VertexBuffer.h"
+#include "Hedron/Renderer/Renderer.h"
+
 #include "Platform/OpenGL/OpenGLVertexBuffer.h"
 
 namespace Hedron

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Hedron/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;

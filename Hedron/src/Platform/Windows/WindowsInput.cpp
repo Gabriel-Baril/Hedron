@@ -1,8 +1,9 @@
 #include "hdrpch.h"
-#include "WindowsInput.h"
 
-#include "GLFW/glfw3.h"
-#include "Hedron/Application.h"
+#include <GLFW/glfw3.h>
+
+#include "Hedron/Core/Application.h"
+#include "Platform/Windows/WindowsInput.h"
 
 namespace Hedron
 {

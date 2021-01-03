@@ -1,7 +1,10 @@
 #include "hdrpch.h"
-#include "IndexBuffer.h"
 
-#include "Renderer.h"
+#include "Hedron/Core/Core.h"
+
+#include "Hedron/Renderer/IndexBuffer.h"
+#include "Hedron/Renderer/Renderer.h"
+
 #include "Platform/OpenGL/OpenGLIndexBuffer.h"
 
 namespace Hedron

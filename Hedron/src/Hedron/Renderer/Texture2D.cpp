@@ -1,7 +1,8 @@
 #include "hdrpch.h"
-#include "Texture2D.h"
 
-#include "Renderer.h"
+#include "Hedron/Renderer/Texture2D.h"
+#include "Hedron/Renderer/Renderer.h"
+
 #include "Platform/OpenGL/OpenGLTexture2D.h"
 
 namespace Hedron

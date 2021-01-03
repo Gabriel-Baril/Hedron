@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Hedron/Core.h"
-#include "Hedron/Events/Event.h"
+#include "Hedron/Core/Core.h"
 #include "Hedron/Core/Timestep.h"
+
+#include "Hedron/Events/Event.h"
 
 namespace Hedron
 {

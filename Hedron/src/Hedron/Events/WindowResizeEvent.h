@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Event.h"
+#include <sstream>
+
+#include "Hedron/Events/Event.h"
 
 namespace Hedron
 {

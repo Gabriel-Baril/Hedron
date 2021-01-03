@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RendererAPI.h"
+#include "Hedron/Renderer/RendererAPI.h"
 
 namespace Hedron
 {
@@ -25,6 +25,11 @@ namespace Hedron
 		inline static void draw_indexed(const Ref<VertexArray>& vertexArray)
 		{
 			s_rendererAPI->draw_indexed(vertexArray);
+		}
+
+		inline static void set_viewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+		{
+			s_rendererAPI->set_viewport(x, y, width, height);
 		}
 
 	private:

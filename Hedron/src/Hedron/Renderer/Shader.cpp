@@ -1,10 +1,11 @@
 #include "hdrpch.h"
-#include "Shader.h"
-
-#include "Renderer.h"
-#include "Platform/OpenGL/OpenGLShader.h"
 
 #include <glad/glad.h>
+
+#include "Hedron/Renderer/Shader.h"
+#include "Hedron/Renderer/Renderer.h"
+
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Hedron
 {

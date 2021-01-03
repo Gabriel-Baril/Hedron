@@ -1,5 +1,6 @@
 #include "hdrpch.h"
-#include "Renderer.h"
+
+#include "Hedron/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -30,5 +31,10 @@ namespace Hedron
 
 		vertexArray->bind();
 		RenderCommand::draw_indexed(vertexArray);
+	}
+
+	void Renderer::on_window_resize(uint32_t width, uint32_t height)
+	{
+		RenderCommand::set_viewport(0, 0, width, height);
 	}
 }

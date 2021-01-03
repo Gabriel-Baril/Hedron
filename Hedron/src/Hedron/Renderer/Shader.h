@@ -1,6 +1,8 @@
 #pragma once
 
-#include <string>\
+#include <string>
+
+#include "Hedron/Core/Core.h"
 
 namespace Hedron
 {

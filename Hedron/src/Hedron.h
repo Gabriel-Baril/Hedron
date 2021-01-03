@@ -2,15 +2,13 @@
 
 // For use by Hedron applications
 
-#include "Hedron/Application.h"
-#include "Hedron/Layer.h"
-#include "Hedron/Log.h"
-
+#include "Hedron/Core/Application.h"
+#include "Hedron/Core/Layer.h"
+#include "Hedron/Core/Log.h"
 #include "Hedron/Core/Timestep.h"
-
-#include "Hedron/Input.h"
-#include "Hedron/KeyCodes.h"
-#include "Hedron/MouseButtonCodes.h"
+#include "Hedron/Core/Input.h"
+#include "Hedron/Core/KeyCodes.h"
+#include "Hedron/Core/MouseButtonCodes.h"
 
 #include "Hedron/ImGui/ImGuiLayer.h"
 
@@ -27,9 +25,9 @@
 #include "Hedron/Renderer/VertexBuffer.h"
 
 #include "Hedron/Renderer/OrthographicCamera.h"
-#include "Hedron/OrthographicCameraController.h"
+#include "Hedron/Renderer/OrthographicCameraController.h"
 //-------------------------------
 
 //-Entry-point-------------------
-#include "Hedron/EntryPoint.h"
+#include "Hedron/Core/EntryPoint.h"
 //-------------------------------

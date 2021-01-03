@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MouseMovedEvent.h"
-#include "MouseScrolledEvent.h"
-#include "MouseButtonPressedEvent.h"
-#include "MouseButtonReleasedEvent.h"
+#include "Hedron/Events/MouseMovedEvent.h"
+#include "Hedron/Events/MouseScrolledEvent.h"
+#include "Hedron/Events/MouseButtonPressedEvent.h"
+#include "Hedron/Events/MouseButtonReleasedEvent.h"
