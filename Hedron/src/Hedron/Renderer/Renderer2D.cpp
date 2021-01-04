@@ -114,6 +114,7 @@ namespace Hedron
 	{
 		s_renderer2DStorage->textureShader->set_float4("u_color", color);
 		s_renderer2DStorage->whiteTexture->bind();
+		s_renderer2DStorage->quadVertexArray->bind();
 
 		glm::mat4 transform = 
 			glm::translate(glm::mat4(1.0f), position) *
@@ -121,7 +122,6 @@ namespace Hedron
 			glm::scale(glm::mat4(1.0f), { size, 0 }); // translate * rotate * scale
 		s_renderer2DStorage->textureShader->set_mat4("u_transform", transform);
 
-		s_renderer2DStorage->quadVertexArray->bind();
 		RenderCommand::draw_indexed(s_renderer2DStorage->quadVertexArray);
 		//s_renderer2DStorage->whiteTexture->unbind();
 	}
