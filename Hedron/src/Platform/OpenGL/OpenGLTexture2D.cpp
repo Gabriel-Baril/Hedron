@@ -1,6 +1,5 @@
 #include "hdrpch.h"
 
-#include <glad/glad.h>
 #include <stb_image.h>
 
 #include "Platform/OpenGL/OpenGLTexture2D.h"
@@ -35,18 +34,40 @@ namespace Hedron
 			dataFormat = GL_RGB;
 		}
 		
+		m_internalFormat = internalFormat;
+		m_dataFormat = dataFormat;
 		
-		HDR_CORE_ASSERT(internalFormat && dataFormat, "Format not supported !")
+		HDR_CORE_ASSERT(internalFormat && dataFormat, "Format not supported !");
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
 		glTextureStorage2D(m_rendererID, 1, internalFormat, m_width, m_height); // We interpret the image has a GL_RGB8, but the image can be RGBA
 
 		glTextureParameteri(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // What happen when the texture is smaller than it's size, we do linear interpolation
-		glTextureParameteri(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // What happen when the texture is bigger than it's size, we do nearest interpolation
-		
+		glTextureParameteri(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // What happen when the texture is bigger than it's size, we do nearest filtering
+
+		glTextureParameteri(m_rendererID, GL_TEXTURE_WRAP_T, GL_REPEAT); // When we scale the texture coordinate it should scale the textures
+		glTextureParameteri(m_rendererID, GL_TEXTURE_WRAP_S, GL_REPEAT); // When we scale the texture coordinate it should scale the textures
+
 		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, dataFormat, GL_UNSIGNED_BYTE, textureData);
 
 		stbi_image_free(textureData); // We no longer need to store texture data on the CPU
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
+		: m_width(width), m_height(height)
+	{
+		m_internalFormat = GL_RGBA8;
+		m_dataFormat = GL_RGBA;
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
+		glTextureStorage2D(m_rendererID, 1, m_internalFormat, m_width, m_height); // We interpret the image has a GL_RGB8, but the image can be RGBA
+
+		glTextureParameteri(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // What happen when the texture is smaller than it's size, we do linear interpolation
+		glTextureParameteri(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // What happen when the texture is bigger than it's size, we do nearest filtering
+
+
+		glTextureParameteri(m_rendererID, GL_TEXTURE_WRAP_T, GL_REPEAT); // When we scale the texture coordinate it should scale the textures
+		glTextureParameteri(m_rendererID, GL_TEXTURE_WRAP_S, GL_REPEAT); // When we scale the texture coordinate it should scale the textures
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
@@ -57,5 +78,17 @@ namespace Hedron
 	void OpenGLTexture2D::bind(uint32_t slot) const
 	{
 		glBindTextureUnit(slot, m_rendererID);
+	}
+
+	void OpenGLTexture2D::unbind() const
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void OpenGLTexture2D::set_data(void* data, uint32_t size)
+	{
+		uint32_t bpp = (m_dataFormat == GL_RGBA) ? 4 : 3; // Byte per pixel
+		HDR_CORE_ASSERT(size == m_width * m_height * bpp, "Invalid buffer size at line : {0}", __LINE__)
+		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
 	}
 }

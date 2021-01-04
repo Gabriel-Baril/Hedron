@@ -4,7 +4,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Platform/OpenGL/OpenGLShader.h"
 
 Sandbox2D::Sandbox2D()
 	: Hedron::Layer("Sandbox2D layer"), 
@@ -15,6 +14,7 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::on_attach()
 {
+	m_heartTexture = Hedron::Texture2D::create("assets/textures/heart_pixel_art_254x254.png");
 }
 
 void Sandbox2D::on_detach()
@@ -24,6 +24,7 @@ void Sandbox2D::on_detach()
 
 void Sandbox2D::on_update(Hedron::Timestep ts)
 {
+	HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), 1000.0f / ts.get_milliseconds());
 	m_cameraController.on_update(ts);
 	
 	if (Hedron::Input::is_key_pressed(HDR_KEY_I))
@@ -40,9 +41,9 @@ void Sandbox2D::on_update(Hedron::Timestep ts)
 	Hedron::RenderCommand::clear();
 
 	Hedron::Renderer2D::begin_scene(m_cameraController.get_camera());
-	
-	Hedron::Renderer2D::fill_rect({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.2f, 0.8f, 0.5f, 1.0f });
-	Hedron::Renderer2D::fill_rect(m_squarePosition, { 1.0f, 0.5f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+
+	Hedron::Renderer2D::fill_rect({ m_squarePosition.x, m_squarePosition.y, 0.0f }, { 1.0f, 1.0f }, m_heartTexture);
+	Hedron::Renderer2D::fill_rect({ m_squarePosition.x + 0.5f, m_squarePosition.y + 0.5f, 0.0f }, { 1.0f, 0.5f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 	Hedron::Renderer2D::fill_rect({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.5f }, m_rotation, { 0.2f, 0.4f, 0.8f, 1.0f });
 
 	Hedron::Renderer2D::end_scene();

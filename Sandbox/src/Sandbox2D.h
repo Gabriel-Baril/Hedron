@@ -22,6 +22,7 @@ private:
 	Hedron::Ref<Hedron::Shader> m_shader;
 	Hedron::Ref<Hedron::Texture2D> m_texture;
 	Hedron::Ref<Hedron::VertexArray> m_vertexArray;
+	Hedron::Ref<Hedron::Texture2D> m_heartTexture;
 	glm::vec4 m_backgroundColor;
 
 	Hedron::OrthographicCameraController m_cameraController;
