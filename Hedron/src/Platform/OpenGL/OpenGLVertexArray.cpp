@@ -4,6 +4,8 @@
 
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
+
+
 namespace Hedron
 {
 	static GLenum shader_data_type_to_opengl_base_type(ShaderDataType type)
@@ -29,26 +31,36 @@ namespace Hedron
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &m_rendererID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		HDR_PROFILE_FUNCTION();
+		
 		glDeleteVertexArrays(1, &m_rendererID);
 	}
 
 	void OpenGLVertexArray::bind() const
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_rendererID);
 	}
 
 	void OpenGLVertexArray::unbind() const
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::add_vertex_buffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_rendererID); // We can just do this->bind();
 		vertexBuffer->bind();
 
@@ -78,6 +90,8 @@ namespace Hedron
 
 	void OpenGLVertexArray::set_index_buffer(const Ref<IndexBuffer>& indexBuffer)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_rendererID); // We can just do this->bind();
 		indexBuffer->bind();
 

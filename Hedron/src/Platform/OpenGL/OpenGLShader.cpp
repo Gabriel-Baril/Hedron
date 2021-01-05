@@ -33,6 +33,8 @@ namespace Hedron
 	OpenGLShader::OpenGLShader(const std::string& filePath)
 		: m_name(get_file_name(filePath))
 	{
+		HDR_PROFILE_FUNCTION();
+
 		std::string shaderSource = read_file(filePath);
 		auto shaderSources = pre_process(shaderSource);
 
@@ -42,6 +44,8 @@ namespace Hedron
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource)
 		: m_name(name)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 		shaderSources[GL_VERTEX_SHADER] = vertexSource;
 		shaderSources[GL_FRAGMENT_SHADER] = fragmentSource;
@@ -51,67 +55,93 @@ namespace Hedron
 
 	OpenGLShader::~OpenGLShader()
 	{
+		HDR_PROFILE_FUNCTION();
+		
 		glDeleteProgram(m_rendererID); // Delete the program when we don't need it anymore
 	}
 
 	void OpenGLShader::bind() const
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glUseProgram(m_rendererID); // Use the program for the future draw calls
 	}
 
 	void OpenGLShader::unbind() const
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glUseProgram(0); // Unbind the program for the future draw calls
 	}
 
 
 	void OpenGLShader::set_int(const std::string& name, int values)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_int(name, values);
 	}
 
 	void OpenGLShader::set_int2(const std::string& name, const glm::vec<2, int>& values)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_int2(name, values);
 	}
 
 	void OpenGLShader::set_int3(const std::string& name, const glm::vec<3, int>& values)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_int3(name, values);
 	}
 
 	void OpenGLShader::set_int4(const std::string& name, const glm::vec<4, int>& values)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_int4(name, values);
 	}
 
 	void OpenGLShader::set_float(const std::string& name, float values)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_float(name, values);
 	}
 
 	void OpenGLShader::set_float2(const std::string& name, const glm::vec2& values)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_float2(name, values);
 	}
 
 	void OpenGLShader::set_float3(const std::string& name, const glm::vec3& values)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_float3(name, values);
 	}
 
 	void OpenGLShader::set_float4(const std::string& name, const glm::vec4& values)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_float4(name, values);
 	}
 
 	void OpenGLShader::set_mat3(const std::string& name, const glm::mat3& matrix)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_mat3(name, matrix);
 	}
 
 	void OpenGLShader::set_mat4(const std::string& name, const glm::mat4& matrix)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		this->upload_uniform_mat4(name, matrix);
 	}
 
@@ -177,6 +207,8 @@ namespace Hedron
 
 	void OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram(); // Create a program object
 		
 		HDR_CORE_ASSERT(shaderSources.size() <= 2, "You need to have less than 2 shader in the rendering pipeline !")
@@ -256,6 +288,8 @@ namespace Hedron
 
 	std::string OpenGLShader::read_file(const std::string filePath)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		std::string result;
 		std::ifstream file(filePath, std::ios::in | std::ios::binary);
 		if (file)
@@ -276,6 +310,8 @@ namespace Hedron
 
 	std::string OpenGLShader::get_file_name(const std::string& filePath)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		size_t lastSlashPos = filePath.find_last_of("/\\");
 		lastSlashPos = (lastSlashPos == std::string::npos) ? 0 : lastSlashPos + 1;
 		size_t lastDotPos = filePath.rfind(".");
@@ -286,6 +322,8 @@ namespace Hedron
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::pre_process(const std::string& shaderSource)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type"; // The token that we are searching

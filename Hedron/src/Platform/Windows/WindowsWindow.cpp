@@ -8,9 +8,11 @@
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
+
+
 namespace Hedron
 {
-	static bool s_GLFWInitialized = false;
+	static int s_GLFWWindowCount = 0;
 
 	static void GLFW_error_callback(int errorCode, const char* errorDescription)
 	{
@@ -24,6 +26,7 @@ namespace Hedron
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		HDR_PROFILE_FUNCTION();
 		this->init(props);
 	}
 
@@ -34,6 +37,7 @@ namespace Hedron
 
 	void WindowsWindow::init(const WindowProps& props)
 	{
+		HDR_PROFILE_FUNCTION();
 		m_data.title = props.title;
 		m_data.width = props.width;
 		m_data.height = props.height;
@@ -41,18 +45,22 @@ namespace Hedron
 		HDR_CORE_INFO("Creating window {0} [{1}, {2}]", props.title, props.width, props.height);
 
 		// We might create multiple window so we need to make sure that we initialise GLFW only once
-		if (!s_GLFWInitialized)
+		if (s_GLFWWindowCount == 0)
 		{
 			// TODO: glfwTerminate on system shutdown
+			HDR_PROFILE_SCOPE("glfwInit");
 			int success = glfwInit();
 			
 			HDR_CORE_ASSERT(success, "Could not initialize GLFW !");
 			glfwSetErrorCallback(GLFW_error_callback);
-
-			s_GLFWInitialized = true;
 		}
 
-		m_window = glfwCreateWindow((int)props.width, (int)props.height, props.title.c_str(), nullptr, nullptr);
+		{
+			HDR_PROFILE_SCOPE("glfwCreateWindow");
+			m_window = glfwCreateWindow((int)props.width, (int)props.height, props.title.c_str(), nullptr, nullptr);
+			++s_GLFWWindowCount;
+		}
+
 		m_context = new OpenGLContext(m_window);
 		m_context->init();
 
@@ -67,16 +75,21 @@ namespace Hedron
 		this->set_mouse_button_callback();
 		this->set_scroll_callback();
 		this->set_mouse_moved_callback();
+
 	}
 
 	void WindowsWindow::on_update()
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		m_context->swap_buffers();
 	}
 
 	void WindowsWindow::set_v_sync(bool enabled)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else
@@ -92,7 +105,15 @@ namespace Hedron
 
 	void WindowsWindow::shutdown()
 	{
+		HDR_PROFILE_FUNCTION();
 		glfwDestroyWindow(m_window);
+		--s_GLFWWindowCount;
+
+		if (s_GLFWWindowCount == 0)
+		{
+			glfwTerminate();
+		}
+
 	}
 
 	// Binds our callback function to Window Resize events from GLFW

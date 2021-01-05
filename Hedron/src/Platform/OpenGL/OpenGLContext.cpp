@@ -5,6 +5,8 @@
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
+
+
 namespace Hedron
 {
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
@@ -15,6 +17,8 @@ namespace Hedron
 
 	void OpenGLContext::init()
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(m_windowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		HDR_CORE_ASSERT(status, "Failed to initialize GLAD");
@@ -27,6 +31,8 @@ namespace Hedron
 
 	void OpenGLContext::swap_buffers()
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_windowHandle);
 	}
 }

@@ -11,17 +11,7 @@ public:
 	virtual void on_update(Hedron::Timestep ts) override;
 	virtual void on_imgui_render() override;
 	virtual void on_event(Hedron::Event& event) override;
-
-	struct ProfileResult
-	{
-		const char* name;
-		float time;
-	};
-
 private:
-
-	std::vector<ProfileResult> m_profileResults;
-
 	// TEMP
 	glm::vec3 m_squarePosition = { 1.0f, 0.25f, 0.0f };
 	float m_squareSpeed = 4.0f;

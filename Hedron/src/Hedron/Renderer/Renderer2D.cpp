@@ -10,6 +10,8 @@
 #include "Hedron/Renderer/IndexBuffer.h"
 #include "Hedron/Renderer/RenderCommand.h"
 
+
+
 namespace Hedron
 {
 	struct Renderer2DStorage
@@ -23,6 +25,8 @@ namespace Hedron
 
 	void Renderer2D::init()
 	{
+		HDR_PROFILE_FUNCTION();
+
 		s_renderer2DStorage = new Renderer2DStorage();
 		///------------------------------------------------------------
 		s_renderer2DStorage->quadVertexArray = VertexArray::create();
@@ -66,17 +70,23 @@ namespace Hedron
 
 	void Renderer2D::shutdown()
 	{
+		HDR_PROFILE_FUNCTION();
+
 		delete s_renderer2DStorage;
 	}
 
 	void Renderer2D::begin_scene(const OrthographicCamera& camera)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		s_renderer2DStorage->textureShader->bind();
 		s_renderer2DStorage->textureShader->set_mat4("u_viewProjection", camera.get_view_projection_matrix());
 	}
 
 	void Renderer2D::end_scene()
 	{
+		HDR_PROFILE_FUNCTION();
+
 
 	}
 
@@ -97,6 +107,8 @@ namespace Hedron
 
 	void Renderer2D::fill_rect(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		s_renderer2DStorage->textureShader->set_float4("u_color", { 1.0f, 1.0f, 1.0f, 1.0f });
 		texture->bind();
 
@@ -112,6 +124,8 @@ namespace Hedron
 
 	void Renderer2D::fill_rect(const glm::vec3& position, const glm::vec2& size, float degRotation, const glm::vec4& color)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		s_renderer2DStorage->textureShader->set_float4("u_color", color);
 		s_renderer2DStorage->whiteTexture->bind();
 		s_renderer2DStorage->quadVertexArray->bind();

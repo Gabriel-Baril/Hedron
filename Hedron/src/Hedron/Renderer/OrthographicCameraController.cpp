@@ -16,6 +16,8 @@ namespace Hedron
 
 	void OrthographicCameraController::on_update(Timestep ts)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		if (Input::is_key_pressed(HDR_KEY_W))
 			m_cameraPosition.y += m_cameraTranslationSpeed * ts;
 		else if (Input::is_key_pressed(HDR_KEY_S))
@@ -41,6 +43,8 @@ namespace Hedron
 
 	void OrthographicCameraController::on_event(Event& e)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<MouseScrolledEvent>(HDR_BIND_EVENT_FN(OrthographicCameraController::on_mouse_scrolled_event));
 		dispatcher.dispatch<WindowResizeEvent>(HDR_BIND_EVENT_FN(OrthographicCameraController::on_window_resize_event));
@@ -48,6 +52,8 @@ namespace Hedron
 
 	bool OrthographicCameraController::on_mouse_scrolled_event(MouseScrolledEvent& e)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		m_zoomLevel -= e.get_y_offset() / 5.0f;
 		m_zoomLevel = std::max(m_zoomLevel, 0.25f);
 		m_cameraTranslationSpeed = m_zoomLevel;
@@ -57,6 +63,8 @@ namespace Hedron
 
 	bool OrthographicCameraController::on_window_resize_event(WindowResizeEvent& e)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		m_aspectRatio = (float)e.get_width() / (float)e.get_height();
 		m_orthoCamera.set_projection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
 		return false;

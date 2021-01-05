@@ -33,6 +33,7 @@ namespace Hedron
 		auto it = std::find(m_layers.begin(), m_layers.end(), layer);
 		if (it != m_layers.end())
 		{
+			layer->on_detach();
 			m_layers.erase(it);
 			m_layerInsertIndex--;
 		}
@@ -43,6 +44,7 @@ namespace Hedron
 		auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
 		if (it != m_layers.end())
 		{
+			overlay->on_detach();
 			m_layers.erase(it);
 		}
 	}

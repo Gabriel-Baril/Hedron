@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "Hedron/Debug/Instrumentor.h"
 
 #if defined(HDR_PLATFORM_WINDOWS)
 	#if HDR_DYNAMIC_LINK

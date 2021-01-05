@@ -10,11 +10,19 @@ namespace Hedron
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& filePath)
 		: m_filePath(filePath)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		int width;
 		int height;
 		int channels;
-		stbi_set_flip_vertically_on_load(true);
-		stbi_uc* textureData = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+
+		stbi_uc* textureData = nullptr;
+		{
+			HDR_PROFILE_SCOPE("stbi_load : OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
+			stbi_set_flip_vertically_on_load(true);
+			textureData = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+		}
+
 	
 		HDR_CORE_ASSERT(textureData, "Failed to load Texture2D [OpenGL]");
 	
@@ -56,6 +64,8 @@ namespace Hedron
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: m_width(width), m_height(height)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		m_internalFormat = GL_RGBA8;
 		m_dataFormat = GL_RGBA;
 
@@ -72,21 +82,29 @@ namespace Hedron
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glDeleteTextures(1, &m_rendererID);
 	}
 
 	void OpenGLTexture2D::bind(uint32_t slot) const
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glBindTextureUnit(slot, m_rendererID);
 	}
 
 	void OpenGLTexture2D::unbind() const
 	{
+		HDR_PROFILE_FUNCTION();
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void OpenGLTexture2D::set_data(void* data, uint32_t size)
 	{
+		HDR_PROFILE_FUNCTION();
+
 		uint32_t bpp = (m_dataFormat == GL_RGBA) ? 4 : 3; // Byte per pixel
 		HDR_CORE_ASSERT(size == m_width * m_height * bpp, "Invalid buffer size at line : {0}", __LINE__)
 		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
