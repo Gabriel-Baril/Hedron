@@ -12,8 +12,9 @@ public:
 	virtual void on_imgui_render() override;
 	virtual void on_event(Hedron::Event& event) override;
 private:
+
 	// TEMP
-	glm::vec3 m_squarePosition = { 1.0f, 0.25f, 0.0f };
+	glm::vec3 m_squarePosition = { 0.0f, 0.0f, 0.0f };
 	float m_squareSpeed = 4.0f;
 
 	float m_rotation = 0;

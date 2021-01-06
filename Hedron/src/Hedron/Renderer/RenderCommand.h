@@ -27,6 +27,11 @@ namespace Hedron
 			s_rendererAPI->draw_indexed(vertexArray);
 		}
 
+		inline static void draw_line_loop(uint32_t startVertex, uint32_t endVertex)
+		{
+			s_rendererAPI->draw_line_loop(startVertex, endVertex);
+		}
+
 		inline static void set_viewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 		{
 			s_rendererAPI->set_viewport(x, y, width, height);

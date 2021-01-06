@@ -2,7 +2,7 @@
 
 // To visualize the json file outputted you need to go on this site : "chrome://tracing"
 
-#define HDR_PROFILE 1
+#define HDR_PROFILE 0
 #if HDR_PROFILE
 
 #include <string>

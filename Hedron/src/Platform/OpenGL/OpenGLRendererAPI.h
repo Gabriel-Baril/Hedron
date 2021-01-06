@@ -12,6 +12,9 @@ namespace Hedron
 		virtual void clear() override;
 
 		virtual void draw_indexed(const Ref<VertexArray>& vertexArray) override;
+		virtual void draw_line_loop(uint32_t startVertex, uint32_t endVertex) override;
+
+
 		virtual void set_viewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
 	};
 }

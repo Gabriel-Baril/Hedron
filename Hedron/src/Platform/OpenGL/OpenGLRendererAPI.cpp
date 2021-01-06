@@ -12,7 +12,9 @@ namespace Hedron
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
+
+		//glEnable(GL_PROGRAM_POINT_SIZE);
 	}
 
 	void OpenGLRendererAPI::set_clear_color(const glm::vec4& color)
@@ -28,6 +30,11 @@ namespace Hedron
 	void OpenGLRendererAPI::draw_indexed(const Ref<VertexArray>& vertexArray)
 	{
 		glDrawElements(GL_TRIANGLES, vertexArray->get_index_buffer()->get_count(), GL_UNSIGNED_INT, nullptr);
+	}
+
+	void OpenGLRendererAPI::draw_line_loop(uint32_t startVertex, uint32_t endVertex)
+	{
+		glDrawArrays(GL_LINE_LOOP, startVertex, endVertex);
 	}
 
 	void OpenGLRendererAPI::set_viewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
