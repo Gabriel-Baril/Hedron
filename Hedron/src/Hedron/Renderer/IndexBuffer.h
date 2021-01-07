@@ -2,6 +2,7 @@
 
 namespace Hedron
 {
+	// Only support 32-bit index buffer
 	class IndexBuffer
 	{
 	public:
@@ -12,6 +13,6 @@ namespace Hedron
 
 		virtual uint32_t get_count() const = 0;
 
-		static Ref<IndexBuffer> create(uint32_t* indices, uint32_t size);
+		static Ref<IndexBuffer> create(uint32_t* indices, uint32_t count);
 	};
 }

@@ -9,7 +9,7 @@
 
 namespace Hedron
 {
-	Ref<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t size)
+	Ref<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::get_renderer_api())
 		{
@@ -17,7 +17,7 @@ namespace Hedron
 				HDR_CORE_ASSERT(false, "RendererAPI::NONE is not supported!");
 				return nullptr;
 			case RendererAPI::API::OPEN_GL:
-				return std::make_shared<OpengGLIndexBuffer>(indices, size);
+				return std::make_shared<OpengGLIndexBuffer>(indices, count);
 		}
 
 		HDR_CORE_ASSERT(false, "Unknown RendererAPI!");

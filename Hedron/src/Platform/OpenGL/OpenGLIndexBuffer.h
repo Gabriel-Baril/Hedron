@@ -7,7 +7,7 @@ namespace Hedron
 	class OpengGLIndexBuffer : public IndexBuffer
 	{
 	public:
-		OpengGLIndexBuffer(uint32_t* indices, uint32_t size);
+		OpengGLIndexBuffer(uint32_t* indices, uint32_t count);
 		virtual ~OpengGLIndexBuffer();
 
 		virtual void bind() const override;

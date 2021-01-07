@@ -20,6 +20,11 @@ private:
 	float m_rotation = 0;
 	float m_rotationSpeed = 2;
 
+	float m_time = 0;
+	uint32_t m_frame = 0;
+	uint32_t m_quadCount = 0;
+	float m_fps;
+
 	Hedron::Ref<Hedron::Shader> m_shader;
 	Hedron::Ref<Hedron::Texture2D> m_texture;
 	Hedron::Ref<Hedron::VertexArray> m_vertexArray;

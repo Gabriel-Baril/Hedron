@@ -16,46 +16,129 @@
 
 namespace Hedron
 {
-	struct Renderer2DStorage
+
+	struct QuadVertex
 	{
+		glm::vec3 position;
+		glm::vec4 color;
+		glm::vec2 texCoord;
+		// TODO: textureID
+	};
+
+	struct Renderer2DData
+	{
+		const uint32_t maxQuads = 10000; // Max quads per draw calls
+		const uint32_t maxVertices = maxQuads * 4; // Max vertices per draw calls
+		const uint32_t maxIndices = maxQuads * 6; // Max quads per draw calls
 		Ref<VertexArray> quadVertexArray;
+		Ref<VertexBuffer> quadVertexBuffer;
 		Ref<Shader> textureShader;
 		Ref<Texture2D> whiteTexture;
 
-		Ref<VertexArray> circleVertexArray;
+		QuadVertex* quadVertexBufferBase = nullptr;
+		QuadVertex* quadVertexBufferPtr = nullptr;
+
+
+		uint32_t quadIndexCount = 0;
 	};
 
-	static Renderer2DStorage* s_renderer2DStorage;
+	static Renderer2DData s_renderer2DData;
+
 
 	void Renderer2D::init()
 	{
 		HDR_PROFILE_FUNCTION();
-		s_renderer2DStorage = new Renderer2DStorage();
-
+		
 		Renderer2D::build_rect_data();
 		//Renderer2D::build_circle_data();
+	}
+
+
+	void Renderer2D::build_rect_data()
+	{
+		s_renderer2DData.quadVertexArray = VertexArray::create();
+
+		s_renderer2DData.quadVertexBuffer = VertexBuffer::create(s_renderer2DData.maxVertices * sizeof(QuadVertex));
+		// TODO: Construct a layout from a vertex struct
+		s_renderer2DData.quadVertexBuffer->set_layout({
+			{ Hedron::ShaderDataType::FLOAT3, "a_position" },
+			{ Hedron::ShaderDataType::FLOAT4, "a_color" },
+			{ Hedron::ShaderDataType::FLOAT2, "a_texCoord" }
+			});
+		s_renderer2DData.quadVertexArray->add_vertex_buffer(s_renderer2DData.quadVertexBuffer);
+
+		s_renderer2DData.quadVertexBufferBase = new QuadVertex[s_renderer2DData.maxVertices];
+
+		// Unsafe in a multi-threaded environment
+		uint32_t* quadIndices = new uint32_t[s_renderer2DData.maxIndices]; // To be safe we heap allocate to prevent a memory leak ( 0, 1, 2, 2, 3, 0)
+
+		uint32_t offset = 0;
+		for (uint32_t i = 0;i < s_renderer2DData.maxIndices; i += 6)
+		{
+			quadIndices[0 + i] = offset + 0;
+			quadIndices[1 + i] = offset + 1;
+			quadIndices[2 + i] = offset + 2;
+						
+			quadIndices[3 + i] = offset + 2;
+			quadIndices[4 + i] = offset + 3;
+			quadIndices[5 + i] = offset + 0;
+
+			offset += 4;
+		}
+
+		Ref<IndexBuffer> quadIndexBuffer = IndexBuffer::create(quadIndices, s_renderer2DData.maxIndices);
+		s_renderer2DData.quadVertexArray->set_index_buffer(quadIndexBuffer);
+		delete[] quadIndices;
+		
+		// Create a 1x1 white texture
+		s_renderer2DData.whiteTexture = Texture2D::create(1, 1);
+		uint32_t whiteTextureData = 0xFFFFFFFF;
+		s_renderer2DData.whiteTexture->set_data(&whiteTextureData, sizeof(uint32_t));
+
+		// Setup texture shader
+		s_renderer2DData.textureShader = Shader::create("assets/shaders/texture.shader");
+
+
+		s_renderer2DData.textureShader->bind();
+		s_renderer2DData.textureShader->set_int("u_texture", 0);
+
+		s_renderer2DData.textureShader->set_float("u_tilingFactor", 1.0f);
+		s_renderer2DData.whiteTexture->bind();
 	}
 
 	void Renderer2D::shutdown()
 	{
 		HDR_PROFILE_FUNCTION();
 
-		delete s_renderer2DStorage;
+		delete[] s_renderer2DData.quadVertexBufferBase;
 	}
 
 	void Renderer2D::begin_scene(const OrthographicCamera& camera)
 	{
 		HDR_PROFILE_FUNCTION();
 
-		s_renderer2DStorage->textureShader->bind();
-		s_renderer2DStorage->textureShader->set_mat4("u_viewProjection", camera.get_view_projection_matrix());
+		s_renderer2DData.textureShader->bind();
+		s_renderer2DData.textureShader->set_mat4("u_viewProjection", camera.get_view_projection_matrix());
+
+		s_renderer2DData.quadIndexCount = 0;
+		s_renderer2DData.quadVertexBufferPtr = s_renderer2DData.quadVertexBufferBase;
 	}
 
 	void Renderer2D::end_scene()
 	{
 		HDR_PROFILE_FUNCTION();
 
+		uint32_t quadVertexBufferSize = (uint8_t*)s_renderer2DData.quadVertexBufferPtr - (uint8_t*)s_renderer2DData.quadVertexBufferBase;
+		s_renderer2DData.quadVertexBuffer->set_data(s_renderer2DData.quadVertexBufferBase, quadVertexBufferSize);
 
+		Renderer2D::flush();
+	}
+
+	void Renderer2D::flush()
+	{
+		HDR_PROFILE_FUNCTION();
+		
+		RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray, s_renderer2DData.quadIndexCount);
 	}
 
 #pragma region fill_rect_impl
@@ -78,18 +161,45 @@ namespace Hedron
 	void Renderer2D::fill_rect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		HDR_PROFILE_FUNCTION();
+		if (s_renderer2DData.quadIndexCount >= s_renderer2DData.maxIndices)
+		{
+			uint32_t quadVertexBufferSize = (uint8_t*)s_renderer2DData.quadVertexBufferPtr - (uint8_t*)s_renderer2DData.quadVertexBufferBase;
+			s_renderer2DData.quadVertexBuffer->set_data(s_renderer2DData.quadVertexBufferBase, quadVertexBufferSize);
+			Renderer2D::flush();
+			s_renderer2DData.quadIndexCount = 0;
+			s_renderer2DData.quadVertexBufferPtr = s_renderer2DData.quadVertexBufferBase;
+		}
 
-		s_renderer2DStorage->textureShader->set_float("u_tilingFactor", 1.0f);
-		s_renderer2DStorage->textureShader->set_float4("u_color", color);
-		s_renderer2DStorage->whiteTexture->bind();
-		s_renderer2DStorage->quadVertexArray->bind();
+		s_renderer2DData.quadVertexBufferPtr->position.x = position.x;
+		s_renderer2DData.quadVertexBufferPtr->position.y = position.y;
+		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->color = color;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = {0.0f, 0.0f};
+		s_renderer2DData.quadVertexBufferPtr++;
 
-		glm::mat4 transform =
-			glm::translate(glm::mat4(1.0f), position) *
-			glm::scale(glm::mat4(1.0f), { size, 0 });
-		s_renderer2DStorage->textureShader->set_mat4("u_transform", transform);
+		s_renderer2DData.quadVertexBufferPtr->position.x = position.x + size.x;
+		s_renderer2DData.quadVertexBufferPtr->position.y = position.y;
+		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->color = color;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
+		s_renderer2DData.quadVertexBufferPtr++;
 
-		RenderCommand::draw_indexed(s_renderer2DStorage->quadVertexArray);
+		s_renderer2DData.quadVertexBufferPtr->position.x = position.x + size.x;
+		s_renderer2DData.quadVertexBufferPtr->position.y = position.y + size.y;
+		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->color = color;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position.x = position.x;
+		s_renderer2DData.quadVertexBufferPtr->position.y = position.y + size.y;
+		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->color = color;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
+		s_renderer2DData.quadVertexBufferPtr++;
+
+
+		s_renderer2DData.quadIndexCount += 6;
 	}
 
 	void Renderer2D::fill_rect(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture)
@@ -121,17 +231,17 @@ namespace Hedron
 	{
 		HDR_PROFILE_FUNCTION();
 
-		s_renderer2DStorage->textureShader->set_float("u_tilingFactor", tilingFactor);
-		s_renderer2DStorage->textureShader->set_float4("u_color", color);
+		s_renderer2DData.textureShader->set_float("u_tilingFactor", tilingFactor);
+		s_renderer2DData.textureShader->set_float4("u_color", color);
 		texture->bind();
 
 		glm::mat4 transform =
 			glm::translate(glm::mat4(1.0f), position) *
 			glm::scale(glm::mat4(1.0f), { size, 0 }); // translate  * scale
-		s_renderer2DStorage->textureShader->set_mat4("u_transform", transform);
+		s_renderer2DData.textureShader->set_mat4("u_transform", transform);
 
-		s_renderer2DStorage->quadVertexArray->bind();
-		RenderCommand::draw_indexed(s_renderer2DStorage->quadVertexArray);
+		s_renderer2DData.quadVertexArray->bind();
+		RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray);
 	}
 
 	void Renderer2D::fill_rect(const glm::vec2& position, const glm::vec2& size, float radRotation)
@@ -153,18 +263,18 @@ namespace Hedron
 	{
 		HDR_PROFILE_FUNCTION();
 
-		s_renderer2DStorage->textureShader->set_float("u_tilingFactor", 1.0f);
-		s_renderer2DStorage->textureShader->set_float4("u_color", color);
-		s_renderer2DStorage->whiteTexture->bind();
-		s_renderer2DStorage->quadVertexArray->bind();
+		s_renderer2DData.textureShader->set_float("u_tilingFactor", 1.0f);
+		s_renderer2DData.textureShader->set_float4("u_color", color);
+		s_renderer2DData.whiteTexture->bind();
+		s_renderer2DData.quadVertexArray->bind();
 
 		glm::mat4 transform =
 			glm::translate(glm::mat4(1.0f), position) *
 			glm::rotate(glm::mat4(1.0f), radRotation, { 0, 0, 1 }) *
 			glm::scale(glm::mat4(1.0f), { size, 0 });
-		s_renderer2DStorage->textureShader->set_mat4("u_transform", transform);
+		s_renderer2DData.textureShader->set_mat4("u_transform", transform);
 
-		RenderCommand::draw_indexed(s_renderer2DStorage->quadVertexArray);
+		RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray);
 	}
 
 	void Renderer2D::fill_rect(const glm::vec2& position, const glm::vec2& size, float radRotation, const Ref<Texture2D>& texture)
@@ -196,63 +306,22 @@ namespace Hedron
 	{
 		HDR_PROFILE_FUNCTION();
 
-		s_renderer2DStorage->textureShader->set_float("u_tilingFactor", tilingFactor);
-		s_renderer2DStorage->textureShader->set_float4("u_color", color);
+		s_renderer2DData.textureShader->set_float("u_tilingFactor", tilingFactor);
+		s_renderer2DData.textureShader->set_float4("u_color", color);
 		texture->bind();
-		s_renderer2DStorage->quadVertexArray->bind();
+		s_renderer2DData.quadVertexArray->bind();
 
 		glm::mat4 transform =
 			glm::translate(glm::mat4(1.0f), { position.x, position.y, 0 }) *
 			glm::rotate(glm::mat4(1.0f), radRotation, { 0, 0, 1 }) *
 			glm::scale(glm::mat4(1.0f), { size, 0 }); // translate * rotate * scale
-		s_renderer2DStorage->textureShader->set_mat4("u_transform", transform);
+		s_renderer2DData.textureShader->set_mat4("u_transform", transform);
 
-		RenderCommand::draw_indexed(s_renderer2DStorage->quadVertexArray);
+		RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray);
 	}
 
 #pragma endregion
 
-	void Renderer2D::build_rect_data()
-	{
-		///------------------------------------------------------------
-		s_renderer2DStorage->quadVertexArray = VertexArray::create();
-
-		float squareVertices[] =
-		{
-			 -0.5f,-0.5f, 0.0f, 0.0f, 0.0f,
-			  0.5f,-0.5f, 0.0f, 1.0f, 0.0f,
-			  0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-			 -0.5f, 0.5f, 0.0f, 0.0f, 1.0f
-		};
-
-		Ref<VertexBuffer> quadVertexBuffer = VertexBuffer::create(squareVertices, sizeof(squareVertices));
-
-		quadVertexBuffer->set_layout({
-			{ Hedron::ShaderDataType::FLOAT3, "a_position" },
-			{ Hedron::ShaderDataType::FLOAT2, "a_texCoord" }
-			});
-
-		s_renderer2DStorage->quadVertexArray->add_vertex_buffer(quadVertexBuffer);
-		///------------------------------------------------------------
-
-		uint32_t indices[] =
-		{
-			0, 1, 2,
-			2, 3, 0
-		};
-
-		Ref<IndexBuffer> indexBuffer = IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t));
-
-		s_renderer2DStorage->quadVertexArray->set_index_buffer(indexBuffer);
-
-		s_renderer2DStorage->whiteTexture = Texture2D::create(1, 1);
-		uint32_t whiteTextureData = 0xFFFFFFFF;
-		s_renderer2DStorage->whiteTexture->set_data(&whiteTextureData, sizeof(uint32_t));
-
-		s_renderer2DStorage->textureShader = Shader::create("assets/shaders/texture.shader");
-		s_renderer2DStorage->textureShader->bind();
-		s_renderer2DStorage->textureShader->set_int("u_texture", 0);
-	}
 
 	void Renderer2D::build_circle_data()
 	{

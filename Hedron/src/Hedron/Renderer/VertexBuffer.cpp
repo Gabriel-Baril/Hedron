@@ -15,7 +15,22 @@ namespace Hedron
 				HDR_CORE_ASSERT(false, "RendererAPI::NONE is not supported!");
 				return nullptr;
 			case RendererAPI::API::OPEN_GL:
-				return std::make_shared<OpengGLVertexBuffer>(vertices, size);
+				return create_ref<OpengGLVertexBuffer>(vertices, size);
+		}
+
+		HDR_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+
+	Ref<VertexBuffer> VertexBuffer::create(uint32_t size)
+	{
+		switch (Renderer::get_renderer_api())
+		{
+			case RendererAPI::API::NONE:
+				HDR_CORE_ASSERT(false, "RendererAPI::NONE is not supported!");
+				return nullptr;
+			case RendererAPI::API::OPEN_GL:
+				return create_ref<OpengGLVertexBuffer>(size);
 		}
 
 		HDR_CORE_ASSERT(false, "Unknown RendererAPI!");

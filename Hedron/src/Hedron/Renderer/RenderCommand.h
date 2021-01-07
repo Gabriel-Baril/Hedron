@@ -22,9 +22,9 @@ namespace Hedron
 			s_rendererAPI->clear();
 		}
 
-		inline static void draw_indexed(const Ref<VertexArray>& vertexArray)
+		inline static void draw_indexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
 		{
-			s_rendererAPI->draw_indexed(vertexArray);
+			s_rendererAPI->draw_indexed(vertexArray, indexCount);
 		}
 
 		inline static void draw_line_loop(uint32_t startVertex, uint32_t endVertex)

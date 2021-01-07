@@ -27,9 +27,12 @@ namespace Hedron
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::draw_indexed(const Ref<VertexArray>& vertexArray)
+	void OpenGLRendererAPI::draw_indexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount)
 	{
-		glDrawElements(GL_TRIANGLES, vertexArray->get_index_buffer()->get_count(), GL_UNSIGNED_INT, nullptr);
+		uint32_t indexToDraw = indexCount ? vertexArray->get_index_buffer()->get_count() : indexCount;
+		
+		glDrawElements(GL_TRIANGLES, indexToDraw, GL_UNSIGNED_INT, nullptr);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void OpenGLRendererAPI::draw_line_loop(uint32_t startVertex, uint32_t endVertex)

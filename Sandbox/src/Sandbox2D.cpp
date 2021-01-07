@@ -30,7 +30,12 @@ void Sandbox2D::on_detach()
 void Sandbox2D::on_update(Hedron::Timestep ts)
 {
 	HDR_PROFILE_FUNCTION();
-	//HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), 1000.0f / ts.get_milliseconds());
+	
+	//HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), );
+	
+	m_fps = 1000.0f / ts.get_milliseconds();
+	m_quadCount = 0;
+
 	m_cameraController.on_update(ts);
 	
 	if (Hedron::Input::is_key_pressed(HDR_KEY_I))
@@ -48,12 +53,26 @@ void Sandbox2D::on_update(Hedron::Timestep ts)
 
 	Hedron::Renderer2D::begin_scene(m_cameraController.get_camera());
 
-	//Hedron::Renderer2D::fill_rect({ 0.0f, 0.0f, 0.1f }, { 0.8f, 0.8f }, 0, { 0.2f, 0.4f, 0.8f, 1.0f });
-	Hedron::Renderer2D::fill_rect({ m_squarePosition.x, m_squarePosition.y, 0.0f }, { 0.4f, 0.8f }, m_heartTexture, {0.0f, 1.0f, 0.3f, 1.0f}, 1);
+	float xBound = 450;
+	float yBound = 450;
+
+	for (float x = 0;x < xBound; x++)
+	{
+		for (float y = 0; y < yBound; y++)
+		{
+			float xColor = sin(x + m_time);
+			float yColor = cos(y + m_time);
+			Hedron::Renderer2D::fill_rect({ x, y, 0.0f }, { 0.8f, 0.8f }, { xColor, yColor , xColor * yColor , 1.0f });
+			m_quadCount++;
+		}
+	}
+	//Hedron::Renderer2D::fill_rect({ m_squarePosition.x, m_squarePosition.y, 0.0f }, { 0.4f, 0.8f }, m_heartTexture, {0.0f, 1.0f, 0.3f, 1.0f}, 1);
 	//Hedron::Renderer2D::fill_rect({ m_squarePosition.x + 0.5f, m_squarePosition.y + 0.5f, -0.1f }, { 1.0f, 0.5f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 
 	Hedron::Renderer2D::end_scene();
 
+	m_time += 0.01;
+	m_frame++;
 	m_rotation += m_rotationSpeed;
 }
 
@@ -65,6 +84,8 @@ void Sandbox2D::on_imgui_render()
 	ImGui::SliderFloat("Red background color", &m_backgroundColor.r, 0.0f, 1.0f);
 	ImGui::SliderFloat("Greed background color", &m_backgroundColor.g, 0.0f, 1.0f);
 	ImGui::SliderFloat("Blue background color", &m_backgroundColor.b, 0.0f, 1.0f);
+	ImGui::Text("FPS : %.2f", m_fps);
+	ImGui::Text("Quad Count : %i", m_quadCount);
 	ImGui::End();
 }
 

@@ -11,7 +11,7 @@ namespace Hedron
 		virtual void set_clear_color(const glm::vec4& color) override;
 		virtual void clear() override;
 
-		virtual void draw_indexed(const Ref<VertexArray>& vertexArray) override;
+		virtual void draw_indexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0) override;
 		virtual void draw_line_loop(uint32_t startVertex, uint32_t endVertex) override;
 
 
