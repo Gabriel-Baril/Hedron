@@ -30,6 +30,7 @@ namespace Hedron
 		const uint32_t maxQuads = 10000; // Max quads per draw calls
 		const uint32_t maxVertices = maxQuads * 4; // Max vertices per draw calls
 		const uint32_t maxIndices = maxQuads * 6; // Max quads per draw calls
+
 		Ref<VertexArray> quadVertexArray;
 		Ref<VertexBuffer> quadVertexBuffer;
 		Ref<Shader> textureShader;
