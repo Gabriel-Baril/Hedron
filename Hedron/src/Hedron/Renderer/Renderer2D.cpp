@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Hedron/Renderer/Renderer2D.h"
+#include "Hedron/Renderer/OrthographicCamera.h"
 #include "Hedron/Renderer/Shader.h"
 #include "Hedron/Renderer/VertexArray.h"
 #include "Hedron/Renderer/VertexBuffer.h"
@@ -28,9 +29,9 @@ namespace Hedron
 
 	struct Renderer2DData
 	{
-		const uint32_t maxQuads = 10000; // Max quads per draw calls
-		const uint32_t maxVertices = maxQuads * 4; // Max vertices per draw calls
-		const uint32_t maxIndices = maxQuads * 6; // Max quads per draw calls
+		static const uint32_t maxQuads = 10000; // Max quads per draw calls
+		static const uint32_t maxVertices = maxQuads * 4; // Max vertices per draw calls
+		static const uint32_t maxIndices = maxQuads * 6; // Max quads per draw calls
 		static const uint32_t maxTextureSlot = 32; // TODO: Render Capabilities
 
 		Ref<VertexArray> quadVertexArray;
@@ -44,6 +45,10 @@ namespace Hedron
 
 		std::array<Ref<Texture2D>, maxTextureSlot> textureSlots;
 		uint32_t textureSlotIndex = 1; // SLOT 0 = white texture
+
+		glm::vec4 quadVertexPositions[4];
+
+		Renderer2D::Statistics stats;
 	};
 
 	static Renderer2DData s_renderer2DData;
@@ -63,7 +68,7 @@ namespace Hedron
 	{
 		s_renderer2DData.quadVertexArray = VertexArray::create();
 
-		s_renderer2DData.quadVertexBuffer = VertexBuffer::create(s_renderer2DData.maxVertices * sizeof(QuadVertex));
+		s_renderer2DData.quadVertexBuffer = VertexBuffer::create(Renderer2DData::maxVertices * sizeof(QuadVertex));
 		// TODO: Construct a layout from a vertex struct
 		s_renderer2DData.quadVertexBuffer->set_layout({
 			{ Hedron::ShaderDataType::FLOAT3, "a_position" },
@@ -74,13 +79,13 @@ namespace Hedron
 			});
 		s_renderer2DData.quadVertexArray->add_vertex_buffer(s_renderer2DData.quadVertexBuffer);
 
-		s_renderer2DData.quadVertexBufferBase = new QuadVertex[s_renderer2DData.maxVertices];
+		s_renderer2DData.quadVertexBufferBase = new QuadVertex[Renderer2DData::maxVertices];
 
 		// Unsafe in a multi-threaded environment
-		uint32_t* quadIndices = new uint32_t[s_renderer2DData.maxIndices]; // To be safe we heap allocate to prevent a memory leak ( 0, 1, 2, 2, 3, 0)
+		uint32_t* quadIndices = new uint32_t[Renderer2DData::maxIndices]; // To be safe we heap allocate to prevent a memory leak ( 0, 1, 2, 2, 3, 0)
 
 		uint32_t offset = 0;
-		for (uint32_t i = 0;i < s_renderer2DData.maxIndices; i += 6)
+		for (uint32_t i = 0;i < Renderer2DData::maxIndices; i += 6)
 		{
 			quadIndices[0 + i] = offset + 0;
 			quadIndices[1 + i] = offset + 1;
@@ -93,7 +98,7 @@ namespace Hedron
 			offset += 4;
 		}
 
-		Ref<IndexBuffer> quadIndexBuffer = IndexBuffer::create(quadIndices, s_renderer2DData.maxIndices);
+		Ref<IndexBuffer> quadIndexBuffer = IndexBuffer::create(quadIndices, Renderer2DData::maxIndices);
 		s_renderer2DData.quadVertexArray->set_index_buffer(quadIndexBuffer);
 		delete[] quadIndices;
 		
@@ -102,17 +107,22 @@ namespace Hedron
 		uint32_t whiteTextureData = 0xFFFFFFFF;
 		s_renderer2DData.whiteTexture->set_data(&whiteTextureData, sizeof(uint32_t));
 
-		int32_t samplers[s_renderer2DData.maxTextureSlot];
-		for (int32_t i = 0; i < s_renderer2DData.maxTextureSlot; i++)
+		int32_t samplers[Renderer2DData::maxTextureSlot];
+		for (int32_t i = 0; i < Renderer2DData::maxTextureSlot; i++)
 			samplers[i] = i;
 
 		// Setup texture shader
 		s_renderer2DData.textureShader = Shader::create("assets/shaders/texture.shader");
 
 		s_renderer2DData.textureShader->bind();
-		s_renderer2DData.textureShader->set_int_array("u_textures", samplers, s_renderer2DData.maxTextureSlot);
+		s_renderer2DData.textureShader->set_int_array("u_textures", samplers, Renderer2DData::maxTextureSlot);
 
 		s_renderer2DData.textureSlots[0] = s_renderer2DData.whiteTexture;
+
+		s_renderer2DData.quadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		s_renderer2DData.quadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
+		s_renderer2DData.quadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		s_renderer2DData.quadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 	}
 
 	void Renderer2D::shutdown()
@@ -152,6 +162,18 @@ namespace Hedron
 			s_renderer2DData.textureSlots[i]->bind(i);
 
 		RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray, s_renderer2DData.quadIndexCount);
+
+		s_renderer2DData.stats.drawCalls++;
+	}
+
+	void Renderer2D::start_new_batch()
+	{
+		Renderer2D::end_scene(); // TODO: Rename that function
+
+		// TODO: Create a reset_flush_data function
+		s_renderer2DData.quadIndexCount = 0;
+		s_renderer2DData.quadVertexBufferPtr = s_renderer2DData.quadVertexBufferBase;
+		s_renderer2DData.textureSlotIndex = 1;
 	}
 
 #pragma region fill_rect_impl
@@ -174,55 +196,44 @@ namespace Hedron
 	void Renderer2D::fill_rect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		HDR_PROFILE_FUNCTION();
-		if (s_renderer2DData.quadIndexCount >= s_renderer2DData.maxIndices)
-		{
-			uint32_t quadVertexBufferSize = (uint8_t*)s_renderer2DData.quadVertexBufferPtr - (uint8_t*)s_renderer2DData.quadVertexBufferBase;
-			s_renderer2DData.quadVertexBuffer->set_data(s_renderer2DData.quadVertexBufferBase, quadVertexBufferSize);
-			Renderer2D::flush();
-			s_renderer2DData.quadIndexCount = 0;
-			s_renderer2DData.quadVertexBufferPtr = s_renderer2DData.quadVertexBufferBase;
-			s_renderer2DData.textureSlotIndex = 1;
-		}
+		if (s_renderer2DData.quadIndexCount >= Renderer2DData::maxIndices)
+			Renderer2D::start_new_batch();
 
-		const float texIndex = 0.0f; // White texture index
+		const float textureIndex = 0.0f; // White texture index
+		const float tilingFactor = 1.0f;
 
-		s_renderer2DData.quadVertexBufferPtr->position.x = position.x;
-		s_renderer2DData.quadVertexBufferPtr->position.y = position.y;
-		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		// TODO: Create a function that fill vertex data
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x, position.y, position.z };
 		s_renderer2DData.quadVertexBufferPtr->color = color;
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
-		s_renderer2DData.quadVertexBufferPtr->texIndex = texIndex;
-		s_renderer2DData.quadVertexBufferPtr->tilingFactor = 1.0f;
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
 		s_renderer2DData.quadVertexBufferPtr++;
 
-		s_renderer2DData.quadVertexBufferPtr->position.x = position.x + size.x;
-		s_renderer2DData.quadVertexBufferPtr->position.y = position.y;
-		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x + size.x, position.y, position.z };
 		s_renderer2DData.quadVertexBufferPtr->color = color;
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
-		s_renderer2DData.quadVertexBufferPtr->texIndex = texIndex;
-		s_renderer2DData.quadVertexBufferPtr->tilingFactor = 1.0f;
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
 		s_renderer2DData.quadVertexBufferPtr++;
 
-		s_renderer2DData.quadVertexBufferPtr->position.x = position.x + size.x;
-		s_renderer2DData.quadVertexBufferPtr->position.y = position.y + size.y;
-		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x + size.x, position.y + size.y, position.z };
 		s_renderer2DData.quadVertexBufferPtr->color = color;
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
-		s_renderer2DData.quadVertexBufferPtr->texIndex = texIndex;
-		s_renderer2DData.quadVertexBufferPtr->tilingFactor = 1.0f;
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
 		s_renderer2DData.quadVertexBufferPtr++;
 
-		s_renderer2DData.quadVertexBufferPtr->position.x = position.x;
-		s_renderer2DData.quadVertexBufferPtr->position.y = position.y + size.y;
-		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x, position.y + size.y, position.z };
 		s_renderer2DData.quadVertexBufferPtr->color = color;
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
-		s_renderer2DData.quadVertexBufferPtr->texIndex = texIndex;
-		s_renderer2DData.quadVertexBufferPtr->tilingFactor = 1.0f;
-		s_renderer2DData.quadVertexBufferPtr++;
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
 
 		s_renderer2DData.quadIndexCount += 6;
+
+		// TODO: Make sure that
+		s_renderer2DData.stats.quadCount++;
 	}
 
 	void Renderer2D::fill_rect(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture)
@@ -254,15 +265,8 @@ namespace Hedron
 	{
 		HDR_PROFILE_FUNCTION();
 
-		if (s_renderer2DData.quadIndexCount >= s_renderer2DData.maxIndices || s_renderer2DData.textureSlotIndex >= s_renderer2DData.maxTextureSlot - 1)
-		{
-			uint32_t quadVertexBufferSize = (uint8_t*)s_renderer2DData.quadVertexBufferPtr - (uint8_t*)s_renderer2DData.quadVertexBufferBase;
-			s_renderer2DData.quadVertexBuffer->set_data(s_renderer2DData.quadVertexBufferBase, quadVertexBufferSize);
-			Renderer2D::flush();
-			s_renderer2DData.quadIndexCount = 0;
-			s_renderer2DData.quadVertexBufferPtr = s_renderer2DData.quadVertexBufferBase;
-			s_renderer2DData.textureSlotIndex = 1;
-		}
+		if (s_renderer2DData.quadIndexCount >= Renderer2DData::maxIndices || s_renderer2DData.textureSlotIndex >= Renderer2DData::maxTextureSlot - 1)
+			Renderer2D::start_new_batch();
 
 		float textureIndex = 0.0f;
 
@@ -282,36 +286,28 @@ namespace Hedron
 			s_renderer2DData.textureSlotIndex++;
 		}
 
-		s_renderer2DData.quadVertexBufferPtr->position.x = position.x;
-		s_renderer2DData.quadVertexBufferPtr->position.y = position.y;
-		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x, position.y, position.z };
 		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
 		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
 		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
 		s_renderer2DData.quadVertexBufferPtr++;
 
-		s_renderer2DData.quadVertexBufferPtr->position.x = position.x + size.x;
-		s_renderer2DData.quadVertexBufferPtr->position.y = position.y;
-		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x + size.x, position.y, position.z };
 		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
 		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
 		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
 		s_renderer2DData.quadVertexBufferPtr++;
 
-		s_renderer2DData.quadVertexBufferPtr->position.x = position.x + size.x;
-		s_renderer2DData.quadVertexBufferPtr->position.y = position.y + size.y;
-		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x + size.x, position.y + size.y, position.z };
 		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
 		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
 		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
 		s_renderer2DData.quadVertexBufferPtr++;
 
-		s_renderer2DData.quadVertexBufferPtr->position.x = position.x;
-		s_renderer2DData.quadVertexBufferPtr->position.y = position.y + size.y;
-		s_renderer2DData.quadVertexBufferPtr->position.z = position.z;
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x, position.y + size.y, position.z };
 		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
 		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
@@ -319,18 +315,8 @@ namespace Hedron
 		s_renderer2DData.quadVertexBufferPtr++;
 
 		s_renderer2DData.quadIndexCount += 6;
-		/*
-		s_renderer2DData.textureShader->set_float("u_tilingFactor", tilingFactor);
-		s_renderer2DData.textureShader->set_float4("u_color", tintColor);
-		texture->bind();
 
-		glm::mat4 transform =
-			glm::translate(glm::mat4(1.0f), position) *
-			glm::scale(glm::mat4(1.0f), { size, 0 }); // translate  * scale
-		s_renderer2DData.textureShader->set_mat4("u_transform", transform);
-
-		s_renderer2DData.quadVertexArray->bind();
-		RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray);*/
+		s_renderer2DData.stats.quadCount++;
 	}
 
 	void Renderer2D::fill_rect(const glm::vec2& position, const glm::vec2& size, float radRotation)
@@ -352,18 +338,48 @@ namespace Hedron
 	{
 		HDR_PROFILE_FUNCTION();
 
-		s_renderer2DData.textureShader->set_float("u_tilingFactor", 1.0f);
-		s_renderer2DData.textureShader->set_float4("u_color", color);
-		s_renderer2DData.whiteTexture->bind();
-		s_renderer2DData.quadVertexArray->bind();
+		if (s_renderer2DData.quadIndexCount >= Renderer2DData::maxIndices || s_renderer2DData.textureSlotIndex >= Renderer2DData::maxTextureSlot - 1)
+			Renderer2D::start_new_batch();
+
+		const float textureIndex = 0.0f;
+		const float tilingFactor = 1.0f;
 
 		glm::mat4 transform =
 			glm::translate(glm::mat4(1.0f), position) *
-			glm::rotate(glm::mat4(1.0f), radRotation, { 0, 0, 1 }) *
-			glm::scale(glm::mat4(1.0f), { size, 0 });
-		s_renderer2DData.textureShader->set_mat4("u_transform", transform);
+			glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f }) *
+			glm::rotate(glm::mat4(1.0f), radRotation, { 0.0f, 0.0f, 1.0f });
 
-		RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray);
+		s_renderer2DData.quadVertexBufferPtr->position = transform * s_renderer2DData.quadVertexPositions[0];
+		s_renderer2DData.quadVertexBufferPtr->color = color;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position = transform * s_renderer2DData.quadVertexPositions[1];
+		s_renderer2DData.quadVertexBufferPtr->color = color;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position = transform * s_renderer2DData.quadVertexPositions[2];
+		s_renderer2DData.quadVertexBufferPtr->color = color;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position = transform * s_renderer2DData.quadVertexPositions[3];
+		s_renderer2DData.quadVertexBufferPtr->color = color;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadIndexCount += 6;
+
+		s_renderer2DData.stats.quadCount++;
 	}
 
 	void Renderer2D::fill_rect(const glm::vec2& position, const glm::vec2& size, float radRotation, const Ref<Texture2D>& texture)
@@ -391,22 +407,67 @@ namespace Hedron
 		fill_rect({position.x, position.y, 0.0f}, size, radRotation, texture, color, tilingFactor);
 	}
 
-	void Renderer2D::fill_rect(const glm::vec3& position, const glm::vec2& size, float radRotation, const Ref<Texture2D>& texture, const glm::vec4& color, float tilingFactor)
+	void Renderer2D::fill_rect(const glm::vec3& position, const glm::vec2& size, float radRotation, const Ref<Texture2D>& texture, const glm::vec4& tintColor, float tilingFactor)
 	{
 		HDR_PROFILE_FUNCTION();
 
-		s_renderer2DData.textureShader->set_float("u_tilingFactor", tilingFactor);
-		s_renderer2DData.textureShader->set_float4("u_color", color);
-		texture->bind();
-		s_renderer2DData.quadVertexArray->bind();
+		if (s_renderer2DData.quadIndexCount >= Renderer2DData::maxIndices || s_renderer2DData.textureSlotIndex >= Renderer2DData::maxTextureSlot - 1)
+			Renderer2D::start_new_batch();
+
+		float textureIndex = 0.0f;
+
+		for (uint32_t i = 1; i < s_renderer2DData.textureSlotIndex; i++)
+		{
+			if (*s_renderer2DData.textureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)s_renderer2DData.textureSlotIndex;
+			s_renderer2DData.textureSlots[s_renderer2DData.textureSlotIndex] = texture;
+			s_renderer2DData.textureSlotIndex++;
+		}
 
 		glm::mat4 transform =
-			glm::translate(glm::mat4(1.0f), { position.x, position.y, 0 }) *
-			glm::rotate(glm::mat4(1.0f), radRotation, { 0, 0, 1 }) *
-			glm::scale(glm::mat4(1.0f), { size, 0 }); // translate * rotate * scale
-		s_renderer2DData.textureShader->set_mat4("u_transform", transform);
+			glm::translate(glm::mat4(1.0f), position) *
+			glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f }) *
+			glm::rotate(glm::mat4(1.0f), radRotation, { 0.0f, 0.0f, 1.0f });
 
-		RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray);
+		s_renderer2DData.quadVertexBufferPtr->position = transform * s_renderer2DData.quadVertexPositions[0];
+		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position = transform * s_renderer2DData.quadVertexPositions[1];
+		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position = transform * s_renderer2DData.quadVertexPositions[2];
+		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position = transform * s_renderer2DData.quadVertexPositions[3];
+		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadIndexCount += 6;
+
+		s_renderer2DData.stats.quadCount++;
 	}
 
 #pragma endregion
@@ -437,5 +498,16 @@ namespace Hedron
 
 		vertexBuffer->bind();
 		//RenderCommand::draw_line_loop(0, vertexBuffer->);
+	}
+
+
+	Renderer2D::Statistics Renderer2D::get_stats()
+	{
+		return s_renderer2DData.stats;
+	}
+
+	void Renderer2D::reset_stats()
+	{
+		memset(&s_renderer2DData.stats, 0, sizeof(Statistics));
 	}
 }

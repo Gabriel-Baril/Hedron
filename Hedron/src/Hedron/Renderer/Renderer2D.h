@@ -62,8 +62,24 @@ namespace Hedron
 		static void fill_oval();
 		static void fill_triangle();
 
+		// Stats
+
+		struct Statistics
+		{
+			uint32_t drawCalls = 0;
+			uint32_t quadCount = 0;
+
+			uint32_t get_total_triangle_count() { return quadCount * 3; }
+			uint32_t get_total_vertex_count() { return quadCount * 4; }
+			uint32_t get_total_index_count() { return quadCount * 6; }
+		};
+
+		static Statistics get_stats();
+		static void reset_stats();
 
 	private:
+		static void start_new_batch();
+
 		static void build_rect_data();
 		static void build_circle_data();
 
