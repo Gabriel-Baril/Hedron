@@ -29,7 +29,7 @@ namespace Hedron
 
 	void OpenGLRendererAPI::draw_indexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount)
 	{
-		uint32_t indexToDraw = indexCount ? vertexArray->get_index_buffer()->get_count() : indexCount;
+		uint32_t indexToDraw = (indexCount == 0) ? vertexArray->get_index_buffer()->get_count() : indexCount;
 		
 		glDrawElements(GL_TRIANGLES, indexToDraw, GL_UNSIGNED_INT, nullptr);
 		glBindTexture(GL_TEXTURE_2D, 0);

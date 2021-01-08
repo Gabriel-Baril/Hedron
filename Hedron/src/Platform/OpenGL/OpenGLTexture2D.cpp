@@ -50,7 +50,7 @@ namespace Hedron
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
 		glTextureStorage2D(m_rendererID, 1, internalFormat, m_width, m_height); // We interpret the image has a GL_RGB8, but the image can be RGBA
 
-		glTextureParameteri(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // What happen when the texture is smaller than it's size, we do linear interpolation
+		glTextureParameteri(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // What happen when the texture is smaller than it's size, we do linear interpolation
 		glTextureParameteri(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // What happen when the texture is bigger than it's size, we do nearest filtering
 
 		glTextureParameteri(m_rendererID, GL_TEXTURE_WRAP_T, GL_REPEAT); // When we scale the texture coordinate it should scale the textures

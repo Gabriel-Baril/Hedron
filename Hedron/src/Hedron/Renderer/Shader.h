@@ -21,7 +21,8 @@ namespace Hedron
 		virtual void set_int2(const std::string& name, const glm::vec<2, int>& values) = 0;
 		virtual void set_int3(const std::string& name, const glm::vec<3, int>& values) = 0;
 		virtual void set_int4(const std::string& name, const glm::vec<4, int>& values) = 0;
-					 
+		virtual void set_int_array(const std::string& name, int* values, uint32_t count) = 0;
+
 		virtual void set_float(const std::string& name, float values) = 0;
 		virtual void set_float2(const std::string& name, const glm::vec2& values) = 0;
 		virtual void set_float3(const std::string& name, const glm::vec3& values) = 0;

@@ -25,6 +25,7 @@ namespace Hedron
 		virtual void set_int2(const std::string& name, const glm::vec<2, int>& values) override;
 		virtual void set_int3(const std::string& name, const glm::vec<3, int>& values) override;
 		virtual void set_int4(const std::string& name, const glm::vec<4, int>& values) override;
+		virtual void set_int_array(const std::string& name, int* values, uint32_t count) override;
 
 		virtual void set_float(const std::string& name, float values) override;
 		virtual void set_float2(const std::string& name,const glm::vec2& values) override;
@@ -39,6 +40,7 @@ namespace Hedron
 		void upload_uniform_int2(const std::string& uniformName, const glm::vec<2, int>& values);
 		void upload_uniform_int3(const std::string& uniformName, const glm::vec<3, int>& values);
 		void upload_uniform_int4(const std::string& uniformName, const glm::vec<4, int>& values);
+		void upload_uniform_int_array(const std::string& uniformName, int* values, uint32_t count);
 
 		void upload_uniform_float(const std::string& uniformName, float values);
 		void upload_uniform_float2(const std::string& uniformName, const glm::vec2& values);

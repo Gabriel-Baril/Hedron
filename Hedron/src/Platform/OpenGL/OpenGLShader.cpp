@@ -103,6 +103,13 @@ namespace Hedron
 		this->upload_uniform_int4(name, values);
 	}
 
+	void OpenGLShader::set_int_array(const std::string& name, int* values, uint32_t count)
+	{
+		HDR_PROFILE_FUNCTION();
+
+		this->upload_uniform_int_array(name, values, count);
+	}
+
 	void OpenGLShader::set_float(const std::string& name, float values)
 	{
 		HDR_PROFILE_FUNCTION();
@@ -167,6 +174,12 @@ namespace Hedron
 	{
 		GLint location = glGetUniformLocation(m_rendererID, uniformName.c_str());
 		glUniform4i(location, values.x, values.y, values.z, values.w);
+	}
+
+	void OpenGLShader::upload_uniform_int_array(const std::string& uniformName, int* values, uint32_t count)
+	{
+		GLint location = glGetUniformLocation(m_rendererID, uniformName.c_str());
+		glUniform1iv(location, count, values);
 	}
 
 	void OpenGLShader::upload_uniform_float(const std::string& uniformName, float values)

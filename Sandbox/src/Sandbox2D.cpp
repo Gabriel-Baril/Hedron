@@ -19,7 +19,8 @@ void Sandbox2D::on_attach()
 {
 	HDR_PROFILE_FUNCTION();
 
-	m_heartTexture = Hedron::Texture2D::create("assets/textures/circle322x322.png");
+	m_heartTexture = Hedron::Texture2D::create("assets/textures/heart_pixel_art_64x64.png");
+	m_cricketsHead = Hedron::Texture2D::create("assets/textures/collectibles_004_cricketshead.png");
 }
 
 void Sandbox2D::on_detach()
@@ -53,25 +54,31 @@ void Sandbox2D::on_update(Hedron::Timestep ts)
 
 	Hedron::Renderer2D::begin_scene(m_cameraController.get_camera());
 
-	float xBound = 450;
-	float yBound = 450;
+	float xBound = 10;
+	float yBound = 10;
 
-	for (float x = 0;x < xBound; x++)
+	/*
+	for (int x = 0;x < xBound; x++)
 	{
-		for (float y = 0; y < yBound; y++)
+		for (int y = 0; y < yBound; y++)
 		{
 			float xColor = sin(x + m_time);
 			float yColor = cos(y + m_time);
-			Hedron::Renderer2D::fill_rect({ x, y, 0.0f }, { 0.8f, 0.8f }, { xColor, yColor , xColor * yColor , 1.0f });
+			if( (x + y) % 2 == 0)
+				Hedron::Renderer2D::fill_rect({ x, y, 0.0f }, { 0.8f, 0.8f }, m_heartTexture, { xColor, yColor, xColor * yColor, 1.0 }, 1.0f);
+			else
+				Hedron::Renderer2D::fill_rect({ x, y, 0.0f }, { 1.0f, 1.0f }, m_cricketsHead, { xColor, yColor, xColor * yColor, 1.0 }, 1.0f);
+
 			m_quadCount++;
 		}
-	}
+	}*/
+	Hedron::Renderer2D::fill_rect({ 0.0f, 0.0f, 0.0f }, { 0.8f, 0.8f }, m_heartTexture, { 0.2f, 0.8f, 0.3f, 1.0 }, 4.0f);
 	//Hedron::Renderer2D::fill_rect({ m_squarePosition.x, m_squarePosition.y, 0.0f }, { 0.4f, 0.8f }, m_heartTexture, {0.0f, 1.0f, 0.3f, 1.0f}, 1);
 	//Hedron::Renderer2D::fill_rect({ m_squarePosition.x + 0.5f, m_squarePosition.y + 0.5f, -0.1f }, { 1.0f, 0.5f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 
 	Hedron::Renderer2D::end_scene();
 
-	m_time += 0.01;
+	m_time += 0.005;
 	m_frame++;
 	m_rotation += m_rotationSpeed;
 }
