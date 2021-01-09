@@ -1,18 +1,27 @@
 #include "Sandbox2D.h"
 #include "imgui.h"
 
-#define GLM_SWIZZLE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <chrono>
 
+
 Sandbox2D::Sandbox2D()
 	: Hedron::Layer("Sandbox2D layer"), 
 	  m_cameraController(1280.f / 720.f, true), 
-	  m_backgroundColor(1.0f, 1.0f, 1.0f, 1.0f)
+	  m_backgroundColor(0.2f, 0.2f, 0.2f, 1.0f)
 {
+	m_particleProps.colorBegin = { 0.4f, 0.7f, 0.2f, 1.0f };
+	m_particleProps.colorEnd = { 0.9f, 0.1f, 0.6f, 1.0f };
+	m_particleProps.sizeBegin = 0.1f;
+	m_particleProps.sizeVariation = 0.3f;
+	m_particleProps.sizeEnd = 0.0f;
+	m_particleProps.lifeTime = 1.0f;
+	m_particleProps.velocity = { 0.0f, 0.0f };
+	m_particleProps.velocityVariation = { 3.0f, 1.0f };
+	m_particleProps.position = { 0.0f, 0.0f };
 }
 
 void Sandbox2D::on_attach()
@@ -20,7 +29,7 @@ void Sandbox2D::on_attach()
 	HDR_PROFILE_FUNCTION();
 
 	m_heartTexture = Hedron::Texture2D::create("assets/textures/heart_pixel_art_64x64.png");
-	m_cricketsHead = Hedron::Texture2D::create("assets/textures/collectibles_004_cricketshead.png");
+	m_achivementsTexture = Hedron::Texture2D::create("assets/game/textures/isaac_achievements_sprite_sheet.png");
 }
 
 void Sandbox2D::on_detach()
@@ -31,61 +40,49 @@ void Sandbox2D::on_detach()
 void Sandbox2D::on_update(Hedron::Timestep ts)
 {
 	HDR_PROFILE_FUNCTION();
+	m_fps = 1000.0f / ts.get_milliseconds();
 	
 	Hedron::Renderer2D::reset_stats();
-
-	//HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), );
-	
-	m_fps = 1000.0f / ts.get_milliseconds();
-	m_quadCount = 0;
-
 	m_cameraController.on_update(ts);
+	//HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), 1000 / ts.get_milliseconds());
 
 	// Camera position
-	//glm::vec3 cam = m_cameraController.get_camera().get_position();
 	//HDR_INFO("[{0}, {1}, {2}]", cam.x, cam.y, cam.z);
-	
-	if (Hedron::Input::is_key_pressed(HDR_KEY_I))
-		m_squarePosition.y += m_squareSpeed * ts;
-	else if (Hedron::Input::is_key_pressed(HDR_KEY_K))
-		m_squarePosition.y -= m_squareSpeed * ts;
-	
-	if (Hedron::Input::is_key_pressed(HDR_KEY_J))
-		m_squarePosition.x -= m_squareSpeed * ts;
-	else if (Hedron::Input::is_key_pressed(HDR_KEY_L))
-		m_squarePosition.x += m_squareSpeed * ts;
 	
 	Hedron::RenderCommand::set_clear_color(m_backgroundColor);
 	Hedron::RenderCommand::clear();
 
+
 	Hedron::Renderer2D::begin_scene(m_cameraController.get_camera());
 
-	float xBound = 200;
-	float yBound = 200;
-
-	for (int x = 0;x < xBound; x++)
+	if (Hedron::Input::is_mouse_button_pressed(HDR_MOUSE_BUTTON_1))
 	{
-		for (int y = 0; y < yBound; y++)
-		{
-			float xColor = sin(x + m_time);
-			float yColor = cos(y + m_time);
-			if( (x + y) % 2 == 0)
-				Hedron::Renderer2D::fill_rect({ x, y, 0.0f }, { 0.8f, 0.8f }, m_heartTexture, { xColor, yColor, xColor * yColor, 1.0 }, 1.0f);
-			else
-				Hedron::Renderer2D::fill_rect({ x, y, 0.0f }, { 1.0f, 1.0f }, m_cricketsHead, { xColor, yColor, xColor * yColor, 1.0 }, 1.0f);
+		glm::vec2 cam_pos = m_cameraController.get_camera().get_position();
 
-			m_quadCount++;
-		}
+		uint32_t width = Hedron::Application::get().get_window().get_width();
+		uint32_t height = Hedron::Application::get().get_window().get_height();
+		auto [x, y] = Hedron::Input::get_mouse_position();
+		float cam_width = m_cameraController.get_bounds().get_width();
+		float cam_height = m_cameraController.get_bounds().get_height();
+
+		x = x * (cam_width / width) - cam_width * 0.5f;
+		y = -y * (cam_height / height) + cam_height * 0.5f;
+
+		//HDR_INFO("[{0}, {1}]", x, y);
+		m_particleProps.position = { x + cam_pos.x, y + cam_pos.y };
+		for (uint32_t i = 0;i < 5;i++)
+			m_particleSystem.emit(m_particleProps);
 	}
-	Hedron::Renderer2D::fill_rect({ 0.5f, 0.3f, 0.0f }, { 0.8f, 0.8f }, glm::radians(m_time), { 0.2f, 0.8f, 0.3f, 1.0 });
-	//Hedron::Renderer2D::fill_rect({ m_squarePosition.x, m_squarePosition.y, 0.0f }, { 0.4f, 0.8f }, m_heartTexture, {0.0f, 1.0f, 0.3f, 1.0f}, 1);
-	//Hedron::Renderer2D::fill_rect({ m_squarePosition.x + 0.5f, m_squarePosition.y + 0.5f, -0.1f }, { 1.0f, 0.5f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+
+	m_particleSystem.render();
+	m_particleSystem.update(ts);
+
+	Hedron::Renderer2D::fill_rect({ 0, 0, 0 }, { m_achivementsTexture->get_width() / (float)m_achivementsTexture->get_height(), 1.0f }, m_achivementsTexture);
 
 	Hedron::Renderer2D::end_scene();
 
-	m_time += 0.001;
+	m_time += 0.001f;
 	m_frame++;
-	m_rotation += m_rotationSpeed;
 }
 
 void Sandbox2D::on_imgui_render()
@@ -93,11 +90,16 @@ void Sandbox2D::on_imgui_render()
 	HDR_PROFILE_FUNCTION();
 
 	auto stat = Hedron::Renderer2D::get_stats();
+	auto cam = m_cameraController.get_camera();
+	auto cam_pos = cam.get_position();
 
 	ImGui::Begin("Background color control panel");
 	ImGui::SliderFloat("Red background color", &m_backgroundColor.r, 0.0f, 1.0f);
 	ImGui::SliderFloat("Greed background color", &m_backgroundColor.g, 0.0f, 1.0f);
 	ImGui::SliderFloat("Blue background color", &m_backgroundColor.b, 0.0f, 1.0f);
+	ImGui::ColorEdit4("Starting Color", glm::value_ptr(m_particleProps.colorBegin));
+	ImGui::ColorEdit4("Finishing Color", glm::value_ptr(m_particleProps.colorEnd));
+	ImGui::DragFloat("Life Span", &m_particleProps.lifeTime, 0.1f, 0.0f, 10.0f);
 	ImGui::Text("FPS : %.2f", m_fps);
 	ImGui::Text("Renderer2D stats:");
 	ImGui::Text("	Draw Call(s) : %i", stat.drawCalls);
@@ -105,6 +107,11 @@ void Sandbox2D::on_imgui_render()
 	ImGui::Text("	Vertex Count : %i", stat.get_total_vertex_count());
 	ImGui::Text("	Index Count : %i", stat.get_total_index_count());
 	ImGui::Text("	Triangle Count : %i", stat.get_total_triangle_count());
+	ImGui::Text("Camera Data:");
+	ImGui::Text("	Position : [%.2f, %.2f, %.2f]", cam_pos.x, cam_pos.y, cam_pos.z);
+	ImGui::Text("	Aspect ratio : %.2f", m_cameraController.get_aspect_ratio());
+	ImGui::Text("	Zoom level : %.2f", m_cameraController.get_zoom_level());
+	ImGui::Text("	ZL * AR : %.2f", m_cameraController.get_zoom_level() * m_cameraController.get_aspect_ratio());
 	ImGui::End();
 }
 

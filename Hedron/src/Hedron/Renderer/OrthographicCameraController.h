@@ -20,6 +20,17 @@ namespace Hedron
 		uint32_t zoomIn;
 	};
 
+	struct OrthographicCameraBounds
+	{
+		float left;
+		float right;
+		float bottom;
+		float top;
+
+		float get_width() const { return right - left; }
+		float get_height() const { return top - bottom; }
+	};
+
 	class OrthographicCameraController
 	{
 	public:
@@ -28,14 +39,18 @@ namespace Hedron
 		void on_update(Timestep ts);
 		void on_event(Event& e);
 
-		OrthographicCamera& get_camera() { return m_orthoCamera; }
-		const OrthographicCamera& get_camera() const { return m_orthoCamera; }
+		OrthographicCamera& get_camera() { return m_camera; }
+		const OrthographicCamera& get_camera() const { return m_camera; }
 
+		float get_aspect_ratio() { return m_aspectRatio; }
 		float get_zoom_level() const { return m_zoomLevel; }
+		const OrthographicCameraBounds& get_bounds() const { return m_bounds; }
+
+
 		void set_zoom_level(float zoomLevel)
 		{
 			m_zoomLevel = zoomLevel;
-			//m_orthoCamera.set_projection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
+			//m_camera.set_projection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
 		}
 
 	private:
@@ -52,7 +67,9 @@ namespace Hedron
 		float m_cameraRotation = 0.0f;
 		float m_cameraRotationSpeed = 180.0f;
 
-		OrthographicCamera m_orthoCamera;
+		OrthographicCameraBounds m_bounds;
+		OrthographicCamera m_camera;
+
 		MoveKeyCallback m_moveKeyCallback;
 	};
 }

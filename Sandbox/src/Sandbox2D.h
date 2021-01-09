@@ -1,6 +1,9 @@
 #pragma once
 #include <Hedron.h>
 
+#include "Random.h"
+#include "ParticleSystem.h"
+
 class Sandbox2D : public Hedron::Layer
 {
 public:
@@ -12,22 +15,13 @@ public:
 	virtual void on_imgui_render() override;
 	virtual void on_event(Hedron::Event& event) override;
 private:
-
-	// TEMP
-	glm::vec3 m_squarePosition = { 0.0f, 0.0f, 0.0f };
-	float m_squareSpeed = 4.0f;
-
-	float m_rotation = 0;
-	float m_rotationSpeed = 2;
-
 	float m_time = 0;
 	uint32_t m_frame = 0;
-	uint32_t m_quadCount = 0;
 	float m_fps;
+	ParticleSystem m_particleSystem;
+	ParticleProps m_particleProps;
 
-	Hedron::Ref<Hedron::Shader> m_shader;
-	Hedron::Ref<Hedron::Texture2D> m_cricketsHead;
-	Hedron::Ref<Hedron::VertexArray> m_vertexArray;
+	Hedron::Ref<Hedron::Texture2D> m_achivementsTexture;
 	Hedron::Ref<Hedron::Texture2D> m_heartTexture;
 	glm::vec4 m_backgroundColor;
 

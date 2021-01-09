@@ -114,6 +114,7 @@ namespace Hedron
 				}
 			}
 
+			if(true)
 			{
 				HDR_PROFILE_SCOPE("ImGui LayerStack update | Application::run()");
 

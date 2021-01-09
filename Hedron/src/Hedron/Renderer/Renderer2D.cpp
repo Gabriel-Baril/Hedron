@@ -161,7 +161,9 @@ namespace Hedron
 		for (uint32_t i = 0;i < s_renderer2DData.textureSlotIndex;i++)
 			s_renderer2DData.textureSlots[i]->bind(i);
 
-		RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray, s_renderer2DData.quadIndexCount);
+		// TODO: Change the signature of the draw_indexed function to prevent those kind of if statement
+		if (s_renderer2DData.quadIndexCount > 0)
+			RenderCommand::draw_indexed(s_renderer2DData.quadVertexArray, s_renderer2DData.quadIndexCount);
 
 		s_renderer2DData.stats.drawCalls++;
 	}
@@ -229,10 +231,10 @@ namespace Hedron
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
 		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
 		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
 
 		s_renderer2DData.quadIndexCount += 6;
 
-		// TODO: Make sure that
 		s_renderer2DData.stats.quadCount++;
 	}
 
@@ -265,6 +267,17 @@ namespace Hedron
 	{
 		HDR_PROFILE_FUNCTION();
 
+		float sheetWidth = texture->get_width();
+		float sheetHeight = texture->get_height();
+		float spriteWidth = 64;
+		float spriteHeight = 64;
+
+		auto pixelMap = [sheetHeight](uint32_t x, uint32_t y) {return glm::vec2{ x, sheetHeight - y }; };
+		//auto pixelMap = [sheetHeight](uint32_t x, uint32_t y) {return glm::vec2{ x, y }; };
+		auto pixelSpriteMap = [&pixelMap, spriteWidth, spriteHeight](uint32_t x, uint32_t y) {return pixelMap((spriteWidth + 1) * x + 1, (spriteHeight + 1) * y + 1); };
+
+		glm::vec2 spriteCoord = pixelSpriteMap(1, 1) / glm::vec2(sheetWidth, sheetHeight);
+		
 		if (s_renderer2DData.quadIndexCount >= Renderer2DData::maxIndices || s_renderer2DData.textureSlotIndex >= Renderer2DData::maxTextureSlot - 1)
 			Renderer2D::start_new_batch();
 
