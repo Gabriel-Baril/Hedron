@@ -22,6 +22,7 @@ Sandbox2D::Sandbox2D()
 	m_particleProps.velocity = { 0.0f, 0.0f };
 	m_particleProps.velocityVariation = { 3.0f, 1.0f };
 	m_particleProps.position = { 0.0f, 0.0f };
+
 }
 
 void Sandbox2D::on_attach()
@@ -30,6 +31,8 @@ void Sandbox2D::on_attach()
 
 	m_heartTexture = Hedron::Texture2D::create("assets/textures/heart_pixel_art_64x64.png");
 	m_achivementsTexture = Hedron::Texture2D::create("assets/game/textures/isaac_achievements_sprite_sheet.png");
+
+	m_frameTexture = Hedron::SubTexture2D::create_from_coords(m_achivementsTexture, { 0.0f, 1.0f }, {64.0f, 64.0f}, { 2.0f, 2.0f });
 }
 
 void Sandbox2D::on_detach()
@@ -77,7 +80,7 @@ void Sandbox2D::on_update(Hedron::Timestep ts)
 	m_particleSystem.render();
 	m_particleSystem.update(ts);
 
-	Hedron::Renderer2D::fill_rect({ 0, 0, 0 }, { m_achivementsTexture->get_width() / (float)m_achivementsTexture->get_height(), 1.0f }, m_achivementsTexture);
+	Hedron::Renderer2D::fill_rect({ 0, 0, 0 }, { 1.0f, 1.0f }, glm::radians(45.0f), m_frameTexture, { 1.0f, 1.0f, 1.0f, 1.0f }, 1.0f);
 
 	Hedron::Renderer2D::end_scene();
 

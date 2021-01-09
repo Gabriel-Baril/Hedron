@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hedron/Renderer/OrthographicCamera.h"
+#include "Hedron/Renderer/SubTexture2D.h"
 #include "Hedron/Renderer/Texture2D.h"
 
 
@@ -41,6 +42,8 @@ namespace Hedron
 		static void fill_rect(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color);
 		static void fill_rect(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color, float tilingFactor);
 		static void fill_rect(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color, float tilingFactor);
+		static void fill_rect(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, const glm::vec4& color, float tilingFactor);
+		static void fill_rect(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, const glm::vec4& color, float tilingFactor);
 
 		static void fill_rect(const glm::vec2& position, const glm::vec2& size, float radRotation);
 		static void fill_rect(const glm::vec3& position, const glm::vec2& size, float radRotation);
@@ -52,6 +55,8 @@ namespace Hedron
 		static void fill_rect(const glm::vec3& position, const glm::vec2& size, float radRotation, const Ref<Texture2D>& texture, const glm::vec4& color);
 		static void fill_rect(const glm::vec2& position, const glm::vec2& size, float radRotation, const Ref<Texture2D>& texture, const glm::vec4& color, float tilingFactor);
 		static void fill_rect(const glm::vec3& position, const glm::vec2& size, float radRotation, const Ref<Texture2D>& texture, const glm::vec4& color, float tilingFactor);
+		static void fill_rect(const glm::vec2& position, const glm::vec2& size, float radRotation, const Ref<SubTexture2D>& subTexture, const glm::vec4& color, float tilingFactor);
+		static void fill_rect(const glm::vec3& position, const glm::vec2& size, float radRotation, const Ref<SubTexture2D>& subTexture, const glm::vec4& color, float tilingFactor);
 
 		static void fill_quad();
 		static void fill_trigon();

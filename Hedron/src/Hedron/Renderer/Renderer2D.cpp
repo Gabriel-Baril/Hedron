@@ -266,17 +266,6 @@ namespace Hedron
 	void Renderer2D::fill_rect(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& tintColor, float tilingFactor)
 	{
 		HDR_PROFILE_FUNCTION();
-
-		float sheetWidth = texture->get_width();
-		float sheetHeight = texture->get_height();
-		float spriteWidth = 64;
-		float spriteHeight = 64;
-
-		auto pixelMap = [sheetHeight](uint32_t x, uint32_t y) {return glm::vec2{ x, sheetHeight - y }; };
-		//auto pixelMap = [sheetHeight](uint32_t x, uint32_t y) {return glm::vec2{ x, y }; };
-		auto pixelSpriteMap = [&pixelMap, spriteWidth, spriteHeight](uint32_t x, uint32_t y) {return pixelMap((spriteWidth + 1) * x + 1, (spriteHeight + 1) * y + 1); };
-
-		glm::vec2 spriteCoord = pixelSpriteMap(1, 1) / glm::vec2(sheetWidth, sheetHeight);
 		
 		if (s_renderer2DData.quadIndexCount >= Renderer2DData::maxIndices || s_renderer2DData.textureSlotIndex >= Renderer2DData::maxTextureSlot - 1)
 			Renderer2D::start_new_batch();
@@ -323,6 +312,72 @@ namespace Hedron
 		s_renderer2DData.quadVertexBufferPtr->position = { position.x, position.y + size.y, position.z };
 		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
 		s_renderer2DData.quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadIndexCount += 6;
+
+		s_renderer2DData.stats.quadCount++;
+	}
+
+	void Renderer2D::fill_rect(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, const glm::vec4& tintColor, float tilingFactor)
+	{
+		fill_rect({position.x, position.y, 0.0f}, size, subTexture, tintColor, tilingFactor);
+	}
+
+	void Renderer2D::fill_rect(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, const glm::vec4& tintColor, float tilingFactor)
+	{
+		HDR_PROFILE_FUNCTION();
+
+		const Ref<Texture2D> texture = subTexture->get_texture();
+		const glm::vec2* textureCoords = subTexture->get_tex_coords();
+
+		if (s_renderer2DData.quadIndexCount >= Renderer2DData::maxIndices || s_renderer2DData.textureSlotIndex >= Renderer2DData::maxTextureSlot - 1)
+			Renderer2D::start_new_batch();
+
+		float textureIndex = 0.0f;
+
+		for (uint32_t i = 1; i < s_renderer2DData.textureSlotIndex; i++)
+		{
+			if (*s_renderer2DData.textureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)s_renderer2DData.textureSlotIndex;
+			s_renderer2DData.textureSlots[s_renderer2DData.textureSlotIndex] = texture;
+			s_renderer2DData.textureSlotIndex++;
+		}
+
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x, position.y, position.z };
+		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = textureCoords[0];
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x + size.x, position.y, position.z };
+		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = textureCoords[1];
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x + size.x, position.y + size.y, position.z };
+		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = textureCoords[2];
+		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadVertexBufferPtr->position = { position.x, position.y + size.y, position.z };
+		s_renderer2DData.quadVertexBufferPtr->color = tintColor;
+		s_renderer2DData.quadVertexBufferPtr->texCoord = textureCoords[3];
 		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
 		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
 		s_renderer2DData.quadVertexBufferPtr++;
@@ -477,6 +532,61 @@ namespace Hedron
 		s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
 		s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
 		s_renderer2DData.quadVertexBufferPtr++;
+
+		s_renderer2DData.quadIndexCount += 6;
+
+		s_renderer2DData.stats.quadCount++;
+	}
+
+
+	void Renderer2D::fill_rect(const glm::vec2& position, const glm::vec2& size, float radRotation, const Ref<SubTexture2D>& subTexture, const glm::vec4& tintColor, float tilingFactor)
+	{
+		fill_rect({position.x, position.y, 0.0f}, size, radRotation, subTexture, tintColor, tilingFactor);
+	}
+
+	void Renderer2D::fill_rect(const glm::vec3& position, const glm::vec2& size, float radRotation, const Ref<SubTexture2D>& subTexture, const glm::vec4& tintColor, float tilingFactor)
+	{
+		HDR_PROFILE_FUNCTION();
+
+		const Ref<Texture2D> texture = subTexture->get_texture();
+		const glm::vec2* textureCoords = subTexture->get_tex_coords();
+
+		if (s_renderer2DData.quadIndexCount >= Renderer2DData::maxIndices || s_renderer2DData.textureSlotIndex >= Renderer2DData::maxTextureSlot - 1)
+			Renderer2D::start_new_batch();
+
+		float textureIndex = 0.0f;
+
+		for (uint32_t i = 1; i < s_renderer2DData.textureSlotIndex; i++)
+		{
+			if (*s_renderer2DData.textureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)s_renderer2DData.textureSlotIndex;
+			s_renderer2DData.textureSlots[s_renderer2DData.textureSlotIndex] = texture;
+			s_renderer2DData.textureSlotIndex++;
+		}
+
+		glm::mat4 transform =
+			glm::translate(glm::mat4(1.0f), position) *
+			glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f }) *
+			glm::rotate(glm::mat4(1.0f), radRotation, { 0.0f, 0.0f, 1.0f });
+
+		// TODO: Refactor the other functions like this
+		for (uint32_t i = 0;i < 4;i++)
+		{
+			s_renderer2DData.quadVertexBufferPtr->position = transform * s_renderer2DData.quadVertexPositions[i];
+			s_renderer2DData.quadVertexBufferPtr->color = tintColor;
+			s_renderer2DData.quadVertexBufferPtr->texCoord = textureCoords[i];
+			s_renderer2DData.quadVertexBufferPtr->texIndex = textureIndex;
+			s_renderer2DData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+			s_renderer2DData.quadVertexBufferPtr++;
+		}
 
 		s_renderer2DData.quadIndexCount += 6;
 

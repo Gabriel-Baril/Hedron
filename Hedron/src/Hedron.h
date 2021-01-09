@@ -22,6 +22,7 @@
 #include "Hedron/Renderer/ShaderLibrary.h"
 #include "Hedron/Renderer/Texture.h"
 #include "Hedron/Renderer/Texture2D.h"
+#include "Hedron/Renderer/SubTexture2D.h"
 #include "Hedron/Renderer/VertexArray.h"
 #include "Hedron/Renderer/IndexBuffer.h"
 #include "Hedron/Renderer/VertexBuffer.h"
