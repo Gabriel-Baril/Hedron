@@ -22,8 +22,12 @@ private:
 	ParticleProps m_particleProps;
 
 	Hedron::Ref<Hedron::Texture2D> m_achivementsTexture;
+	Hedron::Ref<Hedron::Texture2D> m_tilesTexture;
 	Hedron::Ref<Hedron::Texture2D> m_heartTexture;
 	Hedron::Ref<Hedron::SubTexture2D> m_frameTexture;
+
+	std::unordered_map<char, Hedron::Ref<Hedron::SubTexture2D>> m_tiles;
+
 	glm::vec4 m_backgroundColor;
 
 	Hedron::OrthographicCameraController m_cameraController;

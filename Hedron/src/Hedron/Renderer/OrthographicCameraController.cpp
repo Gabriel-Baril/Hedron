@@ -50,6 +50,12 @@ namespace Hedron
 		dispatcher.dispatch<WindowResizeEvent>(HDR_BIND_EVENT_FN(OrthographicCameraController::on_window_resize_event));
 	}
 
+	void OrthographicCameraController::calculate_view()
+	{
+		m_bounds = { -m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel };
+		m_camera.set_projection(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
+	}
+
 	bool OrthographicCameraController::on_mouse_scrolled_event(MouseScrolledEvent& e)
 	{
 		HDR_PROFILE_FUNCTION();
@@ -57,18 +63,15 @@ namespace Hedron
 		m_zoomLevel -= e.get_y_offset() / 5.0f;
 		m_zoomLevel = std::max(m_zoomLevel, 0.25f);
 		m_cameraTranslationSpeed = m_zoomLevel;
-		m_bounds = { -m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel };
-		m_camera.set_projection(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
+		calculate_view();
 		return false;
 	}
 
 	bool OrthographicCameraController::on_window_resize_event(WindowResizeEvent& e)
 	{
 		HDR_PROFILE_FUNCTION();
-
-		m_aspectRatio = (float)e.get_width() / (float)e.get_height();
-		m_bounds = { -m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel };
-		m_camera.set_projection(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
+		m_aspectRatio = (float)e.get_width() / (float)e.get_height(); 
+		calculate_view();
 		return false;
 	}
 

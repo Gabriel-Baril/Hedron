@@ -50,10 +50,12 @@ namespace Hedron
 		void set_zoom_level(float zoomLevel)
 		{
 			m_zoomLevel = zoomLevel;
-			//m_camera.set_projection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
+			calculate_view();
 		}
 
 	private:
+		void calculate_view();
+
 		bool on_mouse_scrolled_event(MouseScrolledEvent& e);
 		bool on_window_resize_event(WindowResizeEvent& e);
 	private:

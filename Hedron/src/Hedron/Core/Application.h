@@ -26,6 +26,8 @@ namespace Hedron
 
 		inline static Application& get() { return *s_instance; }
 		inline Window& get_window() { return *m_window; };
+
+		void close();
 	private:
 		bool on_window_close(WindowCloseEvent& windowCloseEvent);
 		bool on_window_resize(WindowResizeEvent& windowResizeEvent);

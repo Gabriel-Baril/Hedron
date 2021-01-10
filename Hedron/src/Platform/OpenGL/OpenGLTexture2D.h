@@ -18,6 +18,7 @@ namespace Hedron
 
 		virtual uint32_t get_width() const override { return m_width; }
 		virtual uint32_t get_height() const override { return m_height; }
+		virtual uint32_t get_renderer_id() const override { return m_rendererID; };
 
 		virtual void set_data(void* data, uint32_t size) override;
 

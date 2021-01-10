@@ -6,6 +6,12 @@
 
 namespace Hedron
 {
+	enum class CoordType
+	{
+		TOP,
+		BOTTOM
+	};
+
 	class SubTexture2D
 	{
 	public:
@@ -16,7 +22,8 @@ namespace Hedron
 
 		// sprite dimension is in term of cell size
 		// TODO: Add overloads
-		static Ref<SubTexture2D> create_from_coords(const Ref<Texture2D>& texture, const glm::vec2& coords, const glm::vec2 cellSize, const glm::vec2& spriteDimension = { 1.0f, 1.0f });
+		static Ref<SubTexture2D> create_from_coords(const Ref<Texture2D>& texture, const glm::vec2& coords, const glm::vec2 cellSize, const glm::vec2& spriteDimension);// = { 1.0f, 1.0f });
+		static Ref<SubTexture2D> create_from_coords(const Ref<Texture2D>& texture, const glm::vec2& pixelCoords, const glm::vec2& spriteDimension);
 	private:
 		Ref<Texture2D> m_texture;
 

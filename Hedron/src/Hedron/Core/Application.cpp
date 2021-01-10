@@ -70,6 +70,11 @@ namespace Hedron
 		overlay->on_attach();
 	}
 
+	void Application::close()
+	{
+		m_running = false;
+	}
+
 	bool Application::on_window_close(WindowCloseEvent& windowCloseEvent)
 	{
 		m_running = false;

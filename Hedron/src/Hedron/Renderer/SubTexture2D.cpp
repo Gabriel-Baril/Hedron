@@ -31,5 +31,14 @@ namespace Hedron
 
 		return create_ref<SubTexture2D>(texture, min, max);
 	}
+
+
+	Ref<SubTexture2D> SubTexture2D::create_from_coords(const Ref<Texture2D>& texture, const glm::vec2& pixelCoords, const glm::vec2& spriteDimension)
+	{
+		glm::vec2 min = { pixelCoords.x / (float)texture->get_width(), pixelCoords.y / (float)texture->get_height() };
+		glm::vec2 max = { (pixelCoords.x + spriteDimension.x) / (float)texture->get_width(), (pixelCoords.y + spriteDimension.y) / (float)texture->get_height() };
+
+		return create_ref<SubTexture2D>(texture, min, max);
+	}
 }
 
