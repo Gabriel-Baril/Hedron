@@ -1,6 +1,6 @@
 workspace "Hedron"
     architecture "x64" -- Chooses the architecture of our workspace (solution)
-    startproject "Sandbox"
+    startproject "Poly"
 
     configurations
     {
@@ -137,6 +137,64 @@ project "Hedron"      -- Name of the project
 
 project "Sandbox"
     location "Sandbox"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"  -- The version of our C++ used
+    staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
+    objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
+
+    disablewarnings
+    {
+        "4251"
+    }
+
+    files -- Chooses the files that we want to add in our project
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp"
+    }
+
+    includedirs -- Adds additional include folders
+    {
+        "Hedron/vendor/spdlog/include",
+        "Hedron/src",
+        "%{includeDir.glm}",
+        "%{includeDir.imgui}"
+    }
+
+    links
+    {
+        "Hedron"
+    }
+
+    filter "system:windows" -- The instructions downward are only applied for windows users
+        staticruntime "on"  -- Do we want to link runtime libraries (Yes)
+        systemversion "latest" -- Chooses the windows version of our project
+
+        defines -- Defines preprocessor definition
+        {
+            "HDR_PLATFORM_WINDOWS"
+        }
+
+    filter "configurations:Debug"
+        defines "HDR_DEBUG"
+        runtime "Debug"
+        symbols "on"
+        
+    filter "configurations:Release"
+        defines "HDR_RELEASE"
+        runtime "Release"
+        optimize "on"
+        
+    filter "configurations:Dist"
+        defines "HDR_DIST"
+        runtime "Release"
+        optimize "on"
+
+project "Poly"
+    location "Poly"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"  -- The version of our C++ used

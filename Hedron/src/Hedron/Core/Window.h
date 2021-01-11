@@ -27,8 +27,8 @@ namespace Hedron
 
 		virtual void on_update() = 0;
 
-		virtual unsigned int get_width() const = 0;
-		virtual unsigned int get_height() const = 0;
+		virtual uint32_t get_width() const = 0;
+		virtual uint32_t get_height() const = 0;
 
 		// Window attribute
 		virtual void set_event_callback(const EventCallbackFn& callback) = 0;
@@ -37,6 +37,6 @@ namespace Hedron
 
 		virtual void* get_native_window() = 0;
 
-		static Window* create(const WindowProps& props = WindowProps()); // Has to be implemented in all the subclasses of Window
+		static Scope<Window> create(const WindowProps& props = WindowProps()); // Has to be implemented in all the subclasses of Window
 	};
 }

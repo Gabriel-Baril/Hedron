@@ -250,6 +250,7 @@ class Sandbox : public Hedron::Application
 {
 public:
 	Sandbox()
+		: Application("Sandbox")
 	{
 		//push_layer(new SceneLayer());
 		push_layer(new Sandbox2D());

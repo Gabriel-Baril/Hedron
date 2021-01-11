@@ -19,11 +19,6 @@ namespace Hedron
 		HDR_CORE_ERROR("GLFW Error ({0}): {1}", errorCode, errorDescription);
 	}
 
-	Window* Window::create(const WindowProps& props)
-	{
-		return new WindowsWindow(props);
-	}
-
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
 		HDR_PROFILE_FUNCTION();
@@ -173,7 +168,7 @@ namespace Hedron
 
 	void WindowsWindow::set_char_callback()
 	{
-		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keyCode)
+		glfwSetCharCallback(m_window, [](GLFWwindow* window, uint32_t keyCode)
 		{
 			WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
 			KeyTypedEvent keyTypedEvent(keyCode);

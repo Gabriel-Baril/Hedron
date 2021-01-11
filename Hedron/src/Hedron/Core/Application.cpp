@@ -15,14 +15,15 @@ namespace Hedron
 {
 	Application* Application::s_instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
+		: m_name(name)
 	{
 		HDR_CORE_ASSERT(!s_instance, "Application already exists!");
 		HDR_PROFILE_FUNCTION();
 
 		s_instance = this;
 
-		m_window = std::unique_ptr<Window>(Window::create());
+		m_window = Window::create(WindowProps(name));
 		m_window->set_event_callback(HDR_BIND_EVENT_FN(Application::on_event));
 
 		Renderer::init();

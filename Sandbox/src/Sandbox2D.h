@@ -26,8 +26,6 @@ private:
 	Hedron::Ref<Hedron::Texture2D> m_heartTexture;
 	Hedron::Ref<Hedron::SubTexture2D> m_frameTexture;
 
-	Hedron::Ref<Hedron::FrameBuffer> m_frameBuffer;
-
 	std::unordered_map<char, Hedron::Ref<Hedron::SubTexture2D>> m_tiles;
 
 	glm::vec4 m_backgroundColor;

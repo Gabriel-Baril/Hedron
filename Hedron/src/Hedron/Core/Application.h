@@ -15,7 +15,7 @@ namespace Hedron
 	class HEDRON_API Application
 	{
 	public:
-		Application();
+		Application(const std::string& name);
 		virtual ~Application();
 
 		void run();
@@ -32,11 +32,12 @@ namespace Hedron
 		bool on_window_close(WindowCloseEvent& windowCloseEvent);
 		bool on_window_resize(WindowResizeEvent& windowResizeEvent);
 	private:
-		std::unique_ptr<Window> m_window;
+		Scope<Window> m_window;
 		ImGuiLayer* m_imGuiLayer;
+		LayerStack m_layerStack;
+		std::string m_name;
 		bool m_running = true;
 		bool m_minimised = false;
-		LayerStack m_layerStack;
 		float m_lastFrameTime = 0;
 	private:
 		static Application* s_instance;

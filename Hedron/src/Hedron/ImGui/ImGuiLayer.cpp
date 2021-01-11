@@ -91,10 +91,10 @@ namespace Hedron
 
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
-				GLFWwindow* backupCurrentContext = glfwGetCurrentContext();
-				ImGui::UpdatePlatformWindows();
-				ImGui::RenderPlatformWindowsDefault();
-				glfwMakeContextCurrent(backupCurrentContext);
+			GLFWwindow* backupCurrentContext = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backupCurrentContext);
 		}
 	}
 }

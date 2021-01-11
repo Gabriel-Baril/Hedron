@@ -50,6 +50,12 @@ namespace Hedron
 		dispatcher.dispatch<WindowResizeEvent>(HDR_BIND_EVENT_FN(OrthographicCameraController::on_window_resize_event));
 	}
 
+	void OrthographicCameraController::on_resize(float width, float height)
+	{
+		m_aspectRatio = width / height;
+		this->calculate_view();
+	}
+
 	void OrthographicCameraController::calculate_view()
 	{
 		m_bounds = { -m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel };
@@ -70,8 +76,7 @@ namespace Hedron
 	bool OrthographicCameraController::on_window_resize_event(WindowResizeEvent& e)
 	{
 		HDR_PROFILE_FUNCTION();
-		m_aspectRatio = (float)e.get_width() / (float)e.get_height(); 
-		calculate_view();
+		on_resize((float)e.get_width(), (float)e.get_height());
 		return false;
 	}
 
