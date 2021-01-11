@@ -18,6 +18,7 @@
 #include "Hedron/Renderer/Renderer2D.h"
 #include "Hedron/Renderer/RenderCommand.h"
 
+#include "Hedron/Renderer/FrameBuffer.h"
 #include "Hedron/Renderer/Shader.h"
 #include "Hedron/Renderer/ShaderLibrary.h"
 #include "Hedron/Renderer/Texture.h"
