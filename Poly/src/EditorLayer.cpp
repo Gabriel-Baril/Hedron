@@ -145,7 +145,7 @@ namespace Hedron
 		Application::get().get_imgui_layer()->block_events(!m_viewportFocused || !m_viewportHovered);
 		
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail(); // Get the size of our panel
-		if (m_viewPortSize != *(glm::vec2*)&viewportPanelSize)
+		if (m_viewPortSize != *(glm::vec2*)&viewportPanelSize && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
 		{
 			m_frameBuffer->resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 			m_cameraController.on_resize(viewportPanelSize.x, viewportPanelSize.y);

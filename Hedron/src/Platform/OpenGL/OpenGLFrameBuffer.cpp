@@ -5,6 +5,8 @@
 
 namespace Hedron
 {
+	static const uint32_t s_maxFrameBufferSize = 8192;
+
 	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpec& spec)
 		: m_frameBufferSpec(spec)
 	{
@@ -63,6 +65,11 @@ namespace Hedron
 
 	void OpenGLFrameBuffer::resize(uint32_t width, uint32_t height)
 	{
+		if (width == 0 || height == 0 || width > s_maxFrameBufferSize || height > s_maxFrameBufferSize)
+		{
+			HDR_CORE_WARNING("[{0}, {1}] is an invalid framebuffer size", width, height);
+			return;
+		}
 		m_frameBufferSpec.width = width;
 		m_frameBufferSpec.height = height;
 		this->invalidate();

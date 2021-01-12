@@ -17,21 +17,21 @@ namespace Hedron
 	void OrthographicCameraController::on_update(Timestep ts)
 	{
 		HDR_PROFILE_FUNCTION();
-		if (Input::is_key_pressed(HDR_KEY_W))
+		if (Input::is_key_pressed(Hedron::KeyCode::W))
 			m_cameraPosition.y += m_cameraTranslationSpeed * ts;
-		else if (Input::is_key_pressed(HDR_KEY_S))
+		else if (Input::is_key_pressed(Hedron::KeyCode::S))
 			m_cameraPosition.y -= m_cameraTranslationSpeed * ts;
 
-		if (Input::is_key_pressed(HDR_KEY_A))
+		if (Input::is_key_pressed(Hedron::KeyCode::A))
 			m_cameraPosition.x -= m_cameraTranslationSpeed * ts;
-		else if (Input::is_key_pressed(HDR_KEY_D))
+		else if (Input::is_key_pressed(Hedron::KeyCode::D))
 			m_cameraPosition.x += m_cameraTranslationSpeed * ts;
 
 		if (m_rotation)
 		{
-			if (Input::is_key_pressed(HDR_KEY_Q))
+			if (Input::is_key_pressed(Hedron::KeyCode::Q))
 				m_cameraRotation += m_cameraRotationSpeed * ts;
-			else if (Input::is_key_pressed(HDR_KEY_E))
+			else if (Input::is_key_pressed(Hedron::KeyCode::E))
 				m_cameraRotation -= m_cameraRotationSpeed * ts;
 
 			m_camera.set_rotation(m_cameraRotation);

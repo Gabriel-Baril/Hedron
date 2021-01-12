@@ -14,6 +14,11 @@ namespace Hedron
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
+	bool Input::is_key_pressed(KeyCode keyCode)
+	{
+		return Input::is_key_pressed(static_cast<int32_t>(keyCode));
+	}
+
 	bool Input::is_mouse_button_pressed(int mouseButton)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().get_window().get_native_window());

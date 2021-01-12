@@ -3,6 +3,36 @@
 #include <memory>
 #include "Hedron/Debug/Instrumentor.h"
 
+
+#if defined(_WIN32)
+	#if defined(_WIN64)
+		#define HDR_PLATFORM_WINDOWS
+	#else
+		#error "x86 builds are not supported!"
+	#endif
+#elif defined(__APPLE__) || defined(_MACH__)
+	#include <TargetConditionals.h>
+	#if TARGET_IPHONE_SIMULATOR == 1
+		#error "IOS simulator is not supported!"
+	#elif TARGET_OS_IPHONE == 1
+		#define HDR_PLATFORM_IOS
+		#error "IOS is not supported!"
+	#elif TARGET_OS_MAC == 1
+		#define HDR_PLATFORM_MACOS
+		#error "MaxOS is not supported!"
+	#else
+		#error "Unknown Apple platform!"
+	#endif
+#elif defined(__ANDROID__)
+	#define HDR_PLATFORM_ANDROID
+	#error "Android is not supported!"
+#elif defined(__linux__)
+	#define HDR_PLATFORM_LINUX
+	#error "Linux is not supported!"
+#else
+	#error "Unknown platform!"
+#endif
+
 #if defined(HDR_PLATFORM_WINDOWS)
 	#if HDR_DYNAMIC_LINK
 		#if defined(HDR_BUILD_DLL)
