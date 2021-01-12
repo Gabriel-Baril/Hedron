@@ -11,12 +11,18 @@ namespace Hedron
 	{
 	public:
 		ImGuiLayer();
-		~ImGuiLayer();
+		virtual ~ImGuiLayer();
 
 		virtual void on_attach() override;
 		virtual void on_detach() override;
+		virtual void on_event(Event& event) override;
 
 		void begin();
 		void end();
+
+		void block_events(bool blockImGuiEvents) { m_blockImGuiEvents = blockImGuiEvents; }
+	private:
+		bool m_blockImGuiEvents = true;
+		float m_time = 0.0f;
 	};
 }

@@ -28,7 +28,7 @@ namespace Hedron
 
 		Renderer::init();
 
-		m_imGuiLayer = new ImGuiLayer;
+		m_imGuiLayer = new ImGuiLayer();
 		push_overlay(m_imGuiLayer);
 	}
 
@@ -50,8 +50,9 @@ namespace Hedron
 		// Maybe replace this with a while loop
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
 		{
+			if (e.handled)
+				break;
 			(*--it)->on_event(e);
-			if (e.is_handled()) break;
 		}
 	}
 

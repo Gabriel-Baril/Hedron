@@ -68,6 +68,16 @@ namespace Hedron
 		ImGui::DestroyContext();
 	}
 
+	void ImGuiLayer::on_event(Event& event)
+	{
+		if (m_blockImGuiEvents)
+		{
+			ImGuiIO io = ImGui::GetIO();
+			event.handled |= event.is_in_category(EVENT_CATEGORY_MOUSE) & io.WantCaptureMouse;
+			event.handled |= event.is_in_category(EVENT_CATEGORY_KEYBOARD) & io.WantCaptureKeyboard;
+		}
+	}
+
 	void ImGuiLayer::begin()
 	{
 		HDR_PROFILE_FUNCTION();

@@ -16,6 +16,8 @@ namespace Hedron
 	private:
 		Ref<FrameBuffer> m_frameBuffer;
 
+		bool m_viewportFocused = false, m_viewportHovered = false;
+		
 		glm::vec2 m_viewPortSize = { 0.0f, 0.0f };
 		glm::vec4 m_backgroundColor;
 		OrthographicCameraController m_cameraController;

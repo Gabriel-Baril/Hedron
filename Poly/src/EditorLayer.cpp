@@ -38,7 +38,8 @@ namespace Hedron
 		HDR_PROFILE_FUNCTION();
 
 		Renderer2D::reset_stats();
-		m_cameraController.on_update(ts);
+		if(m_viewportFocused)
+			m_cameraController.on_update(ts);
 		//HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), 1000 / ts.get_milliseconds());
 
 		// Camera position
@@ -139,6 +140,10 @@ namespace Hedron
 			
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+		m_viewportFocused = ImGui::IsWindowFocused();
+		m_viewportHovered = ImGui::IsWindowHovered();
+		Application::get().get_imgui_layer()->block_events(!m_viewportFocused || !m_viewportHovered);
+		
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail(); // Get the size of our panel
 		if (m_viewPortSize != *(glm::vec2*)&viewportPanelSize)
 		{

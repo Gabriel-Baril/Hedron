@@ -24,10 +24,13 @@ namespace Hedron
 		void push_layer(Layer* layer);
 		void push_overlay(Layer* overlay);
 
-		inline static Application& get() { return *s_instance; }
 		inline Window& get_window() { return *m_window; };
 
 		void close();
+
+		ImGuiLayer* get_imgui_layer() { return m_imGuiLayer; }
+
+		inline static Application& get() { return *s_instance; }
 	private:
 		bool on_window_close(WindowCloseEvent& windowCloseEvent);
 		bool on_window_resize(WindowResizeEvent& windowResizeEvent);

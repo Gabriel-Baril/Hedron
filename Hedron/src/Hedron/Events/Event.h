@@ -39,19 +39,18 @@ namespace Hedron
 	{
 		friend class EventDispatcher;
 	public:
+		virtual ~Event() = default;
+
 		virtual EventType get_event_type() const = 0;
 		virtual const char* get_name() const = 0;
 		virtual int get_category_flags() const = 0;
 		virtual std::string to_string() const { return get_name(); } // Has to be overrided if you want more specific details about the event
-		virtual void set_handled(bool handled) { this->m_handled = handled; }
-		virtual bool is_handled() { return m_handled; }
 
 		inline bool is_in_category(EventCategory category)
 		{
 			return get_category_flags() & category;
 		}
-	protected:
-		bool m_handled = false;
+		bool handled = false;
 	};
 
 	// Used to dispatch events based on their type
@@ -68,7 +67,7 @@ namespace Hedron
 			// Check if the template parameter matchs the current event type
 			if (m_event.get_event_type() == T::get_static_type())
 			{
-				m_event.m_handled = func(*(T*)&m_event);
+				m_event.handled = func(*(T*)&m_event);
 				return true;
 			}
 			return false;

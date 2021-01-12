@@ -3,27 +3,25 @@
 #include <GLFW/glfw3.h>
 
 #include "Hedron/Core/Application.h"
-#include "Platform/Windows/WindowsInput.h"
+#include "Hedron/Core/Input.h"
 
 namespace Hedron
 {
-	Input* Input::s_instance = new WindowsInput();
-
-	bool WindowsInput::is_key_pressed_impl(int keyCode)
+	bool Input::is_key_pressed(int keyCode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().get_window().get_native_window());
 		auto state = glfwGetKey(window, keyCode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::is_mouse_button_pressed_impl(int mouseButton)
+	bool Input::is_mouse_button_pressed(int mouseButton)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().get_window().get_native_window());
 		auto state = glfwGetMouseButton(window, mouseButton);
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowsInput::get_mouse_position_impl()
+	std::pair<float, float> Input::get_mouse_position()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().get_window().get_native_window());
 		double mouse_x, mouse_y;
@@ -31,15 +29,15 @@ namespace Hedron
 		return std::make_pair<float, float>((float)mouse_x, (float)mouse_y);
 	}
 
-	float WindowsInput::get_mouse_x_impl()
+	float Input::get_mouse_x()
 	{
-		auto [mouse_x, mouse_y] = get_mouse_position_impl();
+		auto [mouse_x, mouse_y] = Input::get_mouse_position();
 		return mouse_x;
 	}
 
-	float WindowsInput::get_mouse_y_impl()
+	float Input::get_mouse_y()
 	{
-		auto [mouse_x, mouse_y] = get_mouse_position_impl();
+		auto [mouse_x, mouse_y] = Input::get_mouse_position();
 		return mouse_y;
 	}
 }
