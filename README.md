@@ -1,5 +1,4 @@
-# Hedron
-Hedron Engine
+# Hedron Engine
 An engine inspired by the Hazel Engine :)
 
 # TODO
