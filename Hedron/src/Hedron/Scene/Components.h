@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "Hedron/Renderer/OrthographicCamera.h"
+#include "Hedron/Renderer/Camera.h"
 
 namespace Hedron
 {
@@ -40,6 +40,12 @@ namespace Hedron
 
 	struct CameraComponent
 	{
-		OrthographicCamera camera;
+		Hedron::Camera camera;
+		bool primary = true; // TODO: Think about moving to scene 
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const glm::mat4& projection)
+			: camera{ projection } {}
 	};
 }

@@ -132,6 +132,20 @@ namespace Hedron
 		delete[] s_renderer2DData.quadVertexBufferBase;
 	}
 
+	void Renderer2D::begin_scene(const Camera& camera, const glm::mat4& transform)
+	{
+		HDR_PROFILE_FUNCTION();
+
+		glm::mat4 viewProj = camera.get_projection() * glm::inverse(transform);
+
+		s_renderer2DData.textureShader->bind();
+		s_renderer2DData.textureShader->set_mat4("u_viewProjection", viewProj);
+
+		s_renderer2DData.quadIndexCount = 0;
+		s_renderer2DData.quadVertexBufferPtr = s_renderer2DData.quadVertexBufferBase;
+		s_renderer2DData.textureSlotIndex = 1;
+	}
+
 	void Renderer2D::begin_scene(const OrthographicCamera& camera)
 	{
 		HDR_PROFILE_FUNCTION();

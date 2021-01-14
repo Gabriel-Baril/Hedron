@@ -18,6 +18,10 @@ namespace Hedron
 
 		Ref<Scene> m_activeScene;
 		Entity m_squareEntity;
+		
+		Entity m_mainCameraEntity;
+		Entity m_originCameraEntity;
+		bool m_mainCamera;
 
 		bool m_viewportFocused = false, m_viewportHovered = false;
 		

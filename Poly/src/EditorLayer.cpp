@@ -31,6 +31,12 @@ namespace Hedron
 
 		m_squareEntity = m_activeScene->create_entity();
 		m_squareEntity.add_component<Hedron::SpriteRendererComponent>(glm::vec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+
+		m_mainCameraEntity = m_activeScene->create_entity();
+		m_mainCameraEntity.add_component<Hedron::CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+
+		m_originCameraEntity = m_activeScene->create_entity();
+		m_originCameraEntity.add_component<Hedron::CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
 	}
 
 	void EditorLayer::on_detach()
@@ -44,8 +50,13 @@ namespace Hedron
 
 		if (m_viewportFocused)
 			m_cameraController.on_update(ts);
-
 		
+		// TEMP
+		m_mainCameraEntity.get_component<TransformComponent>().transform = glm::inverse(m_cameraController.get_camera().get_view_matrix());
+		m_mainCameraEntity.get_component<CameraComponent>().camera.set_projection(m_cameraController.get_camera().get_projection_matrix());
+
+
+		// End temp
 
 		Renderer2D::reset_stats();
 		m_frameBuffer->bind();
@@ -134,13 +145,17 @@ namespace Hedron
 			ImGui::EndMenuBar();
 		}
 
-		ImGui::Begin("Background color control panel");
+		ImGui::Begin("Control Panel");
 		auto& squareColor = m_squareEntity.get_component<Hedron::SpriteRendererComponent>().color;
 
 		ImGui::Text("Entity name : %s", m_squareEntity.get_component<Hedron::TagComponent>().tag.c_str());
 		ImGui::Separator();
 		ImGui::ColorEdit4("Square Color : ", glm::value_ptr(squareColor));
-
+		if (ImGui::Checkbox("Main Camera", &m_mainCamera))
+		{
+			m_mainCameraEntity.get_component<CameraComponent>().primary = m_mainCamera;
+			m_originCameraEntity.get_component<CameraComponent>().primary = !m_mainCamera;
+		}
 
 		ImGui::End();
 			
