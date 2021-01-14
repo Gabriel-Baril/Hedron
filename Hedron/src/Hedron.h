@@ -13,6 +13,9 @@
 
 #include "Hedron/ImGui/ImGuiLayer.h"
 
+#include "Hedron/Scene/Scene.h"
+#include "Hedron/Scene/Components.h"
+
 //-Rendering---------------------
 #include "Hedron/Renderer/Renderer.h"
 #include "Hedron/Renderer/Renderer2D.h"

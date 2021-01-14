@@ -58,6 +58,9 @@ namespace Hedron
 		static void fill_rect(const glm::vec2& position, const glm::vec2& size, float radRotation, const Ref<SubTexture2D>& subTexture, const glm::vec4& color, float tilingFactor);
 		static void fill_rect(const glm::vec3& position, const glm::vec2& size, float radRotation, const Ref<SubTexture2D>& subTexture, const glm::vec4& color, float tilingFactor);
 
+		static void fill_rect(const glm::mat4& transform, const glm::vec4& color);
+		static void fill_rect(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& tintColor, float tilingFactor);
+
 		static void fill_quad();
 		static void fill_trigon();
 		static void fill_polygon();

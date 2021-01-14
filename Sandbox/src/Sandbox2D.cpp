@@ -79,7 +79,7 @@ void Sandbox2D::on_update(Hedron::Timestep ts)
 
 	Hedron::Renderer2D::begin_scene(m_cameraController.get_camera());
 
-	if (Hedron::Input::is_mouse_button_pressed(HDR_MOUSE_BUTTON_1))
+	if (Hedron::Input::is_mouse_button_pressed(Hedron::MouseButton::MOUSE_BUTTON_1))
 	{
 		glm::vec2 cam_pos = m_cameraController.get_camera().get_position();
 

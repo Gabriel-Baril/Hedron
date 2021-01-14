@@ -26,6 +26,12 @@ namespace Hedron
 		return state == GLFW_PRESS;
 	}
 
+
+	bool Input::is_mouse_button_pressed(MouseButton mouseButton)
+	{
+		return Input::is_mouse_button_pressed(static_cast<int32_t>(mouseButton));
+	}
+
 	std::pair<float, float> Input::get_mouse_position()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().get_window().get_native_window());

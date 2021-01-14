@@ -18,6 +18,7 @@ includeDir["glad"] = "Hedron/vendor/glad/include"
 includeDir["imgui"] = "Hedron/vendor/imgui"
 includeDir["glm"] = "Hedron/vendor/glm"
 includeDir["stb_image"] = "Hedron/vendor/stb_image"
+includeDir["entt"] = "Hedron/vendor/entt/include"
 
 group "Dependencies"
     include "Hedron/vendor/glfw" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/glfw" in this premake file
@@ -56,7 +57,8 @@ project "Hedron"      -- Name of the project
         "%{includeDir.glad}",
         "%{includeDir.imgui}",
         "%{includeDir.glm}",
-        "%{includeDir.stb_image}"
+        "%{includeDir.stb_image}",
+        "%{includeDir.entt}"
     }
 
     links
@@ -144,12 +146,7 @@ project "Sandbox"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
     objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
-
-    disablewarnings
-    {
-        "4251"
-    }
-
+    
     files -- Chooses the files that we want to add in our project
     {
         "%{prj.name}/src/**.h",
@@ -161,7 +158,8 @@ project "Sandbox"
         "Hedron/vendor/spdlog/include",
         "Hedron/src",
         "%{includeDir.glm}",
-        "%{includeDir.imgui}"
+        "%{includeDir.imgui}",
+        "%{includeDir.entt}"
     }
 
     links
@@ -203,11 +201,6 @@ project "Poly"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
     objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
 
-    disablewarnings
-    {
-        "4251"
-    }
-
     files -- Chooses the files that we want to add in our project
     {
         "%{prj.name}/src/**.h",
@@ -219,7 +212,8 @@ project "Poly"
         "Hedron/vendor/spdlog/include",
         "Hedron/src",
         "%{includeDir.glm}",
-        "%{includeDir.imgui}"
+        "%{includeDir.imgui}",
+        "%{includeDir.entt}"
     }
 
     links

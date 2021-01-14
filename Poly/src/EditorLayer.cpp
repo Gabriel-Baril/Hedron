@@ -13,7 +13,7 @@ namespace Hedron
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer layer"),
 		m_cameraController(1280.f / 720.f, true),
-		m_backgroundColor(0.2f, 0.2f, 0.2f, 1.0f)
+		m_squareColor(0.0f, 1.0f, 0.0f, 1.0f)
 	{
 
 	}
@@ -26,6 +26,12 @@ namespace Hedron
 		frameBufferSpec.width = Application::get().get_window().get_width();
 		frameBufferSpec.height = Application::get().get_window().get_height();
 		m_frameBuffer = FrameBuffer::create(frameBufferSpec);
+
+		m_activeScene = create_ref<Scene>();
+
+		m_square = m_activeScene->create_entity();
+		m_activeScene->reg().emplace<Hedron::TransformComponent>(m_square);
+		m_activeScene->reg().emplace<Hedron::SpriteRendererComponent>(m_square, glm::vec4{ 1.0f, 1.0f, 0.0f, 1.0f });
 	}
 
 	void EditorLayer::on_detach()
@@ -37,23 +43,21 @@ namespace Hedron
 	{
 		HDR_PROFILE_FUNCTION();
 
-		Renderer2D::reset_stats();
-		if(m_viewportFocused)
+		if (m_viewportFocused)
 			m_cameraController.on_update(ts);
-		//HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), 1000 / ts.get_milliseconds());
 
-		// Camera position
-		//HDR_INFO("[{0}, {1}, {2}]", cam.x, cam.y, cam.z);
+		
 
+		Renderer2D::reset_stats();
 		m_frameBuffer->bind();
-		RenderCommand::set_clear_color(m_backgroundColor);
+		RenderCommand::set_clear_color({0.2f, 0.2f, 0.2f, 1.0f});
 		RenderCommand::clear();
 
+
 		Renderer2D::begin_scene(m_cameraController.get_camera());
-
-		Renderer2D::fill_rect({ -0.5f, -0.5f, 0.0f }, {1.0f, 1.0f});
-
+		m_activeScene->on_update(ts); // Update scene
 		Renderer2D::end_scene();
+
 		m_frameBuffer->unbind();
 	}
 
@@ -132,9 +136,9 @@ namespace Hedron
 		}
 
 		ImGui::Begin("Background color control panel");
-		ImGui::SliderFloat("Red background color", &m_backgroundColor.r, 0.0f, 1.0f);
-		ImGui::SliderFloat("Greed background color", &m_backgroundColor.g, 0.0f, 1.0f);
-		ImGui::SliderFloat("Blue background color", &m_backgroundColor.b, 0.0f, 1.0f);
+		auto& squareColor = m_activeScene->reg().get<Hedron::SpriteRendererComponent>(m_square).color;
+		ImGui::ColorEdit4("Square Color : ", glm::value_ptr(squareColor));
+
 
 		ImGui::End();
 			
