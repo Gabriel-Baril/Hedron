@@ -5,19 +5,19 @@
 
 namespace Hedron
 {
+	class Entity;
+
 	class Scene
 	{
 	public:
 		Scene();
 		~Scene();
 
-		entt::entity create_entity(); // TODO: temp
-
-		// TEMP
-		entt::registry& reg() { return m_registry; }
-
+		Entity create_entity(const std::string& name = ""); // TODO: temp
 		void on_update(Timestep ts);
 	private:
 		entt::registry m_registry; // Contains all of our entities
+
+		friend class Entity;
 	};
 }

@@ -1,10 +1,13 @@
 #include "hdrpch.h"
 #include "Hedron/Scene/Scene.h"
 
+#include <glm/glm.hpp>
+
 #include "Hedron/Renderer/Renderer2D.h"
 #include "Hedron/Scene/Components.h"
 
-#include <glm/glm.hpp>
+#include "Hedron/Scene/Entity.h"
+
 
 namespace Hedron
 {
@@ -75,8 +78,16 @@ namespace Hedron
 		}
 	}
 
-	entt::entity Scene::create_entity()
+	Entity Scene::create_entity(const std::string& name)
 	{
-		return m_registry.create();
+		entt::entity entityId = m_registry.create();
+		Entity entity = { entityId, this };
+		entity.add_component<TransformComponent>();
+		auto& tag = entity.add_component<TagComponent>();
+		if (name.empty())
+			tag.tag = "Entity" + std::to_string((uint32_t)entityId);
+		else
+			tag.tag = name;
+		return entity;
 	}
 }

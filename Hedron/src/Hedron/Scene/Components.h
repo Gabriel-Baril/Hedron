@@ -2,8 +2,19 @@
 
 #include <glm/glm.hpp>
 
+#include "Hedron/Renderer/OrthographicCamera.h"
+
 namespace Hedron
 {
+	struct TagComponent
+	{
+		std::string tag;
+		TagComponent() = default;
+		TagComponent(const TagComponent&) = default;
+		TagComponent(const std::string& tag)
+			: tag(tag) {}
+	};
+
 	struct TransformComponent
 	{
 		glm::mat4 transform{ 1.0f };
@@ -25,5 +36,10 @@ namespace Hedron
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
 		SpriteRendererComponent(const glm::vec4& color)
 			: color{ color } {}
+	};
+
+	struct CameraComponent
+	{
+		OrthographicCamera camera;
 	};
 }

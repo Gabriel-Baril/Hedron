@@ -29,9 +29,8 @@ namespace Hedron
 
 		m_activeScene = create_ref<Scene>();
 
-		m_square = m_activeScene->create_entity();
-		m_activeScene->reg().emplace<Hedron::TransformComponent>(m_square);
-		m_activeScene->reg().emplace<Hedron::SpriteRendererComponent>(m_square, glm::vec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		m_squareEntity = m_activeScene->create_entity();
+		m_squareEntity.add_component<Hedron::SpriteRendererComponent>(glm::vec4{ 1.0f, 1.0f, 0.0f, 1.0f });
 	}
 
 	void EditorLayer::on_detach()
@@ -136,7 +135,10 @@ namespace Hedron
 		}
 
 		ImGui::Begin("Background color control panel");
-		auto& squareColor = m_activeScene->reg().get<Hedron::SpriteRendererComponent>(m_square).color;
+		auto& squareColor = m_squareEntity.get_component<Hedron::SpriteRendererComponent>().color;
+
+		ImGui::Text("Entity name : %s", m_squareEntity.get_component<Hedron::TagComponent>().tag.c_str());
+		ImGui::Separator();
 		ImGui::ColorEdit4("Square Color : ", glm::value_ptr(squareColor));
 
 

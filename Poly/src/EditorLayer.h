@@ -17,7 +17,7 @@ namespace Hedron
 		Ref<FrameBuffer> m_frameBuffer;
 
 		Ref<Scene> m_activeScene;
-		entt::entity m_square;
+		Entity m_squareEntity;
 
 		bool m_viewportFocused = false, m_viewportHovered = false;
 		

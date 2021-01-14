@@ -15,6 +15,7 @@
 
 #include "Hedron/Scene/Scene.h"
 #include "Hedron/Scene/Components.h"
+#include "Hedron/Scene/Entity.h"
 
 //-Rendering---------------------
 #include "Hedron/Renderer/Renderer.h"
