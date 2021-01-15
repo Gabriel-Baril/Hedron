@@ -71,17 +71,16 @@ namespace Hedron
 	void Scene::on_update(Timestep ts)
 	{
 		// update scripts
-		m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nativeScriptComponent) 
+		m_registry.view<NativeScriptComponent>().each([=](auto entity, NativeScriptComponent& nativeScriptComponent)
 		{
+			// TODO: Move to Scene::OnPlay
 			if (!nativeScriptComponent.instance)
 			{
-				nativeScriptComponent.instantiateFunction();
+				nativeScriptComponent.instance = nativeScriptComponent.instantiateScript();
 				nativeScriptComponent.instance->m_entity = Entity{ entity, this };
-				if(nativeScriptComponent.onCreateFunction)
-					nativeScriptComponent.onCreateFunction(nativeScriptComponent.instance);
+				nativeScriptComponent.instance->on_create();
 			}
-			if(nativeScriptComponent.onUpdateFunction)
-				nativeScriptComponent.onUpdateFunction(nativeScriptComponent.instance, ts);
+			nativeScriptComponent.instance->on_update(ts);
 		});
 
 		// Render sprites
@@ -91,7 +90,7 @@ namespace Hedron
 			auto view = m_registry.view<TransformComponent, CameraComponent>();
 			for (auto& entity : view)
 			{
-				auto& [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+				auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
 				if (camera.primary)
 				{
 					mainCamera = &camera.camera;

@@ -54,22 +54,15 @@ namespace Hedron
 	struct NativeScriptComponent
 	{
 		ScriptableEntity* instance = nullptr;
-		std::function<void()> instantiateFunction;
-		std::function<void()> destroyInstanceFunction;
 
-		std::function<void(ScriptableEntity*)> onCreateFunction;
-		std::function<void(ScriptableEntity*)> onDestroyFunction;
-		std::function<void(ScriptableEntity*, Timestep)> onUpdateFunction;
+		ScriptableEntity* (*instantiateScript)();
+		void (*destroyScript)(NativeScriptComponent*);
 
 		template<typename T>
 		void bind()
 		{
-			instantiateFunction = [&]() { instance = new T(); };
-			destroyInstanceFunction = [&] { delete (T*)instance; instance = nullptr; };
-
-			onCreateFunction = [](ScriptableEntity* instance) { static_cast<T*>(instance)->on_create(); };
-			onDestroyFunction = [](ScriptableEntity* instance) { static_cast<T*>(instance)->on_destroy(); };
-			onUpdateFunction = [](ScriptableEntity* instance, Timestep ts) { static_cast<T*>(instance)->on_update(ts); };
+			instantiateScript = []() { return static_cast<ScriptableEntity*>(new T()); };
+			destroyScript = [](NativeScriptComponent* script) { delete script->instance; script->instance = nullptr; };
 		}
 	};
 }
