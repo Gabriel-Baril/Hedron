@@ -22,9 +22,8 @@ namespace Hedron
 		Entity m_mainCameraEntity;
 		Entity m_originCameraEntity;
 		bool m_mainCamera;
-
 		bool m_viewportFocused = false, m_viewportHovered = false;
-		
+
 		glm::vec2 m_viewPortSize = { 0.0f, 0.0f };
 		glm::vec4 m_squareColor;
 		OrthographicCameraController m_cameraController;

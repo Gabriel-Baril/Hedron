@@ -1,8 +1,10 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <functional>
 
-#include "Hedron/Renderer/Camera.h"
+#include "Hedron/Scene/ScriptableEntity.h"
+#include "Hedron/Scene/SceneCamera.h"
 
 namespace Hedron
 {
@@ -40,12 +42,34 @@ namespace Hedron
 
 	struct CameraComponent
 	{
-		Hedron::Camera camera;
+		Hedron::SceneCamera camera;
 		bool primary = true; // TODO: Think about moving to scene 
+		bool fixedAspectRatio = false;
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
-		CameraComponent(const glm::mat4& projection)
-			: camera{ projection } {}
+	};
+
+	// Script in C++
+	struct NativeScriptComponent
+	{
+		ScriptableEntity* instance = nullptr;
+		std::function<void()> instantiateFunction;
+		std::function<void()> destroyInstanceFunction;
+
+		std::function<void(ScriptableEntity*)> onCreateFunction;
+		std::function<void(ScriptableEntity*)> onDestroyFunction;
+		std::function<void(ScriptableEntity*, Timestep)> onUpdateFunction;
+
+		template<typename T>
+		void bind()
+		{
+			instantiateFunction = [&]() { instance = new T(); };
+			destroyInstanceFunction = [&] { delete (T*)instance; instance = nullptr; };
+
+			onCreateFunction = [](ScriptableEntity* instance) { static_cast<T*>(instance)->on_create(); };
+			onDestroyFunction = [](ScriptableEntity* instance) { static_cast<T*>(instance)->on_destroy(); };
+			onUpdateFunction = [](ScriptableEntity* instance, Timestep ts) { static_cast<T*>(instance)->on_update(ts); };
+		}
 	};
 }

@@ -70,14 +70,28 @@ namespace Hedron
 
 	void Scene::on_update(Timestep ts)
 	{
+		// update scripts
+		m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nativeScriptComponent) 
+		{
+			if (!nativeScriptComponent.instance)
+			{
+				nativeScriptComponent.instantiateFunction();
+				nativeScriptComponent.instance->m_entity = Entity{ entity, this };
+				if(nativeScriptComponent.onCreateFunction)
+					nativeScriptComponent.onCreateFunction(nativeScriptComponent.instance);
+			}
+			if(nativeScriptComponent.onUpdateFunction)
+				nativeScriptComponent.onUpdateFunction(nativeScriptComponent.instance, ts);
+		});
+
 		// Render sprites
 		Camera* mainCamera = nullptr;
 		glm::mat4* camTransform = nullptr;
 		{
-			auto group = m_registry.view<TransformComponent, CameraComponent>();
-			for (auto& entity : group)
+			auto view = m_registry.view<TransformComponent, CameraComponent>();
+			for (auto& entity : view)
 			{
-				auto& [transform, camera] = group.get<TransformComponent, CameraComponent>(entity);
+				auto& [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
 				if (camera.primary)
 				{
 					mainCamera = &camera.camera;
@@ -113,5 +127,20 @@ namespace Hedron
 		else
 			tag.tag = name;
 		return entity;
+	}
+
+	void Scene::on_viewport_resize(uint32_t width, uint32_t height)
+	{
+		m_viewportWidth = width;
+		m_viewportHeight = height;
+
+		// Resize our non-fixed aspect ratio camera
+		auto view = m_registry.view<CameraComponent>();
+		for (auto& entity : view)
+		{
+			auto& cameraComponent = view.get<CameraComponent>(entity);
+			if (!cameraComponent.fixedAspectRatio)
+				cameraComponent.camera.set_viewport_size(width, height);
+		}
 	}
 }

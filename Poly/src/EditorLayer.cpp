@@ -33,10 +33,41 @@ namespace Hedron
 		m_squareEntity.add_component<Hedron::SpriteRendererComponent>(glm::vec4{ 1.0f, 1.0f, 0.0f, 1.0f });
 
 		m_mainCameraEntity = m_activeScene->create_entity();
-		m_mainCameraEntity.add_component<Hedron::CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+		m_mainCameraEntity.add_component<Hedron::CameraComponent>();
+
+
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void on_create()
+			{
+			}
+
+			void on_destroy()
+			{
+			}
+
+			void on_update(Timestep ts)
+			{
+				auto& transform = get_component<TransformComponent>().transform;
+				float cameraSpeed = 10.0f;
+
+				if (Input::is_key_pressed(KeyCode::W))
+					transform[3][1] += cameraSpeed * ts;
+				else if (Input::is_key_pressed(KeyCode::S))
+					transform[3][1] -= cameraSpeed * ts;
+
+				if (Input::is_key_pressed(KeyCode::A))
+					transform[3][0] -= cameraSpeed * ts;
+				else if (Input::is_key_pressed(KeyCode::D))
+					transform[3][0] += cameraSpeed * ts;
+			}
+		};
+
+		m_mainCameraEntity.add_component<Hedron::NativeScriptComponent>().bind<CameraController>();
 
 		m_originCameraEntity = m_activeScene->create_entity();
-		m_originCameraEntity.add_component<Hedron::CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
+		m_originCameraEntity.add_component<Hedron::CameraComponent>().primary = false;
 	}
 
 	void EditorLayer::on_detach()
@@ -51,12 +82,6 @@ namespace Hedron
 		if (m_viewportFocused)
 			m_cameraController.on_update(ts);
 		
-		// TEMP
-		m_mainCameraEntity.get_component<TransformComponent>().transform = glm::inverse(m_cameraController.get_camera().get_view_matrix());
-		m_mainCameraEntity.get_component<CameraComponent>().camera.set_projection(m_cameraController.get_camera().get_projection_matrix());
-
-
-		// End temp
 
 		Renderer2D::reset_stats();
 		m_frameBuffer->bind();
@@ -156,6 +181,11 @@ namespace Hedron
 			m_mainCameraEntity.get_component<CameraComponent>().primary = m_mainCamera;
 			m_originCameraEntity.get_component<CameraComponent>().primary = !m_mainCamera;
 		}
+		
+		auto& camera = m_mainCameraEntity.get_component<CameraComponent>().camera;
+		float orthoSize = camera.get_orthographic_size();
+		if(ImGui::DragFloat("Camera Size : ", &orthoSize, 1, 10, 30))
+			camera.set_orthographic_size(orthoSize);
 
 		ImGui::End();
 			
@@ -171,6 +201,8 @@ namespace Hedron
 			m_frameBuffer->resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 			m_cameraController.on_resize(viewportPanelSize.x, viewportPanelSize.y);
 			m_viewPortSize = { viewportPanelSize.x, viewportPanelSize.y };
+
+			m_activeScene->on_viewport_resize((uint32_t)m_viewPortSize.x, (uint32_t)m_viewPortSize.y);
 		}
 
 		uint32_t textureID = m_frameBuffer->get_color_attachment_rendererID();
