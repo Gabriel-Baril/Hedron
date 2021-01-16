@@ -168,6 +168,19 @@ namespace Hedron
 				ImGui::TreePop();
 			}
 		}
+	
+		if (entity.has_component<SpriteRendererComponent>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			{
+				auto& color = entity.get_component<SpriteRendererComponent>().color;
+				
+				ImGui::ColorEdit4("Color", glm::value_ptr(color));
+				
+				ImGui::Separator();
+				ImGui::TreePop();
+			}
+		}
 	}
 
 }

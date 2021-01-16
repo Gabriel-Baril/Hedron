@@ -88,20 +88,12 @@ namespace Hedron
 	void EditorLayer::on_update(Timestep ts)
 	{
 		HDR_PROFILE_FUNCTION();
-
-		if (m_viewportFocused)
-			m_cameraController.on_update(ts);
-		
-
 		Renderer2D::reset_stats();
 		m_frameBuffer->bind();
 		RenderCommand::set_clear_color({0.2f, 0.2f, 0.2f, 1.0f});
 		RenderCommand::clear();
 
-
-		Renderer2D::begin_scene(m_cameraController.get_camera());
 		m_activeScene->on_update(ts); // Update scene
-		Renderer2D::end_scene();
 
 		m_frameBuffer->unbind();
 	}
@@ -180,28 +172,16 @@ namespace Hedron
 			ImGui::EndMenuBar();
 		}
 
-		
-		ImGui::Begin("Control Panel");
-		auto& squareColor = m_squareEntity.get_component<Hedron::SpriteRendererComponent>().color;
-
-		ImGui::Text("Entity name : %s", m_squareEntity.get_component<Hedron::TagComponent>().tag.c_str());
-		ImGui::Separator();
-		ImGui::ColorEdit4("Square Color : ", glm::value_ptr(squareColor));
-		if (ImGui::Checkbox("Main Camera", &m_mainCamera))
-		{
-			m_mainCameraEntity.get_component<CameraComponent>().primary = m_mainCamera;
-			m_originCameraEntity.get_component<CameraComponent>().primary = !m_mainCamera;
-		}
-		
-		auto& camera = m_mainCameraEntity.get_component<CameraComponent>().camera;
-		float orthoSize = camera.get_orthographic_size();
-		if(ImGui::DragFloat("Camera Size : ", &orthoSize, 1, 10, 30))
-			camera.set_orthographic_size(orthoSize);
-
-		ImGui::End();
-		
-
 		m_hierarchyPanel.on_imgui_render();
+
+		ImGui::Begin("Stats");
+		ImGui::Text("Renderer2D stats:");
+		ImGui::Text("	Draw Call(s) : %i", stat.drawCalls);
+		ImGui::Text("	Quad Count : %i", stat.quadCount);
+		ImGui::Text("	Vertex Count : %i", stat.get_total_vertex_count());
+		ImGui::Text("	Index Count : %i", stat.get_total_index_count());
+		ImGui::Text("	Triangle Count : %i", stat.get_total_triangle_count());
+		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
@@ -231,7 +211,6 @@ namespace Hedron
 	void EditorLayer::on_event(Event& event)
 	{
 		HDR_PROFILE_FUNCTION();
-		m_cameraController.on_event(event);
 	}
 
 }
