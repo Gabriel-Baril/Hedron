@@ -41,7 +41,18 @@ namespace Hedron
 			m_scene->m_registry.remove<Component>(m_entityHandle);
 		}
 
+		bool operator==(const Entity& other) const
+		{
+			return m_entityHandle == other.m_entityHandle && m_scene == other.m_scene;
+		}
+
+		bool operator!=(const Entity& other) const
+		{
+			return !operator==(other);
+		}
+
 		operator bool() const { return m_entityHandle != entt::null; }
+		operator uint32_t() const { return static_cast<uint32_t>(m_entityHandle); }
 	private:
 		entt::entity m_entityHandle{ entt::null }; // id
 		Scene* m_scene = nullptr;

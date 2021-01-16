@@ -11,11 +11,6 @@
 
 namespace Hedron
 {
-
-	static void on_transform_construct()
-	{
-	}
-
 	Scene::Scene()
 	{
 #if ENTT_EXAMPLE
@@ -107,7 +102,7 @@ namespace Hedron
 			auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
 			for (auto& entity : group)
 			{
-				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity); // Retrieve this TransformComponent
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity); // Retrieve this TransformComponent
 				Renderer2D::fill_rect(transform, sprite.color);
 			}
 

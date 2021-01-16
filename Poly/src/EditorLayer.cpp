@@ -29,12 +29,20 @@ namespace Hedron
 
 		m_activeScene = create_ref<Scene>();
 
-		m_squareEntity = m_activeScene->create_entity();
-		m_squareEntity.add_component<Hedron::SpriteRendererComponent>(glm::vec4{ 1.0f, 1.0f, 0.0f, 1.0f });
+		m_squareEntity = m_activeScene->create_entity("Square Entity");
+		m_squareEntity.add_component<Hedron::SpriteRendererComponent>(glm::vec4{ 1.0f, 1.0f, 0.0f, 0.3f });
 
-		m_mainCameraEntity = m_activeScene->create_entity();
+		for (uint32_t i = 0; i < 10; i++)
+		{
+			auto entity = m_activeScene->create_entity("Red Square Entity");
+			entity.get_component<TransformComponent>().transform[0][0] = 0.8f;
+			entity.get_component<TransformComponent>().transform[1][1] = 0.8f;
+			entity.get_component<TransformComponent>().transform[3][0] = (float)i;
+			entity.add_component<Hedron::SpriteRendererComponent>(glm::vec4{ i / 10.0f, i / 2.0f, i / 5.0f, 1.0f });
+		}
+
+		m_mainCameraEntity = m_activeScene->create_entity("Main camera");
 		m_mainCameraEntity.add_component<Hedron::CameraComponent>();
-
 
 		class CameraController : public ScriptableEntity
 		{
@@ -66,8 +74,10 @@ namespace Hedron
 
 		m_mainCameraEntity.add_component<Hedron::NativeScriptComponent>().bind<CameraController>();
 
-		m_originCameraEntity = m_activeScene->create_entity();
+		m_originCameraEntity = m_activeScene->create_entity("Origin Camera");
 		m_originCameraEntity.add_component<Hedron::CameraComponent>().primary = false;
+
+		m_hierarchyPanel.set_context(m_activeScene);
 	}
 
 	void EditorLayer::on_detach()
@@ -170,6 +180,7 @@ namespace Hedron
 			ImGui::EndMenuBar();
 		}
 
+		
 		ImGui::Begin("Control Panel");
 		auto& squareColor = m_squareEntity.get_component<Hedron::SpriteRendererComponent>().color;
 
@@ -188,7 +199,10 @@ namespace Hedron
 			camera.set_orthographic_size(orthoSize);
 
 		ImGui::End();
-			
+		
+
+		m_hierarchyPanel.on_imgui_render();
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 		m_viewportFocused = ImGui::IsWindowFocused();

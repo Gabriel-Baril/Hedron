@@ -13,9 +13,19 @@ namespace Hedron
 
 	void SceneCamera::set_orthographic(float size, float nearClip, float farClip)
 	{
-		m_orthographicsSize = size;
-		m_orthographicsNear = nearClip;
-		m_orthographicsFar = farClip;
+		m_projectionType = ProjectionType::ORTHOGRAPHIC;
+		m_orthographicSize = size;
+		m_orthographicNear = nearClip;
+		m_orthographicFar = farClip;
+		recalculate_projection();
+	}
+
+	void SceneCamera::set_perspective(float verticalFOV, float nearClip, float farClip)
+	{
+		m_projectionType = ProjectionType::PERSPECTIVE;
+		m_perspectiveFOV = verticalFOV;
+		m_perspectiveNear = nearClip;
+		m_perspectiveFar = farClip;
 		recalculate_projection();
 	}
 
@@ -31,14 +41,21 @@ namespace Hedron
 
 	void SceneCamera::recalculate_projection()
 	{
-		const float halfSize = m_orthographicsSize * 0.5f;
+		if (m_projectionType == ProjectionType::ORTHOGRAPHIC)
+		{
+			const float halfSize = m_orthographicSize * 0.5f;
 
-		const float orthoLeft = -halfSize * m_aspectRatio;
-		const float orthoRight = halfSize * m_aspectRatio;
-		const float orthoBottom = -halfSize;
-		const float orthoTop = halfSize;
+			const float orthoLeft = -halfSize * m_aspectRatio;
+			const float orthoRight = halfSize * m_aspectRatio;
+			const float orthoBottom = -halfSize;
+			const float orthoTop = halfSize;
 
-		m_projection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, m_orthographicsNear, m_orthographicsFar);
+			m_projection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, m_orthographicNear, m_orthographicFar);
+		}
+		else if (m_projectionType == ProjectionType::PERSPECTIVE)
+		{
+			m_projection = glm::perspective(m_perspectiveFOV, m_aspectRatio, m_perspectiveNear, m_perspectiveFar);
+		}
 	}
 
 }

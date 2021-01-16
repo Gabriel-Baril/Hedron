@@ -1,5 +1,6 @@
 #pragma once
 #include <Hedron.h>
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace Hedron
 {
@@ -17,6 +18,8 @@ namespace Hedron
 		Ref<FrameBuffer> m_frameBuffer;
 
 		Ref<Scene> m_activeScene;
+		SceneHierarchyPanel m_hierarchyPanel;
+		
 		Entity m_squareEntity;
 		
 		Entity m_mainCameraEntity;

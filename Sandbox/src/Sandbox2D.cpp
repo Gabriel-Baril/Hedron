@@ -68,7 +68,7 @@ void Sandbox2D::on_update(Hedron::Timestep ts)
 	
 	Hedron::Renderer2D::reset_stats();
 	m_cameraController.on_update(ts);
-	//HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), 1000 / ts.get_milliseconds());
+	HDR_INFO("Delta time: [{0} sec] [{1} ms] [{2} fps]", ts.get_seconds(), ts.get_milliseconds(), 1000 / ts.get_milliseconds());
 
 	// Camera position
 	//HDR_INFO("[{0}, {1}, {2}]", cam.x, cam.y, cam.z);
