@@ -9,238 +9,31 @@ workspace "Hedron"
         "Dist"     -- The distribution configuration have no logging and have compiler optimisation on
     }
 
+    flags
+    {
+    	"MultiProcessorCompile"
+    }
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to the root folder (solution directory)
 includeDir = {}
-includeDir["glfw"] = "Hedron/vendor/glfw/include"
-includeDir["glad"] = "Hedron/vendor/glad/include"
-includeDir["imgui"] = "Hedron/vendor/imgui"
-includeDir["glm"] = "Hedron/vendor/glm"
-includeDir["stb_image"] = "Hedron/vendor/stb_image"
-includeDir["entt"] = "Hedron/vendor/entt/include"
+includeDir["glfw"] = "%{wks.location}/Hedron/vendor/glfw/include"
+includeDir["glad"] = "%{wks.location}/Hedron/vendor/glad/include"
+includeDir["spdlog"] = "%{wks.location}/Hedron/vendor/spdlog/include"
+includeDir["imgui"] = "%{wks.location}/Hedron/vendor/imgui"
+includeDir["glm"] = "%{wks.location}/Hedron/vendor/glm"
+includeDir["stb_image"] = "%{wks.location}/Hedron/vendor/stb_image"
+includeDir["entt"] = "%{wks.location}/Hedron/vendor/entt/include"
+includeDir["yaml_cpp"] = "%{wks.location}/Hedron/vendor/yaml-cpp/include"
 
 group "Dependencies"
     include "Hedron/vendor/glfw" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/glfw" in this premake file
     include "Hedron/vendor/glad" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/glad" in this premake file
     include "Hedron/vendor/imgui" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/imgui" in this premake file
+    include "Hedron/vendor/yaml-cpp" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/yaml-cpp" in this premake file
 group ""
 
-project "Hedron"      -- Name of the project
-    location "Hedron" -- Location of our stuff
-    kind "StaticLib"  -- Type of project (in that case a .lib (static library))
-    language "C++"    -- The language in which the project is written
-    cppdialect "C++17"  -- The version of our C++ used
-    staticruntime "on"
-
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
-    objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
-    
-    pchheader "hdrpch.h"   -- What is our precompiled header
-    pchsource "Hedron/src/hdrpch.cpp"
-
-    files -- Chooses the files that we want to add in our project
-    {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp",
-        "%{prj.name}/vendor/stb_image/**.h",
-        "%{prj.name}/vendor/stb_image/**.cpp",
-        "%{prj.name}/vendor/glm/glm/**.hpp",
-        "%{prj.name}/vendor/glm/glm/**.inl"
-    }
-
-    includedirs -- Adds additional include folders
-    {
-        "%{prj.name}/vendor/spdlog/include",
-        "%{prj.name}/src",
-        "%{includeDir.glfw}",
-        "%{includeDir.glad}",
-        "%{includeDir.imgui}",
-        "%{includeDir.glm}",
-        "%{includeDir.stb_image}",
-        "%{includeDir.entt}"
-    }
-
-    links
-    {
-        "glfw",
-        "glad",
-        "imgui",
-        "opengl32.lib"
-    }
-
-    vpathhdrdest = "src/Hedron"
-    vpathhdrfiledest = "Hedron/src/Hedron"
-    vpatheventdest = "src/Hedron/Events"
-    vpatheventfiledest = "Hedron/src/Hedron/Events"
-    vpaths -- https://github.com/premake/premake-core/wiki/vpaths
-    { 
-        ["%{vpatheventdest}/ApplicationEvents/*"] =
-        { 
-            "%{vpatheventfiledest}/AppTickEvent.h",
-            "%{vpatheventfiledest}/AppUpdateEvent.h",
-            "%{vpatheventfiledest}/AppRenderEvent.h",
-            "%{vpatheventfiledest}/WindowCloseEvent.h",
-            "%{vpatheventfiledest}/WindowResizeEvent.h"
-        },
-        ["%{vpatheventdest}/KeyboardEvents/*"] =
-        { 
-            "%{vpatheventfiledest}/KeyPressedEvent.h",
-            "%{vpatheventfiledest}/KeyReleasedEvent.h",
-            "%{vpatheventfiledest}/KeyTypedEvent.h"
-        },
-        ["%{vpatheventdest}/MouseEvents/*"] =
-        {
-            "%{vpatheventfiledest}/MouseMovedEvent.h",
-            "%{vpatheventfiledest}/MouseScrolledEvent.h",
-            "%{vpatheventfiledest}/MouseButtonPressedEvent.h",
-            "%{vpatheventfiledest}/MouseButtonReleasedEvent.h"
-        },
-        ["%{vpatheventdest}/Common/*"] =
-        {
-            "%{vpatheventfiledest}/Event.h",
-            "%{vpatheventfiledest}/KeyEvent.h",
-            "%{vpatheventfiledest}/MouseButtonEvent.h"
-        }
-    }
-
-    defines
-    {
-        "_CRT_SECURE_NO_WARNINGS"
-    }
-
-    filter "system:windows" -- The instructions downward are only applied for windows users
-        systemversion "latest" -- Chooses the windows version of our project
-
-        defines -- Defines preprocessor definition
-        {
-            "HDR_PLATFORM_WINDOWS",
-            "HDR_BUILD_DLL",
-            "GLFW_INCLUDE_NONE"
-        }
-
-    filter "configurations:Debug"
-        defines 
-        {
-            "HDR_DEBUG"
-        }
-        runtime "Debug"
-        symbols "on"
-        
-    filter "configurations:Release"
-        defines "HDR_RELEASE"
-        runtime "Release"
-        optimize "on"
-        
-    filter "configurations:Dist"
-        defines "HDR_DIST"
-        runtime "Release"
-        optimize "on"
-
-project "Sandbox"
-    location "Sandbox"
-    kind "ConsoleApp"
-    language "C++"
-    cppdialect "C++17"  -- The version of our C++ used
-    staticruntime "on"
-
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
-    objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
-    
-    files -- Chooses the files that we want to add in our project
-    {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
-    }
-
-    includedirs -- Adds additional include folders
-    {
-        "Hedron/vendor/spdlog/include",
-        "Hedron/src",
-        "%{includeDir.glm}",
-        "%{includeDir.imgui}",
-        "%{includeDir.entt}"
-    }
-
-    links
-    {
-        "Hedron"
-    }
-
-    filter "system:windows" -- The instructions downward are only applied for windows users
-        staticruntime "on"  -- Do we want to link runtime libraries (Yes)
-        systemversion "latest" -- Chooses the windows version of our project
-
-        defines -- Defines preprocessor definition
-        {
-            "HDR_PLATFORM_WINDOWS"
-        }
-
-    filter "configurations:Debug"
-        defines "HDR_DEBUG"
-        runtime "Debug"
-        symbols "on"
-        
-    filter "configurations:Release"
-        defines "HDR_RELEASE"
-        runtime "Release"
-        optimize "on"
-        
-    filter "configurations:Dist"
-        defines "HDR_DIST"
-        runtime "Release"
-        optimize "on"
-
-project "Poly"
-    location "Poly"
-    kind "ConsoleApp"
-    language "C++"
-    cppdialect "C++17"  -- The version of our C++ used
-    staticruntime "on"
-
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")      -- Output dir for our binaries (.exe, .lib, .dll ...)
-    objdir    ("bin-int/"  .. outputdir .. "/%{prj.name}") -- Output dir for our object file (.obj)
-
-    files -- Chooses the files that we want to add in our project
-    {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
-    }
-
-    includedirs -- Adds additional include folders
-    {
-        "Hedron/vendor/spdlog/include",
-        "Hedron/src",
-        "%{includeDir.glm}",
-        "%{includeDir.imgui}",
-        "%{includeDir.entt}"
-    }
-
-    links
-    {
-        "Hedron"
-    }
-
-    filter "system:windows" -- The instructions downward are only applied for windows users
-        staticruntime "on"  -- Do we want to link runtime libraries (Yes)
-        systemversion "latest" -- Chooses the windows version of our project
-
-        defines -- Defines preprocessor definition
-        {
-            "HDR_PLATFORM_WINDOWS"
-        }
-
-    filter "configurations:Debug"
-        defines "HDR_DEBUG"
-        runtime "Debug"
-        symbols "on"
-        
-    filter "configurations:Release"
-        defines "HDR_RELEASE"
-        runtime "Release"
-        optimize "on"
-        
-    filter "configurations:Dist"
-        defines "HDR_DIST"
-        runtime "Release"
-        optimize "on"
+include "Hedron"
+include "Sandbox"
+include "Poly"

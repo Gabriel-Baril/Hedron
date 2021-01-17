@@ -11,3 +11,6 @@
 	path = Hedron/vendor/imgui
 	url = https://github.com/Gabriel-Baril/imgui/
 	branch = docking
+[submodule "Hedron/vendor/yaml-cpp"]
+	path = Hedron/vendor/yaml-cpp
+	url = https://github.com/Gabriel-Baril/yaml-cpp
