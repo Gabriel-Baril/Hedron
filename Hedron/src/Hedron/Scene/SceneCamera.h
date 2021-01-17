@@ -8,7 +8,7 @@ namespace Hedron
 	class SceneCamera : public Camera
 	{
 	public:
-		enum class ProjectionType { PERSPECTIVE = 0, ORTHOGRAPHIC = 1 };
+		enum class ProjectionType : uint32_t { PERSPECTIVE = 0, ORTHOGRAPHIC = 1 };
 	public:
 		SceneCamera();
 		virtual ~SceneCamera() = default;

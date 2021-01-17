@@ -1,11 +1,10 @@
 #include "EditorLayer.h"
 #include "imgui.h"
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <chrono>
+#include "Hedron/Scene/SceneSerializer.h"
 
 namespace Hedron
 {
@@ -28,7 +27,7 @@ namespace Hedron
 		m_frameBuffer = FrameBuffer::create(frameBufferSpec);
 
 		m_activeScene = create_ref<Scene>();
-
+#if 0
 		m_squareEntity = m_activeScene->create_entity("Square Entity");
 		m_squareEntity.add_component<Hedron::SpriteRendererComponent>(glm::vec4{ 1.0f, 1.0f, 0.0f, 0.3f });
 
@@ -78,8 +77,12 @@ namespace Hedron
 
 		m_originCameraEntity = m_activeScene->create_entity("Origin Camera");
 		m_originCameraEntity.add_component<Hedron::CameraComponent>().primary = false;
-
+#endif
 		m_hierarchyPanel.set_context(m_activeScene);
+
+		SceneSerializer serializer(m_activeScene);
+		serializer.deserialize_yaml("assets/scenes/Example.hdr");
+		//serializer.serialize_yaml("assets/scenes/Example.hdr");
 	}
 
 	void EditorLayer::on_detach()
@@ -171,6 +174,16 @@ namespace Hedron
 			{
 				// Disabling fullscreen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
+				if (ImGui::MenuItem("Serialize"))
+				{
+
+				}
+				
+				if (ImGui::MenuItem("Deserialize"))
+				{
+
+				}
+				
 				if (ImGui::MenuItem("Quit"))
 					Application::get().close();
 
