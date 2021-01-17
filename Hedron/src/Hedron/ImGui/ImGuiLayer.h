@@ -21,6 +21,8 @@ namespace Hedron
 		void end();
 
 		void block_events(bool blockImGuiEvents) { m_blockImGuiEvents = blockImGuiEvents; }
+
+		void set_dark_theme_colors();
 	private:
 		bool m_blockImGuiEvents = true;
 		float m_time = 0.0f;
