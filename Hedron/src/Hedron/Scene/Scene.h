@@ -14,6 +14,8 @@ namespace Hedron
 		~Scene();
 
 		Entity create_entity(const std::string& name = ""); // TODO: temp
+		void destroy_entity(Entity entity);
+
 		void on_update(Timestep ts);
 
 		void on_viewport_resize(uint32_t width, uint32_t height);

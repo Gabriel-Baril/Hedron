@@ -3,6 +3,7 @@
 #include <Hedron/Scene/Components.h>
 
 #include <imgui.h>
+#include <imgui_internal.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -63,6 +64,66 @@ namespace Hedron
 		}
 	}
 
+	static void draw_vec3_control(const char* labelName, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
+	{
+		ImGui::PushID(labelName);
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(labelName);
+		ImGui::NextColumn();
+
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 3.0f, 0.0f });
+
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = {lineHeight + 3.0f, lineHeight};
+
+		//X
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
+		if (ImGui::Button("X", buttonSize))
+			values.x = resetValue;
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		ImGui::PopStyleColor(3);
+
+		//Y
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
+		if (ImGui::Button("Y", buttonSize))
+			values.y = resetValue;
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		ImGui::PopStyleColor(3);
+
+		//Z
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
+		if (ImGui::Button("Z", buttonSize))
+			values.z = resetValue;
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+
+		ImGui::PopStyleColor(3);
+		ImGui::PopStyleVar();
+
+		ImGui::Columns(1); 
+		
+		ImGui::PopID();
+	}
+
 	// TODO: Create a draw function for each component type
 	void SceneHierarchyPanel::draw_components(Entity entity)
 	{
@@ -88,15 +149,14 @@ namespace Hedron
 		{
 			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
 			{
-				auto& transform = entity.get_component<TransformComponent>().transform;
-				glm::vec3 scaling = { transform[0][0], transform[1][1], transform[2][2] };
+				auto& transform = entity.get_component<TransformComponent>();
 
-				ImGui::DragFloat3("Position", glm::value_ptr(transform[3]), 0.1f, -100.0f, 100.0f);
-				ImGui::DragFloat3("Scaling", glm::value_ptr(scaling), 0.1f, -100.0f, 100.0f);
-				transform[0][0] = scaling.x;
-				transform[1][1] = scaling.y;
-				transform[2][2] = scaling.z;
-
+				draw_vec3_control("Translation", transform.translation);
+				glm::vec3 rotation = glm::degrees(transform.rotation);
+				draw_vec3_control("Rotation", rotation);
+				transform.rotation = glm::radians(rotation);
+				draw_vec3_control("Scale", transform.scale, 1.0f);
+				
 				ImGui::Separator();
 				ImGui::TreePop();
 			}

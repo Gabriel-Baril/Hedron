@@ -80,7 +80,7 @@ namespace Hedron
 
 		// Render sprites
 		Camera* mainCamera = nullptr;
-		glm::mat4* camTransform = nullptr;
+		glm::mat4 camTransform;
 		{
 			auto view = m_registry.view<TransformComponent, CameraComponent>();
 			for (auto& entity : view)
@@ -89,7 +89,7 @@ namespace Hedron
 				if (camera.primary)
 				{
 					mainCamera = &camera.camera;
-					camTransform = &transform.transform;
+					camTransform = transform.get_transform();
 					break;
 				}
 			}
@@ -97,13 +97,13 @@ namespace Hedron
 
 		if (mainCamera)
 		{
-			Renderer2D::begin_scene(mainCamera->get_projection(), *camTransform);
+			Renderer2D::begin_scene(mainCamera->get_projection(), camTransform);
 
 			auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
 			for (auto& entity : group)
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity); // Retrieve this TransformComponent
-				Renderer2D::fill_rect(transform, sprite.color);
+				Renderer2D::fill_rect(transform.get_transform(), sprite.color);
 			}
 
 			Renderer2D::end_scene();
@@ -121,6 +121,11 @@ namespace Hedron
 		else
 			tag.tag = name;
 		return entity;
+	}
+
+	void Scene::destroy_entity(Entity entity)
+	{
+		m_registry.destroy(entity);
 	}
 
 	void Scene::on_viewport_resize(uint32_t width, uint32_t height)

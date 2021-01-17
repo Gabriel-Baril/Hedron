@@ -53,6 +53,7 @@ namespace Hedron
 
 		operator bool() const { return m_entityHandle != entt::null; }
 		operator uint32_t() const { return static_cast<uint32_t>(m_entityHandle); }
+		operator entt::entity() const { return static_cast<entt::entity>(m_entityHandle); }
 	private:
 		entt::entity m_entityHandle{ entt::null }; // id
 		Scene* m_scene = nullptr;

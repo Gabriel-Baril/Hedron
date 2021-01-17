@@ -35,9 +35,11 @@ namespace Hedron
 		for (uint32_t i = 0; i < 10; i++)
 		{
 			auto entity = m_activeScene->create_entity("Red Square Entity");
-			entity.get_component<TransformComponent>().transform[0][0] = 0.8f;
-			entity.get_component<TransformComponent>().transform[1][1] = 0.8f;
-			entity.get_component<TransformComponent>().transform[3][0] = (float)i;
+			auto& transformComponent = entity.get_component<TransformComponent>();
+			
+			transformComponent.scale.x = 0.8f;
+			transformComponent.scale.y = 0.8f;
+			transformComponent.translation.x = (float)i;
 			entity.add_component<Hedron::SpriteRendererComponent>(glm::vec4{ i / 10.0f, i / 2.0f, i / 5.0f, 1.0f });
 		}
 
@@ -57,18 +59,18 @@ namespace Hedron
 
 			void on_update(Timestep ts)
 			{
-				auto& transform = get_component<TransformComponent>().transform;
+				auto& transform = get_component<TransformComponent>();
 				float cameraSpeed = 10.0f;
 
 				if (Input::is_key_pressed(KeyCode::W))
-					transform[3][1] += cameraSpeed * ts;
+					transform.translation.y += cameraSpeed * ts;
 				else if (Input::is_key_pressed(KeyCode::S))
-					transform[3][1] -= cameraSpeed * ts;
+					transform.translation.y -= cameraSpeed * ts;
 
 				if (Input::is_key_pressed(KeyCode::A))
-					transform[3][0] -= cameraSpeed * ts;
+					transform.translation.x -= cameraSpeed * ts;
 				else if (Input::is_key_pressed(KeyCode::D))
-					transform[3][0] += cameraSpeed * ts;
+					transform.translation.x += cameraSpeed * ts;
 			}
 		};
 
