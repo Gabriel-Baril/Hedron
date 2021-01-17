@@ -31,7 +31,9 @@ namespace Hedron
 		Component& add_component(Args&&... args)
 		{
 			HDR_CORE_ASSERT(!has_component<Component>(), "Entity already has component!");
-			return m_scene->m_registry.emplace<Component>(m_entityHandle, std::forward<Args>(args)...);
+			Component& component = m_scene->m_registry.emplace<Component>(m_entityHandle, std::forward<Args>(args)...);
+			m_scene->on_component_added<Component>(*this, component);
+			return component;
 		}
 
 		template<typename Component, typename... Args>
@@ -53,7 +55,7 @@ namespace Hedron
 
 		operator bool() const { return m_entityHandle != entt::null; }
 		operator uint32_t() const { return static_cast<uint32_t>(m_entityHandle); }
-		operator entt::entity() const { return static_cast<entt::entity>(m_entityHandle); }
+		operator entt::entity() const { return m_entityHandle; }
 	private:
 		entt::entity m_entityHandle{ entt::null }; // id
 		Scene* m_scene = nullptr;

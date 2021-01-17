@@ -34,7 +34,16 @@ namespace Hedron
 			m_selectionContext = {};
 		}
 
-		//ImGui::Text("Entity %i", (uint32_t)m_selectionContext);
+		// Right-Click on blank space
+		if (ImGui::BeginPopupContextWindow(0, 1, false))
+		{
+			if (ImGui::MenuItem("Create Empty Entity"))
+			{
+				m_context->create_entity("Empty Entity");
+			}
+
+			ImGui::EndPopup();
+		}
 
 		ImGui::End();
 
@@ -42,7 +51,29 @@ namespace Hedron
 		ImGui::Begin("Properties");
 
 		if (m_selectionContext)
+		{
 			draw_components(m_selectionContext);
+
+			if (ImGui::Button("Add Component..."))
+				ImGui::OpenPopup("PropertyPopupAddComponent");
+		
+			if (ImGui::BeginPopup("PropertyPopupAddComponent"))
+			{
+				if (ImGui::MenuItem("Camera"))
+				{
+					m_selectionContext.add_component<CameraComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+				
+				if (ImGui::MenuItem("Sprite Renderer"))
+				{
+					m_selectionContext.add_component<SpriteRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndPopup();
+			}
+		}
 		
 		ImGui::End();
 	}
@@ -58,9 +89,25 @@ namespace Hedron
 			m_selectionContext = entity;
 		}
 
+		bool entityDeleted = false;
+		if (ImGui::BeginPopupContextItem())
+		{
+			if (ImGui::MenuItem("Delete Entity"))
+				entityDeleted = true;
+			
+			ImGui::EndPopup();
+		}
+
 		if(opened)
 		{
 			ImGui::TreePop();
+		}
+
+		if (entityDeleted)
+		{
+			m_context->destroy_entity(entity);
+			if (m_selectionContext == entity)
+				m_selectionContext = {};
 		}
 	}
 
@@ -127,9 +174,11 @@ namespace Hedron
 	// TODO: Create a draw function for each component type
 	void SceneHierarchyPanel::draw_components(Entity entity)
 	{
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
 		if(entity.has_component<TagComponent>())
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(TagComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Tag"))
+			if (ImGui::TreeNodeEx((void*)typeid(TagComponent).hash_code(), treeNodeFlags, "Tag"))
 			{
 				std::string& tagName = entity.get_component<TagComponent>().tag;
 				char buffer[256];
@@ -147,7 +196,22 @@ namespace Hedron
 
 		if (entity.has_component<TransformComponent>())
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
+			bool isOpened = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags, "Transform");
+			ImGui::SameLine();
+
+			if (ImGui::Button("+"))
+				ImGui::OpenPopup("ComponentSettings");
+
+			bool removeComponent = false;
+			if (ImGui::BeginPopup("ComponentSettings"))
+			{
+				if (ImGui::MenuItem("Remove Component"))
+					removeComponent = true;
+
+				ImGui::EndPopup();
+			}
+
+			if (isOpened)
 			{
 				auto& transform = entity.get_component<TransformComponent>();
 
@@ -160,11 +224,14 @@ namespace Hedron
 				ImGui::Separator();
 				ImGui::TreePop();
 			}
+
+			if (removeComponent)
+				m_selectionContext.remove_component<TransformComponent>();
 		}
 
 		if (entity.has_component<CameraComponent>())
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
+			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), treeNodeFlags, "Camera"))
 			{
 				auto& cameraComponent = entity.get_component<CameraComponent>();
 				auto& camera = cameraComponent.camera;
@@ -231,7 +298,24 @@ namespace Hedron
 	
 		if (entity.has_component<SpriteRendererComponent>())
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+
+			bool isOpened = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite Renderer");
+			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
+			if (ImGui::Button("+", ImVec2{ 20, 20 }))
+				ImGui::OpenPopup("ComponentSettings");
+			ImGui::PopStyleVar();
+
+			bool removeComponent = false;
+			if (ImGui::BeginPopup("ComponentSettings"))
+			{
+				if (ImGui::MenuItem("Remove Component"))
+					removeComponent = true;
+
+				ImGui::EndPopup();
+			}
+
+			if (isOpened)
 			{
 				auto& color = entity.get_component<SpriteRendererComponent>().color;
 				
@@ -240,6 +324,9 @@ namespace Hedron
 				ImGui::Separator();
 				ImGui::TreePop();
 			}
+
+			if (removeComponent)
+				m_selectionContext.remove_component<SpriteRendererComponent>();
 		}
 	}
 

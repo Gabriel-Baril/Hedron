@@ -20,6 +20,9 @@ namespace Hedron
 
 		void on_viewport_resize(uint32_t width, uint32_t height);
 	private:
+		template<typename Component>
+		void on_component_added(Entity& entity, Component& addComponent);
+	private:
 		entt::registry m_registry; // Contains all of our entities
 		uint32_t m_viewportWidth = 0;
 		uint32_t m_viewportHeight = 0;

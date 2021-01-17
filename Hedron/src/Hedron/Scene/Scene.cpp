@@ -142,4 +142,36 @@ namespace Hedron
 				cameraComponent.camera.set_viewport_size(width, height);
 		}
 	}
+
+	template<typename Component>
+	void Scene::on_component_added(Entity& entity, Component& addComponent)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	void Scene::on_component_added<TransformComponent>(Entity& entity, TransformComponent& transformComponent)
+	{
+	}
+
+	template<>
+	void Scene::on_component_added<CameraComponent>(Entity& entity, CameraComponent& cameraComponent)
+	{
+		cameraComponent.camera.set_viewport_size(m_viewportWidth, m_viewportHeight);
+	}
+
+	template<>
+	void Scene::on_component_added<TagComponent>(Entity& entity, TagComponent& tagComponent)
+	{
+	}
+
+	template<>
+	void Scene::on_component_added<SpriteRendererComponent>(Entity& entity, SpriteRendererComponent& spriteRendererComponent)
+	{
+	}
+
+	template<>
+	void Scene::on_component_added<NativeScriptComponent>(Entity& entity, NativeScriptComponent& nativeScriptComponent)
+	{
+	}
 }
