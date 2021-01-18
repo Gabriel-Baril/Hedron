@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hedron/Renderer/Camera.h"
+#include "Hedron/Renderer/EditorCamera.h"
 #include "Hedron/Renderer/OrthographicCamera.h"
 #include "Hedron/Renderer/SubTexture2D.h"
 #include "Hedron/Renderer/Texture2D.h"
@@ -17,6 +18,7 @@ namespace Hedron
 		static void shutdown();
 
 		static void begin_scene(const Camera& camera, const glm::mat4& transform);
+		static void begin_scene(const EditorCamera& camera);
 		static void begin_scene(const OrthographicCamera& camera); // TODO: remove
 		static void end_scene();
 		static void flush();

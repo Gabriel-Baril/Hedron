@@ -33,6 +33,8 @@ namespace Hedron
 		m_frameBuffer = FrameBuffer::create(frameBufferSpec);
 
 		m_activeScene = create_ref<Scene>();
+
+		m_editorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 #if 0
 		m_squareEntity = m_activeScene->create_entity("Square Entity");
 		m_squareEntity.add_component<Hedron::SpriteRendererComponent>(glm::vec4{ 1.0f, 1.0f, 0.0f, 0.3f });
@@ -95,12 +97,18 @@ namespace Hedron
 	void EditorLayer::on_update(Timestep ts)
 	{
 		HDR_PROFILE_FUNCTION();
+
+		//if (m_viewportFocused)
+		//{
+			m_editorCamera.on_update(ts);
+		//}
+
 		Renderer2D::reset_stats();
 		m_frameBuffer->bind();
 		RenderCommand::set_clear_color({0.2f, 0.2f, 0.2f, 1.0f});
 		RenderCommand::clear();
 
-		m_activeScene->on_update(ts); // Update scene
+		m_activeScene->on_update_editor(ts, m_editorCamera); // Update scene
 
 		m_frameBuffer->unbind();
 	}
@@ -223,7 +231,7 @@ namespace Hedron
 			m_frameBuffer->resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 			m_cameraController.on_resize(viewportPanelSize.x, viewportPanelSize.y);
 			m_viewPortSize = { viewportPanelSize.x, viewportPanelSize.y };
-
+			m_editorCamera.set_viewport_size(viewportPanelSize.x, viewportPanelSize.y);
 			m_activeScene->on_viewport_resize((uint32_t)m_viewPortSize.x, (uint32_t)m_viewPortSize.y);
 		}
 
@@ -243,11 +251,15 @@ namespace Hedron
 			float windowHeight = (float)ImGui::GetWindowHeight();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight); // Set the viewport
 
-			// Camera
-			auto cameraEntity = m_activeScene->get_primary_camera_entity();
-			const auto& camera = cameraEntity.get_component<CameraComponent>().camera;
-			const glm::mat4& cameraProjection = camera.get_projection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.get_component<TransformComponent>().get_transform());
+			// Runtime Camera from entity
+			//auto cameraEntity = m_activeScene->get_primary_camera_entity();
+			//const auto& camera = cameraEntity.get_component<CameraComponent>().camera;
+			//const glm::mat4& cameraProjection = camera.get_projection();
+			//glm::mat4 cameraView = glm::inverse(cameraEntity.get_component<TransformComponent>().get_transform());
+
+			// Editor Camera
+			const glm::mat4& cameraProjection = m_editorCamera.get_projection();
+			glm::mat4 cameraView = m_editorCamera.get_view_matrix();
 
 			// Entity Transform
 			auto& transformComponent = selectedEntity.get_component<TransformComponent>();
@@ -300,6 +312,8 @@ namespace Hedron
 	void EditorLayer::on_event(Event& event)
 	{
 		HDR_PROFILE_FUNCTION();
+		m_editorCamera.on_event(event);
+
 		EventDispatcher dispatcher(event);
 		dispatcher.dispatch<KeyPressedEvent>(HDR_BIND_EVENT_FN(EditorLayer::on_key_pressed));
 	}

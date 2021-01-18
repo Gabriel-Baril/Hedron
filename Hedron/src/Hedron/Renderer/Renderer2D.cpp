@@ -146,6 +146,21 @@ namespace Hedron
 		s_renderer2DData.textureSlotIndex = 1;
 	}
 
+	void Renderer2D::begin_scene(const EditorCamera& camera)
+	{
+		HDR_PROFILE_FUNCTION();
+
+		glm::mat4 viewProj = camera.get_view_projection();
+
+		s_renderer2DData.textureShader->bind();
+		s_renderer2DData.textureShader->set_mat4("u_viewProjection", viewProj);
+
+		// TODO: Put this stuff in a start_batch function
+		s_renderer2DData.quadIndexCount = 0;
+		s_renderer2DData.quadVertexBufferPtr = s_renderer2DData.quadVertexBufferBase;
+		s_renderer2DData.textureSlotIndex = 1;
+	}
+
 	void Renderer2D::begin_scene(const OrthographicCamera& camera)
 	{
 		HDR_PROFILE_FUNCTION();
@@ -153,6 +168,7 @@ namespace Hedron
 		s_renderer2DData.textureShader->bind();
 		s_renderer2DData.textureShader->set_mat4("u_viewProjection", camera.get_view_projection_matrix());
 
+		// TODO: Put this stuff in a start_batch function
 		s_renderer2DData.quadIndexCount = 0;
 		s_renderer2DData.quadVertexBufferPtr = s_renderer2DData.quadVertexBufferBase;
 		s_renderer2DData.textureSlotIndex = 1;

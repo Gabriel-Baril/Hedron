@@ -63,7 +63,23 @@ namespace Hedron
 
 	}
 
-	void Scene::on_update(Timestep ts)
+	void Scene::on_update_editor(Timestep ts, EditorCamera& camera)
+	{
+		Renderer2D::begin_scene(camera);
+
+		auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
+		for (auto& entity : group)
+		{
+
+			HDR_CORE_INFO("IN");
+			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity); // Retrieve this TransformComponent
+			Renderer2D::fill_rect(transform.get_transform(), sprite.color);
+		}
+
+		Renderer2D::end_scene();
+	}
+
+	void Scene::on_update_runtime(Timestep ts)
 	{
 		// update scripts
 		m_registry.view<NativeScriptComponent>().each([=](auto entity, NativeScriptComponent& nativeScriptComponent)

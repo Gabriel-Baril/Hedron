@@ -1,6 +1,7 @@
 #pragma once
 #include <Hedron.h>
 #include "Panels/SceneHierarchyPanel.h"
+#include "Hedron/Renderer/EditorCamera.h"
 
 namespace Hedron
 {
@@ -30,6 +31,9 @@ namespace Hedron
 		
 		Entity m_mainCameraEntity;
 		Entity m_originCameraEntity;
+
+		EditorCamera m_editorCamera;
+
 		bool m_mainCamera;
 		bool m_viewportFocused = false, m_viewportHovered = false;
 

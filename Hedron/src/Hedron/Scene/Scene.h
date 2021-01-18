@@ -2,6 +2,7 @@
 #include <entt.hpp>
 
 #include "Hedron/Core/Timestep.h"
+#include "Hedron/Renderer/EditorCamera.h"
 
 namespace Hedron
 {
@@ -16,7 +17,9 @@ namespace Hedron
 		Entity create_entity(const std::string& name = ""); // TODO: temp
 		void destroy_entity(Entity entity);
 
-		void on_update(Timestep ts);
+		// TODO: Create an SceneEditor class, SceneRuntime class 
+		void on_update_editor(Timestep ts, EditorCamera& camera); // Editor Camera, Entity outline, grid, gizmo
+		void on_update_runtime(Timestep ts);
 		void on_viewport_resize(uint32_t width, uint32_t height);
 
 		Entity get_primary_camera_entity();
