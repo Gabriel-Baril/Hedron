@@ -18,7 +18,9 @@ project "Hedron"      -- Name of the project
         "vendor/stb_image/**.h",
         "vendor/stb_image/**.cpp",
         "vendor/glm/glm/**.hpp",
-        "vendor/glm/glm/**.inl"
+        "vendor/glm/glm/**.inl",
+        "vendor/ImGuizmo/ImGuizmo.h",
+        "vendor/ImGuizmo/ImGuizmo.cpp"
     }
 
     includedirs -- Adds additional include folders
@@ -31,7 +33,8 @@ project "Hedron"      -- Name of the project
         "%{includeDir.glm}",
         "%{includeDir.stb_image}",
         "%{includeDir.entt}",
-        "%{includeDir.yaml_cpp}"
+        "%{includeDir.yaml_cpp}",
+        "%{includeDir.ImGuizmo}"
     }
 
     links
@@ -42,6 +45,9 @@ project "Hedron"      -- Name of the project
         "yaml-cpp",
         "opengl32.lib"
     }
+
+    filter "files:vendor/ImGuizmo/**.cpp"
+    flags { "NoPCH" }
 
     vpathhdrdest = "src/Hedron"
     vpathhdrfiledest = "Hedron/src/Hedron"

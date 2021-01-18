@@ -17,8 +17,9 @@ namespace Hedron
 		void destroy_entity(Entity entity);
 
 		void on_update(Timestep ts);
-
 		void on_viewport_resize(uint32_t width, uint32_t height);
+
+		Entity get_primary_camera_entity();
 	private:
 		template<typename Component>
 		void on_component_added(Entity& entity, Component& addComponent);

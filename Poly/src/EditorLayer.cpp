@@ -8,6 +8,10 @@
 
 #include "Hedron/Utils/PlatformUtils.h"
 
+#include "ImGuizmo.h"
+
+#include "Hedron/Math/Math.h"
+
 namespace Hedron
 {
 
@@ -211,7 +215,7 @@ namespace Hedron
 		ImGui::Begin("Viewport");
 		m_viewportFocused = ImGui::IsWindowFocused();
 		m_viewportHovered = ImGui::IsWindowHovered();
-		Application::get().get_imgui_layer()->block_events(!m_viewportFocused || !m_viewportHovered);
+		Application::get().get_imgui_layer()->block_events(!m_viewportFocused && !m_viewportHovered);
 		
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail(); // Get the size of our panel
 		if (m_viewPortSize != *(glm::vec2*)&viewportPanelSize && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
@@ -224,7 +228,68 @@ namespace Hedron
 		}
 
 		uint32_t textureID = m_frameBuffer->get_color_attachment_rendererID();
-		ImGui::Image((void*)textureID, ImVec2{ m_viewPortSize.x, m_viewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_viewPortSize.x, m_viewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+		// Gizmos
+		//m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+
+		Entity selectedEntity = m_hierarchyPanel.get_selected_entity();
+		if (selectedEntity && m_gizmoType != -1)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight); // Set the viewport
+
+			// Camera
+			auto cameraEntity = m_activeScene->get_primary_camera_entity();
+			const auto& camera = cameraEntity.get_component<CameraComponent>().camera;
+			const glm::mat4& cameraProjection = camera.get_projection();
+			glm::mat4 cameraView = glm::inverse(cameraEntity.get_component<TransformComponent>().get_transform());
+
+			// Entity Transform
+			auto& transformComponent = selectedEntity.get_component<TransformComponent>();
+			glm::mat4 transform = transformComponent.get_transform();
+
+			// Snapping
+			bool snap = Input::is_key_pressed(KeyCode::LEFT_CONTROL);
+			float snapValue = 0.5f; // Snap to 0.5m for translate and rotate
+			// Snap by 45 degrees for rotation 
+			if (m_gizmoType == ImGuizmo::OPERATION::ROTATE)
+				snapValue = 45.0f;
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+
+			ImGuizmo::Manipulate(
+				glm::value_ptr(cameraView), 
+				glm::value_ptr(cameraProjection), 
+				(ImGuizmo::OPERATION)m_gizmoType,
+				ImGuizmo::LOCAL,
+				glm::value_ptr(transform),
+				nullptr,
+				snap ? snapValues : nullptr
+			);
+
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::decompose_transform(transform, translation, rotation, scale);
+
+				glm::vec3 deltaRotation = rotation - transformComponent.rotation;
+				transformComponent.translation = translation;
+				transformComponent.rotation += deltaRotation;
+				transformComponent.scale = scale;
+			}
+		}
+
+
+
+
+
+
 		ImGui::End();
 		ImGui::PopStyleVar();
 
@@ -247,6 +312,7 @@ namespace Hedron
 
 		bool controlPressed = Input::is_key_pressed(KeyCode::LEFT_CONTROL) || Input::is_key_pressed(KeyCode::RIGHT_CONTROL);
 		bool shiftPressed = Input::is_key_pressed(KeyCode::LEFT_SHIFT) || Input::is_key_pressed(KeyCode::RIGHT_SHIFT);
+		bool altPressed = Input::is_key_pressed(KeyCode::LEFT_ALT) || Input::is_key_pressed(KeyCode::RIGHT_ALT);
 
 		switch (event.get_key_code()) // TODO: Change get_key_code() to return a KeyCode
 		{
@@ -263,6 +329,26 @@ namespace Hedron
 			case (uint32_t)KeyCode::S: // TODO: Fix the cast
 			{
 				if (controlPressed && shiftPressed) save_as_scene();
+				break;
+			}
+			case (uint32_t)KeyCode::Q:
+			{
+				m_gizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+			}
+			case (uint32_t)KeyCode::W:
+			{
+				m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			}
+			case (uint32_t)KeyCode::E:
+			{
+				m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			}
+			case (uint32_t)KeyCode::R:
+			{
+				m_gizmoType = ImGuizmo::OPERATION::BOUNDS;
 				break;
 			}
 		}

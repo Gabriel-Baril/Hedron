@@ -12,6 +12,8 @@
 #include "GLFW/glfw3.h"
 #include "GLAD/glad.h"
 
+#include "ImGuizmo.h"
+
 namespace Hedron
 {
 	ImGuiLayer::ImGuiLayer()
@@ -91,6 +93,7 @@ namespace Hedron
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void ImGuiLayer::end()

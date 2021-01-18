@@ -33,6 +33,8 @@ namespace Hedron
 		bool m_mainCamera;
 		bool m_viewportFocused = false, m_viewportHovered = false;
 
+		float m_gizmoType = -1.0f;
+
 		glm::vec2 m_viewPortSize = { 0.0f, 0.0f };
 		glm::vec4 m_squareColor;
 		OrthographicCameraController m_cameraController;

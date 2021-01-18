@@ -143,6 +143,18 @@ namespace Hedron
 		}
 	}
 
+	Entity Scene::get_primary_camera_entity()
+	{
+		auto view = m_registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			const auto& camera = view.get<CameraComponent>(entity);
+			if (camera.primary)
+				return Entity{ entity, this };
+		}
+		return {};
+	}
+
 	template<typename Component>
 	void Scene::on_component_added(Entity& entity, Component& addComponent)
 	{

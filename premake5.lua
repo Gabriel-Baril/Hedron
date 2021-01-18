@@ -26,6 +26,7 @@ includeDir["glm"] = "%{wks.location}/Hedron/vendor/glm"
 includeDir["stb_image"] = "%{wks.location}/Hedron/vendor/stb_image"
 includeDir["entt"] = "%{wks.location}/Hedron/vendor/entt/include"
 includeDir["yaml_cpp"] = "%{wks.location}/Hedron/vendor/yaml-cpp/include"
+includeDir["ImGuizmo"] = "%{wks.location}/Hedron/vendor/ImGuizmo"
 
 group "Dependencies"
     include "Hedron/vendor/glfw" -- Includes the premake5.lua file contained in the folder "Hedron/vendor/glfw" in this premake file

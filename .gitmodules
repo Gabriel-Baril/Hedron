@@ -14,3 +14,6 @@
 [submodule "Hedron/vendor/yaml-cpp"]
 	path = Hedron/vendor/yaml-cpp
 	url = https://github.com/Gabriel-Baril/yaml-cpp
+[submodule "Hedron/vendor/ImGuizmo"]
+	path = Hedron/vendor/ImGuizmo
+	url = https://github.com/gabriel-baril/imguizmo

@@ -19,7 +19,8 @@ project "Poly"
         "%{includeDir.spdlog}",
         "%{includeDir.glm}",
         "%{includeDir.imgui}",
-        "%{includeDir.entt}"
+        "%{includeDir.entt}",
+        "%{includeDir.ImGuizmo}"
     }
 
     links

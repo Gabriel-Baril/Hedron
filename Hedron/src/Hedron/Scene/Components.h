@@ -3,6 +3,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <functional>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+
 #include "Hedron/Scene/ScriptableEntity.h"
 #include "Hedron/Scene/SceneCamera.h"
 
@@ -33,10 +36,10 @@ namespace Hedron
 
 		glm::mat4 get_transform() const
 		{
-			glm::mat4 rotationMatrix =
-				glm::rotate(glm::mat4(1.0f), rotation.x, { 1, 0, 0 }) *
-				glm::rotate(glm::mat4(1.0f), rotation.y, { 0, 1, 0 }) *
-				glm::rotate(glm::mat4(1.0f), rotation.z, { 0, 0, 1 });
+			glm::mat4 rotationMatrix = glm::toMat4(glm::quat(rotation));
+				//glm::rotate(glm::mat4(1.0f), rotation.x, { 1, 0, 0 }) *
+				//glm::rotate(glm::mat4(1.0f), rotation.y, { 0, 1, 0 }) *
+				//glm::rotate(glm::mat4(1.0f), rotation.z, { 0, 0, 1 });
 
 			return glm::translate(glm::mat4(1.0f), translation) * 
 				rotationMatrix *
