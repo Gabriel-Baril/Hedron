@@ -15,6 +15,12 @@ namespace Hedron
 		virtual void on_imgui_render() override;
 		virtual void on_event(Event& event) override;
 	private:
+		bool on_key_pressed(KeyPressedEvent& event);
+
+		void new_scene();
+		void open_scene();
+		void save_as_scene();
+	private:
 		Ref<FrameBuffer> m_frameBuffer;
 
 		Ref<Scene> m_activeScene;

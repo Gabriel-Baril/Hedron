@@ -6,6 +6,8 @@
 
 #include "Hedron/Scene/SceneSerializer.h"
 
+#include "Hedron/Utils/PlatformUtils.h"
+
 namespace Hedron
 {
 
@@ -79,10 +81,6 @@ namespace Hedron
 		m_originCameraEntity.add_component<Hedron::CameraComponent>().primary = false;
 #endif
 		m_hierarchyPanel.set_context(m_activeScene);
-
-		SceneSerializer serializer(m_activeScene);
-		serializer.deserialize_yaml("assets/scenes/Example.hdr");
-		//serializer.serialize_yaml("assets/scenes/Example.hdr");
 	}
 
 	void EditorLayer::on_detach()
@@ -174,14 +172,19 @@ namespace Hedron
 			{
 				// Disabling fullscreen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
-				if (ImGui::MenuItem("Serialize"))
+				if (ImGui::MenuItem("New", "Ctrl+N"))
 				{
-
+					this->new_scene();
 				}
 				
-				if (ImGui::MenuItem("Deserialize"))
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
 				{
-
+					this->open_scene();
+				}
+				
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+				{
+					this->save_as_scene();
 				}
 				
 				if (ImGui::MenuItem("Quit"))
@@ -232,6 +235,69 @@ namespace Hedron
 	void EditorLayer::on_event(Event& event)
 	{
 		HDR_PROFILE_FUNCTION();
+		EventDispatcher dispatcher(event);
+		dispatcher.dispatch<KeyPressedEvent>(HDR_BIND_EVENT_FN(EditorLayer::on_key_pressed));
 	}
 
+	bool EditorLayer::on_key_pressed(KeyPressedEvent& event)
+	{
+		// Shortcut System
+		if (event.get_repeat_count() > 0)
+			return false;
+
+		bool controlPressed = Input::is_key_pressed(KeyCode::LEFT_CONTROL) || Input::is_key_pressed(KeyCode::RIGHT_CONTROL);
+		bool shiftPressed = Input::is_key_pressed(KeyCode::LEFT_SHIFT) || Input::is_key_pressed(KeyCode::RIGHT_SHIFT);
+
+		switch (event.get_key_code()) // TODO: Change get_key_code() to return a KeyCode
+		{
+			case (uint32_t)KeyCode::N: // TODO: Fix the cast
+			{
+				if (controlPressed) new_scene();
+				break;
+			}
+			case (uint32_t)KeyCode::O: // TODO: Fix the cast
+			{
+				if (controlPressed) open_scene();
+				break;
+			}
+			case (uint32_t)KeyCode::S: // TODO: Fix the cast
+			{
+				if (controlPressed && shiftPressed) save_as_scene();
+				break;
+			}
+		}
+
+		return false;
+	}
+
+	void EditorLayer::new_scene()
+	{
+		m_activeScene = create_ref<Scene>();
+		m_activeScene->on_viewport_resize((uint32_t)m_viewPortSize.x, (uint32_t)m_viewPortSize.y);
+		m_hierarchyPanel.set_context(m_activeScene);
+	}
+
+	void EditorLayer::open_scene()
+	{
+		std::string filePath = FileDialogs::open_file("Hazel Scene (*.hdr)\0*.hdr\0"); // "Hazel Scene (*.hdr)" is the string that appears inside the selection box
+		if (!filePath.empty())
+		{
+			m_activeScene = create_ref<Scene>();
+			m_activeScene->on_viewport_resize((uint32_t)m_viewPortSize.x, (uint32_t)m_viewPortSize.y);
+			m_hierarchyPanel.set_context(m_activeScene);
+
+			SceneSerializer serializer(m_activeScene);
+			serializer.deserialize_yaml(filePath);
+		}
+	}
+
+	void EditorLayer::save_as_scene()
+	{
+		std::string filePath = FileDialogs::save_file("Hazel Scene (*.hdr)\0*.hdr\0"); // "Hazel Scene (*.hdr)" is the string that appears inside the selection box
+		if (!filePath.empty())
+		{
+			SceneSerializer serializer(m_activeScene);
+			serializer.serialize_yaml(filePath);
+		}
+	}
 }

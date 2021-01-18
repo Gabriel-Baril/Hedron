@@ -2,7 +2,7 @@
 
 namespace Hedron
 {
-	enum class KeyCode : uint16_t
+	enum class KeyCode : uint32_t
 	{
 		// From glfw3.h
 		SPACE = 32,
@@ -136,7 +136,7 @@ namespace Hedron
 
 	inline std::ostream& operator<<(std::ostream& os, KeyCode keyCode)
 	{
-		os << static_cast<int32_t>(keyCode);
+		os << static_cast<uint32_t>(keyCode);
 		return os;
 	}
 }

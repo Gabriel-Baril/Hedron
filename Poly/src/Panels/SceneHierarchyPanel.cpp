@@ -18,6 +18,7 @@ namespace Hedron
 	void SceneHierarchyPanel::set_context(const Ref<Scene>& context)
 	{
 		m_context = context;
+		m_selectionContext = {};
 	}
 
 	void SceneHierarchyPanel::on_imgui_render()
