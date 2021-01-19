@@ -44,12 +44,12 @@ void ParticleSystem::emit(const ParticleProps& props)
 
 	particle.active = true;
 	particle.position = props.position;
-	particle.rotation = Random::next_double() * 2.0f * glm::pi<float>();
+	particle.rotation = Random::next_float() * 2.0f * glm::pi<float>();
 
 	// Velocity
 	particle.velocity = props.velocity;
-	particle.velocity.x = props.velocityVariation.x * (Random::next_double() - 0.5f);
-	particle.velocity.y = props.velocityVariation.y * (Random::next_double() - 0.5f);
+	particle.velocity.x = props.velocityVariation.x * (Random::next_float() - 0.5f);
+	particle.velocity.y = props.velocityVariation.y * (Random::next_float() - 0.5f);
 
 	// Color
 	particle.colorBegin = props.colorBegin;
@@ -60,7 +60,7 @@ void ParticleSystem::emit(const ParticleProps& props)
 	particle.lifeTime = props.lifeTime;
 
 	// Size
-	particle.sizeBegin = props.sizeBegin + props.sizeVariation * (Random::next_double() - 0.5f);
+	particle.sizeBegin = props.sizeBegin + props.sizeVariation * (Random::next_float() - 0.5f);
 	particle.sizeEnd = props.sizeEnd;
 
 	m_poolIndex = --m_poolIndex % m_particlePool.size();

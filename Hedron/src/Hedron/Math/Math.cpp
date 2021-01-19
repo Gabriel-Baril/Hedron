@@ -32,7 +32,7 @@ namespace Hedron::Math
 		outTranslation = vec3(localMatrix[3]);
 		localMatrix[3] = vec4(0, 0, 0, localMatrix[3].w);
 
-		vec3 row[3], pdum3;
+		vec3 row[3]; // , pdum3;
 
 		// Now get scale and shear.
 		for (length_t i = 0; i < 3; ++i)

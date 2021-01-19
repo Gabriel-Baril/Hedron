@@ -6,7 +6,7 @@
 
 namespace Hedron
 {
-	OpengGLVertexBuffer::OpengGLVertexBuffer(float* vertices, uint32_t size)
+	OpengGLVertexBuffer::OpengGLVertexBuffer(float* vertices, size_t size)
 	{
 		HDR_PROFILE_FUNCTION();
 
@@ -15,7 +15,7 @@ namespace Hedron
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 	}
 
-	OpengGLVertexBuffer::OpengGLVertexBuffer(uint32_t size)
+	OpengGLVertexBuffer::OpengGLVertexBuffer(size_t size)
 	{
 		HDR_PROFILE_FUNCTION();
 
@@ -45,7 +45,7 @@ namespace Hedron
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void OpengGLVertexBuffer::set_data(const void* data, uint32_t size)
+	void OpengGLVertexBuffer::set_data(const void* data, size_t size)
 	{
 		HDR_PROFILE_FUNCTION();
 

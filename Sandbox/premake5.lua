@@ -34,7 +34,7 @@ project "Sandbox"
 
         defines -- Defines preprocessor definition
         {
-            "HDR_PLATFORM_WINDOWS"
+            --"HDR_PLATFORM_WINDOWS"
         }
 
     filter "configurations:Debug"

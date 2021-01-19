@@ -7,7 +7,7 @@
 
 namespace Hedron
 {
-	Ref<VertexBuffer> VertexBuffer::create(float* vertices, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::create(float* vertices, size_t size)
 	{
 		switch (Renderer::get_renderer_api())
 		{
@@ -22,7 +22,7 @@ namespace Hedron
 		return nullptr;
 	}
 
-	Ref<VertexBuffer> VertexBuffer::create(uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::create(size_t size)
 	{
 		switch (Renderer::get_renderer_api())
 		{

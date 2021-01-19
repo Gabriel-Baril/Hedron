@@ -103,8 +103,8 @@ void Sandbox2D::on_update(Hedron::Timestep ts)
 
 	for (uint32_t i = 0;i < s_mapSize.x * s_mapSize.y; i++)
 	{
-		float x = i % s_mapSize.x;
-		float y = i / s_mapSize.x;
+		uint32_t x = i % s_mapSize.x;
+		uint32_t y = i / s_mapSize.x;
 
 		if(m_tiles.find(s_mapTiles[i]) != m_tiles.end())
 			Hedron::Renderer2D::fill_rect({ x, y, 0 }, { 1.0f, 1.0f }, m_tiles[s_mapTiles[i]], { 1.0f, 1.0f, 1.0f, 1.0f }, 1.0f);

@@ -94,7 +94,7 @@ project "Hedron"      -- Name of the project
 
         defines -- Defines preprocessor definition
         {
-            "HDR_PLATFORM_WINDOWS",
+            -- "HDR_PLATFORM_WINDOWS",
             "HDR_BUILD_DLL",
             "GLFW_INCLUDE_NONE"
         }

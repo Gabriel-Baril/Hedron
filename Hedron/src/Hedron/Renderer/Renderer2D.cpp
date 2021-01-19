@@ -178,7 +178,7 @@ namespace Hedron
 	{
 		HDR_PROFILE_FUNCTION();
 
-		uint32_t quadVertexBufferSize = (uint8_t*)s_renderer2DData.quadVertexBufferPtr - (uint8_t*)s_renderer2DData.quadVertexBufferBase;
+		size_t quadVertexBufferSize = (uint8_t*)s_renderer2DData.quadVertexBufferPtr - (uint8_t*)s_renderer2DData.quadVertexBufferBase;
 		s_renderer2DData.quadVertexBuffer->set_data(s_renderer2DData.quadVertexBufferBase, quadVertexBufferSize);
 
 		Renderer2D::flush();
@@ -710,8 +710,8 @@ namespace Hedron
 
 		for (int theta = 0; theta < 360; theta += 360 / sideCount)
 		{
-			vertices.push_back(radius * cos(theta)); // x component
-			vertices.push_back(radius * sin(theta)); // y component
+			vertices.push_back(radius * (float)cos(theta)); // x component
+			vertices.push_back(radius * (float)sin(theta)); // y component
 			vertices.push_back(0); // z component
 		}
 

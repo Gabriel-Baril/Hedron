@@ -235,7 +235,7 @@ namespace Hedron
 			m_activeScene->on_viewport_resize((uint32_t)m_viewPortSize.x, (uint32_t)m_viewPortSize.y);
 		}
 
-		uint32_t textureID = m_frameBuffer->get_color_attachment_rendererID();
+		uint64_t textureID = m_frameBuffer->get_color_attachment_rendererID();
 		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_viewPortSize.x, m_viewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 		// Gizmos

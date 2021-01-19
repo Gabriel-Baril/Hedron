@@ -7,6 +7,9 @@ public:
 	Random() = delete;
 	~Random() = delete;
 
+	static float next_float();
+	static float next_float(double_t min, double_t max);
+
 	static double_t next_double();
 	static double_t next_double(double_t min, double_t max);
 private:
