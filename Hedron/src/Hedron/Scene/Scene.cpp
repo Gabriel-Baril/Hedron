@@ -70,8 +70,6 @@ namespace Hedron
 		auto group = m_registry.group<TransformComponent, SpriteRendererComponent>();
 		for (auto& entity : group)
 		{
-
-			HDR_CORE_INFO("IN");
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity); // Retrieve this TransformComponent
 			Renderer2D::fill_rect(transform.get_transform(), sprite.color);
 		}

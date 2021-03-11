@@ -16,19 +16,22 @@ namespace Hedron
 	{
 		OPENFILENAMEA openFileName;
 		CHAR szFile[260] = { 0 };
+		CHAR currentDir[256] = { 0 };
 		// Initialize OPENFILENAME
 		ZeroMemory(&openFileName, sizeof(OPENFILENAME));
 		openFileName.lStructSize = sizeof(OPENFILENAME);
 		openFileName.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::get().get_window().get_native_window());
 		openFileName.lpstrFile = szFile;
 		openFileName.nMaxFile = sizeof(szFile);
+		if (GetCurrentDirectoryA(256, currentDir))
+			openFileName.lpstrInitialDir = currentDir;
 		openFileName.lpstrFilter = filter;
 		openFileName.nFilterIndex = 1;
 		openFileName.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
 		if (GetOpenFileNameA(&openFileName) == TRUE)
-		{
 			return openFileName.lpstrFile;
-		}
+
 		return std::string();
 	}
 
@@ -36,19 +39,22 @@ namespace Hedron
 	{
 		OPENFILENAMEA openFileName;
 		CHAR szFile[260] = { 0 };
+		CHAR currentDir[256] = { 0 };
 		// Initialize OPENFILENAME
 		ZeroMemory(&openFileName, sizeof(OPENFILENAME));
 		openFileName.lStructSize = sizeof(OPENFILENAME);
 		openFileName.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::get().get_window().get_native_window());
 		openFileName.lpstrFile = szFile;
 		openFileName.nMaxFile = sizeof(szFile);
+		if (GetCurrentDirectoryA(256, currentDir))
+			openFileName.lpstrInitialDir = currentDir;
 		openFileName.lpstrFilter = filter;
 		openFileName.nFilterIndex = 1;
 		openFileName.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+		
 		if (GetSaveFileNameA(&openFileName) == TRUE)
-		{
 			return openFileName.lpstrFile;
-		}
+
 		return std::string();
 	}
 }

@@ -27,7 +27,8 @@ namespace Hedron
 	{
 		HDR_PROFILE_FUNCTION();
 
-		FrameBufferSpec frameBufferSpec;
+		FrameBufferSpecification frameBufferSpec;
+		frameBufferSpec.attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::DEPTH };
 		frameBufferSpec.width = Application::get().get_window().get_width();
 		frameBufferSpec.height = Application::get().get_window().get_height();
 		m_frameBuffer = FrameBuffer::create(frameBufferSpec);

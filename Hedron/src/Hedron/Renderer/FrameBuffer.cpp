@@ -7,7 +7,7 @@
 
 namespace Hedron
 {
-    Ref<FrameBuffer> FrameBuffer::create(const FrameBufferSpec& spec)
+	Ref<FrameBuffer> FrameBuffer::create(const FrameBufferSpecification& spec)
 	{
 		switch (Renderer::get_renderer_api())
 		{

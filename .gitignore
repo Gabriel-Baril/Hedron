@@ -11,3 +11,6 @@ Poly/assets/game/
 *.vcxproj.*
 *.vcxproj
 imgui.ini
+HedronProfile-Runtime.json
+HedronProfile-Shutdown.json
+HedronProfile-Startup.json

@@ -51,7 +51,7 @@ void Sandbox2D::on_attach()
 	
 	m_frameTexture = Hedron::SubTexture2D::create_from_coords(m_achivementsTexture, { 1.0f, 65.0f }, {64.0f, 64.0f});
 
-	Hedron::FrameBufferSpec frameBufferSpec;
+	Hedron::FrameBufferSpecification frameBufferSpec;
 	frameBufferSpec.width = Hedron::Application::get().get_window().get_width();
 	frameBufferSpec.height = Hedron::Application::get().get_window().get_height();
 }

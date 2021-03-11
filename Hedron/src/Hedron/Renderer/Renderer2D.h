@@ -36,7 +36,7 @@ namespace Hedron
 		static void draw_oval();
 		static void draw_triangle();
 
-		static void fill_rect(const glm::vec2& position, const glm::vec2& size);
+		static void fill_rect(const glm::vec2& position, const glm::vec2& size); 
 		static void fill_rect(const glm::vec3& position, const glm::vec2& size);
 		static void fill_rect(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void fill_rect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
