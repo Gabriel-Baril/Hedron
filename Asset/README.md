@@ -1,0 +1,1 @@
+The /Asset folder will contain all the raw assets used by the /Definition

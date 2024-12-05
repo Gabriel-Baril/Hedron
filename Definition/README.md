@@ -1,0 +1,1 @@
+The /Definition contains all pipeline-ready asset data, called hdef.  
