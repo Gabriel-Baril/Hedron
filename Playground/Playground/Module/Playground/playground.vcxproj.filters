@@ -4,13 +4,16 @@
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Public\BufferWriter.h">
-      <Filter>Public</Filter>
+    <ClInclude Include="Source\Public\Playground\BufferWriter.h">
+      <Filter>Public\Playground</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Public">
       <UniqueIdentifier>{ed7b063d-2ffe-7746-470d-d6ccf64d05ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Playground">
+      <UniqueIdentifier>{3975870e-98f8-408a-0ce8-9fa6a5eb6902}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

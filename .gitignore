@@ -402,3 +402,6 @@ FodyWeavers.xsd
 *.vcxproj
 *.csproj.*
 *.csproj
+
+**/out/
+**/Out/

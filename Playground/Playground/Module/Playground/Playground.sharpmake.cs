@@ -5,7 +5,6 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 public class PlaygroundProject : BaseCppProject
 {
     public PlaygroundProject()
-        : base()
     {
         Name = "Playground";
         SourceRootPath = @"[project.SharpmakeCsPath]\Source";
@@ -20,7 +19,7 @@ public class PlaygroundProject : BaseCppProject
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
-        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\Source");
+        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\Source\Public");
 
         conf.Options.Add(Options.Vc.Compiler.Exceptions.Enable);
 

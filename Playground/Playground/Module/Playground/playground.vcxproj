@@ -67,43 +67,43 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>playground</TargetName>
+    <TargetName>Playground</TargetName>
     <OutDir>out\bin\win32-debug\</OutDir>
     <IntDir>out\intermediate\win32-debug\</IntDir>
     <TargetExt>.exe</TargetExt>
     <GenerateManifest>true</GenerateManifest>
     <LinkIncremental>false</LinkIncremental>
-    <OutputFile>out\bin\win32-debug\playground.exe</OutputFile>
+    <OutputFile>out\bin\win32-debug\Playground.exe</OutputFile>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>playground</TargetName>
+    <TargetName>Playground</TargetName>
     <OutDir>out\bin\win64-debug\</OutDir>
     <IntDir>out\intermediate\win64-debug\</IntDir>
     <TargetExt>.exe</TargetExt>
     <GenerateManifest>true</GenerateManifest>
     <LinkIncremental>false</LinkIncremental>
-    <OutputFile>out\bin\win64-debug\playground.exe</OutputFile>
+    <OutputFile>out\bin\win64-debug\Playground.exe</OutputFile>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>playground</TargetName>
+    <TargetName>Playground</TargetName>
     <OutDir>out\bin\win32-release\</OutDir>
     <IntDir>out\intermediate\win32-release\</IntDir>
     <TargetExt>.exe</TargetExt>
     <GenerateManifest>true</GenerateManifest>
     <LinkIncremental>false</LinkIncremental>
-    <OutputFile>out\bin\win32-release\playground.exe</OutputFile>
+    <OutputFile>out\bin\win32-release\Playground.exe</OutputFile>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetName>playground</TargetName>
+    <TargetName>Playground</TargetName>
     <OutDir>out\bin\win64-release\</OutDir>
     <IntDir>out\intermediate\win64-release\</IntDir>
     <TargetExt>.exe</TargetExt>
     <GenerateManifest>true</GenerateManifest>
     <LinkIncremental>false</LinkIncremental>
-    <OutputFile>out\bin\win64-release\playground.exe</OutputFile>
+    <OutputFile>out\bin\win64-release\Playground.exe</OutputFile>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -112,7 +112,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions);$(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\..\external\glm\source;..\..\..\..\module\core\source\public;source</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\external\glm\source;..\..\..\..\module\core\source\public;source\public</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TreatWarningAsError>false</TreatWarningAsError>
@@ -160,7 +160,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>out\bin\win32-debug\playground.exe</OutputFile>
+      <OutputFile>out\bin\win32-debug\Playground.exe</OutputFile>
       <ShowProgress>NotSet</ShowProgress>
       <AdditionalLibraryDirectories>..\..\..\..\external\glm\out\bin\win32-debug;..\..\..\..\module\core\out\bin\win32-debug</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>out\bin\win32-debug\playground.pdb</ProgramDatabaseFile>
@@ -183,12 +183,12 @@
       <Profile>false</Profile>
       <CLRImageType>Default</CLRImageType>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
-      <AdditionalDependencies>core.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries></IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
-      <MapFileName>out\bin\win32-debug\playground.map</MapFileName>
+      <MapFileName>out\bin\win32-debug\Playground.map</MapFileName>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -197,7 +197,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_CONSOLE;_DEBUG;%(PreprocessorDefinitions);$(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\..\external\glm\source;..\..\..\..\module\core\source\public;source</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\external\glm\source;..\..\..\..\module\core\source\public;source\public</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TreatWarningAsError>false</TreatWarningAsError>
@@ -245,7 +245,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>out\bin\win64-debug\playground.exe</OutputFile>
+      <OutputFile>out\bin\win64-debug\Playground.exe</OutputFile>
       <ShowProgress>NotSet</ShowProgress>
       <AdditionalLibraryDirectories>..\..\..\..\external\glm\out\bin\win64-debug;..\..\..\..\module\core\out\bin\win64-debug</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>out\bin\win64-debug\playground.pdb</ProgramDatabaseFile>
@@ -268,12 +268,12 @@
       <Profile>false</Profile>
       <CLRImageType>Default</CLRImageType>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
-      <AdditionalDependencies>core.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries></IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
-      <MapFileName>out\bin\win64-debug\playground.map</MapFileName>
+      <MapFileName>out\bin\win64-debug\Playground.map</MapFileName>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -282,7 +282,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Full</Optimization>
       <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;%(PreprocessorDefinitions);$(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\..\external\glm\source;..\..\..\..\module\core\source\public;source</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\external\glm\source;..\..\..\..\module\core\source\public;source\public</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TreatWarningAsError>false</TreatWarningAsError>
@@ -330,7 +330,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>out\bin\win32-release\playground.exe</OutputFile>
+      <OutputFile>out\bin\win32-release\Playground.exe</OutputFile>
       <ShowProgress>NotSet</ShowProgress>
       <AdditionalLibraryDirectories>..\..\..\..\external\glm\out\bin\win32-release;..\..\..\..\module\core\out\bin\win32-release</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>out\bin\win32-release\playground.pdb</ProgramDatabaseFile>
@@ -353,12 +353,12 @@
       <Profile>false</Profile>
       <CLRImageType>Default</CLRImageType>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
-      <AdditionalDependencies>core.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries></IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
-      <MapFileName>out\bin\win32-release\playground.map</MapFileName>
+      <MapFileName>out\bin\win32-release\Playground.map</MapFileName>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -367,7 +367,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Full</Optimization>
       <PreprocessorDefinitions>NDEBUG;WIN64;_CONSOLE;%(PreprocessorDefinitions);$(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\..\external\glm\source;..\..\..\..\module\core\source\public;source</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\external\glm\source;..\..\..\..\module\core\source\public;source\public</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TreatWarningAsError>false</TreatWarningAsError>
@@ -415,7 +415,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>out\bin\win64-release\playground.exe</OutputFile>
+      <OutputFile>out\bin\win64-release\Playground.exe</OutputFile>
       <ShowProgress>NotSet</ShowProgress>
       <AdditionalLibraryDirectories>..\..\..\..\external\glm\out\bin\win64-release;..\..\..\..\module\core\out\bin\win64-release</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>out\bin\win64-release\playground.pdb</ProgramDatabaseFile>
@@ -438,16 +438,16 @@
       <Profile>false</Profile>
       <CLRImageType>Default</CLRImageType>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
-      <AdditionalDependencies>core.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries></IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
-      <MapFileName>out\bin\win64-release\playground.map</MapFileName>
+      <MapFileName>out\bin\win64-release\Playground.map</MapFileName>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Public\BufferWriter.h" />
+    <ClInclude Include="Source\Public\Playground\BufferWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp" />
