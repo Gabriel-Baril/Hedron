@@ -2,45 +2,45 @@
 
 #include <stack>
 #include <vector>
+#include "Core/Core.h"
 
-using byte = char;
-using uint32 = unsigned int;
-using uint64 = unsigned long long;
-
-struct GroupMetadata
+namespace hdn
 {
-	enum Type
-	{
-		INT32 = 0,
-		UINT32 = 1,
-		STRING = 2
-	};
 
-	template<typename T>
-	void Meta(Type type, const char* key, const T& value)
-	{
-		const uint keySize = strlen(key);
-		writer.Write(keySize);
-		writer.Write(key, keySize);
-		writer.Write(type);
-		writer.Write(sizeof(T)); // Not really necessary but can be useful
-		writer.Write(value);
-	}
-
-	BufferWriter writer; // TODO: Fix
-};
+// struct GroupMetadata
+// {
+// 	enum Type
+// 	{
+// 		INT32 = 0,
+// 		UINT32 = 1,
+// 		STRING = 2
+// 	};
+// 
+// 	template<typename T>
+// 	void Meta(Type type, const char* key, const T& value)
+// 	{
+// 		const uint keySize = strlen(key);
+// 		writer.Write(keySize);
+// 		writer.Write(key, keySize);
+// 		writer.Write(type);
+// 		writer.Write(sizeof(T)); // Not really necessary but can be useful
+// 		writer.Write(value);
+// 	}
+// 
+// 	BufferWriter writer; // TODO: Fix
+// };
 
 class GroupData
 {
 public:
 	GroupData() = default;
 
-	void PushChildren(uint32 childIndex)
+	void PushChildren(size_t childIndex)
 	{
 		Children.push_back(childIndex);
 	}
 
-	const std::vector<uint32>& GetChildren() const
+	const std::vector<size_t>& GetChildren() const
 	{
 		return Children;
 	}
@@ -68,11 +68,10 @@ private:
 	uint64 BeginByte = 0;
 	uint64 EndByte = 0;
 	const char* Semantic = nullptr; // This field could more complex metadata if we want/need to
-	GroupMetadata meta;
-	std::vector<uint32> Children = {};
+	// GroupMetadata meta;
+	std::vector<size_t> Children = {};
 };
 
-// Create SimpleBufferWriter with the Push/Pop logic
 class BufferWriter
 {
 public:
@@ -86,7 +85,7 @@ public:
 		GroupData data;
 		data.SetBeginByte(BytesWritten());
 		data.SetSemantic(semantic);
-		int newGroupIndex = m_GroupDataVector.size();
+		size_t newGroupIndex = m_GroupDataVector.size();
 		m_GroupDataVector.push_back(data);
 		if (!m_GroupDataStack.empty())
 		{
@@ -182,6 +181,8 @@ private:
 	byte* m_BufferBase = nullptr;
 	byte* m_CurrentPtr = nullptr;
 
-	std::stack<uint32> m_GroupDataStack;
+	std::stack<size_t> m_GroupDataStack;
 	std::vector<GroupData> m_GroupDataVector;
 };
+
+}

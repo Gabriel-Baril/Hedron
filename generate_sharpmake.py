@@ -52,7 +52,7 @@ def main():
     sharpmake_exe = sys.argv[1]
 
     # Allowed folders
-    allowed_folders = ["External", "Module", "Plugin", "Solution"]
+    allowed_folders = ["External", "Module", "Plugin", "Solution", "Playground"]
 
     print(f"Searching for .sharpmake.cs files in {allowed_folders} folders under {base_path}...")
     

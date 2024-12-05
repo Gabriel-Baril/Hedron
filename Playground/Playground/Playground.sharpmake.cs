@@ -8,10 +8,7 @@ public class PlaygroundSolution : Solution
     {
         Name = "Playground";
 
-        AddTargets(new Target(
-            Platform.win32 | Platform.win64,
-            DevEnv.vs2022,
-            Optimization.Debug | Optimization.Release));
+        AddTargets(TargetUtil.DefaultTarget);
     }
 
     [Configure]

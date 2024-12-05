@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Public/BufferWriter.h"
+#include "Core/Core.h"
 
 #define DEGIN_META() { GroupMetadata meta;
 #define META(key, value) meta.Meta(key, value);
@@ -20,6 +21,8 @@ struct Data
 
 int main()
 {
+	using namespace hdn;
+
 	byte* buffer = new byte[1000];
 
 	Data data;
@@ -28,10 +31,10 @@ int main()
 
 	writer.PushGroup("Data:data");
 
-	GroupMetadata meta;
-	meta.Meta(GroupMetadata::Type::STRING, "semantic", "f0");
-	meta.Meta(GroupMetadata::Type::STRING, "type", "float");
-	meta.Meta(GroupMetadata::Type::UINT32, "type.size", sizeof(data.f0));
+	// GroupMetadata meta;
+	// meta.Meta(GroupMetadata::Type::STRING, "semantic", "f0");
+	// meta.Meta(GroupMetadata::Type::STRING, "type", "float");
+	// meta.Meta(GroupMetadata::Type::UINT32, "type.size", sizeof(data.f0));
 	writer.PushGroup("float:f0");
 	writer.Write(data.f0);
 	writer.PopGroup();

@@ -8,10 +8,7 @@ public class SheredomJsonProject : Project
     {
         Name = "sheredom-json";
         SourceRootPath = @"[project.SharpmakeCsPath]\Vendor";
-        AddTargets(new Target(
-            Platform.win32 | Platform.win64,
-            DevEnv.vs2022,
-            Optimization.Debug | Optimization.Release));
+        AddTargets(TargetUtil.DefaultTarget);
     }
     
     [Configure]

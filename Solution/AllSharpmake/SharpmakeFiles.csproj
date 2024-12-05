@@ -43,11 +43,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\External\glm\glm.sharpmake.cs">
+      <Link>External\glm\glm.sharpmake.cs</Link>
+    </Compile>
     <Compile Include="..\..\Main.sharpmake.cs">
       <Link>Main.sharpmake.cs</Link>
     </Compile>
     <Compile Include="..\..\Module\Core\Core.sharpmake.cs">
       <Link>Module\Core\Core.sharpmake.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Playground\Playground\Module\Playground\Playground.sharpmake.cs">
+      <Link>Playground\Playground\Module\Playground\Playground.sharpmake.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Playground\Playground\Playground.sharpmake.cs">
+      <Link>Playground\Playground\Playground.sharpmake.cs</Link>
     </Compile>
     <Compile Include="..\Idaes\Idaes.sharpmake.cs">
       <Link>Idaes\Idaes.sharpmake.cs</Link>
@@ -57,12 +66,6 @@
     </Compile>
     <Compile Include="..\Idaes\Module\sheredom-json\sheredom-json.sharpmake.cs">
       <Link>Idaes\Module\sheredom-json\sheredom-json.sharpmake.cs</Link>
-    </Compile>
-    <Compile Include="..\Playground\Module\Playground\Playground.sharpmake.cs">
-      <Link>Playground\Module\Playground\Playground.sharpmake.cs</Link>
-    </Compile>
-    <Compile Include="..\Playground\Playground.sharpmake.cs">
-      <Link>Playground\Playground.sharpmake.cs</Link>
     </Compile>
     <Compile Include="AllSharpmake.sharpmake.cs" />
   </ItemGroup>
