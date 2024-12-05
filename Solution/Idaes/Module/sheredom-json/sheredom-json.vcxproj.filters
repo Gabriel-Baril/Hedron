@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Vendor\json\test\allocator.cpp">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_c_style_comments.cpp">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_equals_in_object.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_global_object.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_hexadecimal_numbers.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_inf_and_nan.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_json5.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_leading_or_trailing_decimal_point.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_leading_plus_sign.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_location_information.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_multi_line_strings.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_no_commas.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_simplified_json.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_single_quoted_strings.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_trailing_comma.cpp">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\allow_unquoted_keys.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\extract.cpp">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\JSONTestSuite.cpp">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\main.cpp">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\test.c">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\test.cpp">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\write_minified.cpp">
+      <Filter>json\test</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\json\test\write_pretty.cpp">
+      <Filter>json\test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Vendor\json\json.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendor\json\test\utest.h">
+      <Filter>json\test</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="json">
+      <UniqueIdentifier>{c7ee6d46-cd6e-fcf5-a6d3-8571f6324d54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="json\test">
+      <UniqueIdentifier>{90142bf5-cd01-5053-e66f-c513dc3943cb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

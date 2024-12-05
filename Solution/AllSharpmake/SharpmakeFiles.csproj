@@ -1,0 +1,70 @@
+﻿<Project>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <PlatformTarget Condition=" '$(Platform)' == '' ">AnyCPU</PlatformTarget>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpmakeFiles</RootNamespace>
+    <AssemblyName>SharpmakeFiles</AssemblyName>
+    <TargetFramework>net6.0</TargetFramework>
+    <FileAlignment>512</FileAlignment>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>output\anycpu\debug</OutputPath>
+    <IntermediateOutputPath>obj\anycpu\debug</IntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>output\anycpu\release</OutputPath>
+    <IntermediateOutputPath>obj\anycpu\release</IntermediateOutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <ItemGroup>
+    <Reference Include="Sharpmake">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Vendor\Sharpmake\Sharpmake.Application\bin\Release\net6.0\Sharpmake.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Main.sharpmake.cs">
+      <Link>Main.sharpmake.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Module\Core\Core.sharpmake.cs">
+      <Link>Module\Core\Core.sharpmake.cs</Link>
+    </Compile>
+    <Compile Include="..\Idaes\Idaes.sharpmake.cs">
+      <Link>Idaes\Idaes.sharpmake.cs</Link>
+    </Compile>
+    <Compile Include="..\Idaes\Module\Idaes\Idaes.sharpmake.cs">
+      <Link>Idaes\Module\Idaes\Idaes.sharpmake.cs</Link>
+    </Compile>
+    <Compile Include="..\Idaes\Module\sheredom-json\sheredom-json.sharpmake.cs">
+      <Link>Idaes\Module\sheredom-json\sheredom-json.sharpmake.cs</Link>
+    </Compile>
+    <Compile Include="..\Playground\Module\Playground\Playground.sharpmake.cs">
+      <Link>Playground\Module\Playground\Playground.sharpmake.cs</Link>
+    </Compile>
+    <Compile Include="..\Playground\Playground.sharpmake.cs">
+      <Link>Playground\Playground.sharpmake.cs</Link>
+    </Compile>
+    <Compile Include="AllSharpmake.sharpmake.cs" />
+  </ItemGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>
