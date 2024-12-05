@@ -21,8 +21,6 @@ public class PlaygroundProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\Source\Public");
 
-        conf.Options.Add(Options.Vc.Compiler.Exceptions.Enable);
-
         conf.AddPublicDependency<CoreProject>(target);
     }
 }
