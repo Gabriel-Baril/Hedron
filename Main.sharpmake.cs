@@ -20,7 +20,7 @@ public static class Paths
 
 public static class TargetUtil
 {
-    public static readonly Target DefaultTarget = new Target(Platform.win32 | Platform.win64, DevEnv.vs2022, Optimization.Debug | Optimization.Release);
+    public static readonly Target DefaultTarget = new Target(Platform.win32 | Platform.win64, DevEnv.vs2022, Optimization.Debug | Optimization.Release | Optimization.Retail);
 }
 
 public abstract class BaseCppProject : Project
@@ -36,6 +36,19 @@ public abstract class BaseCppProject : Project
         conf.Options.Add(Options.Vc.Compiler.Exceptions.Enable);
         conf.Options.Add(Options.Vc.Compiler.CppLanguageStandard.Latest);
         conf.Options.Add(new Options.Vc.Compiler.DisableSpecificWarnings("4201"));
+
+        switch(target.Optimization)
+        {
+            case Optimization.Debug:
+                conf.Defines.Add("_HDN_DEBUG");
+                break;
+            case Optimization.Release:
+                conf.Defines.Add("_HDN_RELEASE");
+                break;
+            case Optimization.Retail:
+                conf.Defines.Add("_HDN_RETAIL");
+                break;
+        }
     }
 }
 
