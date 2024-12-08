@@ -1,11 +1,11 @@
 #pragma once
 
-#include "core/core_defines.h"
-#include "core/core_type.h"
+#include "Core/CoreDefine.h"
+#include "Core/CoreType.h"
 
-namespace hedron
+namespace hdn
 {
-	class HEDRON_API Timestep
+	class Timestep
 	{
 	public:
 		Timestep(float32 time = 0.0f)

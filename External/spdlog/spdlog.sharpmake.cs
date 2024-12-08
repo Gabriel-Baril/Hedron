@@ -2,12 +2,12 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class CoreProject : BaseCppProject
+public class SpdlogProject : BaseCppProject
 {
-    public CoreProject()
+    public SpdlogProject()
     {
-        Name = "Core";
-        SourceRootPath = @"[project.SharpmakeCsPath]\Source";
+        Name = "spdlog";
+        SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
 
@@ -19,11 +19,8 @@ public class CoreProject : BaseCppProject
         conf.Output = Project.Configuration.OutputType.Lib;
         conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
-        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\Source\Public");
+        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\include");
 
-        conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
-
-        conf.AddPublicDependency<GlmProject>(target);
-        conf.AddPublicDependency<SpdlogProject>(target);
+        conf.Defines.Add("SPDLOG_COMPILED_LIB");
     }
 }

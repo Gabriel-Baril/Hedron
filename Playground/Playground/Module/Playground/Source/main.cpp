@@ -22,6 +22,7 @@ struct Data
 int main()
 {
 	using namespace hdn;
+	hdn::Log_Init();
 
 	byte* buffer = new byte[1000];
 
@@ -52,16 +53,16 @@ int main()
 	const auto& groups = writer.GetGroups();
 	for (const auto& group : groups)
 	{
-		std::cout << "Semantic: " << group.GetSemantic() << std::endl;
+		HDN_CORE_INFO("Semantic: {0}", group.GetSemantic());
 		for (const auto& childIndex : group.GetChildren())
 		{
 			const auto& child = groups.at(childIndex);
-			std::cout << "Children: " << child.GetSemantic() << std::endl;
+			HDN_CORE_WARNING("Children: {0}", child.GetSemantic());
 		}
 	}
 
 	delete[] buffer;
 
-	std::cout << "Hello Playground" << std::endl;
+	HDN_CORE_INFO("Hello Playground");
 	return 0;
 }
