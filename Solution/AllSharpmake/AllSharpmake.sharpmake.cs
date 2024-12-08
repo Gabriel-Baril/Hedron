@@ -71,5 +71,7 @@ public class AllSharpmakeSolution : CSharpSolution
     public void ConfigureAll(Solution.Configuration conf, Target target)
     {
         conf.AddProject<SharpmakeFilesProject>(target);
+
+        conf.SetStartupProject<SharpmakeFilesProject>();
     }
 }

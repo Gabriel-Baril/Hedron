@@ -15,6 +15,9 @@ public class SheredomJsonProject : Project
     public void ConfigureAll(Project.Configuration conf, Target target)
     {
         conf.Output = Project.Configuration.OutputType.None;
+
+        conf.SolutionFolder = Constants.EXTERNAL_FOLDER;
+
         conf.IncludePaths.Add(SourceRootPath);
     }
 }

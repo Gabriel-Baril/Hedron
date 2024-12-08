@@ -16,6 +16,8 @@ public class SpdlogProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
+        conf.SolutionFolder = Constants.EXTERNAL_FOLDER;
+
         conf.Output = Project.Configuration.OutputType.Lib;
         conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";

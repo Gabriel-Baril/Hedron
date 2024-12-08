@@ -15,5 +15,7 @@ public class PlaygroundSolution : Solution
     public void ConfigureAll(Solution.Configuration conf, Target target)
     {
         conf.AddProject<PlaygroundProject>(target);
+
+        conf.SetStartupProject<PlaygroundProject>();
     }
 }

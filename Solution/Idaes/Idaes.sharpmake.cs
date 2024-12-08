@@ -19,5 +19,7 @@ public class IdaesSolution : Solution
     {
         conf.AddProject<SheredomJsonProject>(target);
         conf.AddProject<IdaesProject>(target);
+
+        conf.SetStartupProject<IdaesProject>();
     }
 }
