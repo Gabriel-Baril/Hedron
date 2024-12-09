@@ -1,6 +1,5 @@
 import os
 import subprocess
-import sys
 import argparse
 
 def find_files_with_extensions(base_path, allowed_folders, allowed_extensions):

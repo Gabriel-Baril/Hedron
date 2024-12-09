@@ -14,8 +14,8 @@ public class PlaygroundSolution : Solution
     [Configure]
     public void ConfigureAll(Solution.Configuration conf, Target target)
     {
-        conf.AddProject<PlaygroundProject>(target);
+        conf.AddProject<DataTraceProject>(target);
 
-        conf.SetStartupProject<PlaygroundProject>();
+        conf.SetStartupProject<DataTraceProject>();
     }
 }
