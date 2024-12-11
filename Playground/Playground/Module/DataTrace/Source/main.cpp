@@ -5,6 +5,8 @@
 #include "DataTrace/BufferWriter.h"
 #include "DataTrace/BinaryIO.h"
 
+#include "octree-cpp/OctreeCpp.h"
+
 struct Data
 {
 	hdn::float32 f0 = 2;
