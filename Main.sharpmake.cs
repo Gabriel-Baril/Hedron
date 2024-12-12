@@ -9,8 +9,8 @@ public static class Constants
     public const string MODULE_FOLDER = "Module";
     public const string PLUGIN_FOLDER = "Plugin";
     public const string SOLUTION_FOLDER = "Solution";
-    public const string PLAYGROUND_FOLDER = "Playground";
-    public static string[] SHARPMAKE_FOLDERS = { Constants.EXTERNAL_FOLDER, Constants.MODULE_FOLDER, Constants.PLUGIN_FOLDER, Constants.SOLUTION_FOLDER, Constants.PLAYGROUND_FOLDER };
+    public const string EXPERIMENTAL_FOLDER = "Experimental";
+    public static string[] SHARPMAKE_FOLDERS = { Constants.EXTERNAL_FOLDER, Constants.MODULE_FOLDER, Constants.PLUGIN_FOLDER, Constants.SOLUTION_FOLDER, Constants.EXPERIMENTAL_FOLDER };
 }
 
 public static class Paths
