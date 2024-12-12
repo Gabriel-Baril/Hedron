@@ -58,8 +58,8 @@ public static class Main
     public static void SharpmakeMain(Sharpmake.Arguments args)
     {
         args.Generate<IdaesSolution>();
+        args.Generate<PolySolution>();
         args.Generate<PlaygroundSolution>();
-        
         args.Generate<AllSharpmakeSolution>();
     }
 }

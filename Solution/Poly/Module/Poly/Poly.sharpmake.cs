@@ -2,15 +2,15 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class DataTraceProject : BaseCppProject
+public class PolyProject : BaseCppProject
 {
-    public DataTraceProject()
+    public PolyProject()
     {
-        Name = "DataTrace";
+        Name = "PolyProject";
         SourceRootPath = @"[project.SharpmakeCsPath]\Source";
         AddTargets(TargetUtil.DefaultTarget);
     }
-    
+
     [Configure]
     public new void ConfigureAll(Project.Configuration conf, Target target)
     {
@@ -22,5 +22,6 @@ public class DataTraceProject : BaseCppProject
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\Source\Public");
 
         conf.AddPublicDependency<CoreProject>(target);
+        conf.AddPublicDependency<OctreeCppProject>(target);
     }
 }
