@@ -7,3 +7,6 @@
 [submodule "External/octree-cpp"]
 	path = External/octree-cpp
 	url = https://github.com/Gabriel-Baril/octree-cpp/
+[submodule "External/glfw"]
+	path = External/glfw
+	url = https://github.com/Gabriel-Baril/glfw/
