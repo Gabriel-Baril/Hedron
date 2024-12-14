@@ -16,6 +16,15 @@ public class VulkanPlaygroundProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
+        string vulkanSDK = System.Environment.GetEnvironmentVariable("VULKAN_SDK");
+        if (string.IsNullOrEmpty(vulkanSDK))
+        {
+            throw new System.Exception("VULKAN_SDK not found!");
+        }
+        conf.IncludePaths.Add(Path.Combine(vulkanSDK, "Include"));
+        conf.LibraryPaths.Add(Path.Combine(vulkanSDK, "Lib"));
+        conf.LibraryFiles.Add("vulkan-1.lib");
+
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
