@@ -33,6 +33,7 @@ public abstract class BaseCppProject : Project
 
     public void ConfigureAll(Project.Configuration conf, Target target)
     {
+        conf.AdditionalCompilerOptions.Add("/utf-8");
         conf.Options.Add(Options.Vc.Compiler.Exceptions.Enable);
         conf.Options.Add(Options.Vc.Compiler.CppLanguageStandard.Latest);
         conf.Options.Add(new Options.Vc.Compiler.DisableSpecificWarnings("4201"));
