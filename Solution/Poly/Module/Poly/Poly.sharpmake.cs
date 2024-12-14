@@ -6,7 +6,7 @@ public class PolyProject : BaseCppProject
 {
     public PolyProject()
     {
-        Name = "PolyProject";
+        Name = "Poly";
         SourceRootPath = @"[project.SharpmakeCsPath]\Source";
         AddTargets(TargetUtil.DefaultTarget);
     }
