@@ -2,6 +2,8 @@
 #pragma once
 
 #include "HDNWindow.h"
+#include "HDNPipeline.h"
+#include "HDNDevice.h"
 
 namespace hdn
 {
@@ -14,6 +16,13 @@ namespace hdn
 		FirstApp();
 		void Run();
 	private:
-		HDNWindow m_Window;
+		HDNWindow m_Window{ WIDTH, HEIGHT, "First App"};
+		HDNDevice m_Device{ m_Window };
+		HDNPipeline m_Pipeline{ 
+			&m_Device, 
+			"Shaders/simple_shader.vert.spv", 
+			"Shaders/simple_shader.frag.spv", 
+			HDNPipeline::DefaultPipelineConfigInfo(WIDTH, HEIGHT)
+		};
 	};
 }

@@ -405,3 +405,6 @@ FodyWeavers.xsd
 
 **/out/
 **/Out/
+
+*.vert.spv
+*.frag.spv

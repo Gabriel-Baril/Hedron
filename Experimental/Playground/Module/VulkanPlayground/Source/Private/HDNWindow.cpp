@@ -1,5 +1,7 @@
 #include "VulkanPlayground/HDNWindow.h"
 
+#include <stdexcept>
+
 namespace hdn
 {
 	HDNWindow::HDNWindow(uint32 width, uint32 height, const std::string& name)
@@ -17,6 +19,14 @@ namespace hdn
 	bool HDNWindow::ShouldClose()
 	{
 		return glfwWindowShouldClose(m_Window);
+	}
+
+	void HDNWindow::CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface)
+	{
+		if (glfwCreateWindowSurface(instance, m_Window, nullptr, surface) != VK_SUCCESS)
+		{
+			throw std::runtime_error("Failed to create window surface");
+		}
 	}
 
 	void HDNWindow::InitWindow()
