@@ -3,7 +3,9 @@
 #include "Core/Core.h"
 #include <fstream>
 #include <stdexcept>
-#include <cassert> // TOD): Use HDN_ASSERT
+#include <cassert> // TODO: Use HDN_ASSERT
+
+#include "VulkanPlayground/HDNModel.h"
 
 namespace hdn
 {
@@ -146,12 +148,14 @@ namespace hdn
 		shaderStages[1].pSpecializationInfo = nullptr;
 
 		// Controls how we interpret our vertex buffer data (which the initial info in our graphics pipeline)
+		auto attributeDescriptions = HDNModel::Vertex::GetAttributeDescriptions();
+		auto bindingDescriptions = HDNModel::Vertex::GetBindingDescriptions();
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputInfo.vertexAttributeDescriptionCount = 0;
-		vertexInputInfo.vertexBindingDescriptionCount = 0;
-		vertexInputInfo.pVertexAttributeDescriptions = nullptr;
-		vertexInputInfo.pVertexBindingDescriptions = nullptr;
+		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32>(attributeDescriptions.size());
+		vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32>(bindingDescriptions.size());
+		vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+		vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 
 		// Combine the viewport and scissor options
 		VkPipelineViewportStateCreateInfo viewportInfo{};

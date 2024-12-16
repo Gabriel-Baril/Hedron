@@ -5,6 +5,7 @@
 #include "HDNPipeline.h"
 #include "HDNWindow.h"
 #include "HDNSwapChain.h"
+#include "HDNModel.h"
 
 #include <memory>
 #include <vector>
@@ -25,6 +26,7 @@ namespace hdn
 
 		void Run();
 	private:
+		void LoadModels();
 		void CreatePipelineLayout();
 		void CreatePipeline();
 		void CreateCommandBuffers();
@@ -36,5 +38,7 @@ namespace hdn
 		std::unique_ptr<HDNPipeline> m_Pipeline;
 		VkPipelineLayout m_PipelineLayout;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
+
+		std::unique_ptr<HDNModel> m_Model;
 	};
 }

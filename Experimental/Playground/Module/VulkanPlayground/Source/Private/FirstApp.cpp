@@ -7,6 +7,7 @@ namespace hdn
 {
 	FirstApp::FirstApp()
 	{
+		LoadModels();
 		CreatePipelineLayout();
 		CreatePipeline();
 		CreateCommandBuffers();
@@ -26,6 +27,17 @@ namespace hdn
 		}
 
 		vkDeviceWaitIdle(m_Device.device());
+	}
+
+	void FirstApp::LoadModels()
+	{
+		std::vector<HDNModel::Vertex> vertices{
+			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+		};
+
+		m_Model = std::make_unique<HDNModel>(&m_Device, vertices);
 	}
 
 	void FirstApp::CreatePipelineLayout()
@@ -89,7 +101,8 @@ namespace hdn
 
 			vkCmdBeginRenderPass(currentCommandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE); // VK_SUBPASS_CONTENTS_INLINE = Signals that the subsequent render pass command will be directly embedded in the primary command buffer itself
 			m_Pipeline->Bind(currentCommandBuffer);
-			vkCmdDraw(currentCommandBuffer, 3, 1, 0, 0); // Instances can be used if you want to draw multiple copy of the same vertex data
+			m_Model->Bind(currentCommandBuffer);
+			m_Model->Draw(currentCommandBuffer);
 			vkCmdEndRenderPass(currentCommandBuffer);
 
 			if (vkEndCommandBuffer(currentCommandBuffer) != VK_SUCCESS)

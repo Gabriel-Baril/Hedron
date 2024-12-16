@@ -1,10 +1,13 @@
 
 #pragma once
 
+#include <type_traits>
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/detail/qualifier.hpp>
 #include <glm/detail/type_quat.hpp>
 #include <glm/glm.hpp>
-#include <type_traits>
 
 namespace hdn
 {
