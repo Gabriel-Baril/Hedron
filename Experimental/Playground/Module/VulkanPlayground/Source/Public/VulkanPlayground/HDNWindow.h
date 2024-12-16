@@ -17,6 +17,8 @@ namespace hdn
 		HDNWindow& operator=(const HDNWindow&) = delete;
 
 		bool ShouldClose();
+		VkExtent2D GetExtent() { return { m_Width, m_Height }; }
+
 		void CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 	private:
 		void InitWindow();

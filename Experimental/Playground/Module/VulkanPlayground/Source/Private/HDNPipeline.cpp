@@ -20,6 +20,11 @@ namespace hdn
 		vkDestroyPipeline(m_Device->device(), m_GraphicsPipeline, nullptr);
 	}
 
+	void HDNPipeline::Bind(VkCommandBuffer commandBuffer)
+	{
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline); // Signal that we want to bind a graphics pipeline
+	}
+
 	PipelineConfigInfo HDNPipeline::DefaultPipelineConfigInfo(uint32 width, uint32 height)
 	{
 		PipelineConfigInfo configInfo{};
@@ -39,13 +44,6 @@ namespace hdn
 		// Any pixel outside of the scissor rectangle will not be drawn
 		configInfo.scissor.offset = { 0, 0 };
 		configInfo.scissor.extent = { width, height };
-
-		// Combine the viewport and scissor options
-		configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-		configInfo.viewportInfo.viewportCount = 1;
-		configInfo.viewportInfo.pViewports = &configInfo.viewport;
-		configInfo.viewportInfo.scissorCount = 1;
-		configInfo.viewportInfo.pScissors = &configInfo.scissor;
 
 		// Breaks up our geometry into fragment
 		configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -155,13 +153,21 @@ namespace hdn
 		vertexInputInfo.pVertexAttributeDescriptions = nullptr;
 		vertexInputInfo.pVertexBindingDescriptions = nullptr;
 
+		// Combine the viewport and scissor options
+		VkPipelineViewportStateCreateInfo viewportInfo{};
+		viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+		viewportInfo.viewportCount = 1;
+		viewportInfo.pViewports = &configInfo.viewport;
+		viewportInfo.scissorCount = 1;
+		viewportInfo.pScissors = &configInfo.scissor;
+
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 		pipelineInfo.stageCount = 2;
 		pipelineInfo.pStages = shaderStages; // Programmable Stages
 		pipelineInfo.pVertexInputState = &vertexInputInfo;
 		pipelineInfo.pInputAssemblyState = &configInfo.inputAssemblyInfo;
-		pipelineInfo.pViewportState = &configInfo.viewportInfo;
+		pipelineInfo.pViewportState = &viewportInfo;
 		pipelineInfo.pRasterizationState = &configInfo.rasterizationInfo;
 		pipelineInfo.pMultisampleState = &configInfo.multisampleInfo;
 		pipelineInfo.pColorBlendState = &configInfo.colorBlendInfo;

@@ -11,7 +11,6 @@ namespace hdn
 	{
 		VkViewport viewport;
 		VkRect2D scissor;
-		VkPipelineViewportStateCreateInfo viewportInfo;
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
 		VkPipelineRasterizationStateCreateInfo rasterizationInfo;
 		VkPipelineMultisampleStateCreateInfo multisampleInfo;
@@ -34,6 +33,8 @@ namespace hdn
 		virtual ~HDNPipeline();
 		HDNPipeline(const HDNPipeline&) = delete;
 		void operator=(const HDNPipeline&) = delete;
+
+		void Bind(VkCommandBuffer commandBuffer);
 		static PipelineConfigInfo DefaultPipelineConfigInfo(uint32 width, uint32 height);
 	private:
 		static std::vector<char> ReadFile(const std::string& filepath);
