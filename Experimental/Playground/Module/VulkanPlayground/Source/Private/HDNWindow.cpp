@@ -33,7 +33,18 @@ namespace hdn
 	{
 		glfwInit();
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_WindowName.c_str(), nullptr, nullptr);
+		glfwSetWindowUserPointer(m_Window, this);
+		glfwSetFramebufferSizeCallback(m_Window, HDNWindow::FramebufferResizeCallback);
+	}
+
+	void HDNWindow::FramebufferResizeCallback(GLFWwindow* window, int width, int height)
+	{
+		auto hdnWindow = reinterpret_cast<HDNWindow*>(glfwGetWindowUserPointer(window));
+		hdnWindow->m_FramebufferResized = true;
+		hdnWindow->m_Width = width;
+		hdnWindow->m_Height = height;
 	}
 }

@@ -9,14 +9,20 @@ namespace hdn
 {
 	struct PipelineConfigInfo
 	{
-		VkViewport viewport;
-		VkRect2D scissor;
+		PipelineConfigInfo() = default;
+		PipelineConfigInfo(const PipelineConfigInfo&) = delete;
+		PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
+
+		VkPipelineViewportStateCreateInfo viewportInfo;
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
 		VkPipelineRasterizationStateCreateInfo rasterizationInfo;
 		VkPipelineMultisampleStateCreateInfo multisampleInfo;
 		VkPipelineColorBlendAttachmentState colorBlendAttachment;
 		VkPipelineColorBlendStateCreateInfo colorBlendInfo;
 		VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+		std::vector<VkDynamicState> dynamicStateEnables;
+		VkPipelineDynamicStateCreateInfo dynamicStateInfo;
+
 		VkPipelineLayout pipelineLayout = nullptr;
 		VkRenderPass renderPass = nullptr;
 		uint32_t subpass = 0;
@@ -31,11 +37,14 @@ namespace hdn
 			const std::string& fragFilepath, 
 			const PipelineConfigInfo& configInfo);
 		virtual ~HDNPipeline();
+		HDNPipeline() = default;
 		HDNPipeline(const HDNPipeline&) = delete;
-		void operator=(const HDNPipeline&) = delete;
+		HDNPipeline& operator=(const HDNPipeline&) = delete;
+		HDNPipeline(HDNPipeline&&) = delete;
+		HDNPipeline& operator=(HDNPipeline&&) = delete;
 
 		void Bind(VkCommandBuffer commandBuffer);
-		static PipelineConfigInfo DefaultPipelineConfigInfo(uint32 width, uint32 height);
+		static void DefaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
 	private:
 		static std::vector<char> ReadFile(const std::string& filepath);
 		void CreateGraphicsPipeline(

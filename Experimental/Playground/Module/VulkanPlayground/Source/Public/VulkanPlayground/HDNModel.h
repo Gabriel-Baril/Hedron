@@ -23,6 +23,8 @@ namespace hdn
 		virtual ~HDNModel();
 		HDNModel(const HDNModel&) = delete;
 		HDNModel& operator=(const HDNModel&) = delete;
+		HDNModel(HDNModel&&) = delete;
+		HDNModel& operator=(HDNModel&&) = delete;
 
 		void Bind(VkCommandBuffer commandBuffer);
 		void Draw(VkCommandBuffer commandBuffer);

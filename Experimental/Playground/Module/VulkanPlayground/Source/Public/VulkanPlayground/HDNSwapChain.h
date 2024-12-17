@@ -6,6 +6,7 @@
 #include <vulkan/vulkan.h>
 
 // std lib headers
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -17,10 +18,13 @@ namespace hdn {
 
 		// TODO: Convert deviceRef to ptr
 		HDNSwapChain(HDNDevice& deviceRef, VkExtent2D windowExtent);
+		HDNSwapChain(HDNDevice& deviceRef, VkExtent2D windowExtent, std::shared_ptr<HDNSwapChain> previous);
 		~HDNSwapChain();
 
 		HDNSwapChain(const HDNSwapChain&) = delete;
-		void operator=(const HDNSwapChain&) = delete;
+		HDNSwapChain& operator=(const HDNSwapChain&) = delete;
+		HDNSwapChain(HDNSwapChain&&) = delete;
+		HDNSwapChain& operator=(HDNSwapChain&&) = delete;
 
 		VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
 		VkRenderPass getRenderPass() { return renderPass; }
@@ -40,6 +44,7 @@ namespace hdn {
 		VkResult submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
 	private:
+		void Init();
 		void createSwapChain();
 		void createImageViews();
 		void createDepthResources();
@@ -70,6 +75,7 @@ namespace hdn {
 		VkExtent2D windowExtent;
 
 		VkSwapchainKHR swapChain;
+		std::shared_ptr<HDNSwapChain> m_OldSwapChain;
 
 		std::vector<VkSemaphore> imageAvailableSemaphores;
 		std::vector<VkSemaphore> renderFinishedSemaphores;

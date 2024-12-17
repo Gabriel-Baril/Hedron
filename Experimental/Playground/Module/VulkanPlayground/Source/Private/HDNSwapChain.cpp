@@ -12,7 +12,22 @@
 namespace hdn {
 
 	HDNSwapChain::HDNSwapChain(HDNDevice& deviceRef, VkExtent2D extent)
-		: device{ deviceRef }, windowExtent{ extent } {
+		: device{ deviceRef }, windowExtent{ extent }
+	{
+		Init();
+	}
+
+	HDNSwapChain::HDNSwapChain(HDNDevice& deviceRef, VkExtent2D extent, std::shared_ptr<HDNSwapChain> previous)
+		: device{ deviceRef }, windowExtent{ extent }, m_OldSwapChain{ previous }
+	{
+		Init();
+
+		m_OldSwapChain = nullptr; // https://stackoverflow.com/questions/16151550/c11-when-clearing-shared-ptr-should-i-use-reset-or-set-to-nullptr
+	}
+
+
+	void HDNSwapChain::Init()
+	{
 		createSwapChain();
 		createImageViews();
 		createRenderPass();
@@ -163,7 +178,7 @@ namespace hdn {
 		createInfo.presentMode = presentMode;
 		createInfo.clipped = VK_TRUE;
 
-		createInfo.oldSwapchain = VK_NULL_HANDLE;
+		createInfo.oldSwapchain = m_OldSwapChain == nullptr ? VK_NULL_HANDLE : m_OldSwapChain->swapChain;
 
 		if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create swap chain!");
