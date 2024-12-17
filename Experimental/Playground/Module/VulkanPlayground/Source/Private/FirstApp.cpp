@@ -1,8 +1,10 @@
 #include "VulkanPlayground/FirstApp.h"
 
 #include "VulkanPlayground/KeyboardMovementController.h"
+#include "VulkanPlayground/HDNBuffer.h"
 #include "VulkanPlayground/HDNCamera.h"
 #include "VulkanPlayground/SimpleRenderSystem.h"
+
 
 #include "Core/Core.h"
 #include <glm/gtc/constants.hpp>
@@ -15,6 +17,13 @@ namespace hdn
 {
 	static constexpr float32 MAX_FRAME_TIME = 0.5f;
 
+	// Global Uniform Buffer Object
+	struct GlobalUbo
+	{
+		mat4f32 projectionView{ 1.0f };
+		vec3f32 lightDirection = glm::normalize(vec3f32{ 1.0f, 3.0f, -1.0f });
+	};
+
 	FirstApp::FirstApp()
 	{
 		LoadGameObjects();
@@ -26,6 +35,17 @@ namespace hdn
 
 	void FirstApp::Run()
 	{
+		HDNBuffer globalUboBuffer{
+			&m_Device,
+			sizeof(GlobalUbo),
+			HDNSwapChain::MAX_FRAMES_IN_FLIGHT, // dictate how many frames that can be rendered simultaneously
+			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			m_Device.properties.limits.minUniformBufferOffsetAlignment
+		};
+		globalUboBuffer.map();
+
+
 		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass() };
 		HDNCamera camera{};
 		camera.SetViewDirection(vec3f32{ 0.0f }, vec3f32{0.5f, 0.0f, 1.0f});
@@ -53,13 +73,22 @@ namespace hdn
 
 			if (auto commandBuffer = m_Renderer.BeginFrame())
 			{
-				
-				// Begin offscreen shadow pass
-				// Render shadow casting objects
-				// end offscreen shadow pass
+				int frameIndex = m_Renderer.GetFrameIndex();
+				FrameInfo frameInfo{};
+				frameInfo.frameIndex = frameIndex;
+				frameInfo.frameTime = frameTime;
+				frameInfo.commandBuffer = commandBuffer;
+				frameInfo.camera = &camera;
 
+				// update
+				GlobalUbo ubo{};
+				ubo.projectionView = camera.GetProjection() * camera.GetView();
+				globalUboBuffer.writeToIndex(&ubo, frameIndex);
+				globalUboBuffer.flushIndex(frameIndex); // Send the data to the gpu
+
+				// render
 				m_Renderer.BeginSwapChainRenderPass(commandBuffer);
-				simpleRenderSystem.RenderGameObjects(commandBuffer, m_GameObjects, camera);
+				simpleRenderSystem.RenderGameObjects(frameInfo, m_GameObjects);
 				m_Renderer.EndSwapChainRenderPass(commandBuffer);
 
 				m_Renderer.EndFrame();

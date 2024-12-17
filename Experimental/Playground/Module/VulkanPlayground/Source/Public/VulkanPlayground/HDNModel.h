@@ -1,6 +1,7 @@
 #pragma once
 
 #include "HDNDevice.h"
+#include "HDNBuffer.h"
 
 #include "Core/Core.h"
 
@@ -56,13 +57,11 @@ namespace hdn
 		HDNDevice* m_Device;
 		
 		// The buffer and it's assigned memory are 2 different objects
-		VkBuffer m_VertexBuffer;
-		VkDeviceMemory m_VertexBufferMemory;
+		Scope<HDNBuffer> m_VertexBuffer;
 		uint32 m_VertexCount;
 
 		bool m_HasIndexBuffer = false;
-		VkBuffer m_IndexBuffer;
-		VkDeviceMemory m_IndexBufferMemory;
+		Scope<HDNBuffer> m_IndexBuffer;
 		uint32 m_IndexCount;
 	};
 }

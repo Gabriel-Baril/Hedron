@@ -57,20 +57,20 @@ namespace hdn
 		m_Pipeline = std::make_unique<HDNPipeline>(m_Device, "Shaders/simple_shader.vert.spv", "Shaders/simple_shader.frag.spv", pipelineConfig);
 	}
 
-	void SimpleRenderSystem::RenderGameObjects(VkCommandBuffer commandBuffer, std::vector<HDNGameObject>& gameObjects, const HDNCamera& camera)
+	void SimpleRenderSystem::RenderGameObjects(FrameInfo& frameInfo, std::vector<HDNGameObject>& gameObjects)
 	{
-		m_Pipeline->Bind(commandBuffer);
+		m_Pipeline->Bind(frameInfo.commandBuffer);
 
-		auto projectionView = camera.GetProjection() * camera.GetView();
+		auto projectionView = frameInfo.camera->GetProjection() * frameInfo.camera->GetView();
 		for (auto& obj : gameObjects)
 		{
 			SimplePushConstantData push{};
 			const auto modelMatrix = obj.transform.mat4();
 			push.transform = projectionView * modelMatrix; // Will be done in the shader once we have uniform buffer
 			push.normalMatrix = obj.transform.NormalMatrix();
-			vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-			obj.model->Bind(commandBuffer);
-			obj.model->Draw(commandBuffer);
+			vkCmdPushConstants(frameInfo.commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
+			obj.model->Bind(frameInfo.commandBuffer);
+			obj.model->Draw(frameInfo.commandBuffer);
 		}
 	}
 }
