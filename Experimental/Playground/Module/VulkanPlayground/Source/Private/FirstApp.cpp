@@ -20,8 +20,10 @@ namespace hdn
 	// Global Uniform Buffer Object
 	struct GlobalUbo
 	{
-		alignas(16) mat4f32 projectionView{ 1.0f };
-		alignas(16) vec3f32 lightDirection = glm::normalize(vec3f32{ 1.0f, -3.0f, -1.0f });
+		mat4f32 projectionView{ 1.0f };
+		vec4f32 ambientLightColor{ 1.0f, 1.0f, 1.0f, 0.02f };
+		vec3f32 lightPosition{ -1.0f };
+		alignas(16) vec4f32 lightColor{ -1.0f }; // w is light intensity
 	};
 
 	FirstApp::FirstApp()
@@ -54,7 +56,7 @@ namespace hdn
 		}
 
 		auto globalSetLayout = HDNDescriptorSetLayout::Builder(m_Device)
-			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
 			.build();
 
 		std::vector<VkDescriptorSet> globalDescriptorSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT); // One descriptor set per frame
@@ -70,6 +72,7 @@ namespace hdn
 		HDNCamera camera{};
 
 		auto viewerObject = HDNGameObject::CreateGameObject();
+		viewerObject.transform.translation.z = -2.5f;
 		KeyboardMovementController cameraController{};
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
@@ -123,15 +126,22 @@ namespace hdn
 		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromFile(&m_Device, "Models/flat_vase.obj");
 		auto flatVase = HDNGameObject::CreateGameObject();
 		flatVase.model = hdnModel;
-		flatVase.transform.translation = { 0.0f, 0.0f, 2.5f };
-		flatVase.transform.scale = vec3f32{3.0f, 1.0f, 2.0f};
+		flatVase.transform.translation = { -0.5f, 0.5f, 0.0f };
+		flatVase.transform.scale = vec3f32{3.0f, 1.5f, 3.0f};
 		m_GameObjects.push_back(std::move(flatVase));
 
 		hdnModel = HDNModel::CreateModelFromFile(&m_Device, "Models/smooth_vase.obj");
 		auto smoothVase = HDNGameObject::CreateGameObject();
 		smoothVase.model = hdnModel;
-		smoothVase.transform.translation = { -1.0f, 0.0f, 2.5f };
+		smoothVase.transform.translation = { -1.0f, 0.5f, 0.0f };
 		smoothVase.transform.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
 		m_GameObjects.push_back(std::move(smoothVase));
+
+		hdnModel = HDNModel::CreateModelFromFile(&m_Device, "Models/quad.obj");
+		auto floor = HDNGameObject::CreateGameObject();
+		floor.model = hdnModel;
+		floor.transform.translation = { 0.0f, 0.5f, 0.0f };
+		floor.transform.scale = vec3f32{ 3.0f, 1.0f, 3.0f };
+		m_GameObjects.push_back(std::move(floor));
 	}
 }
