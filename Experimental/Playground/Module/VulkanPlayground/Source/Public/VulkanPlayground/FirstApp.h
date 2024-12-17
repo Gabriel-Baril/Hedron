@@ -6,6 +6,7 @@
 #include "HDNWindow.h"
 #include "HDNSwapChain.h"
 #include "HDNModel.h"
+#include "HDNGameObject.h"
 
 #include <memory>
 #include <vector>
@@ -28,7 +29,7 @@ namespace hdn
 
 		void Run();
 	private:
-		void LoadModels();
+		void LoadGameObjects();
 		void CreatePipelineLayout();
 		void CreatePipeline();
 		void CreateCommandBuffers();
@@ -36,6 +37,7 @@ namespace hdn
 		void DrawFrame();
 		void RecreateSwapchain();
 		void RecordCommandBuffer(int imageIndex);
+		void RenderGameObjects(VkCommandBuffer commandBuffer);
 	private:
 		HDNWindow m_Window{ WIDTH, HEIGHT, "First App"};
 		HDNDevice m_Device{ m_Window };
@@ -44,6 +46,6 @@ namespace hdn
 		VkPipelineLayout m_PipelineLayout;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
 
-		std::unique_ptr<HDNModel> m_Model;
+		std::vector<HDNGameObject> m_GameObjects;
 	};
 }

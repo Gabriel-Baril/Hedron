@@ -9,13 +9,14 @@ namespace hdn
 {
 	struct SimplePushConstantData
 	{
+		mat2f32 transform{ 1.0f };
 		vec2f32 offset;
 		alignas(16) vec3f32 color;
 	};
 
 	FirstApp::FirstApp()
 	{
-		LoadModels();
+		LoadGameObjects();
 		CreatePipelineLayout();
 		RecreateSwapchain();
 		CreateCommandBuffers();
@@ -37,15 +38,20 @@ namespace hdn
 		vkDeviceWaitIdle(m_Device.device());
 	}
 
-	void FirstApp::LoadModels()
+	void FirstApp::LoadGameObjects()
 	{
 		std::vector<HDNModel::Vertex> vertices{
 			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
 			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
 			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
 		};
-
-		m_Model = std::make_unique<HDNModel>(&m_Device, vertices);
+		auto hdnModel = CreateRef<HDNModel>(&m_Device, vertices);
+		auto triangle = HDNGameObject::CreateGameObject();
+		triangle.model = hdnModel;
+		triangle.color = { 0.0f, 0.8f, 0.1f };
+		triangle.transform2d.translation.x = 0.2f;
+		triangle.transform2d.scale = { 2.0f, 0.5f };
+		m_GameObjects.push_back(std::move(triangle));
 	}
 
 	void FirstApp::CreatePipelineLayout()
@@ -163,8 +169,6 @@ namespace hdn
 
 	void FirstApp::RecordCommandBuffer(int imageIndex)
 	{
-		static int frame = 0;
-
 		VkCommandBuffer& currentCommandBuffer = m_CommandBuffers.at(imageIndex);
 
 		VkCommandBufferBeginInfo beginInfo{};
@@ -200,16 +204,7 @@ namespace hdn
 		vkCmdSetViewport(currentCommandBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(currentCommandBuffer, 0, 1, &scissor);
 
-		m_Pipeline->Bind(currentCommandBuffer);
-		m_Model->Bind(currentCommandBuffer);
-		for (int j = 0; j < 4; j++)
-		{
-			SimplePushConstantData push{};
-			push.offset = { 0.0f + glm::clamp<float>(sinf(frame * 0.001f + j * 0.2f) / glm::pi<float>(), -1, 1), -0.4f + j * 0.25f};
-			push.color = { 0.0f, glm::clamp<float>(sinf(frame * 0.001f + j * 0.2f) / glm::pi<float>(), -1, 1), 0.2f + j * 0.2f };
-			vkCmdPushConstants(currentCommandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-			m_Model->Draw(currentCommandBuffer);
-		}
+		RenderGameObjects(currentCommandBuffer);
 
 		vkCmdEndRenderPass(currentCommandBuffer);
 
@@ -217,6 +212,20 @@ namespace hdn
 		{
 			throw std::runtime_error("Failed to end command buffer");
 		}
-		frame++;
+	}
+
+	void FirstApp::RenderGameObjects(VkCommandBuffer commandBuffer)
+	{
+		m_Pipeline->Bind(commandBuffer);
+		for (auto& obj : m_GameObjects)
+		{
+			SimplePushConstantData push{};
+			push.offset = obj.transform2d.translation;
+			push.color = obj.color;
+			push.transform = obj.transform2d.mat2();
+			vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
+			obj.model->Bind(commandBuffer);
+			obj.model->Draw(commandBuffer);
+		}
 	}
 }
