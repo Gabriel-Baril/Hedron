@@ -20,12 +20,17 @@ namespace hdn
 	// Global Uniform Buffer Object
 	struct GlobalUbo
 	{
-		mat4f32 projectionView{ 1.0f };
-		vec3f32 lightDirection = glm::normalize(vec3f32{ 1.0f, 3.0f, -1.0f });
+		alignas(16) mat4f32 projectionView{ 1.0f };
+		alignas(16) vec3f32 lightDirection = glm::normalize(vec3f32{ 1.0f, -3.0f, -1.0f });
 	};
 
 	FirstApp::FirstApp()
 	{
+		globalPool = HDNDescriptorPool::Builder(m_Device)
+			.setMaxSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
+			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
+			.build();
+		
 		LoadGameObjects();
 	}
 
@@ -35,20 +40,34 @@ namespace hdn
 
 	void FirstApp::Run()
 	{
-		HDNBuffer globalUboBuffer{
-			&m_Device,
-			sizeof(GlobalUbo),
-			HDNSwapChain::MAX_FRAMES_IN_FLIGHT, // dictate how many frames that can be rendered simultaneously
-			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-			m_Device.properties.limits.minUniformBufferOffsetAlignment
-		};
-		globalUboBuffer.map();
+		std::vector<Scope<HDNBuffer>> uboBuffers(HDNSwapChain::MAX_FRAMES_IN_FLIGHT);
+		for (int i = 0;i < uboBuffers.size(); i++)
+		{
+			uboBuffers[i] = CreateScope<HDNBuffer>(
+				&m_Device,
+				sizeof(GlobalUbo),
+				1,
+				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+			);
+			uboBuffers[i]->map();
+		}
 
+		auto globalSetLayout = HDNDescriptorSetLayout::Builder(m_Device)
+			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+			.build();
 
-		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass() };
+		std::vector<VkDescriptorSet> globalDescriptorSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT); // One descriptor set per frame
+		for (int i = 0;i < globalDescriptorSets.size(); i++)
+		{
+			auto bufferInfo = uboBuffers[i]->descriptorInfo();
+			HDNDescriptorWriter(*globalSetLayout, *globalPool)
+				.writeBuffer(0, &bufferInfo)
+				.build(globalDescriptorSets[i]);
+		}
+
+		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
 		HDNCamera camera{};
-		camera.SetViewDirection(vec3f32{ 0.0f }, vec3f32{0.5f, 0.0f, 1.0f});
 
 		auto viewerObject = HDNGameObject::CreateGameObject();
 		KeyboardMovementController cameraController{};
@@ -79,12 +98,13 @@ namespace hdn
 				frameInfo.frameTime = frameTime;
 				frameInfo.commandBuffer = commandBuffer;
 				frameInfo.camera = &camera;
+				frameInfo.globalDescriptorSet = globalDescriptorSets[frameIndex];
 
 				// update
 				GlobalUbo ubo{};
 				ubo.projectionView = camera.GetProjection() * camera.GetView();
-				globalUboBuffer.writeToIndex(&ubo, frameIndex);
-				globalUboBuffer.flushIndex(frameIndex); // Send the data to the gpu
+				uboBuffers[frameIndex]->writeToBuffer((void*)&ubo);
+				uboBuffers[frameIndex]->flush();
 
 				// render
 				m_Renderer.BeginSwapChainRenderPass(commandBuffer);

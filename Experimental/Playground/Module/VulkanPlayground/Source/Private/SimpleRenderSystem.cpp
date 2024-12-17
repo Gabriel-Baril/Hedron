@@ -10,14 +10,14 @@ namespace hdn
 {
 	struct SimplePushConstantData
 	{
-		mat4f32 transform{ 1.0f };
+		mat4f32 modelMatrix{ 1.0f };
 		mat4f32 normalMatrix{ 1.0f };
 	};
 
-	SimpleRenderSystem::SimpleRenderSystem(HDNDevice* device, VkRenderPass renderPass)
+	SimpleRenderSystem::SimpleRenderSystem(HDNDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
 		: m_Device{device}
 	{
-		CreatePipelineLayout();
+		CreatePipelineLayout(globalSetLayout);
 		CreatePipeline(renderPass);
 	}
 
@@ -26,17 +26,19 @@ namespace hdn
 		vkDestroyPipelineLayout(m_Device->device(), m_PipelineLayout, nullptr);
 	}
 
-	void SimpleRenderSystem::CreatePipelineLayout()
+	void SimpleRenderSystem::CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout)
 	{
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 		pushConstantRange.offset = 0;
 		pushConstantRange.size = sizeof(SimplePushConstantData);
 
+		std::vector<VkDescriptorSetLayout> descriptorSetLayouts{globalSetLayout};
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = 0;
-		pipelineLayoutInfo.pSetLayouts = nullptr; // Used to pass data other than our vertex data, to our vertex and fragment shader. For example, texture and uniform buffer.
+		pipelineLayoutInfo.setLayoutCount = static_cast<uint32>(descriptorSetLayouts.size());
+		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data(); // Used to pass data other than our vertex data, to our vertex and fragment shader. For example, texture and uniform buffer.
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // A way to push a very small amount of data to our shader
 		if (vkCreatePipelineLayout(m_Device->device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
@@ -61,12 +63,19 @@ namespace hdn
 	{
 		m_Pipeline->Bind(frameInfo.commandBuffer);
 
-		auto projectionView = frameInfo.camera->GetProjection() * frameInfo.camera->GetView();
+		vkCmdBindDescriptorSets(
+			frameInfo.commandBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			m_PipelineLayout,
+			0, 1,
+			&frameInfo.globalDescriptorSet,
+			0, nullptr
+		); // Low frequency descriptor sets needs to occupy the lowest index
+
 		for (auto& obj : gameObjects)
 		{
 			SimplePushConstantData push{};
-			const auto modelMatrix = obj.transform.mat4();
-			push.transform = projectionView * modelMatrix; // Will be done in the shader once we have uniform buffer
+			push.modelMatrix = obj.transform.mat4(); // Will be done in the shader once we have uniform buffer
 			push.normalMatrix = obj.transform.NormalMatrix();
 			vkCmdPushConstants(frameInfo.commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
 			obj.model->Bind(frameInfo.commandBuffer);

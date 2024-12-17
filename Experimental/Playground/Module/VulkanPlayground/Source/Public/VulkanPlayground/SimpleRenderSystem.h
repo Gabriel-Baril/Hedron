@@ -16,14 +16,14 @@ namespace hdn
 	class SimpleRenderSystem
 	{
 	public:
-		SimpleRenderSystem(HDNDevice* device, VkRenderPass renderPass);
+		SimpleRenderSystem(HDNDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		virtual ~SimpleRenderSystem();
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
 		void RenderGameObjects(FrameInfo& frameInfo, std::vector<HDNGameObject>& gameObjects);
 	private:
-		void CreatePipelineLayout();
+		void CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void CreatePipeline(VkRenderPass renderPass);
 	private:
 		HDNDevice* m_Device;
