@@ -11,7 +11,7 @@ namespace hdn
 	struct SimplePushConstantData
 	{
 		mat4f32 transform{ 1.0f };
-		alignas(16) vec3f32 color;
+		mat4f32 normalMatrix{ 1.0f };
 	};
 
 	SimpleRenderSystem::SimpleRenderSystem(HDNDevice* device, VkRenderPass renderPass)
@@ -65,8 +65,9 @@ namespace hdn
 		for (auto& obj : gameObjects)
 		{
 			SimplePushConstantData push{};
-			push.transform = projectionView * obj.transform.mat4(); // Will be done in the shader once we have uniform buffer
-			push.color = obj.color;
+			const auto modelMatrix = obj.transform.mat4();
+			push.transform = projectionView * modelMatrix; // Will be done in the shader once we have uniform buffer
+			push.normalMatrix = obj.transform.NormalMatrix();
 			vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
 			obj.model->Bind(commandBuffer);
 			obj.model->Draw(commandBuffer);

@@ -49,7 +49,7 @@ namespace hdn
 			camera.SetViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
 			float32 aspect = m_Renderer.GetAspectRatio();
-			camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.1f, 1.0f);
+			camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
 
 			if (auto commandBuffer = m_Renderer.BeginFrame())
 			{
@@ -71,11 +71,18 @@ namespace hdn
 
 	void FirstApp::LoadGameObjects()
 	{
-		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromFile(&m_Device, "Models/smooth_vase.obj");
-		auto gameObj = HDNGameObject::CreateGameObject();
-		gameObj.model = hdnModel;
-		gameObj.transform.translation = { 0.0f, 0.0f, 2.5f };
-		gameObj.transform.scale = vec3f32{3.0f};
-		m_GameObjects.push_back(std::move(gameObj));
+		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromFile(&m_Device, "Models/flat_vase.obj");
+		auto flatVase = HDNGameObject::CreateGameObject();
+		flatVase.model = hdnModel;
+		flatVase.transform.translation = { 0.0f, 0.0f, 2.5f };
+		flatVase.transform.scale = vec3f32{3.0f, 1.0f, 2.0f};
+		m_GameObjects.push_back(std::move(flatVase));
+
+		hdnModel = HDNModel::CreateModelFromFile(&m_Device, "Models/smooth_vase.obj");
+		auto smoothVase = HDNGameObject::CreateGameObject();
+		smoothVase.model = hdnModel;
+		smoothVase.transform.translation = { -1.0f, 0.0f, 2.5f };
+		smoothVase.transform.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
+		m_GameObjects.push_back(std::move(smoothVase));
 	}
 }
