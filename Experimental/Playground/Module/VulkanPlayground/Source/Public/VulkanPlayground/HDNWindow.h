@@ -22,6 +22,7 @@ namespace hdn
 		VkExtent2D GetExtent() { return { m_Width, m_Height }; }
 		bool WasWindowResized() { return m_FramebufferResized; }
 		void ResetWindowResizedFlag() { m_FramebufferResized = false; }
+		GLFWwindow* GetGLFWWindow() const { return m_Window; }
 
 		void CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 	private:
