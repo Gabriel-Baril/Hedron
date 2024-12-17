@@ -12,6 +12,7 @@
 
 namespace hdn
 {
+
 	class FirstApp
 	{
 	public:
