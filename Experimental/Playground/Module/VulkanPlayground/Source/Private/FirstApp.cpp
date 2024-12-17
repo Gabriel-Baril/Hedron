@@ -24,6 +24,7 @@ namespace hdn
 	{
 		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass() };
 		HDNCamera camera{};
+		camera.SetViewDirection(vec3f32{ 0.0f }, vec3f32{0.5f, 0.0f, 1.0f});
 
 		while (!m_Window.ShouldClose())
 		{

@@ -60,13 +60,15 @@ namespace hdn
 	void SimpleRenderSystem::RenderGameObjects(VkCommandBuffer commandBuffer, std::vector<HDNGameObject>& gameObjects, const HDNCamera& camera)
 	{
 		m_Pipeline->Bind(commandBuffer);
+
+		auto projectionView = camera.GetProjection() * camera.GetView();
 		for (auto& obj : gameObjects)
 		{
 			obj.transform.rotation.y = glm::mod<float32>(obj.transform.rotation.y + 0.001f, glm::two_pi<float32>());
 			obj.transform.rotation.x = glm::mod<float32>(obj.transform.rotation.x + 0.0005f, glm::two_pi<float32>());
 
 			SimplePushConstantData push{};
-			push.transform = camera.GetProjection() * obj.transform.mat4(); // Will be done in the shader once we have uniform buffer
+			push.transform = projectionView * obj.transform.mat4(); // Will be done in the shader once we have uniform buffer
 			push.color = obj.color;
 			vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
 			obj.model->Bind(commandBuffer);
