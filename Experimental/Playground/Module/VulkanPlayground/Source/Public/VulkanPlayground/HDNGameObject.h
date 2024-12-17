@@ -10,12 +10,17 @@ namespace hdn
 	{
 		vec2f32 translation{};
 		vec2f32 scale{1.0f, 1.0f};
-
+		float32 rotation;
 
 		mat2f32 mat2()
 		{
+			const float32 s = glm::sin(rotation);
+			const float32 c = glm::cos(rotation);
+			
+			mat2f32 rotationMat{ {c, s}, {-s, c} };
+
 			mat2f32 scaleMat{ {scale.x, 0.0f}, {0.0f, scale.y} }; // Column initializer
-			return scaleMat;
+			return rotationMat * scaleMat;
 		}
 	};
 

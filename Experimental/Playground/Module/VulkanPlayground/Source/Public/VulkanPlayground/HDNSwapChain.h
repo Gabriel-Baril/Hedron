@@ -43,6 +43,12 @@ namespace hdn {
 		VkResult acquireNextImage(uint32_t* imageIndex);
 		VkResult submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
+		bool CompareSwapFormat(const HDNSwapChain& swapChain) const
+		{
+			return swapChain.swapChainDepthFormat == swapChainDepthFormat && 
+				   swapChain.swapChainImageFormat == swapChainImageFormat;
+		}
+
 	private:
 		void Init();
 		void createSwapChain();
@@ -60,6 +66,7 @@ namespace hdn {
 		VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
 		VkFormat swapChainImageFormat;
+		VkFormat swapChainDepthFormat;
 		VkExtent2D swapChainExtent;
 
 		std::vector<VkFramebuffer> swapChainFramebuffers;

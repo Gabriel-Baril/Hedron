@@ -2,11 +2,9 @@
 #pragma once
 
 #include "HDNDevice.h"
-#include "HDNPipeline.h"
 #include "HDNWindow.h"
-#include "HDNSwapChain.h"
-#include "HDNModel.h"
 #include "HDNGameObject.h"
+#include "HDNRenderer.h"
 
 #include <memory>
 #include <vector>
@@ -24,28 +22,14 @@ namespace hdn
 		virtual ~FirstApp();
 		FirstApp(const FirstApp&) = delete;
 		FirstApp& operator=(const FirstApp&) = delete;
-		FirstApp(FirstApp&&) = delete;
-		FirstApp& operator=(FirstApp&&) = delete;
 
 		void Run();
 	private:
 		void LoadGameObjects();
-		void CreatePipelineLayout();
-		void CreatePipeline();
-		void CreateCommandBuffers();
-		void FreeCommandBuffers();
-		void DrawFrame();
-		void RecreateSwapchain();
-		void RecordCommandBuffer(int imageIndex);
-		void RenderGameObjects(VkCommandBuffer commandBuffer);
 	private:
 		HDNWindow m_Window{ WIDTH, HEIGHT, "First App"};
 		HDNDevice m_Device{ m_Window };
-		std::unique_ptr<HDNSwapChain> m_Swapchain;
-		std::unique_ptr<HDNPipeline> m_Pipeline; // TODO: Change to Scope<>
-		VkPipelineLayout m_PipelineLayout;
-		std::vector<VkCommandBuffer> m_CommandBuffers;
-
+		HDNRenderer m_Renderer{ &m_Window, &m_Device };
 		std::vector<HDNGameObject> m_GameObjects;
 	};
 }
