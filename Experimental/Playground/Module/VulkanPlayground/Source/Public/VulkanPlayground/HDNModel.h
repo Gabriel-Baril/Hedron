@@ -12,7 +12,7 @@ namespace hdn
 	{
 	public:
 		struct Vertex {
-			vec2f32 position;
+			vec3f32 position;
 			vec3f32 color;
 		
 			static std::vector<VkVertexInputBindingDescription> GetBindingDescriptions();

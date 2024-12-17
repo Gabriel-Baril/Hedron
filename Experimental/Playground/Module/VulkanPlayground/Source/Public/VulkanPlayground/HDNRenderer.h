@@ -22,6 +22,7 @@ namespace hdn
 		HDNRenderer& operator=(const HDNRenderer&) = delete;
 
 		VkRenderPass GetSwapChainRenderPass() const { return m_Swapchain->getRenderPass(); }
+		float32 GetAspectRatio() const { return m_Swapchain->extentAspectRatio(); }
 		bool IsFrameInProgress() const { return m_IsFrameStarted; }
 
 		VkCommandBuffer GetCurrentCommandBuffer() const

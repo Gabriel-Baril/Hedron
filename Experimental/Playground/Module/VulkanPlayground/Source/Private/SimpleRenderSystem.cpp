@@ -10,8 +10,7 @@ namespace hdn
 {
 	struct SimplePushConstantData
 	{
-		mat2f32 transform{ 1.0f };
-		vec2f32 offset;
+		mat4f32 transform{ 1.0f };
 		alignas(16) vec3f32 color;
 	};
 
@@ -58,17 +57,17 @@ namespace hdn
 		m_Pipeline = std::make_unique<HDNPipeline>(m_Device, "Shaders/simple_shader.vert.spv", "Shaders/simple_shader.frag.spv", pipelineConfig);
 	}
 
-	void SimpleRenderSystem::RenderGameObjects(VkCommandBuffer commandBuffer, std::vector<HDNGameObject>& gameObjects)
+	void SimpleRenderSystem::RenderGameObjects(VkCommandBuffer commandBuffer, std::vector<HDNGameObject>& gameObjects, const HDNCamera& camera)
 	{
 		m_Pipeline->Bind(commandBuffer);
 		for (auto& obj : gameObjects)
 		{
-			obj.transform2d.rotation = glm::mod<float32>(obj.transform2d.rotation + 0.001f, glm::two_pi<float32>());
+			obj.transform.rotation.y = glm::mod<float32>(obj.transform.rotation.y + 0.001f, glm::two_pi<float32>());
+			obj.transform.rotation.x = glm::mod<float32>(obj.transform.rotation.x + 0.0005f, glm::two_pi<float32>());
 
 			SimplePushConstantData push{};
-			push.offset = obj.transform2d.translation;
+			push.transform = camera.GetProjection() * obj.transform.mat4(); // Will be done in the shader once we have uniform buffer
 			push.color = obj.color;
-			push.transform = obj.transform2d.mat2();
 			vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
 			obj.model->Bind(commandBuffer);
 			obj.model->Draw(commandBuffer);
