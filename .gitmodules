@@ -10,3 +10,6 @@
 [submodule "External/glfw"]
 	path = External/glfw
 	url = https://github.com/Gabriel-Baril/glfw/
+[submodule "External/tinyobjloader"]
+	path = External/tinyobjloader
+	url = https://github.com/Gabriel-Baril/tinyobjloader.git
