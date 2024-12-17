@@ -1,6 +1,28 @@
 #include "VulkanPlayground/HDNModel.h"
 
+#include "VulkanPlayground/HDNUtils.h"
+
+#include <tinyobjloader/tiny_obj_loader.h>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
+
 #include <cassert>
+#include <unordered_map>
+
+namespace std
+{
+	template<>
+	struct hash<hdn::HDNModel::Vertex>
+	{
+		size_t operator()(const hdn::HDNModel::Vertex& vertex) const
+		{
+			size_t seed = 0;
+			hdn::HashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+			return seed;
+		}
+	};
+}
 
 namespace hdn
 {
@@ -22,6 +44,14 @@ namespace hdn
 			vkDestroyBuffer(m_Device->device(), m_IndexBuffer, nullptr);
 			vkFreeMemory(m_Device->device(), m_IndexBufferMemory, nullptr);
 		}
+	}
+
+	Scope<HDNModel> HDNModel::CreateModelFromFile(HDNDevice* device, const std::string& filepath)
+	{
+		Builder builder{};
+		builder.LoadModel(filepath);
+		// HDN_CORE_INFO("Vertex Count: {0}", builder.vertices.size());
+		return CreateScope<HDNModel>(device, builder);
 	}
 
 	void HDNModel::Bind(VkCommandBuffer commandBuffer)
@@ -142,5 +172,77 @@ namespace hdn
 		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
 		attributeDescriptions[1].offset = offsetof(Vertex, color);
 		return attributeDescriptions;
+	}
+
+	void HDNModel::Builder::LoadModel(const std::string& filepath)
+	{
+		tinyobj::attrib_t attrib; // Store positions, colors, uvs
+		std::vector<tinyobj::shape_t> shapes; // Index values for each elements
+		std::vector<tinyobj::material_t> materials;
+		std::string warns, errors;
+		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warns, &errors, filepath.c_str()))
+		{
+			throw std::runtime_error(warns + errors);
+		}
+
+		vertices.clear();
+		indices.clear();
+
+		std::unordered_map<Vertex, uint32> uniqueVertices;
+
+		for (const auto& shape : shapes)
+		{
+			for (const auto& index : shape.mesh.indices) // Loop in each face element in the model
+			{
+				Vertex vertex{};
+				
+				if (index.vertex_index >= 0)
+				{
+					vertex.position = {
+						attrib.vertices[3 * index.vertex_index + 0],
+						attrib.vertices[3 * index.vertex_index + 1],
+						attrib.vertices[3 * index.vertex_index + 2]
+					};
+
+					auto colorIndex = 3 * index.vertex_index + 2;
+					if (colorIndex < attrib.colors.size())
+					{
+						vertex.color = {
+							attrib.colors[colorIndex - 2],
+							attrib.colors[colorIndex - 1],
+							attrib.colors[colorIndex - 0]
+						};
+					}
+					else
+					{
+						vertex.color = { 1.0f, 1.0f, 1.0f };
+					}
+				}
+
+				if (index.normal_index >= 0)
+				{
+					vertex.normal = {
+						attrib.normals[3 * index.normal_index + 0],
+						attrib.normals[3 * index.normal_index + 1],
+						attrib.normals[3 * index.normal_index + 2]
+					};
+				}
+
+				if (index.texcoord_index >= 0)
+				{
+					vertex.uv = {
+						attrib.texcoords[2 * index.texcoord_index + 0],
+						attrib.texcoords[2 * index.texcoord_index + 1]
+					};
+				}
+
+				if (!uniqueVertices.contains(vertex))
+				{
+					uniqueVertices[vertex] = static_cast<uint32>(vertices.size());
+					vertices.push_back(vertex);
+				}
+				indices.push_back(uniqueVertices[vertex]);
+			}
+		}
 	}
 }

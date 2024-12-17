@@ -4,6 +4,7 @@
 
 #include "Core/Core.h"
 
+#include <memory>
 #include <vector>
 
 namespace hdn
@@ -13,25 +14,38 @@ namespace hdn
 	public:
 		struct Vertex
 		{
-			vec3f32 position;
-			vec3f32 color;
+			vec3f32 position{};
+			vec3f32 color{};
+			vec3f32 normal{};
+			vec2f32 uv{};
 		
 			static std::vector<VkVertexInputBindingDescription> GetBindingDescriptions();
 			static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions();
+
+			bool operator==(const Vertex& other) const
+			{
+				return
+					position == other.position &&
+					color == other.color &&
+					normal == other.normal &&
+					uv == other.uv;
+			}
 		};
 
 		struct Builder
 		{
 			std::vector<Vertex> vertices{};
 			std::vector<uint32> indices{};
+
+			void LoadModel(const std::string& filepath);
 		};
 
 		HDNModel(HDNDevice* device, const HDNModel::Builder& builder);
 		virtual ~HDNModel();
 		HDNModel(const HDNModel&) = delete;
 		HDNModel& operator=(const HDNModel&) = delete;
-		HDNModel(HDNModel&&) = delete;
-		HDNModel& operator=(HDNModel&&) = delete;
+
+		static Scope<HDNModel> CreateModelFromFile(HDNDevice* device, const std::string& filepath);
 
 		void Bind(VkCommandBuffer commandBuffer);
 		void Draw(VkCommandBuffer commandBuffer);
