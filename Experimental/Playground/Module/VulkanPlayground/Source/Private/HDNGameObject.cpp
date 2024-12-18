@@ -2,7 +2,7 @@
 
 namespace hdn
 {
-	mat4f32 TransformComponent::mat4()
+	mat4f32 TransformComponent::Mat4()
 	{
 		const float32 c3 = glm::cos(rotation.z);
 		const float32 s3 = glm::sin(rotation.z);

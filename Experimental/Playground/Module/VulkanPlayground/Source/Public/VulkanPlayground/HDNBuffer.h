@@ -18,41 +18,41 @@ namespace hdn
 		HDNBuffer(const HDNBuffer&) = delete;
 		HDNBuffer& operator=(const HDNBuffer&) = delete;
 
-		VkResult map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
-		void unmap();
+		VkResult Map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+		void Unmap();
 
-		void writeToBuffer(void* data, VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
-		VkResult flush(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
-		VkDescriptorBufferInfo descriptorInfo(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
-		VkResult invalidate(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+		void WriteToBuffer(void* data, VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+		VkResult Flush(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+		VkDescriptorBufferInfo DescriptorInfo(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+		VkResult Invalidate(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
 
-		void writeToIndex(void* data, int index);
-		VkResult flushIndex(int index);
-		VkDescriptorBufferInfo descriptorInfoForIndex(int index);
-		VkResult invalidateIndex(int index);
+		void WriteToIndex(void* data, int index);
+		VkResult FlushIndex(int index);
+		VkDescriptorBufferInfo DescriptorInfoForIndex(int index);
+		VkResult InvalidateIndex(int index);
 
-		VkBuffer getBuffer() const { return buffer; }
-		void* getMappedMemory() const { return mapped; }
-		uint32_t getInstanceCount() const { return instanceCount; }
-		VkDeviceSize getInstanceSize() const { return instanceSize; }
-		VkDeviceSize getAlignmentSize() const { return instanceSize; }
-		VkBufferUsageFlags getUsageFlags() const { return usageFlags; }
-		VkMemoryPropertyFlags getMemoryPropertyFlags() const { return memoryPropertyFlags; }
-		VkDeviceSize getBufferSize() const { return bufferSize; }
+		VkBuffer GetBuffer() const { return m_Buffer; }
+		void* GetMappedMemory() const { return m_Mapped; }
+		uint32_t GetInstanceCount() const { return m_InstanceCount; }
+		VkDeviceSize GetInstanceSize() const { return m_InstanceSize; }
+		VkDeviceSize GetAlignmentSize() const { return m_InstanceSize; }
+		VkBufferUsageFlags GetUsageFlags() const { return m_UsageFlags; }
+		VkMemoryPropertyFlags GetMemoryPropertyFlags() const { return m_MemoryPropertyFlags; }
+		VkDeviceSize GetBufferSize() const { return m_BufferSize; }
 
 	private:
-		static VkDeviceSize getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment);
+		static VkDeviceSize GetAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment);
 
 		HDNDevice* m_Device;
-		void* mapped = nullptr;
-		VkBuffer buffer = VK_NULL_HANDLE;
-		VkDeviceMemory memory = VK_NULL_HANDLE;
+		void* m_Mapped = nullptr;
+		VkBuffer m_Buffer = VK_NULL_HANDLE;
+		VkDeviceMemory m_Memory = VK_NULL_HANDLE;
 
-		VkDeviceSize bufferSize;
-		uint32_t instanceCount;
-		VkDeviceSize instanceSize;
-		VkDeviceSize alignmentSize;
-		VkBufferUsageFlags usageFlags;
-		VkMemoryPropertyFlags memoryPropertyFlags;
+		VkDeviceSize m_BufferSize;
+		uint32_t m_InstanceCount;
+		VkDeviceSize m_InstanceSize;
+		VkDeviceSize m_AlignmentSize;
+		VkBufferUsageFlags m_UsageFlags;
+		VkMemoryPropertyFlags m_MemoryPropertyFlags;
 	};
 }

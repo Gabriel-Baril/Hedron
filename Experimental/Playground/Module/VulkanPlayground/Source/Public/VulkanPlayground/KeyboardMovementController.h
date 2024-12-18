@@ -22,10 +22,9 @@ namespace hdn
 		};
 
 		void MoveInPlaneXZ(GLFWwindow* window, float32 dt, HDNGameObject& gameObject);
-
-		KeyMappings keys{};
-		float32 moveSpeed{ 3.0f };
-		float32 lookSpeed{ 1.5f };
-
+	private:
+		KeyMappings m_Keys{};
+		float32 m_MoveSpeed{ 3.0f };
+		float32 m_LookSpeed{ 1.5f };
 	};
 }

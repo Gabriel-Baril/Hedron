@@ -22,9 +22,9 @@ namespace hdn
 	FirstApp::FirstApp()
 	{
 		globalPool = HDNDescriptorPool::Builder(m_Device)
-			.setMaxSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
-			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
-			.build();
+			.SetMaxSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
+			.AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
+			.Build();
 		
 		LoadGameObjects();
 	}
@@ -45,24 +45,24 @@ namespace hdn
 				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
 			);
-			uboBuffers[i]->map();
+			uboBuffers[i]->Map();
 		}
 
 		auto globalSetLayout = HDNDescriptorSetLayout::Builder(m_Device)
-			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
-			.build();
+			.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+			.Build();
 
 		std::vector<VkDescriptorSet> globalDescriptorSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT); // One descriptor set per frame
 		for (int i = 0;i < globalDescriptorSets.size(); i++)
 		{
-			auto bufferInfo = uboBuffers[i]->descriptorInfo();
+			auto bufferInfo = uboBuffers[i]->DescriptorInfo();
 			HDNDescriptorWriter(*globalSetLayout, *globalPool)
-				.writeBuffer(0, &bufferInfo)
-				.build(globalDescriptorSets[i]);
+				.WriteBuffer(0, &bufferInfo)
+				.Build(globalDescriptorSets[i]);
 		}
 
-		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() };
-		PointLightSystem pointLightSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() };
+		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
+		PointLightSystem pointLightSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
 		HDNCamera camera{};
 
 		auto viewerObject = HDNGameObject::CreateGameObject();
@@ -74,21 +74,21 @@ namespace hdn
 		ImguiSystem imguiSystem;
 		
 		Scope<HDNDescriptorPool> imguiDescriptorPool = HDNDescriptorPool::Builder(m_Device)
-			.setPoolFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
-			.setMaxSets(1)
-			.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
-			.build();
+			.SetPoolFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
+			.SetMaxSets(1)
+			.AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
+			.Build();
 		
-		QueueFamilyIndices queueFamilyIndices = m_Device.findPhysicalQueueFamilies();
+		QueueFamilyIndices queueFamilyIndices = m_Device.FindPhysicalQueueFamilies();
 		
 		imguiSystem.Init(
 			m_Window.GetGLFWWindow(),
-			m_Device.surface(),
+			m_Device.GetSurface(),
 			m_Device.GetInstance(),
 			m_Device.GetPhysicalDevice(),
-			m_Device.device(),
+			m_Device.GetDevice(),
 			queueFamilyIndices.graphicsFamily,
-			m_Device.graphicsQueue(),
+			m_Device.GetGraphicsQueue(),
 			imguiDescriptorPool->GetDescriptor()
 		);
 
@@ -130,8 +130,8 @@ namespace hdn
 
 				pointLightSystem.Update(frameInfo, ubo);
 
-				uboBuffers[frameIndex]->writeToBuffer((void*)&ubo);
-				uboBuffers[frameIndex]->flush();
+				uboBuffers[frameIndex]->WriteToBuffer((void*)&ubo);
+				uboBuffers[frameIndex]->Flush();
 
 				// render
 				m_Renderer.BeginSwapChainRenderPass(commandBuffer);
@@ -156,7 +156,7 @@ namespace hdn
 			}
 		}
 
-		vkDeviceWaitIdle(m_Device.device());
+		vkDeviceWaitIdle(m_Device.GetDevice());
 	}
 
 	void FirstApp::LoadGameObjects()

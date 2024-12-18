@@ -17,9 +17,9 @@ namespace hdn
 
 	HDNPipeline::~HDNPipeline()
 	{
-		vkDestroyShaderModule(m_Device->device(), m_VertShaderModule, nullptr);
-		vkDestroyShaderModule(m_Device->device(), m_FragShaderModule, nullptr);
-		vkDestroyPipeline(m_Device->device(), m_GraphicsPipeline, nullptr);
+		vkDestroyShaderModule(m_Device->GetDevice(), m_VertShaderModule, nullptr);
+		vkDestroyShaderModule(m_Device->GetDevice(), m_FragShaderModule, nullptr);
+		vkDestroyPipeline(m_Device->GetDevice(), m_GraphicsPipeline, nullptr);
 	}
 
 	void HDNPipeline::Bind(VkCommandBuffer commandBuffer)
@@ -191,7 +191,7 @@ namespace hdn
 		pipelineInfo.basePipelineIndex = -1;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-		if (vkCreateGraphicsPipelines(m_Device->device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline) != VK_SUCCESS)
+		if (vkCreateGraphicsPipelines(m_Device->GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create graphics pipeline");
 		}
@@ -203,7 +203,7 @@ namespace hdn
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = code.size();
 		createInfo.pCode = reinterpret_cast<const uint32*>(code.data()); // Since std::vector take into account the worst case alignment scenario, thisd reinterpret_cast is valid. It wouldn't be true for a c-style array
-		if (vkCreateShaderModule(m_Device->device(), &createInfo, nullptr, module) != VK_SUCCESS)
+		if (vkCreateShaderModule(m_Device->GetDevice(), &createInfo, nullptr, module) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create shader module");
 		}

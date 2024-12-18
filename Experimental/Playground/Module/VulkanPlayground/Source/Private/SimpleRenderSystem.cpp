@@ -23,7 +23,7 @@ namespace hdn
 
 	SimpleRenderSystem::~SimpleRenderSystem()
 	{
-		vkDestroyPipelineLayout(m_Device->device(), m_PipelineLayout, nullptr);
+		vkDestroyPipelineLayout(m_Device->GetDevice(), m_PipelineLayout, nullptr);
 	}
 
 	void SimpleRenderSystem::CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout)
@@ -41,7 +41,7 @@ namespace hdn
 		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data(); // Used to pass data other than our vertex data, to our vertex and fragment shader. For example, texture and uniform buffer.
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // A way to push a very small amount of data to our shader
-		if (vkCreatePipelineLayout(m_Device->device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
+		if (vkCreatePipelineLayout(m_Device->GetDevice(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create pipeline layout");
 		}
@@ -56,7 +56,7 @@ namespace hdn
 
 		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
 		pipelineConfig.pipelineLayout = m_PipelineLayout;
-		m_Pipeline = std::make_unique<HDNPipeline>(m_Device, "Shaders/simple_shader.vert.spv", "Shaders/simple_shader.frag.spv", pipelineConfig);
+		m_Pipeline = CreateScope<HDNPipeline>(m_Device, "Shaders/simple_shader.vert.spv", "Shaders/simple_shader.frag.spv", pipelineConfig);
 	}
 
 	void SimpleRenderSystem::RenderGameObjects(FrameInfo& frameInfo)
@@ -77,7 +77,7 @@ namespace hdn
 			if (obj.model == nullptr) continue; // TODO: We should query an ECS instead of manually creating such filter
 
 			SimplePushConstantData push{};
-			push.modelMatrix = obj.transform.mat4(); // Will be done in the shader once we have uniform buffer
+			push.modelMatrix = obj.transform.Mat4(); // Will be done in the shader once we have uniform buffer
 			push.normalMatrix = obj.transform.NormalMatrix();
 			vkCmdPushConstants(frameInfo.commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
 			obj.model->Bind(frameInfo.commandBuffer);

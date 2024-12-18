@@ -21,8 +21,8 @@ namespace hdn
 		HDNRenderer(const HDNRenderer&) = delete;
 		HDNRenderer& operator=(const HDNRenderer&) = delete;
 
-		VkRenderPass GetSwapChainRenderPass() const { return m_Swapchain->getRenderPass(); }
-		float32 GetAspectRatio() const { return m_Swapchain->extentAspectRatio(); }
+		VkRenderPass GetSwapChainRenderPass() const { return m_Swapchain->GetRenderPass(); }
+		float32 GetAspectRatio() const { return m_Swapchain->ExtentAspectRatio(); }
 		bool IsFrameInProgress() const { return m_IsFrameStarted; }
 
 		VkCommandBuffer GetCurrentCommandBuffer() const
@@ -48,7 +48,7 @@ namespace hdn
 	private:
 		HDNWindow* m_Window;
 		HDNDevice* m_Device;
-		std::unique_ptr<HDNSwapChain> m_Swapchain;
+		Scope<HDNSwapChain> m_Swapchain;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
 
 		uint32 m_CurrentImageIndex = 0;

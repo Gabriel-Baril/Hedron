@@ -13,32 +13,32 @@ namespace hdn {
 	public:
 		class Builder {
 		public:
-			Builder(HDNDevice& lveDevice) : lveDevice{ lveDevice } {}
+			Builder(HDNDevice& device) : m_Device{ device } {}
 
-			Builder& addBinding(
+			Builder& AddBinding(
 				uint32_t binding,
 				VkDescriptorType descriptorType,
 				VkShaderStageFlags stageFlags,
 				uint32_t count = 1);
-			std::unique_ptr<HDNDescriptorSetLayout> build() const;
+			Scope<HDNDescriptorSetLayout> Build() const;
 
 		private:
-			HDNDevice& lveDevice;
-			std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings{};
+			HDNDevice& m_Device;
+			std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_Bindings{};
 		};
 
 		HDNDescriptorSetLayout(
-			HDNDevice& lveDevice, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
+			HDNDevice& device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
 		~HDNDescriptorSetLayout();
 		HDNDescriptorSetLayout(const HDNDescriptorSetLayout&) = delete;
 		HDNDescriptorSetLayout& operator=(const HDNDescriptorSetLayout&) = delete;
 
-		VkDescriptorSetLayout getDescriptorSetLayout() const { return descriptorSetLayout; }
+		VkDescriptorSetLayout GetDescriptorSetLayout() const { return m_DescriptorSetLayout; }
 
 	private:
-		HDNDevice& lveDevice;
-		VkDescriptorSetLayout descriptorSetLayout;
-		std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings;
+		HDNDevice& m_Device;
+		VkDescriptorSetLayout m_DescriptorSetLayout;
+		std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_Bindings;
 
 		friend class HDNDescriptorWriter;
 	};
@@ -47,22 +47,22 @@ namespace hdn {
 	public:
 		class Builder {
 		public:
-			Builder(HDNDevice& lveDevice) : lveDevice{ lveDevice } {}
+			Builder(HDNDevice& device) : m_Device{ device } {}
 
-			Builder& addPoolSize(VkDescriptorType descriptorType, uint32_t count);
-			Builder& setPoolFlags(VkDescriptorPoolCreateFlags flags);
-			Builder& setMaxSets(uint32_t count);
-			std::unique_ptr<HDNDescriptorPool> build() const;
+			Builder& AddPoolSize(VkDescriptorType descriptorType, uint32_t count);
+			Builder& SetPoolFlags(VkDescriptorPoolCreateFlags flags);
+			Builder& SetMaxSets(uint32_t count);
+			Scope<HDNDescriptorPool> Build() const;
 
 		private:
-			HDNDevice& lveDevice;
-			std::vector<VkDescriptorPoolSize> poolSizes{};
-			uint32_t maxSets = 1000;
-			VkDescriptorPoolCreateFlags poolFlags = 0;
+			HDNDevice& m_Device;
+			std::vector<VkDescriptorPoolSize> m_PoolSizes{};
+			uint32_t m_MaxSets = 1000;
+			VkDescriptorPoolCreateFlags m_PoolFlags = 0;
 		};
 
 		HDNDescriptorPool(
-			HDNDevice& lveDevice,
+			HDNDevice& device,
 			uint32_t maxSets,
 			VkDescriptorPoolCreateFlags poolFlags,
 			const std::vector<VkDescriptorPoolSize>& poolSizes);
@@ -70,18 +70,18 @@ namespace hdn {
 		HDNDescriptorPool(const HDNDescriptorPool&) = delete;
 		HDNDescriptorPool& operator=(const HDNDescriptorPool&) = delete;
 
-		bool allocateDescriptor(
+		bool AllocateDescriptor(
 			const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const;
 
-		void freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const;
+		void FreeDescriptors(std::vector<VkDescriptorSet>& descriptors) const;
 
-		void resetPool();
+		void ResetPool();
 
-		VkDescriptorPool GetDescriptor() const { return descriptorPool; }
+		VkDescriptorPool GetDescriptor() const { return m_DescriptorPool; }
 
 	private:
-		HDNDevice& lveDevice;
-		VkDescriptorPool descriptorPool;
+		HDNDevice& m_Device;
+		VkDescriptorPool m_DescriptorPool;
 
 		friend class HDNDescriptorWriter;
 	};
@@ -90,15 +90,15 @@ namespace hdn {
 	public:
 		HDNDescriptorWriter(HDNDescriptorSetLayout& setLayout, HDNDescriptorPool& pool);
 
-		HDNDescriptorWriter& writeBuffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
-		HDNDescriptorWriter& writeImage(uint32_t binding, VkDescriptorImageInfo* imageInfo);
+		HDNDescriptorWriter& WriteBuffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
+		HDNDescriptorWriter& WriteImage(uint32_t binding, VkDescriptorImageInfo* imageInfo);
 
-		bool build(VkDescriptorSet& set);
-		void overwrite(VkDescriptorSet& set);
+		bool Build(VkDescriptorSet& set);
+		void Overwrite(VkDescriptorSet& set);
 
 	private:
-		HDNDescriptorSetLayout& setLayout;
-		HDNDescriptorPool& pool;
-		std::vector<VkWriteDescriptorSet> writes;
+		HDNDescriptorSetLayout& m_SetLayout;
+		HDNDescriptorPool& m_Pool;
+		std::vector<VkWriteDescriptorSet> m_Writes;
 	};
 }

@@ -48,12 +48,12 @@ namespace hdn
 
 	void HDNModel::Bind(VkCommandBuffer commandBuffer)
 	{
-		VkBuffer buffers[] = { m_VertexBuffer->getBuffer()};
+		VkBuffer buffers[] = { m_VertexBuffer->GetBuffer()};
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
 		if (m_HasIndexBuffer)
 		{
-			vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32); // The index type could be smaller based on the model
+			vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32); // The index type could be smaller based on the model
 		}
 	}
 
@@ -84,8 +84,8 @@ namespace hdn
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		};
 
-		stagingBuffer.map();
-		stagingBuffer.writeToBuffer((void*)vertices.data());
+		stagingBuffer.Map();
+		stagingBuffer.WriteToBuffer((void*)vertices.data());
 
 		m_VertexBuffer = CreateScope<HDNBuffer>(
 			m_Device,
@@ -95,7 +95,7 @@ namespace hdn
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
 		);
 
-		m_Device->copyBuffer(stagingBuffer.getBuffer(), m_VertexBuffer->getBuffer(), bufferSize);
+		m_Device->CopyBuffer(stagingBuffer.GetBuffer(), m_VertexBuffer->GetBuffer(), bufferSize);
 	}
 
 	void HDNModel::CreateIndexBuffers(const std::vector<uint32>& indices)
@@ -118,8 +118,8 @@ namespace hdn
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		};
 
-		stagingBuffer.map();
-		stagingBuffer.writeToBuffer((void*)indices.data());
+		stagingBuffer.Map();
+		stagingBuffer.WriteToBuffer((void*)indices.data());
 
 		m_IndexBuffer = CreateScope<HDNBuffer>(
 			m_Device,
@@ -129,7 +129,7 @@ namespace hdn
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
 		);
 
-		m_Device->copyBuffer(stagingBuffer.getBuffer(), m_IndexBuffer->getBuffer(), bufferSize);
+		m_Device->CopyBuffer(stagingBuffer.GetBuffer(), m_IndexBuffer->GetBuffer(), bufferSize);
 	}
 
 	std::vector<VkVertexInputBindingDescription> HDNModel::Vertex::GetBindingDescriptions()

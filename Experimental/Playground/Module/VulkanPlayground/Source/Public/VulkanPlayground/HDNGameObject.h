@@ -14,7 +14,7 @@ namespace hdn
 		vec3f32 scale{ 1.0f, 1.0f, 1.0f };
 		vec3f32 rotation{}; // In radians
 
-		mat4f32 mat4();
+		mat4f32 Mat4();
 		mat3f32 NormalMatrix();
 	};
 

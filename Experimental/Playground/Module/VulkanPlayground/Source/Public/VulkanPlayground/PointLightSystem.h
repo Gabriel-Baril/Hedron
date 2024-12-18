@@ -28,7 +28,7 @@ namespace hdn
 		void CreatePipeline(VkRenderPass renderPass);
 	private:
 		HDNDevice* m_Device;
-		std::unique_ptr<HDNPipeline> m_Pipeline; // TODO: Change to Scope<>
+		Scope<HDNPipeline> m_Pipeline;
 		VkPipelineLayout m_PipelineLayout;
 	};
 }

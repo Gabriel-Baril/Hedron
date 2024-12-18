@@ -25,7 +25,7 @@ namespace hdn
 
 	PointLightSystem::~PointLightSystem()
 	{
-		vkDestroyPipelineLayout(m_Device->device(), m_PipelineLayout, nullptr);
+		vkDestroyPipelineLayout(m_Device->GetDevice(), m_PipelineLayout, nullptr);
 	}
 
 	void PointLightSystem::CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout)
@@ -43,7 +43,7 @@ namespace hdn
 		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data(); // Used to pass data other than our vertex data, to our vertex and fragment shader. For example, texture and uniform buffer.
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // A way to push a very small amount of data to our shader
-		if (vkCreatePipelineLayout(m_Device->device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
+		if (vkCreatePipelineLayout(m_Device->GetDevice(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create pipeline layout");
 		}
@@ -62,7 +62,7 @@ namespace hdn
 
 		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
 		pipelineConfig.pipelineLayout = m_PipelineLayout;
-		m_Pipeline = std::make_unique<HDNPipeline>(m_Device, "Shaders/point_light.vert.spv", "Shaders/point_light.frag.spv", pipelineConfig);
+		m_Pipeline = CreateScope<HDNPipeline>(m_Device, "Shaders/point_light.vert.spv", "Shaders/point_light.frag.spv", pipelineConfig);
 	}
 
 	void PointLightSystem::Update(FrameInfo& frameInfo, GlobalUbo& ubo)

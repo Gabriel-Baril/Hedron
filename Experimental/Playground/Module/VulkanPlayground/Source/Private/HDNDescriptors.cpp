@@ -9,30 +9,30 @@ namespace hdn {
 
 	// *************** Descriptor Set Layout Builder *********************
 
-	HDNDescriptorSetLayout::Builder& HDNDescriptorSetLayout::Builder::addBinding(
+	HDNDescriptorSetLayout::Builder& HDNDescriptorSetLayout::Builder::AddBinding(
 		uint32_t binding,
 		VkDescriptorType descriptorType,
 		VkShaderStageFlags stageFlags,
 		uint32_t count) {
-		assert(bindings.count(binding) == 0 && "Binding already in use");
+		assert(m_Bindings.count(binding) == 0 && "Binding already in use");
 		VkDescriptorSetLayoutBinding layoutBinding{};
 		layoutBinding.binding = binding;
 		layoutBinding.descriptorType = descriptorType;
 		layoutBinding.descriptorCount = count;
 		layoutBinding.stageFlags = stageFlags;
-		bindings[binding] = layoutBinding;
+		m_Bindings[binding] = layoutBinding;
 		return *this;
 	}
 
-	std::unique_ptr<HDNDescriptorSetLayout> HDNDescriptorSetLayout::Builder::build() const {
-		return std::make_unique<HDNDescriptorSetLayout>(lveDevice, bindings);
+	Scope<HDNDescriptorSetLayout> HDNDescriptorSetLayout::Builder::Build() const {
+		return CreateScope<HDNDescriptorSetLayout>(m_Device, m_Bindings);
 	}
 
 	// *************** Descriptor Set Layout *********************
 
 	HDNDescriptorSetLayout::HDNDescriptorSetLayout(
-		HDNDevice& lveDevice, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
-		: lveDevice{ lveDevice }, bindings{ bindings } {
+		HDNDevice& device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
+		: m_Device{ device }, m_Bindings{ bindings } {
 		std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings{};
 		for (auto kv : bindings) {
 			setLayoutBindings.push_back(kv.second);
@@ -44,48 +44,48 @@ namespace hdn {
 		descriptorSetLayoutInfo.pBindings = setLayoutBindings.data();
 
 		if (vkCreateDescriptorSetLayout(
-			lveDevice.device(),
+			m_Device.GetDevice(),
 			&descriptorSetLayoutInfo,
 			nullptr,
-			&descriptorSetLayout) != VK_SUCCESS) {
+			&m_DescriptorSetLayout) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create descriptor set layout!");
 		}
 	}
 
 	HDNDescriptorSetLayout::~HDNDescriptorSetLayout() {
-		vkDestroyDescriptorSetLayout(lveDevice.device(), descriptorSetLayout, nullptr);
+		vkDestroyDescriptorSetLayout(m_Device.GetDevice(), m_DescriptorSetLayout, nullptr);
 	}
 
 	// *************** Descriptor Pool Builder *********************
 
-	HDNDescriptorPool::Builder& HDNDescriptorPool::Builder::addPoolSize(
+	HDNDescriptorPool::Builder& HDNDescriptorPool::Builder::AddPoolSize(
 		VkDescriptorType descriptorType, uint32_t count) {
-		poolSizes.push_back({ descriptorType, count });
+		m_PoolSizes.push_back({ descriptorType, count });
 		return *this;
 	}
 
-	HDNDescriptorPool::Builder& HDNDescriptorPool::Builder::setPoolFlags(
+	HDNDescriptorPool::Builder& HDNDescriptorPool::Builder::SetPoolFlags(
 		VkDescriptorPoolCreateFlags flags) {
-		poolFlags = flags;
+		m_PoolFlags = flags;
 		return *this;
 	}
-	HDNDescriptorPool::Builder& HDNDescriptorPool::Builder::setMaxSets(uint32_t count) {
-		maxSets = count;
+	HDNDescriptorPool::Builder& HDNDescriptorPool::Builder::SetMaxSets(uint32_t count) {
+		m_MaxSets = count;
 		return *this;
 	}
 
-	std::unique_ptr<HDNDescriptorPool> HDNDescriptorPool::Builder::build() const {
-		return std::make_unique<HDNDescriptorPool>(lveDevice, maxSets, poolFlags, poolSizes);
+	Scope<HDNDescriptorPool> HDNDescriptorPool::Builder::Build() const {
+		return CreateScope<HDNDescriptorPool>(m_Device, m_MaxSets, m_PoolFlags, m_PoolSizes);
 	}
 
 	// *************** Descriptor Pool *********************
 
 	HDNDescriptorPool::HDNDescriptorPool(
-		HDNDevice& lveDevice,
+		HDNDevice& device,
 		uint32_t maxSets,
 		VkDescriptorPoolCreateFlags poolFlags,
 		const std::vector<VkDescriptorPoolSize>& poolSizes)
-		: lveDevice{ lveDevice } {
+		: m_Device{ device } {
 		VkDescriptorPoolCreateInfo descriptorPoolInfo{};
 		descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
@@ -93,57 +93,57 @@ namespace hdn {
 		descriptorPoolInfo.maxSets = maxSets;
 		descriptorPoolInfo.flags = poolFlags;
 
-		if (vkCreateDescriptorPool(lveDevice.device(), &descriptorPoolInfo, nullptr, &descriptorPool) !=
+		if (vkCreateDescriptorPool(m_Device.GetDevice(), &descriptorPoolInfo, nullptr, &m_DescriptorPool) !=
 			VK_SUCCESS) {
 			throw std::runtime_error("failed to create descriptor pool!");
 		}
 	}
 
 	HDNDescriptorPool::~HDNDescriptorPool() {
-		vkDestroyDescriptorPool(lveDevice.device(), descriptorPool, nullptr);
+		vkDestroyDescriptorPool(m_Device.GetDevice(), m_DescriptorPool, nullptr);
 	}
 
 	// TODO: Rename to allocateDescriptorSet
-	bool HDNDescriptorPool::allocateDescriptor(
+	bool HDNDescriptorPool::AllocateDescriptor(
 		const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const {
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = descriptorPool;
+		allocInfo.descriptorPool = m_DescriptorPool;
 		allocInfo.pSetLayouts = &descriptorSetLayout;
 		allocInfo.descriptorSetCount = 1;
 
 		// Might want to create a "DescriptorPoolManager" class that handles this case, and builds
 		// a new pool whenever an old pool fills up. But this is beyond our current scope
 		// A more production ready descriptor abstraction: https://vkguide.dev/docs/extra-chapter/abstracting_descriptors/
-		if (vkAllocateDescriptorSets(lveDevice.device(), &allocInfo, &descriptor) != VK_SUCCESS) {
+		if (vkAllocateDescriptorSets(m_Device.GetDevice(), &allocInfo, &descriptor) != VK_SUCCESS) {
 			return false;
 		}
 		return true;
 	}
 
-	void HDNDescriptorPool::freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const {
+	void HDNDescriptorPool::FreeDescriptors(std::vector<VkDescriptorSet>& descriptors) const {
 		vkFreeDescriptorSets(
-			lveDevice.device(),
-			descriptorPool,
+			m_Device.GetDevice(),
+			m_DescriptorPool,
 			static_cast<uint32_t>(descriptors.size()),
 			descriptors.data());
 	}
 
-	void HDNDescriptorPool::resetPool() {
-		vkResetDescriptorPool(lveDevice.device(), descriptorPool, 0);
+	void HDNDescriptorPool::ResetPool() {
+		vkResetDescriptorPool(m_Device.GetDevice(), m_DescriptorPool, 0);
 	}
 
 	// *************** Descriptor Writer *********************
 
 	HDNDescriptorWriter::HDNDescriptorWriter(HDNDescriptorSetLayout& setLayout, HDNDescriptorPool& pool)
-		: setLayout{ setLayout }, pool{ pool } {
+		: m_SetLayout{ setLayout }, m_Pool{ pool } {
 	}
 
-	HDNDescriptorWriter& HDNDescriptorWriter::writeBuffer(
+	HDNDescriptorWriter& HDNDescriptorWriter::WriteBuffer(
 		uint32_t binding, VkDescriptorBufferInfo* bufferInfo) {
-		assert(setLayout.bindings.count(binding) == 1 && "Layout does not contain specified binding");
+		assert(m_SetLayout.m_Bindings.count(binding) == 1 && "Layout does not contain specified binding");
 
-		auto& bindingDescription = setLayout.bindings[binding];
+		auto& bindingDescription = m_SetLayout.m_Bindings[binding];
 
 		assert(
 			bindingDescription.descriptorCount == 1 &&
@@ -156,15 +156,15 @@ namespace hdn {
 		write.pBufferInfo = bufferInfo;
 		write.descriptorCount = 1;
 
-		writes.push_back(write);
+		m_Writes.push_back(write);
 		return *this;
 	}
 
-	HDNDescriptorWriter& HDNDescriptorWriter::writeImage(
+	HDNDescriptorWriter& HDNDescriptorWriter::WriteImage(
 		uint32_t binding, VkDescriptorImageInfo* imageInfo) {
-		assert(setLayout.bindings.count(binding) == 1 && "Layout does not contain specified binding");
+		assert(m_SetLayout.m_Bindings.count(binding) == 1 && "Layout does not contain specified binding");
 
-		auto& bindingDescription = setLayout.bindings[binding];
+		auto& bindingDescription = m_SetLayout.m_Bindings[binding];
 
 		assert(
 			bindingDescription.descriptorCount == 1 &&
@@ -177,23 +177,23 @@ namespace hdn {
 		write.pImageInfo = imageInfo;
 		write.descriptorCount = 1;
 
-		writes.push_back(write);
+		m_Writes.push_back(write);
 		return *this;
 	}
 
-	bool HDNDescriptorWriter::build(VkDescriptorSet& set) {
-		bool success = pool.allocateDescriptor(setLayout.getDescriptorSetLayout(), set);
+	bool HDNDescriptorWriter::Build(VkDescriptorSet& set) {
+		bool success = m_Pool.AllocateDescriptor(m_SetLayout.GetDescriptorSetLayout(), set);
 		if (!success) {
 			return false;
 		}
-		overwrite(set);
+		Overwrite(set);
 		return true;
 	}
 
-	void HDNDescriptorWriter::overwrite(VkDescriptorSet& set) {
-		for (auto& write : writes) {
+	void HDNDescriptorWriter::Overwrite(VkDescriptorSet& set) {
+		for (auto& write : m_Writes) {
 			write.dstSet = set;
 		}
-		vkUpdateDescriptorSets(pool.lveDevice.device(), writes.size(), writes.data(), 0, nullptr);
+		vkUpdateDescriptorSets(m_Pool.m_Device.GetDevice(), m_Writes.size(), m_Writes.data(), 0, nullptr);
 	}
 }

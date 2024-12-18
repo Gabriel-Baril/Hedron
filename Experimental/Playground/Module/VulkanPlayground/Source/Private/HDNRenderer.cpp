@@ -22,7 +22,7 @@ namespace hdn
 	VkCommandBuffer HDNRenderer::BeginFrame()
 	{
 		assert(!IsFrameInProgress());
-		auto result = m_Swapchain->acquireNextImage(&m_CurrentImageIndex); // Fetch the index of the next image to be used for rendering
+		auto result = m_Swapchain->AcquireNextImage(&m_CurrentImageIndex); // Fetch the index of the next image to be used for rendering
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
@@ -52,7 +52,7 @@ namespace hdn
 		{
 			throw std::runtime_error("Failed to end command buffer");
 		}
-		auto result = m_Swapchain->submitCommandBuffers(&commandBuffer, &m_CurrentImageIndex); // It will submit command buffer to the device graphics queue while handling cpu and gpu synchronization
+		auto result = m_Swapchain->SubmitCommandBuffers(&commandBuffer, &m_CurrentImageIndex); // It will submit command buffer to the device graphics queue while handling cpu and gpu synchronization
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_Window->WasWindowResized())
 		{
 			m_Window->ResetWindowResizedFlag();
@@ -74,10 +74,10 @@ namespace hdn
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = m_Swapchain->getRenderPass();
-		renderPassInfo.framebuffer = m_Swapchain->getFrameBuffer(m_CurrentImageIndex);
+		renderPassInfo.renderPass = m_Swapchain->GetRenderPass();
+		renderPassInfo.framebuffer = m_Swapchain->GetFrameBuffer(m_CurrentImageIndex);
 		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = m_Swapchain->getSwapChainExtent();
+		renderPassInfo.renderArea.extent = m_Swapchain->GetSwapChainExtent();
 
 		std::array<VkClearValue, 2> clearValues{}; // Control what should be the initial value of our attachment
 		clearValues[0].color = { 0.1f, 0.1f, 0.1f, 0.1f };
@@ -90,11 +90,11 @@ namespace hdn
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(m_Swapchain->getSwapChainExtent().width);
-		viewport.height = static_cast<float>(m_Swapchain->getSwapChainExtent().height);
+		viewport.width = static_cast<float>(m_Swapchain->GetSwapChainExtent().width);
+		viewport.height = static_cast<float>(m_Swapchain->GetSwapChainExtent().height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		VkRect2D scissor({ 0, 0 }, m_Swapchain->getSwapChainExtent());
+		VkRect2D scissor({ 0, 0 }, m_Swapchain->GetSwapChainExtent());
 		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
@@ -114,9 +114,9 @@ namespace hdn
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; // Primary = Can be submitted to a queue for execution, but cannot be called by other command buffer
-		allocInfo.commandPool = m_Device->getCommandPool();
+		allocInfo.commandPool = m_Device->GetCommandPool();
 		allocInfo.commandBufferCount = static_cast<uint32>(m_CommandBuffers.size());
-		if (vkAllocateCommandBuffers(m_Device->device(), &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
+		if (vkAllocateCommandBuffers(m_Device->GetDevice(), &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to allocate command buffer");
 		}
@@ -125,7 +125,7 @@ namespace hdn
 
 	void HDNRenderer::FreeCommandBuffers()
 	{
-		vkFreeCommandBuffers(m_Device->device(), m_Device->getCommandPool(), static_cast<uint32>(m_CommandBuffers.size()), m_CommandBuffers.data());
+		vkFreeCommandBuffers(m_Device->GetDevice(), m_Device->GetCommandPool(), static_cast<uint32>(m_CommandBuffers.size()), m_CommandBuffers.data());
 		m_CommandBuffers.clear();
 	}
 
@@ -138,16 +138,16 @@ namespace hdn
 			glfwWaitEvents();
 		}
 
-		vkDeviceWaitIdle(m_Device->device()); // This is an easy way that we can wait until the current swapchain is no longer being used
+		vkDeviceWaitIdle(m_Device->GetDevice()); // This is an easy way that we can wait until the current swapchain is no longer being used
 
 		if (m_Swapchain == nullptr)
 		{
-			m_Swapchain = std::make_unique<HDNSwapChain>(*m_Device, extent);
+			m_Swapchain = CreateScope<HDNSwapChain>(*m_Device, extent);
 		}
 		else
 		{
 			Ref<HDNSwapChain> oldSwapChain = std::move(m_Swapchain);
-			m_Swapchain = std::make_unique<HDNSwapChain>(*m_Device, extent, oldSwapChain);
+			m_Swapchain = CreateScope<HDNSwapChain>(*m_Device, extent, oldSwapChain);
 
 			if (!oldSwapChain->CompareSwapFormat(*m_Swapchain.get()))
 			{
