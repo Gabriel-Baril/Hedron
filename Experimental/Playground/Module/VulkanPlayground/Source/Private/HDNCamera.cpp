@@ -46,6 +46,20 @@ namespace hdn
 		m_ViewMatrix[3][0] = -glm::dot(u, position);
 		m_ViewMatrix[3][1] = -glm::dot(v, position);
 		m_ViewMatrix[3][2] = -glm::dot(w, position);
+
+		m_InverseViewMatrix = mat4f32{ 1.f };
+		m_InverseViewMatrix[0][0] = u.x;
+		m_InverseViewMatrix[0][1] = u.y;
+		m_InverseViewMatrix[0][2] = u.z;
+		m_InverseViewMatrix[1][0] = v.x;
+		m_InverseViewMatrix[1][1] = v.y;
+		m_InverseViewMatrix[1][2] = v.z;
+		m_InverseViewMatrix[2][0] = w.x;
+		m_InverseViewMatrix[2][1] = w.y;
+		m_InverseViewMatrix[2][2] = w.z;
+		m_InverseViewMatrix[3][0] = position.x;
+		m_InverseViewMatrix[3][1] = position.y;
+		m_InverseViewMatrix[3][2] = position.z;
 	}
 
 	void HDNCamera::SetViewTarget(vec3f32 position, vec3f32 target, vec3f32 up) {
@@ -75,5 +89,19 @@ namespace hdn
 		m_ViewMatrix[3][0] = -glm::dot(u, position);
 		m_ViewMatrix[3][1] = -glm::dot(v, position);
 		m_ViewMatrix[3][2] = -glm::dot(w, position);
+
+		m_InverseViewMatrix = mat4f32{ 1.f };
+		m_InverseViewMatrix[0][0] = u.x;
+		m_InverseViewMatrix[0][1] = u.y;
+		m_InverseViewMatrix[0][2] = u.z;
+		m_InverseViewMatrix[1][0] = v.x;
+		m_InverseViewMatrix[1][1] = v.y;
+		m_InverseViewMatrix[1][2] = v.z;
+		m_InverseViewMatrix[2][0] = w.x;
+		m_InverseViewMatrix[2][1] = w.y;
+		m_InverseViewMatrix[2][2] = w.z;
+		m_InverseViewMatrix[3][0] = position.x;
+		m_InverseViewMatrix[3][1] = position.y;
+		m_InverseViewMatrix[3][2] = position.z;
 	}
 }

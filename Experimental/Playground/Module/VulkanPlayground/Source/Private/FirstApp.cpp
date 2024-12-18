@@ -101,6 +101,7 @@ namespace hdn
 				GlobalUbo ubo{};
 				ubo.projection = camera.GetProjection();
 				ubo.view = camera.GetView();
+				ubo.inverseView = camera.GetInverseView();
 
 				pointLightSystem.Update(frameInfo, ubo);
 

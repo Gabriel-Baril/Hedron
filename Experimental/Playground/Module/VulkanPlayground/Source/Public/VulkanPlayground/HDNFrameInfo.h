@@ -20,6 +20,7 @@ namespace hdn
 	{
 		mat4f32 projection{ 1.0f };
 		mat4f32 view{ 1.0f };
+		mat4f32 inverseView{ 1.0f };
 		vec4f32 ambientLightColor{ 1.0f, 1.0f, 1.0f, 0.02f };
 		PointLight pointLights[MAX_LIGHTS];
 		int32 numLights;

@@ -16,8 +16,11 @@ namespace hdn
 
 		const mat4f32& GetProjection() const { return m_ProjectionMatrix; }
 		const mat4f32& GetView() const { return m_ViewMatrix; }
+		const mat4f32& GetInverseView() const { return m_InverseViewMatrix; }
+
 	private:
 		mat4f32 m_ProjectionMatrix{ 1.0f };
 		mat4f32 m_ViewMatrix{ 1.0f };
+		mat4f32 m_InverseViewMatrix{ 1.0f };
 	};
 }
