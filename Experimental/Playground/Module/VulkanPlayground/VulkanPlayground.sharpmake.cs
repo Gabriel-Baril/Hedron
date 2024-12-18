@@ -32,6 +32,7 @@ public class VulkanPlaygroundProject : BaseCppProject
 
         conf.AddPublicDependency<TinyObjLoaderProject>(target);
         conf.AddPublicDependency<GLFWProject>(target);
+        conf.AddPublicDependency<ImguiProject>(target);
         conf.AddPublicDependency<CoreProject>(target);
     }
 }

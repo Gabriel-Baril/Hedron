@@ -45,6 +45,8 @@ namespace hdn {
 		VkCommandPool getCommandPool() { return commandPool; }
 		VkDevice device() { return device_; }
 		VkSurfaceKHR surface() { return surface_; }
+		VkInstance GetInstance() { return instance; }
+		VkPhysicalDevice GetPhysicalDevice() { return physicalDevice; }
 		VkQueue graphicsQueue() { return graphicsQueue_; }
 		VkQueue presentQueue() { return presentQueue_; }
 

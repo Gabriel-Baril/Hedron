@@ -6,6 +6,7 @@
 
 #include "VulkanPlayground/SimpleRenderSystem.h"
 #include "VulkanPlayground/PointLightSystem.h"
+#include "VulkanPlayground/HDNImgui.h"
 
 #include "Core/Core.h"
 #include <glm/gtc/constants.hpp>
@@ -70,10 +71,33 @@ namespace hdn
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
+		ImguiSystem imguiSystem;
+		
+		Scope<HDNDescriptorPool> imguiDescriptorPool = HDNDescriptorPool::Builder(m_Device)
+			.setPoolFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
+			.setMaxSets(1)
+			.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
+			.build();
+		
+		QueueFamilyIndices queueFamilyIndices = m_Device.findPhysicalQueueFamilies();
+		
+		imguiSystem.Init(
+			m_Window.GetGLFWWindow(),
+			m_Device.surface(),
+			m_Device.GetInstance(),
+			m_Device.GetPhysicalDevice(),
+			m_Device.device(),
+			queueFamilyIndices.graphicsFamily,
+			m_Device.graphicsQueue(),
+			imguiDescriptorPool->GetDescriptor()
+		);
+
 		while (!m_Window.ShouldClose())
 		{
 			glfwPollEvents();
 			
+			imguiSystem.HandleWindowResize();
+
 			auto newTime = std::chrono::high_resolution_clock::now();
 			float frameTime = std::chrono::duration<float32, std::chrono::seconds::period>(newTime - currentTime).count();
 			currentTime = newTime;
@@ -85,6 +109,14 @@ namespace hdn
 
 			float32 aspect = m_Renderer.GetAspectRatio();
 			camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
+
+			imguiSystem.NewFrame();
+
+			ImGui::Begin("Hello, world!");
+			ImGui::Text("This is some useful text.");
+			ImGui::End();
+
+			imguiSystem.Render(ImVec4(0.45f, 0.55f, 0.60f, 1.00f));
 
 			if (auto commandBuffer = m_Renderer.BeginFrame())
 			{

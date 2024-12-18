@@ -77,6 +77,8 @@ namespace hdn {
 
 		void resetPool();
 
+		VkDescriptorPool GetDescriptor() const { return descriptorPool; }
+
 	private:
 		HDNDevice& lveDevice;
 		VkDescriptorPool descriptorPool;
