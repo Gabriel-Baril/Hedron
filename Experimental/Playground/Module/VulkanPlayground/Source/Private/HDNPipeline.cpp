@@ -103,6 +103,20 @@ namespace hdn
 		configInfo.attributeDescriptions = HDNModel::Vertex::GetAttributeDescriptions();
 	}
 
+	void HDNPipeline::EnableAlphaBlending(PipelineConfigInfo& configInfo)
+	{
+		configInfo.colorBlendAttachment.blendEnable = VK_TRUE; // Do we want to mix the current output with the color value already in the framebuffer if any
+
+		// Color blending controls how we combine color in our framebuffer. If two triangle overlap with each other then our fragment shader will return multiple color for our pixel
+		configInfo.colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+		configInfo.colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+		configInfo.colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+		configInfo.colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+		configInfo.colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+		configInfo.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+		configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+	}
+
 	std::vector<char> HDNPipeline::ReadFile(const std::string& filepath)
 	{
 		std::ifstream file(filepath, std::ios::ate | std::ios::binary); // std::ios::ate -> When the file open we seek to the end immediately

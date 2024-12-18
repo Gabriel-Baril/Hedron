@@ -5,6 +5,7 @@
 
 #include <stdexcept>
 #include <array>
+#include <map>
 
 namespace hdn
 {
@@ -54,6 +55,8 @@ namespace hdn
 
 		PipelineConfigInfo pipelineConfig{};
 		HDNPipeline::DefaultPipelineConfigInfo(pipelineConfig);
+		HDNPipeline::EnableAlphaBlending(pipelineConfig);
+
 		pipelineConfig.bindingDescriptions.clear();
 		pipelineConfig.attributeDescriptions.clear();
 
@@ -85,6 +88,17 @@ namespace hdn
 
 	void PointLightSystem::Render(FrameInfo& frameInfo)
 	{
+		// Sort Lights
+		std::map<float, HDNGameObject::id_t> sorted;
+		for (auto& [key, obj] : *frameInfo.gameObjects)
+		{
+			if (obj.pointLight == nullptr) continue;
+			// Calculate Distance
+			auto offset = frameInfo.camera->GetPosition() - obj.transform.translation;
+			float distSquared = glm::dot(offset, offset);
+			sorted[distSquared] = obj.GetID();
+		}
+
 		m_Pipeline->Bind(frameInfo.commandBuffer);
 
 		vkCmdBindDescriptorSets(
@@ -96,9 +110,11 @@ namespace hdn
 			0, nullptr
 		); // Low frequency descriptor sets needs to occupy the lowest index
 
-		for (auto& [key, obj] : *frameInfo.gameObjects)
+		// iterate through sorted lights in reverse order (back to front)
+		for (auto it = sorted.rbegin(); it != sorted.rend(); it++)
 		{
-			if (obj.pointLight == nullptr) continue;
+			auto& obj = frameInfo.gameObjects->at(it->second);
+
 			PointLightPushConstants push{};
 			push.position = vec4f32(obj.transform.translation, 1.0f);
 			push.color = vec4f32(obj.color, obj.pointLight->lightIntensity);

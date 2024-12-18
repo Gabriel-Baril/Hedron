@@ -110,8 +110,11 @@ namespace hdn
 
 				// render
 				m_Renderer.BeginSwapChainRenderPass(commandBuffer);
+
+				// Order Here Matters
 				simpleRenderSystem.RenderGameObjects(frameInfo);
 				pointLightSystem.Render(frameInfo);
+
 				m_Renderer.EndSwapChainRenderPass(commandBuffer);
 
 				m_Renderer.EndFrame();
