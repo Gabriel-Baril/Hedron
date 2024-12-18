@@ -14,20 +14,13 @@ namespace hdn
 		vec3f32 scale{ 1.0f, 1.0f, 1.0f };
 		vec3f32 rotation{}; // In radians
 
-		// Matrix corresponds to translate * Ry * Rx * Rz * scale transformation
-		// Rotation convention uses tait-bryan angles with axis order Y(1), X(2), Z(3)
-		// mat4f32 mat4()
-		// {
-		// 	auto transform = glm::translate(mat4f32{ 1.0f }, translation);
-		// 	transform = glm::rotate(transform, rotation.y, { 0.0f, 1.0f, 0.0f });
-		// 	transform = glm::rotate(transform, rotation.x, { 1.0f, 0.0f, 0.0f });
-		// 	transform = glm::rotate(transform, rotation.z, { 0.0f, 0.0f, 1.0f });
-		// 	transform = glm::scale(transform, scale);
-		// 	return transform;
-		// }
-
 		mat4f32 mat4();
 		mat3f32 NormalMatrix();
+	};
+
+	struct PointLightComponent
+	{
+		float lightIntensity = 1.0f;
 	};
 
 	// TODO: We should use entt instead
@@ -48,11 +41,16 @@ namespace hdn
 			return HDNGameObject{ currentId++ };
 		}
 
+		static HDNGameObject MakePointLight(float32 intensity = 10.0f, float32 radius = 0.1f, vec3f32 color = vec3f32{1.0f});
+
 		id_t GetID() const { return m_ID; }
 
-		Ref<HDNModel> model{};
 		vec3f32 color{};
 		TransformComponent transform{};
+		
+		// Optional Pointer Components
+		Ref<HDNModel> model{};
+		Scope<PointLightComponent> pointLight = nullptr;
 
 	private:
 		HDNGameObject(id_t objId) : m_ID{ objId } {}

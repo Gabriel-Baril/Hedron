@@ -61,4 +61,14 @@ namespace hdn
 			}
 		};
 	}
+
+	HDNGameObject HDNGameObject::MakePointLight(float32 intensity, float32 radius, vec3f32 color)
+	{
+		HDNGameObject gameObj = HDNGameObject::CreateGameObject();
+		gameObj.color = color;
+		gameObj.transform.scale.x = radius;
+		gameObj.pointLight = CreateScope<PointLightComponent>();
+		gameObj.pointLight->lightIntensity = intensity;
+		return gameObj;
+	}
 }

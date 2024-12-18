@@ -7,6 +7,24 @@
 
 namespace hdn
 {
+	#define MAX_LIGHTS 10
+
+	struct PointLight
+	{
+		vec4f32 position{}; // ignore w
+		vec4f32 color{}; // w is intensity
+	};
+
+	// Global Uniform Buffer Object
+	struct GlobalUbo
+	{
+		mat4f32 projection{ 1.0f };
+		mat4f32 view{ 1.0f };
+		vec4f32 ambientLightColor{ 1.0f, 1.0f, 1.0f, 0.02f };
+		PointLight pointLights[MAX_LIGHTS];
+		int32 numLights;
+	};
+
 	struct FrameInfo
 	{
 		int frameIndex;

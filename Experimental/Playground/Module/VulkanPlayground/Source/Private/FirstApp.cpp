@@ -18,16 +18,6 @@ namespace hdn
 {
 	static constexpr float32 MAX_FRAME_TIME = 0.5f;
 
-	// Global Uniform Buffer Object
-	struct GlobalUbo
-	{
-		mat4f32 projection{ 1.0f };
-		mat4f32 view{ 1.0f };
-		vec4f32 ambientLightColor{ 1.0f, 1.0f, 1.0f, 0.02f };
-		vec3f32 lightPosition{ -1.0f };
-		alignas(16) vec4f32 lightColor{ -1.0f }; // w is light intensity
-	};
-
 	FirstApp::FirstApp()
 	{
 		globalPool = HDNDescriptorPool::Builder(m_Device)
@@ -111,6 +101,9 @@ namespace hdn
 				GlobalUbo ubo{};
 				ubo.projection = camera.GetProjection();
 				ubo.view = camera.GetView();
+
+				pointLightSystem.Update(frameInfo, ubo);
+
 				uboBuffers[frameIndex]->writeToBuffer((void*)&ubo);
 				uboBuffers[frameIndex]->flush();
 
@@ -149,5 +142,23 @@ namespace hdn
 		floor.transform.translation = { 0.0f, 0.5f, 0.0f };
 		floor.transform.scale = vec3f32{ 3.0f, 1.0f, 3.0f };
 		m_GameObjects.emplace(floor.GetID(), std::move(floor));
+
+		std::vector<glm::vec3> lightColors{
+			{1.f, .1f, .1f},
+			{.1f, .1f, 1.f},
+			{.1f, 1.f, .1f},
+			{1.f, 1.f, .1f},
+			{.1f, 1.f, 1.f},
+			{1.f, 1.f, 1.f} 
+		};
+
+		for (int i = 0;i < lightColors.size(); i++)
+		{
+			auto pointLight = HDNGameObject::MakePointLight(0.2f);
+			pointLight.color = lightColors[i];
+			auto rotateLight = glm::rotate(mat4f32(1.0f), (i * glm::two_pi<float32>()) / lightColors.size(), {0.0f, -1.0f, 0.0f});
+			pointLight.transform.translation = vec3f32(rotateLight * vec4f32(-1.0f, -1.0f, -1.0f, 1.0f));
+			m_GameObjects.emplace(pointLight.GetID(), std::move(pointLight));
+		}
 	}
 }
