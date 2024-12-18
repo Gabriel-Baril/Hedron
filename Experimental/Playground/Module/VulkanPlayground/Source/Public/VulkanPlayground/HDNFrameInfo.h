@@ -1,6 +1,7 @@
 #pragma once
 
 #include "HDNCamera.h"
+#include "HDNGameObject.h"
 
 #include "vulkan/vulkan.h"
 
@@ -13,5 +14,6 @@ namespace hdn
 		VkCommandBuffer commandBuffer;
 		HDNCamera* camera;
 		VkDescriptorSet globalDescriptorSet;
+		HDNGameObject::Map* gameObjects;
 	};
 }

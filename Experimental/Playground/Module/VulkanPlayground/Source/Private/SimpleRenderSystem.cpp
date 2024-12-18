@@ -15,7 +15,7 @@ namespace hdn
 	};
 
 	SimpleRenderSystem::SimpleRenderSystem(HDNDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
-		: m_Device{device}
+		: m_Device{ device }
 	{
 		CreatePipelineLayout(globalSetLayout);
 		CreatePipeline(renderPass);
@@ -33,7 +33,7 @@ namespace hdn
 		pushConstantRange.offset = 0;
 		pushConstantRange.size = sizeof(SimplePushConstantData);
 
-		std::vector<VkDescriptorSetLayout> descriptorSetLayouts{globalSetLayout};
+		std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -59,7 +59,7 @@ namespace hdn
 		m_Pipeline = std::make_unique<HDNPipeline>(m_Device, "Shaders/simple_shader.vert.spv", "Shaders/simple_shader.frag.spv", pipelineConfig);
 	}
 
-	void SimpleRenderSystem::RenderGameObjects(FrameInfo& frameInfo, std::vector<HDNGameObject>& gameObjects)
+	void SimpleRenderSystem::RenderGameObjects(FrameInfo& frameInfo)
 	{
 		m_Pipeline->Bind(frameInfo.commandBuffer);
 
@@ -72,8 +72,10 @@ namespace hdn
 			0, nullptr
 		); // Low frequency descriptor sets needs to occupy the lowest index
 
-		for (auto& obj : gameObjects)
+		for (auto& [key, obj] : *frameInfo.gameObjects)
 		{
+			if (obj.model == nullptr) continue; // TODO: We should query an ECS instead of manually creating such filter
+
 			SimplePushConstantData push{};
 			push.modelMatrix = obj.transform.mat4(); // Will be done in the shader once we have uniform buffer
 			push.normalMatrix = obj.transform.NormalMatrix();

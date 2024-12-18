@@ -13,15 +13,15 @@
 namespace hdn
 {
 
-	class SimpleRenderSystem
+	class PointLightSystem
 	{
 	public:
-		SimpleRenderSystem(HDNDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
-		virtual ~SimpleRenderSystem();
-		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
-		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
+		PointLightSystem(HDNDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+		virtual ~PointLightSystem();
+		PointLightSystem(const PointLightSystem&) = delete;
+		PointLightSystem& operator=(const PointLightSystem&) = delete;
 
-		void RenderGameObjects(FrameInfo& frameInfo);
+		void Render(FrameInfo& frameInfo);
 	private:
 		void CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void CreatePipeline(VkRenderPass renderPass);

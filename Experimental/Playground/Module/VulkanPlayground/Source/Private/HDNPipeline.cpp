@@ -98,6 +98,9 @@ namespace hdn
 		configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
 		configInfo.dynamicStateInfo.dynamicStateCount = static_cast<uint32>(configInfo.dynamicStateEnables.size());
 		configInfo.dynamicStateInfo.flags = 0;
+
+		configInfo.bindingDescriptions = HDNModel::Vertex::GetBindingDescriptions();
+		configInfo.attributeDescriptions = HDNModel::Vertex::GetAttributeDescriptions();
 	}
 
 	std::vector<char> HDNPipeline::ReadFile(const std::string& filepath)
@@ -144,8 +147,8 @@ namespace hdn
 		shaderStages[1].pSpecializationInfo = nullptr;
 
 		// Controls how we interpret our vertex buffer data (which the initial info in our graphics pipeline)
-		auto attributeDescriptions = HDNModel::Vertex::GetAttributeDescriptions();
-		auto bindingDescriptions = HDNModel::Vertex::GetBindingDescriptions();
+		auto& attributeDescriptions = configInfo.attributeDescriptions;
+		auto& bindingDescriptions = configInfo.bindingDescriptions;
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32>(attributeDescriptions.size());

@@ -35,7 +35,6 @@ namespace hdn
 		// Order of declarations matters
 		Scope<HDNDescriptorPool> globalPool{}; // System that require descriptors only relevant to their work should create their own HDNDescriptorPool
 
-
-		std::vector<HDNGameObject> m_GameObjects;
+		HDNGameObject::Map m_GameObjects;
 	};
 }

@@ -3,8 +3,9 @@
 #include "VulkanPlayground/KeyboardMovementController.h"
 #include "VulkanPlayground/HDNBuffer.h"
 #include "VulkanPlayground/HDNCamera.h"
-#include "VulkanPlayground/SimpleRenderSystem.h"
 
+#include "VulkanPlayground/SimpleRenderSystem.h"
+#include "VulkanPlayground/PointLightSystem.h"
 
 #include "Core/Core.h"
 #include <glm/gtc/constants.hpp>
@@ -20,7 +21,8 @@ namespace hdn
 	// Global Uniform Buffer Object
 	struct GlobalUbo
 	{
-		mat4f32 projectionView{ 1.0f };
+		mat4f32 projection{ 1.0f };
+		mat4f32 view{ 1.0f };
 		vec4f32 ambientLightColor{ 1.0f, 1.0f, 1.0f, 0.02f };
 		vec3f32 lightPosition{ -1.0f };
 		alignas(16) vec4f32 lightColor{ -1.0f }; // w is light intensity
@@ -68,7 +70,8 @@ namespace hdn
 				.build(globalDescriptorSets[i]);
 		}
 
-		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
+		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() };
+		PointLightSystem pointLightSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() };
 		HDNCamera camera{};
 
 		auto viewerObject = HDNGameObject::CreateGameObject();
@@ -102,16 +105,19 @@ namespace hdn
 				frameInfo.commandBuffer = commandBuffer;
 				frameInfo.camera = &camera;
 				frameInfo.globalDescriptorSet = globalDescriptorSets[frameIndex];
+				frameInfo.gameObjects = &m_GameObjects;
 
 				// update
 				GlobalUbo ubo{};
-				ubo.projectionView = camera.GetProjection() * camera.GetView();
+				ubo.projection = camera.GetProjection();
+				ubo.view = camera.GetView();
 				uboBuffers[frameIndex]->writeToBuffer((void*)&ubo);
 				uboBuffers[frameIndex]->flush();
 
 				// render
 				m_Renderer.BeginSwapChainRenderPass(commandBuffer);
-				simpleRenderSystem.RenderGameObjects(frameInfo, m_GameObjects);
+				simpleRenderSystem.RenderGameObjects(frameInfo);
+				pointLightSystem.Render(frameInfo);
 				m_Renderer.EndSwapChainRenderPass(commandBuffer);
 
 				m_Renderer.EndFrame();
@@ -128,20 +134,20 @@ namespace hdn
 		flatVase.model = hdnModel;
 		flatVase.transform.translation = { -0.5f, 0.5f, 0.0f };
 		flatVase.transform.scale = vec3f32{3.0f, 1.5f, 3.0f};
-		m_GameObjects.push_back(std::move(flatVase));
+		m_GameObjects.emplace(flatVase.GetID(), std::move(flatVase));
 
 		hdnModel = HDNModel::CreateModelFromFile(&m_Device, "Models/smooth_vase.obj");
 		auto smoothVase = HDNGameObject::CreateGameObject();
 		smoothVase.model = hdnModel;
 		smoothVase.transform.translation = { -1.0f, 0.5f, 0.0f };
 		smoothVase.transform.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
-		m_GameObjects.push_back(std::move(smoothVase));
+		m_GameObjects.emplace(smoothVase.GetID(), std::move(smoothVase));
 
 		hdnModel = HDNModel::CreateModelFromFile(&m_Device, "Models/quad.obj");
 		auto floor = HDNGameObject::CreateGameObject();
 		floor.model = hdnModel;
 		floor.transform.translation = { 0.0f, 0.5f, 0.0f };
 		floor.transform.scale = vec3f32{ 3.0f, 1.0f, 3.0f };
-		m_GameObjects.push_back(std::move(floor));
+		m_GameObjects.emplace(floor.GetID(), std::move(floor));
 	}
 }

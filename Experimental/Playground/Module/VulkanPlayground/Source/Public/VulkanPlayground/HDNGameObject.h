@@ -4,6 +4,8 @@
 
 #include "HDNModel.h"
 
+#include <unordered_map>
+
 namespace hdn
 {
 	struct TransformComponent
@@ -33,6 +35,7 @@ namespace hdn
 	{
 	public:
 		using id_t = uint32;
+		using Map = std::unordered_map<id_t, HDNGameObject>;
 
 		HDNGameObject(const HDNGameObject&) = delete;
 		HDNGameObject& operator=(const HDNGameObject&) = delete;
