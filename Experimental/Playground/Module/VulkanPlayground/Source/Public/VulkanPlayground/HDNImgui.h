@@ -28,7 +28,7 @@ namespace hdn
 
 		bool HandleWindowResize();
 		void NewFrame();
-		void Render(const ImVec4& clearColor);
+		void Render(const ImVec4& clearColor, VkCommandBuffer commandBuffer);
 		void Shutdown();
 	private:
 		void CreateFramebuffer();

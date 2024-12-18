@@ -110,13 +110,6 @@ namespace hdn
 			float32 aspect = m_Renderer.GetAspectRatio();
 			camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
 
-			imguiSystem.NewFrame();
-
-			ImGui::Begin("Hello, world!");
-			ImGui::Text("This is some useful text.");
-			ImGui::End();
-
-			imguiSystem.Render(ImVec4(0.45f, 0.55f, 0.60f, 1.00f));
 
 			if (auto commandBuffer = m_Renderer.BeginFrame())
 			{
@@ -146,6 +139,16 @@ namespace hdn
 				// Order Here Matters
 				simpleRenderSystem.RenderGameObjects(frameInfo);
 				pointLightSystem.Render(frameInfo);
+
+				imguiSystem.NewFrame();
+
+				ImGui::Begin("Hello, world!");
+				ImGui::Text("This is some useful text.");
+				ImGui::End();
+
+				ImGui::ShowDemoWindow();
+
+				imguiSystem.Render(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 
 				m_Renderer.EndSwapChainRenderPass(commandBuffer);
 
