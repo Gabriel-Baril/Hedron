@@ -28,6 +28,8 @@ namespace hdn
 	private:
 		void LoadGameObjects();
 	private:
+		vec3f32 m_FlatVaseTranslation = { -0.5f, 0.5f, 0.0f };
+
 		HDNWindow m_Window{ WIDTH, HEIGHT, "First App"};
 		HDNDevice m_Device{ m_Window };
 		HDNRenderer m_Renderer{ &m_Window, &m_Device };

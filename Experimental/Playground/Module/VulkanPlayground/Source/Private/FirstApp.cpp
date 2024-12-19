@@ -128,6 +128,9 @@ namespace hdn
 
 				pointLightSystem.Update(frameInfo, ubo);
 
+				HDNGameObject::id_t id = 0;
+				m_GameObjects.at(id).transform.translation = m_FlatVaseTranslation; // TODO: Remove
+
 				uboBuffers[frameIndex]->WriteToBuffer((void*)&ubo);
 				uboBuffers[frameIndex]->Flush();
 
@@ -144,13 +147,13 @@ namespace hdn
 				ImGui::Begin("Hello, world!");
 				ImGui::Text("This is some useful text.");
 				ImGui::Text("dt: %.4f", frameTime * 1000);
+				ImGui::DragFloat3("Flat Vase Position", (float32*)&m_FlatVaseTranslation, 0.01f, -2.0f, 2.0f);
 				ImGui::End();
 
 				ImGui::ShowDemoWindow();
 
 				imguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 #endif
-
 				m_Renderer.EndSwapChainRenderPass(commandBuffer);
 
 				m_Renderer.EndFrame();
@@ -165,7 +168,7 @@ namespace hdn
 		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromFile(&m_Device, "Models/flat_vase.obj");
 		auto flatVase = HDNGameObject::CreateGameObject();
 		flatVase.model = hdnModel;
-		flatVase.transform.translation = { -0.5f, 0.5f, 0.0f };
+		flatVase.transform.translation = m_FlatVaseTranslation;
 		flatVase.transform.scale = vec3f32{3.0f, 1.5f, 3.0f};
 		m_GameObjects.emplace(flatVase.GetID(), std::move(flatVase));
 
