@@ -408,3 +408,5 @@ FodyWeavers.xsd
 
 *.vert.spv
 *.frag.spv
+
+**/imgui.ini

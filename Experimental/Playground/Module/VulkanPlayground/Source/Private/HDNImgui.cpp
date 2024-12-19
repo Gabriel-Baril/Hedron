@@ -45,27 +45,6 @@ namespace hdn
 		// Load custom font
 	}
 
-	bool ImguiSystem::HandleWindowResize()
-	{
-		// TODO: Integrate with RecreateSwapchain function
-
-		int fb_width, fb_height;
-		glfwGetFramebufferSize(m_GLFWWindow, &fb_width, &fb_height);
-		if (fb_width > 0 && fb_height > 0 && (m_SwapChainRebuild || m_MainWindowData.Width != fb_width || m_MainWindowData.Height != fb_height))
-		{
-			ImGui_ImplVulkan_SetMinImageCount(m_MinImageCount);
-			ImGui_ImplVulkanH_CreateOrResizeWindow(m_Instance, m_PhysicalDevice, m_Device, &m_MainWindowData, m_QueueFamily, m_Allocator, fb_width, fb_height, m_MinImageCount);
-			m_MainWindowData.FrameIndex = 0;
-			m_SwapChainRebuild = false;
-		}
-		if (glfwGetWindowAttrib(m_GLFWWindow, GLFW_ICONIFIED) != 0)
-		{
-			ImGui_ImplGlfw_Sleep(10);
-			return false;
-		}
-		return true;
-	}
-
 	void ImguiSystem::NewFrame()
 	{
 		ImGui_ImplVulkan_NewFrame();
@@ -73,7 +52,7 @@ namespace hdn
 		ImGui::NewFrame();
 	}
 
-	void ImguiSystem::Render(const ImVec4& clearColor, VkCommandBuffer commandBuffer) // ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	void ImguiSystem::EndFrame(const ImVec4& clearColor, VkCommandBuffer commandBuffer) // ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 	{
 		ImGui::Render();
 		ImDrawData* main_draw_data = ImGui::GetDrawData();

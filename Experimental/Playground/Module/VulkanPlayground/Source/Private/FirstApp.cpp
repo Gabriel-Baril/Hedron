@@ -71,6 +71,7 @@ namespace hdn
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
+#if USING(HDN_DEBUG)
 		ImguiSystem imguiSystem;
 		
 		Scope<HDNDescriptorPool> imguiDescriptorPool = HDNDescriptorPool::Builder(m_Device)
@@ -80,7 +81,6 @@ namespace hdn
 			.Build();
 		
 		QueueFamilyIndices queueFamilyIndices = m_Device.FindPhysicalQueueFamilies();
-		
 		imguiSystem.Init(
 			m_Window.GetGLFWWindow(),
 			m_Device.GetSurface(),
@@ -91,12 +91,11 @@ namespace hdn
 			m_Device.GetGraphicsQueue(),
 			imguiDescriptorPool->GetDescriptor()
 		);
+#endif
 
 		while (!m_Window.ShouldClose())
 		{
 			glfwPollEvents();
-			
-			imguiSystem.HandleWindowResize();
 
 			auto newTime = std::chrono::high_resolution_clock::now();
 			float frameTime = std::chrono::duration<float32, std::chrono::seconds::period>(newTime - currentTime).count();
@@ -140,15 +139,18 @@ namespace hdn
 				simpleRenderSystem.RenderGameObjects(frameInfo);
 				pointLightSystem.Render(frameInfo);
 
+#if USING(HDN_DEBUG)
 				imguiSystem.NewFrame();
 
 				ImGui::Begin("Hello, world!");
 				ImGui::Text("This is some useful text.");
+				ImGui::Text("dt: %.4f", frameTime * 1000);
 				ImGui::End();
 
 				ImGui::ShowDemoWindow();
 
-				imguiSystem.Render(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
+				imguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
+#endif
 
 				m_Renderer.EndSwapChainRenderPass(commandBuffer);
 

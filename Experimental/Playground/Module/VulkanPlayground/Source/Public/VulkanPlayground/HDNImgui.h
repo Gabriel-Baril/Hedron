@@ -26,9 +26,8 @@ namespace hdn
 			VkDescriptorPool descriptorPool
 		);
 
-		bool HandleWindowResize();
 		void NewFrame();
-		void Render(const ImVec4& clearColor, VkCommandBuffer commandBuffer);
+		void EndFrame(const ImVec4& clearColor, VkCommandBuffer commandBuffer);
 		void Shutdown();
 	private:
 		void CreateFramebuffer();
@@ -42,7 +41,7 @@ namespace hdn
 		void FramePresent(ImGui_ImplVulkanH_Window* wd);
 	private:
 		GLFWwindow* m_GLFWWindow = nullptr;
-		VkSurfaceKHR m_Surface;
+		VkSurfaceKHR m_Surface = VK_NULL_HANDLE;
 
 		VkAllocationCallbacks*   m_Allocator = nullptr;
 		VkInstance               m_Instance = VK_NULL_HANDLE; // Used same
