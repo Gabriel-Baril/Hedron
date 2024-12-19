@@ -26,7 +26,7 @@ namespace hdn
 			VkDescriptorPool descriptorPool
 		);
 
-		void NewFrame();
+		void BeginFrame();
 		void EndFrame(const ImVec4& clearColor, VkCommandBuffer commandBuffer);
 		void Shutdown();
 	private:

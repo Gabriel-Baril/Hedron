@@ -45,7 +45,7 @@ namespace hdn
 		// Load custom font
 	}
 
-	void ImguiSystem::NewFrame()
+	void ImguiSystem::BeginFrame()
 	{
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

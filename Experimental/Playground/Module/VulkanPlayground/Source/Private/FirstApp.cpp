@@ -109,7 +109,6 @@ namespace hdn
 			float32 aspect = m_Renderer.GetAspectRatio();
 			camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
 
-
 			if (auto commandBuffer = m_Renderer.BeginFrame())
 			{
 				int frameIndex = m_Renderer.GetFrameIndex();
@@ -140,7 +139,7 @@ namespace hdn
 				pointLightSystem.Render(frameInfo);
 
 #if USING(HDN_DEBUG)
-				imguiSystem.NewFrame();
+				imguiSystem.BeginFrame();
 
 				ImGui::Begin("Hello, world!");
 				ImGui::Text("This is some useful text.");
