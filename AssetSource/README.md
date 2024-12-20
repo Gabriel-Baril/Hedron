@@ -1,1 +1,0 @@
-The /AssetSource folder will contain the files responsible to generate raw asset (.blend, .gimp, etc)
