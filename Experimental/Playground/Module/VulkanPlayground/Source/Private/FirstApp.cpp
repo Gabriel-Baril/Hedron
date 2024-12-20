@@ -6,7 +6,9 @@
 
 #include "VulkanPlayground/SimpleRenderSystem.h"
 #include "VulkanPlayground/PointLightSystem.h"
+
 #include "VulkanPlayground/HDNImgui.h"
+#include "VulkanPlayground/idaes/IdaesImgui.h"
 
 #include "Core/Core.h"
 #include <glm/gtc/constants.hpp>
@@ -91,6 +93,8 @@ namespace hdn
 			m_Device.GetGraphicsQueue(),
 			imguiDescriptorPool->GetDescriptor()
 		);
+
+		IdaesImgui idaesUI;
 #endif
 
 		while (!m_Window.ShouldClose())
@@ -150,7 +154,8 @@ namespace hdn
 				ImGui::DragFloat3("Flat Vase Position", (float32*)&m_FlatVaseTranslation, 0.01f, -2.0f, 2.0f);
 				ImGui::End();
 
-				ImGui::ShowDemoWindow();
+				// ImGui::ShowDemoWindow();
+				idaesUI.Draw();
 
 				imguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 #endif
