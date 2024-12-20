@@ -7,7 +7,7 @@ public class VulkanPlaygroundProject : BaseCppProject
     public VulkanPlaygroundProject()
     {
         Name = "vkplayground";
-        SourceRootPath = @"[project.SharpmakeCsPath]\Source";
+        SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
 
@@ -28,7 +28,6 @@ public class VulkanPlaygroundProject : BaseCppProject
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
-        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\Source\Public");
 
         conf.AddPublicDependency<TinyObjLoaderProject>(target);
         conf.AddPublicDependency<GLFWProject>(target);

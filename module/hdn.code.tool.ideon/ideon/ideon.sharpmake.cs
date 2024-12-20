@@ -7,7 +7,7 @@ public class IdeonProject : BaseCppProject
     public IdeonProject()
     {
         Name = "ideon";
-        SourceRootPath = @"[project.SharpmakeCsPath]\Source";
+        SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
 

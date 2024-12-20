@@ -1,7 +1,7 @@
 #include "ideation_parse.h"
 #include "ideation_parse_payload.h"
 
-#include "json/json.h"
+#include "sheredom-json/json.h"
 
 #include <assert.h>
 #include <fstream>

@@ -4,7 +4,7 @@
 int main()
 {
 	IdeationNode node;
-	parse_ideation_file("../Content/ideation.json", node);
+	parse_ideation_file("../data/ideation.json", node);
 	return 0;
 }
 

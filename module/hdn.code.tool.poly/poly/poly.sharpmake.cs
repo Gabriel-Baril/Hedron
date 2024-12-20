@@ -7,7 +7,7 @@ public class PolyProject : BaseCppProject
     public PolyProject()
     {
         Name = "poly";
-        SourceRootPath = @"[project.SharpmakeCsPath]\Source";
+        SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
 
@@ -19,7 +19,6 @@ public class PolyProject : BaseCppProject
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
-        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\Source\Public");
 
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<OctreeCppProject>(target);

@@ -6,7 +6,7 @@ public class PlaygroundSolution : Solution
 {
     public PlaygroundSolution()
     {
-        Name = "Playground";
+        Name = "playground";
 
         AddTargets(TargetUtil.DefaultTarget);
     }

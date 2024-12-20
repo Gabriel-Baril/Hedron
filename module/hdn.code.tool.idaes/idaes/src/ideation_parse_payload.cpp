@@ -1,5 +1,5 @@
 #include "ideation_parse_payload.h"
-#include "json/json.h"
+#include "sheredom-json/json.h"
 
 using ParseFunc = bool(*)(struct json_object_s* jsonObjectElement, IdeationPayload& node);
 static ParseFunc s_ParseFuncs[underlying(IdeationNodeType::Size)] =
