@@ -1,18 +1,3 @@
-[submodule "module/hdn.code.external.glm"]
-	path = module/hdn.code.external.glm
-	url = https://github.com/Gabriel-Baril/glm/
-[submodule "module/hdn.code.external.spdlog"]
-	path = module/hdn.code.external.spdlog
-	url = https://github.com/Gabriel-Baril/spdlog/
-[submodule "module/hdn.code.external.octree-cpp"]
-	path = module/hdn.code.external.octree-cpp
-	url = https://github.com/Gabriel-Baril/octree-cpp/
-[submodule "module/hdn.code.external.glfw"]
-	path = module/hdn.code.external.glfw
-	url = https://github.com/Gabriel-Baril/glfw/
-[submodule "module/hdn.code.external.tinyobjloader"]
-	path = module/hdn.code.external.tinyobjloader
-	url = https://github.com/Gabriel-Baril/tinyobjloader/
 [submodule "module/hdn.code.external.imgui"]
 	path = module/hdn.code.external.imgui
 	url = https://github.com/Gabriel-Baril/imgui/
