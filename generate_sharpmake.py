@@ -75,7 +75,7 @@ def main():
     print(f"[ARG] clean: {clean_files}")
 
     # Allowed folders
-    allowed_folders = ["Module"]
+    allowed_folders = ["module"]
 
 
     print(f"---------- SHARPMAKE FILE SEARCH ----------")
