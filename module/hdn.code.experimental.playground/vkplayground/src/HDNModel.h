@@ -36,7 +36,7 @@ namespace hdn
 		struct Builder
 		{
 			std::vector<Vertex> vertices{};
-			std::vector<uint32> indices{};
+			std::vector<u32> indices{};
 
 			void LoadModel(const std::string& filepath);
 		};
@@ -52,16 +52,16 @@ namespace hdn
 		void Draw(VkCommandBuffer commandBuffer);
 	private:
 		void CreateVertexBuffers(const std::vector<Vertex>& vertices);
-		void CreateIndexBuffers(const std::vector<uint32>& indices);
+		void CreateIndexBuffers(const std::vector<u32>& indices);
 	private:
 		HDNDevice* m_Device;
 		
 		// The buffer and it's assigned memory are 2 different objects
 		Scope<HDNBuffer> m_VertexBuffer;
-		uint32 m_VertexCount;
+		u32 m_VertexCount;
 
 		bool m_HasIndexBuffer = false;
 		Scope<HDNBuffer> m_IndexBuffer;
-		uint32 m_IndexCount;
+		u32 m_IndexCount;
 	};
 }

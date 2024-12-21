@@ -96,7 +96,7 @@ namespace hdn
 		configInfo.dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
 		configInfo.dynamicStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 		configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
-		configInfo.dynamicStateInfo.dynamicStateCount = static_cast<uint32>(configInfo.dynamicStateEnables.size());
+		configInfo.dynamicStateInfo.dynamicStateCount = static_cast<u32>(configInfo.dynamicStateEnables.size());
 		configInfo.dynamicStateInfo.flags = 0;
 
 		configInfo.bindingDescriptions = HDNModel::Vertex::GetBindingDescriptions();
@@ -165,8 +165,8 @@ namespace hdn
 		auto& bindingDescriptions = configInfo.bindingDescriptions;
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32>(attributeDescriptions.size());
-		vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32>(bindingDescriptions.size());
+		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<u32>(attributeDescriptions.size());
+		vertexInputInfo.vertexBindingDescriptionCount = static_cast<u32>(bindingDescriptions.size());
 		vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 		vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 
@@ -202,7 +202,7 @@ namespace hdn
 		VkShaderModuleCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = code.size();
-		createInfo.pCode = reinterpret_cast<const uint32*>(code.data()); // Since std::vector take into account the worst case alignment scenario, thisd reinterpret_cast is valid. It wouldn't be true for a c-style array
+		createInfo.pCode = reinterpret_cast<const u32*>(code.data()); // Since std::vector take into account the worst case alignment scenario, thisd reinterpret_cast is valid. It wouldn't be true for a c-style array
 		if (vkCreateShaderModule(m_Device->GetDevice(), &createInfo, nullptr, module) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create shader module");

@@ -4,12 +4,12 @@ namespace hdn
 {
 	mat4f32 TransformComponent::Mat4()
 	{
-		const float32 c3 = glm::cos(rotation.z);
-		const float32 s3 = glm::sin(rotation.z);
-		const float32 c2 = glm::cos(rotation.x);
-		const float32 s2 = glm::sin(rotation.x);
-		const float32 c1 = glm::cos(rotation.y);
-		const float32 s1 = glm::sin(rotation.y);
+		const f32 c3 = glm::cos(rotation.z);
+		const f32 s3 = glm::sin(rotation.z);
+		const f32 c2 = glm::cos(rotation.x);
+		const f32 s2 = glm::sin(rotation.x);
+		const f32 c1 = glm::cos(rotation.y);
+		const f32 s1 = glm::sin(rotation.y);
 		return mat4f32{
 			{
 				scale.x * (c1 * c3 + s1 * s2 * s3),
@@ -35,12 +35,12 @@ namespace hdn
 
 	mat3f32 hdn::TransformComponent::NormalMatrix()
 	{
-		const float32 c3 = glm::cos(rotation.z);
-		const float32 s3 = glm::sin(rotation.z);
-		const float32 c2 = glm::cos(rotation.x);
-		const float32 s2 = glm::sin(rotation.x);
-		const float32 c1 = glm::cos(rotation.y);
-		const float32 s1 = glm::sin(rotation.y);
+		const f32 c3 = glm::cos(rotation.z);
+		const f32 s3 = glm::sin(rotation.z);
+		const f32 c2 = glm::cos(rotation.x);
+		const f32 s2 = glm::sin(rotation.x);
+		const f32 c1 = glm::cos(rotation.y);
+		const f32 s1 = glm::sin(rotation.y);
 		const vec3f32 invScale = 1.0f / scale;
 
 		return mat3f32{
@@ -62,7 +62,7 @@ namespace hdn
 		};
 	}
 
-	HDNGameObject HDNGameObject::MakePointLight(float32 intensity, float32 radius, vec3f32 color)
+	HDNGameObject HDNGameObject::MakePointLight(f32 intensity, f32 radius, vec3f32 color)
 	{
 		HDNGameObject gameObj = HDNGameObject::CreateGameObject();
 		gameObj.color = color;

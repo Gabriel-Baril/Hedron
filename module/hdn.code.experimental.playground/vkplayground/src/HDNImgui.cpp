@@ -100,7 +100,7 @@ namespace hdn
 		vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, m_QueueFamily, wd->Surface, &res);
 		if (res != VK_TRUE)
 		{
-			HDN_CORE_ERROR("Error no WSI support on physical device 0");
+			HERR("Error no WSI support on physical device 0");
 			exit(-1);
 		}
 

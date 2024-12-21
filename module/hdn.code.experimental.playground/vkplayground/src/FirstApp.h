@@ -16,8 +16,8 @@ namespace hdn
 	class FirstApp
 	{
 	public:
-		static constexpr uint32 WIDTH = 800;
-		static constexpr uint32 HEIGHT = 600;
+		static constexpr u32 WIDTH = 800;
+		static constexpr u32 HEIGHT = 600;
 	public:
 		FirstApp();
 		virtual ~FirstApp();

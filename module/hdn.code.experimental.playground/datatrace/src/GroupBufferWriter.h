@@ -7,7 +7,7 @@
 
 namespace hdn
 {
-	enum class KeyValueType : uint8
+	enum class KeyValueType : u8
 	{
 		INT32 = 0,
 		UINT32 = 1,
@@ -39,27 +39,27 @@ namespace hdn
 			return Semantic;
 		}
 
-		inline uint64 GetBeginByte() const { return BeginByte; }
-		inline uint64 GetEndByte() const { return EndByte; }
-		inline uint64 GetBeginByteMeta() const { return BeginByteMeta; }
-		inline uint64 GetEndByteMeta() const { return EndByteMeta; }
+		inline u64 GetBeginByte() const { return BeginByte; }
+		inline u64 GetEndByte() const { return EndByte; }
+		inline u64 GetBeginByteMeta() const { return BeginByteMeta; }
+		inline u64 GetEndByteMeta() const { return EndByteMeta; }
 
-		void SetBeginByte(uint64 beginByte)
+		void SetBeginByte(u64 beginByte)
 		{
 			this->BeginByte = beginByte;
 		}
 
-		void SetEndByte(uint64 endByte)
+		void SetEndByte(u64 endByte)
 		{
 			this->EndByte = endByte;
 		}
 
-		void SetBeginByteMeta(uint64 beginByteMeta)
+		void SetBeginByteMeta(u64 beginByteMeta)
 		{
 			this->BeginByteMeta = beginByteMeta;
 		}
 
-		void SetEndByteMeta(uint64 endByteMeta)
+		void SetEndByteMeta(u64 endByteMeta)
 		{
 			this->EndByteMeta = endByteMeta;
 		}
@@ -69,10 +69,10 @@ namespace hdn
 			return EndByteMeta - BeginByteMeta;
 		}
 	private:
-		uint64 BeginByte = 0;
-		uint64 EndByte = 0;
-		uint64 BeginByteMeta = 0;
-		uint64 EndByteMeta = 0;
+		u64 BeginByte = 0;
+		u64 EndByte = 0;
+		u64 BeginByteMeta = 0;
+		u64 EndByteMeta = 0;
 		const char* Semantic = nullptr; // This field could more complex metadata if we want/need to
 		std::vector<size_t> Children = {};
 	};

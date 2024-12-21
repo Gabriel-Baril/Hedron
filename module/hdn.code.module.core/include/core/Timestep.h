@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/CoreDefine.h"
-#include "Core/CoreType.h"
+#include "core/CoreDefine.h"
+#include "core/CoreType.h"
 
 namespace hdn
 {

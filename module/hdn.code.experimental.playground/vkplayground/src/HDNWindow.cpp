@@ -4,7 +4,7 @@
 
 namespace hdn
 {
-	HDNWindow::HDNWindow(uint32 width, uint32 height, const std::string& name)
+	HDNWindow::HDNWindow(u32 width, u32 height, const std::string& name)
 		: m_Width{ width }, m_Height{ height }, m_WindowName{ name }
 	{
 		InitWindow();

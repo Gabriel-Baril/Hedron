@@ -1,4 +1,4 @@
-#include "Core/CoreString.h"
+#include "core/CoreString.h"
 
 #include <string.h>
 #include <ctype.h>
@@ -12,8 +12,8 @@ namespace hdn
 
 	bool Str_EndsWith(const char* str, const char* suffix)
     {
-		const uint64 strLen = strlen(str);
-		const uint64 suffixLen = strlen(suffix);
+		const u64 strLen = strlen(str);
+		const u64 suffixLen = strlen(suffix);
 		if (strLen >= suffixLen)
 			return memcmp(str + (strLen - suffixLen), suffix, suffixLen) == 0;
         return false;
@@ -118,7 +118,7 @@ namespace hdn
 		return count;
 	}
 
-	int64 Str_FindFirstNotOfIndex(const char* str, char c)
+	i64 Str_FindFirstNotOfIndex(const char* str, char c)
 	{
 		const char* result = Str_FindFirstNotOf(str, c);
 		if (result)
@@ -133,7 +133,7 @@ namespace hdn
 	{
 		if (end)
 		{
-			const int64 len = end - begin + 1;
+			const i64 len = end - begin + 1;
 			strncpy(dest, begin, len);
 			dest[len] = '\0';
 			return;

@@ -27,7 +27,7 @@ namespace hdn
 	class HDNGameObject
 	{
 	public:
-		using id_t = uint32;
+		using id_t = u32;
 		using Map = std::unordered_map<id_t, HDNGameObject>;
 
 		HDNGameObject(const HDNGameObject&) = delete;
@@ -41,7 +41,7 @@ namespace hdn
 			return HDNGameObject{ currentId++ };
 		}
 
-		static HDNGameObject MakePointLight(float32 intensity = 10.0f, float32 radius = 0.1f, vec3f32 color = vec3f32{1.0f});
+		static HDNGameObject MakePointLight(f32 intensity = 10.0f, f32 radius = 0.1f, vec3f32 color = vec3f32{1.0f});
 
 		id_t GetID() const { return m_ID; }
 

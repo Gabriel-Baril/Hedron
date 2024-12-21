@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "core/CoreType.h"
 #include <stdio.h>
 
 #define SYMTOSTR(var) #var
@@ -18,6 +18,6 @@ namespace hdn
 	const char* Str_FindFirstOf(const char* str, char c);
 	const char* Str_FindFirstNotOf(const char* str, char c);
 	int Str_CountOccurences(const char* str, char c);
-	int64 Str_FindFirstNotOfIndex(const char* str, char c);
+	i64 Str_FindFirstNotOfIndex(const char* str, char c);
 	void Str_CopySubstring(char* dest, const char* begin, const char* end = nullptr);
 }

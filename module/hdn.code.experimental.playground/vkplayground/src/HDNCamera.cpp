@@ -18,8 +18,8 @@ namespace hdn
 
 	void HDNCamera::SetPerspectiveProjection(float fovy, float aspect, float nearPlane, float farPlane)
 	{
-		assert(glm::abs(aspect - std::numeric_limits<float32>::epsilon()) > 0.0f);
-		const float32 tanHalfFovy = tan(fovy / 2.f);
+		assert(glm::abs(aspect - std::numeric_limits<f32>::epsilon()) > 0.0f);
+		const f32 tanHalfFovy = tan(fovy / 2.f);
 		m_ProjectionMatrix = mat4f32{ 1.0f };
 		m_ProjectionMatrix[0][0] = 1.f / (aspect * tanHalfFovy);
 		m_ProjectionMatrix[1][1] = 1.f / (tanHalfFovy);

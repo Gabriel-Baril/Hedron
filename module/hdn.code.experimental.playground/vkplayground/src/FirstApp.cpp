@@ -19,7 +19,7 @@
 
 namespace hdn
 {
-	static constexpr float32 MAX_FRAME_TIME = 0.5f;
+	static constexpr f32 MAX_FRAME_TIME = 0.5f;
 
 	FirstApp::FirstApp()
 	{
@@ -102,7 +102,7 @@ namespace hdn
 			glfwPollEvents();
 
 			auto newTime = std::chrono::high_resolution_clock::now();
-			float frameTime = std::chrono::duration<float32, std::chrono::seconds::period>(newTime - currentTime).count();
+			float frameTime = std::chrono::duration<f32, std::chrono::seconds::period>(newTime - currentTime).count();
 			currentTime = newTime;
 
 			frameTime = glm::min(frameTime, MAX_FRAME_TIME);
@@ -110,7 +110,7 @@ namespace hdn
 			cameraController.MoveInPlaneXZ(m_Window.GetGLFWWindow(), frameTime, viewerObject);
 			camera.SetViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
-			float32 aspect = m_Renderer.GetAspectRatio();
+			f32 aspect = m_Renderer.GetAspectRatio();
 			camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
 
 			if (auto commandBuffer = m_Renderer.BeginFrame())
@@ -151,7 +151,7 @@ namespace hdn
 				ImGui::Begin("Hello, world!");
 				ImGui::Text("This is some useful text.");
 				ImGui::Text("dt: %.4f", frameTime * 1000);
-				ImGui::DragFloat3("Flat Vase Position", (float32*)&m_FlatVaseTranslation, 0.01f, -2.0f, 2.0f);
+				ImGui::DragFloat3("Flat Vase Position", (f32*)&m_FlatVaseTranslation, 0.01f, -2.0f, 2.0f);
 				ImGui::End();
 
 				// ImGui::ShowDemoWindow();
@@ -204,7 +204,7 @@ namespace hdn
 		{
 			auto pointLight = HDNGameObject::MakePointLight(0.2f);
 			pointLight.color = lightColors[i];
-			auto rotateLight = glm::rotate(mat4f32(1.0f), (i * glm::two_pi<float32>()) / lightColors.size(), {0.0f, -1.0f, 0.0f});
+			auto rotateLight = glm::rotate(mat4f32(1.0f), (i * glm::two_pi<f32>()) / lightColors.size(), {0.0f, -1.0f, 0.0f});
 			pointLight.transform.translation = vec3f32(rotateLight * vec4f32(-1.0f, -1.0f, -1.0f, 1.0f));
 			m_GameObjects.emplace(pointLight.GetID(), std::move(pointLight));
 		}

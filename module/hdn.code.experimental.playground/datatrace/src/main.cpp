@@ -9,9 +9,9 @@
 
 struct Data
 {
-	hdn::float32 f0 = 2;
-	hdn::float32 f1 = 7;
-	hdn::int32 n0 = 1;
+	hdn::f32 f0 = 2;
+	hdn::f32 f1 = 7;
+	hdn::i32 n0 = 1;
 	hdn::byte arr[16];
 };
 
@@ -102,6 +102,16 @@ int main()
 	delete[] buffer;
 	delete[] metaBuffer;
 
-	HDN_CORE_INFO("Hello Playground");
+	HINFO("Hello Playground");
+
+	HASSERT(true, "This is a test assert {0}", "Bonjour");
+	HTRACE("This is a test trace message");
+	HINFO("This is a test info message");
+	HWARN("This is a test warning message");
+	HERR("This is a test error message");
+	HCRIT("This is a test critical message");
+
+	HTHROW(std::runtime_error, "Failed to create window surface");
+
 	return 0;
 }

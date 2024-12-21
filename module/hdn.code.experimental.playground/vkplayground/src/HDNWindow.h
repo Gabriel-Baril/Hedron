@@ -11,7 +11,7 @@ namespace hdn
 	class HDNWindow
 	{
 	public:
-		HDNWindow(uint32 width, uint32 height, const std::string& name);
+		HDNWindow(u32 width, u32 height, const std::string& name);
 		virtual ~HDNWindow();
 		HDNWindow(const HDNWindow&) = delete;
 		HDNWindow& operator=(const HDNWindow&) = delete;
@@ -29,8 +29,8 @@ namespace hdn
 		void InitWindow();
 		static void FramebufferResizeCallback(GLFWwindow* window, int width, int height);
 	private:
-		uint32 m_Width;
-		uint32 m_Height;
+		u32 m_Width;
+		u32 m_Height;
 		bool m_FramebufferResized = false;
 		
 		std::string m_WindowName;

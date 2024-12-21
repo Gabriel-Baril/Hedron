@@ -22,7 +22,7 @@ namespace hdn
 		HDNRenderer& operator=(const HDNRenderer&) = delete;
 
 		VkRenderPass GetSwapChainRenderPass() const { return m_Swapchain->GetRenderPass(); }
-		float32 GetAspectRatio() const { return m_Swapchain->ExtentAspectRatio(); }
+		f32 GetAspectRatio() const { return m_Swapchain->ExtentAspectRatio(); }
 		bool IsFrameInProgress() const { return m_IsFrameStarted; }
 
 		VkCommandBuffer GetCurrentCommandBuffer() const
@@ -51,8 +51,8 @@ namespace hdn
 		Scope<HDNSwapChain> m_Swapchain;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
 
-		uint32 m_CurrentImageIndex = 0;
-		int32 m_CurrentFrameIndex = 0;
+		u32 m_CurrentImageIndex = 0;
+		i32 m_CurrentFrameIndex = 0;
 		bool m_IsFrameStarted = false;
 	};
 }

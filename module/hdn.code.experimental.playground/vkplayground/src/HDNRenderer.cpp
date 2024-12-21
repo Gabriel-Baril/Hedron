@@ -82,7 +82,7 @@ namespace hdn
 		std::array<VkClearValue, 2> clearValues{}; // Control what should be the initial value of our attachment
 		clearValues[0].color = { 0.1f, 0.1f, 0.1f, 0.1f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
-		renderPassInfo.clearValueCount = static_cast<uint32>(clearValues.size());
+		renderPassInfo.clearValueCount = static_cast<u32>(clearValues.size());
 		renderPassInfo.pClearValues = clearValues.data();
 
 		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE); // VK_SUBPASS_CONTENTS_INLINE = Signals that the subsequent render pass command will be directly embedded in the primary command buffer itself
@@ -115,7 +115,7 @@ namespace hdn
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; // Primary = Can be submitted to a queue for execution, but cannot be called by other command buffer
 		allocInfo.commandPool = m_Device->GetCommandPool();
-		allocInfo.commandBufferCount = static_cast<uint32>(m_CommandBuffers.size());
+		allocInfo.commandBufferCount = static_cast<u32>(m_CommandBuffers.size());
 		if (vkAllocateCommandBuffers(m_Device->GetDevice(), &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to allocate command buffer");
@@ -125,7 +125,7 @@ namespace hdn
 
 	void HDNRenderer::FreeCommandBuffers()
 	{
-		vkFreeCommandBuffers(m_Device->GetDevice(), m_Device->GetCommandPool(), static_cast<uint32>(m_CommandBuffers.size()), m_CommandBuffers.data());
+		vkFreeCommandBuffers(m_Device->GetDevice(), m_Device->GetCommandPool(), static_cast<u32>(m_CommandBuffers.size()), m_CommandBuffers.data());
 		m_CommandBuffers.clear();
 	}
 

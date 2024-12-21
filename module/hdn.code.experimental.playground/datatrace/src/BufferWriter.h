@@ -40,7 +40,7 @@ namespace hdn
 		}
 
 		template<typename T>
-		inline void Write(T* values, uint32 count)
+		inline void Write(T* values, u32 count)
 		{
 			const auto size = sizeof(T) * count;
 			memcpy(m_CurrentPtr, values, size);
@@ -55,7 +55,7 @@ namespace hdn
 		}
 
 		template<typename T>
-		inline void Advance(uint32 count)
+		inline void Advance(u32 count)
 		{
 			const auto size = sizeof(T) * count;
 			m_CurrentPtr += size;
@@ -73,7 +73,7 @@ namespace hdn
 			return reinterpret_cast<T*>(m_BufferBase);
 		}
 
-		inline uint64 BytesWritten(const byte* startOffset = nullptr) const
+		inline u64 BytesWritten(const byte* startOffset = nullptr) const
 		{
 			if (startOffset == nullptr)
 			{

@@ -71,11 +71,11 @@ namespace hdn
 
 	void HDNModel::CreateVertexBuffers(const std::vector<Vertex>& vertices)
 	{
-		m_VertexCount = static_cast<uint32>(vertices.size());
+		m_VertexCount = static_cast<u32>(vertices.size());
 		assert(m_VertexCount >= 3 && "Vertex count must be at least 3");
 		VkDeviceSize bufferSize = sizeof(vertices[0]) * m_VertexCount;
 
-		const uint32 vertexSize = sizeof(vertices[0]);
+		const u32 vertexSize = sizeof(vertices[0]);
 		HDNBuffer stagingBuffer{
 			m_Device,
 			vertexSize,
@@ -98,9 +98,9 @@ namespace hdn
 		m_Device->CopyBuffer(stagingBuffer.GetBuffer(), m_VertexBuffer->GetBuffer(), bufferSize);
 	}
 
-	void HDNModel::CreateIndexBuffers(const std::vector<uint32>& indices)
+	void HDNModel::CreateIndexBuffers(const std::vector<u32>& indices)
 	{
-		m_IndexCount = static_cast<uint32>(indices.size());
+		m_IndexCount = static_cast<u32>(indices.size());
 		m_HasIndexBuffer = m_IndexCount > 0;
 		if (!m_HasIndexBuffer)
 		{
@@ -108,7 +108,7 @@ namespace hdn
 		}
 
 		VkDeviceSize bufferSize = sizeof(indices[0]) * m_IndexCount;
-		uint32 indexSize = sizeof(indices[0]);
+		u32 indexSize = sizeof(indices[0]);
 
 		HDNBuffer stagingBuffer{
 			m_Device,
@@ -168,7 +168,7 @@ namespace hdn
 		vertices.clear();
 		indices.clear();
 
-		std::unordered_map<Vertex, uint32> uniqueVertices;
+		std::unordered_map<Vertex, u32> uniqueVertices;
 
 		for (const auto& shape : shapes)
 		{
@@ -210,7 +210,7 @@ namespace hdn
 
 				if (!uniqueVertices.contains(vertex))
 				{
-					uniqueVertices[vertex] = static_cast<uint32>(vertices.size());
+					uniqueVertices[vertex] = static_cast<u32>(vertices.size());
 					vertices.push_back(vertex);
 				}
 				indices.push_back(uniqueVertices[vertex]);
