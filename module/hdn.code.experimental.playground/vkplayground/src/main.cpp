@@ -7,8 +7,8 @@
 int main()
 {
 	using namespace hdn;
-#if USING( HDN_DEBUG )
-	hdn::Log_Init();
+#if USING(ENABLE_LOG)
+	Log_Init();
 #endif
 
 	hdn::FirstApp app{};

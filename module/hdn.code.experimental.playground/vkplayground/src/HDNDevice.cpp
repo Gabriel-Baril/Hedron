@@ -71,7 +71,7 @@ namespace hdn {
 
 	void HDNDevice::CreateInstance() {
 		if (enableValidationLayers && !CheckValidationLayerSupport()) {
-			throw std::runtime_error("validation layers requested, but not available!");
+			HTHROW(std::runtime_error, "validation layers requested, but not available!");
 		}
 
 		VkApplicationInfo appInfo = {};
@@ -104,7 +104,7 @@ namespace hdn {
 		}
 
 		if (vkCreateInstance(&createInfo, nullptr, &m_Instance) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create instance!");
+			HTHROW(std::runtime_error, "failed to create instance!");
 		}
 
 		HasGflwRequiredInstanceExtensions();
@@ -114,9 +114,9 @@ namespace hdn {
 		uint32_t deviceCount = 0;
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
 		if (deviceCount == 0) {
-			throw std::runtime_error("failed to find GPUs with Vulkan support!");
+			HTHROW(std::runtime_error, "failed to find GPUs with Vulkan support!");
 		}
-		std::cout << "Device count: " << deviceCount << std::endl;
+		HINFO("Device Count: {0}", deviceCount);
 		std::vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
 
@@ -128,11 +128,11 @@ namespace hdn {
 		}
 
 		if (m_PhysicalDevice == VK_NULL_HANDLE) {
-			throw std::runtime_error("failed to find a suitable GPU!");
+			HTHROW(std::runtime_error, "failed to find a suitable GPU!");
 		}
 
 		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &properties);
-		std::cout << "physical device: " << properties.deviceName << std::endl;
+		HINFO("Physical Device: {0}", deviceCount);
 	}
 
 	void HDNDevice::CreateLogicalDevice() {
@@ -175,7 +175,7 @@ namespace hdn {
 		}
 
 		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create logical device!");
+			HTHROW(std::runtime_error, "failed to create logical device!");
 		}
 
 		vkGetDeviceQueue(m_Device, indices.graphicsFamily, 0, &m_GraphicsQueue);
@@ -192,7 +192,7 @@ namespace hdn {
 			VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
 		if (vkCreateCommandPool(m_Device, &poolInfo, nullptr, &m_CommandPool) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create command pool!");
+			HTHROW(std::runtime_error, "failed to create command pool!");
 		}
 	}
 
@@ -234,7 +234,7 @@ namespace hdn {
 		VkDebugUtilsMessengerCreateInfoEXT createInfo;
 		PopulateDebugMessengerCreateInfo(createInfo);
 		if (CreateDebugUtilsMessengerEXT(m_Instance, &createInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS) {
-			throw std::runtime_error("failed to set up debug messenger!");
+			HTHROW(std::runtime_error, "failed to set up debug messenger!");
 		}
 	}
 
@@ -283,19 +283,19 @@ namespace hdn {
 		std::vector<VkExtensionProperties> extensions(extensionCount);
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-		std::cout << "available extensions:" << std::endl;
+		HINFO("Available Extensions:");
 		std::unordered_set<std::string> available;
 		for (const auto& extension : extensions) {
-			std::cout << "\t" << extension.extensionName << std::endl;
+			HINFO("\t{0}", extension.extensionName);
 			available.insert(extension.extensionName);
 		}
 
-		std::cout << "required extensions:" << std::endl;
+		HINFO("Required Extensions:");
 		auto requiredExtensions = GetRequiredExtensions();
 		for (const auto& required : requiredExtensions) {
-			std::cout << "\t" << required << std::endl;
+			HINFO("\t{0}", required);
 			if (available.find(required) == available.end()) {
-				throw std::runtime_error("Missing required glfw extension");
+				HTHROW(std::runtime_error, "Missing required glfw extension");
 			}
 		}
 	}
@@ -391,7 +391,7 @@ namespace hdn {
 				return format;
 			}
 		}
-		throw std::runtime_error("failed to find supported format!");
+		HTHROW(std::runtime_error, "failed to find supported format!");
 	}
 
 	uint32_t HDNDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
@@ -404,7 +404,7 @@ namespace hdn {
 			}
 		}
 
-		throw std::runtime_error("failed to find suitable memory type!");
+		HTHROW(std::runtime_error, "failed to find suitable memory type!");
 	}
 
 	void HDNDevice::CreateBuffer(
@@ -420,7 +420,7 @@ namespace hdn {
 		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
 		if (vkCreateBuffer(m_Device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create vertex buffer!");
+			HTHROW(std::runtime_error, "failed to create vertex buffer!");
 		}
 
 		VkMemoryRequirements memRequirements;
@@ -432,7 +432,7 @@ namespace hdn {
 		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties);
 
 		if (vkAllocateMemory(m_Device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-			throw std::runtime_error("failed to allocate vertex buffer memory!");
+			HTHROW(std::runtime_error, "failed to allocate vertex buffer memory!");
 		}
 
 		vkBindBufferMemory(m_Device, buffer, bufferMemory, 0);
@@ -515,7 +515,7 @@ namespace hdn {
 		VkImage& image,
 		VkDeviceMemory& imageMemory) {
 		if (vkCreateImage(m_Device, &imageInfo, nullptr, &image) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create image!");
+			HTHROW(std::runtime_error, "failed to create image!");
 		}
 
 		VkMemoryRequirements memRequirements;
@@ -527,11 +527,11 @@ namespace hdn {
 		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties);
 
 		if (vkAllocateMemory(m_Device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
-			throw std::runtime_error("failed to allocate image memory!");
+			HTHROW(std::runtime_error, "failed to allocate image memory!");
 		}
 
 		if (vkBindImageMemory(m_Device, image, imageMemory, 0) != VK_SUCCESS) {
-			throw std::runtime_error("failed to bind image memory!");
+			HTHROW(std::runtime_error, "failed to bind image memory!");
 		}
 	}
 

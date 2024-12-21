@@ -162,7 +162,7 @@ namespace hdn
 		std::string warns, errors;
 		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warns, &errors, filepath.c_str()))
 		{
-			throw std::runtime_error(warns + errors);
+			HTHROW(std::runtime_error, warns + errors);
 		}
 
 		vertices.clear();

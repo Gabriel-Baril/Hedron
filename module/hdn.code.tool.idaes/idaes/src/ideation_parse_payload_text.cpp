@@ -1,6 +1,8 @@
 #include "ideation_parse_payload.h"
+
+#include "core/Core.h"
 #include "sheredom-json/json.h"
-#include <assert.h>
+
 #include <iostream>
 
 enum class JsonField
@@ -63,7 +65,7 @@ bool parse_ideation_payload_text(struct json_object_s* object, IdeationPayload& 
 	{
 		struct json_string_s* currentObjectElementName = currentObjectElement->name;
 		JsonField field = get_field_from_name(currentObjectElementName->string);
-		assert(field != JsonField::Invalid);
+		HASSERT(field != JsonField::Invalid, "Invalid Json Field '{0}'", currentObjectElementName->string);
 
 		if (!parse_field(field, currentObjectElement, payload))
 		{

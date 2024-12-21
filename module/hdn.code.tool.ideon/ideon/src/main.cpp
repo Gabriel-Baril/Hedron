@@ -9,6 +9,6 @@ int main()
 	Log_Init();
 #endif
 
-	HDN_CORE_INFO("Hello Ideon");
+	HINFO("Hello Ideon");
 	return 0;
 }

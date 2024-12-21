@@ -37,7 +37,6 @@ namespace hdn
 #endif
 
 #if USING(ENABLE_ASSERT)
-#define HASSERT(x) { if(!(x)) { HBREAK(); } }
 #define HASSERT(x, ...) { if(!(x)) { HFATAL(__VA_ARGS__); } }
 #define HASSERT_PTR(x, ...) { if(x == nullptr) { HFATAL(__VA_ARGS__); } }
 #define HASSERT_INDEX(min, index, max, ...) { if(!(index >= 0 && index <= max)) { HFATAL(__VA_ARGS__); } }

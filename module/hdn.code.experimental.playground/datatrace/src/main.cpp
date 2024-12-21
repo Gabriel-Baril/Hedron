@@ -42,7 +42,7 @@ namespace hdn
 		{
 			std::cout << "  ";
 		}
-		std::cout << group.GetSemantic() << " [" << group.GetBeginByte() << ";" << group.GetEndByte() << "] [" << group.MetadataByteSize() << "]" << std::endl;
+		HTRACE("{0} [{1};{2}] [{3}]", group.GetSemantic(), group.GetBeginByte(), group.GetEndByte(), group.MetadataByteSize());
 		for (const auto& childIndex : group.GetChildren())
 		{
 			PrintGroupHierarchy(writer, writer.GetGroups().at(childIndex), depth + 1);
@@ -53,8 +53,8 @@ namespace hdn
 int main()
 {
 	using namespace hdn;
-#if USING( HDN_DEBUG )
-	hdn::Log_Init();
+#if USING(ENABLE_LOG)
+	Log_Init();
 #endif
 
 	byte* buffer = new byte[4096];
@@ -101,17 +101,5 @@ int main()
 
 	delete[] buffer;
 	delete[] metaBuffer;
-
-	HINFO("Hello Playground");
-
-	HASSERT(true, "This is a test assert {0}", "Bonjour");
-	HTRACE("This is a test trace message");
-	HINFO("This is a test info message");
-	HWARN("This is a test warning message");
-	HERR("This is a test error message");
-	HCRIT("This is a test critical message");
-
-	HTHROW(std::runtime_error, "Failed to create window surface");
-
 	return 0;
 }

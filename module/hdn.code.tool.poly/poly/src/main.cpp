@@ -6,8 +6,10 @@
 int main()
 {
 	using namespace hdn;
+#if USING(ENABLE_LOG)
 	Log_Init();
+#endif
 
-	HDN_CORE_INFO("Hello Poly");
+	HINFO("Hello Poly");
 	return 0;
 }

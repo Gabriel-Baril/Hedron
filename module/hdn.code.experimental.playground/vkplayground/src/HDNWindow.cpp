@@ -25,7 +25,7 @@ namespace hdn
 	{
 		if (glfwCreateWindowSurface(instance, m_Window, nullptr, surface) != VK_SUCCESS)
 		{
-			throw std::runtime_error("Failed to create window surface");
+			HTHROW(std::runtime_error, "Failed to create window surface");
 		}
 	}
 
