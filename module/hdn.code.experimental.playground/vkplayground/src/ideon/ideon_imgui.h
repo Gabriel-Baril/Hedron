@@ -1,9 +1,10 @@
 #pragma once
 #include "imgui.h"
+#include "pugixml/pugixml.hpp"
 
 namespace hdn
 {
-	class IdaesImgui
+	class IdeonImgui
 	{
 	public:
 		static void HelpMarker(const char* desc)
@@ -18,6 +19,18 @@ namespace hdn
 			}
 		}
 
+		void LoadTestResultFile(const std::string& path)
+		{
+			pugi::xml_document doc;
+			pugi::xml_parse_result result = doc.load_file(path.c_str());
+			if (!result)
+			{
+				return;
+			}
+
+			HINFO("File parsed!");
+		}
+
 		void Draw()
 		{
 			const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
@@ -26,9 +39,9 @@ namespace hdn
 			const ImGuiTableFlags flags = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
 			const ImGuiTreeNodeFlags tree_node_flags = ImGuiTreeNodeFlags_SpanAllColumns;
 
-			ImGui::Begin("IdaesUI");
+			ImGui::Begin("IdeonUI");
 			HelpMarker("See \"Columns flags\" section to configure how indentation is applied to individual columns.");
-			if (ImGui::BeginTable("idaes", 3, flags))
+			if (ImGui::BeginTable("ideon", 3, flags))
 			{
 				// The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
 				ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_NoHide);

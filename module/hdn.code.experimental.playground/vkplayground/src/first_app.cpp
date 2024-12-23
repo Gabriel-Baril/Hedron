@@ -9,6 +9,7 @@
 
 #include "hdn_imgui.h"
 #include "idaes/idaes_imgui.h"
+#include "ideon/ideon_imgui.h"
 
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
@@ -95,6 +96,9 @@ namespace hdn
 		);
 
 		IdaesImgui idaesUI;
+		IdeonImgui ideonUI;
+
+		ideonUI.LoadTestResultFile("test_results/test_result.xml");
 #endif
 
 		while (!m_Window.ShouldClose())
@@ -156,6 +160,7 @@ namespace hdn
 
 				// ImGui::ShowDemoWindow();
 				idaesUI.Draw();
+				ideonUI.Draw();
 
 				imguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 #endif

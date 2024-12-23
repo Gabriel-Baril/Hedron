@@ -33,5 +33,8 @@ public class VulkanPlaygroundProject : BaseCppProject
         conf.AddPublicDependency<GLFWProject>(target);
         conf.AddPublicDependency<ImguiProject>(target);
         conf.AddPublicDependency<CoreProject>(target);
+
+        // TODO: Ideon specific dependencies, remove once we have a proper way to have an independent ui setup for tools 
+        conf.AddPublicDependency<PugiXMLProject>(target);
     }
 }
