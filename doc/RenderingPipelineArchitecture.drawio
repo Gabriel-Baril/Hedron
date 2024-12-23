@@ -9,7 +9,7 @@
             <mxPoint x="420" y="560" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="1EH9K0UM5rNc1_3nXPrM-1" value="Material*" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="1EH9K0UM5rNc1_3nXPrM-1" value="Material" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="320" y="640" width="200" height="40" as="geometry" />
         </mxCell>
         <mxCell id="1EH9K0UM5rNc1_3nXPrM-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="1EH9K0UM5rNc1_3nXPrM-3" target="1EH9K0UM5rNc1_3nXPrM-1">

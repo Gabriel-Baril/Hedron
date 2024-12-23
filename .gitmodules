@@ -19,3 +19,6 @@
 [submodule "module/hdn.code.external.sheredom-json"]
 	path = module/hdn.code.external.sheredom-json
 	url = https://github.com/Gabriel-Baril/sheredom-json/
+[submodule "module/hdn.code.external.catch2"]
+	path = module/hdn.code.external.catch2
+	url = https://github.com/Gabriel-Baril/catch2
