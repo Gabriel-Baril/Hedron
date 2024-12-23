@@ -1,0 +1,49 @@
+{
+  "FileVersion": 2,
+  "Id": "feea051e-a3aa-cd3e-c8ef-e6b164d06e6a",
+  "Items": [
+    {
+      "Id": "bac45bab-7e4f-4951-b059-88cba061fbb2",
+      "Command": "example parameter",
+      "ExclusiveMode": true,
+      "Items": [
+        {
+          "Id": "59841a45-2438-4bde-8221-1d3027c89615",
+          "Command": "[]"
+        },
+        {
+          "Id": "6bc6f5e9-dbdc-49bb-ae67-be62fcf1e20b",
+          "Command": "[fast]"
+        },
+        {
+          "Id": "04af6fe8-0baa-42e1-992d-af693f55eb71",
+          "Command": "[parametrized]"
+        }
+      ]
+    },
+    {
+      "Id": "c94ee539-95aa-45e9-bf3d-60a432f5de47",
+      "Command": "--reporter console > test_result.txt"
+    },
+    {
+      "Id": "149d1ae3-b29d-4a03-ab41-0bed9110c2c8",
+      "Command": "--reporter json > test_result.json"
+    },
+    {
+      "Id": "1cbfca47-f53f-492f-a7ee-de6146bc9aee",
+      "Command": "--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml"
+    },
+    {
+      "Id": "4e56031e-d310-4c06-ac4b-7e859c024dc1",
+      "Command": "--success --durations yes --verbosity high"
+    },
+    {
+      "Id": "8f35c639-a114-4e82-b5d6-a5556dcb5d02",
+      "Command": "--list-reporters"
+    },
+    {
+      "Id": "de943caf-d7e9-433c-99b2-d4a6238a72e2",
+      "Command": "--skip-benchmarks"
+    }
+  ]
+}

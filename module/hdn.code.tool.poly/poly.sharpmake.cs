@@ -1,4 +1,3 @@
-using System.IO;
 using Sharpmake;
 
 [Generate]
@@ -8,10 +7,7 @@ public class PolySolution : Solution
     {
         Name = "poly";
 
-        AddTargets(new Target(
-            Platform.win32 | Platform.win64,
-            DevEnv.vs2022,
-            Optimization.Debug | Optimization.Release));
+        AddTargets(TargetUtil.DefaultTarget);
     }
 
     [Configure]

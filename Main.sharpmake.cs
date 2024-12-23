@@ -1,5 +1,5 @@
-using System.IO;
 using Sharpmake;
+using System.IO;
 
 public static class Constants
 {
@@ -8,6 +8,7 @@ public static class Constants
 
     public const string EXTERNAL_VS_CATEGORY = "external";
     public const string MODULE_VS_CATEGORY = "module";
+    public const string TEST_VS_CATEGORY = "test";
     public const string PLUGIN_VS_CATEGORY = "plugin";
     public const string EXPERIMENTAL_VS_CATEGORY = "experimental";
 
@@ -40,7 +41,7 @@ public abstract class BaseCppProject : Project
         conf.Options.Add(Options.Vc.Compiler.CppLanguageStandard.Latest);
         conf.Options.Add(new Options.Vc.Compiler.DisableSpecificWarnings("4201"));
 
-        switch(target.Optimization)
+        switch (target.Optimization)
         {
             case Optimization.Debug:
                 conf.Defines.Add("_HDN_DEBUG");
@@ -55,6 +56,16 @@ public abstract class BaseCppProject : Project
     }
 }
 
+public abstract class BaseCppTestProject : BaseCppProject
+{
+    public new void ConfigureAll(Project.Configuration conf, Target target)
+    {
+        base.ConfigureAll(conf, target);
+
+    }
+
+}
+
 public static class Main
 {
     [Sharpmake.Main]
@@ -65,5 +76,6 @@ public static class Main
         args.Generate<PolySolution>();
         args.Generate<PlaygroundSolution>();
         args.Generate<AllSharpmakeSolution>();
+        args.Generate<TestsSolution>();
     }
 }
