@@ -22,3 +22,6 @@
 [submodule "module/hdn.code.external.catch2"]
 	path = module/hdn.code.external.catch2
 	url = https://github.com/Gabriel-Baril/catch2
+[submodule "module/hdn.code.external.pugixml"]
+	path = module/hdn.code.external.pugixml
+	url = https://github.com/Gabriel-Baril/pugixml.git
