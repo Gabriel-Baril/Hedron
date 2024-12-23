@@ -1,6 +1,6 @@
 #include "ideation_parse_payload.h"
 
-#include "core/Core.h"
+#include "core/core.h"
 #include "sheredom-json/json.h"
 
 #include <iostream>

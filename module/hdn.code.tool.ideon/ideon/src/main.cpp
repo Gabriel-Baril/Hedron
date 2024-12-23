@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "core/Core.h"
+#include "core/core.h"
 
 int main()
 {

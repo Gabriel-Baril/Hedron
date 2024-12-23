@@ -1,7 +1,7 @@
 #include <iostream>
 
 
-#include "Core/Core.h"
+#include "core/core.h"
 
 int main()
 {

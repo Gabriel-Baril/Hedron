@@ -2,7 +2,7 @@
 #include "ideation_parse_payload.h"
 
 #include "sheredom-json/json.h"
-#include "core/Core.h"
+#include "core/core.h"
 
 #include <fstream>
 #include <sstream>

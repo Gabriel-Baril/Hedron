@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "core/Core.h"
+#include "core/core.h"
 
-#include "BufferWriter.h"
-#include "BinaryIO.h"
+#include "buffer_writer.h"
+#include "binary_io.h"
 
 // #include "octree-cpp/OctreeCpp.h"
 

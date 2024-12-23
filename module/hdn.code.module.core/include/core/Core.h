@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/CoreDefine.h"
-#include "core/CoreType.h"
-#include "core/CoreMacro.h"
-#include "core/CoreLog.h"
-#include "core/CoreString.h"
+#include "core/core_define.h"
+#include "core/core_type.h"
+#include "core/core_macro.h"
+#include "core/core_log.h"
+#include "core/core_string.h"

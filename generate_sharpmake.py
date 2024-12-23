@@ -118,7 +118,7 @@ def main():
     
     # Find all .sharpmake.cs files in allowed folders
     sharpmake_files = find_sharpmake_files(base_path, allowed_folders)
-    sharpmake_files.append('.\\Main.sharpmake.cs') # The main sharpmake file
+    sharpmake_files.append('.\\main.sharpmake.cs') # The main sharpmake file
 
     if sharpmake_files:
         print(f"Found {len(sharpmake_files)} .sharpmake.cs files:")

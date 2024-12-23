@@ -4,19 +4,15 @@ using Sharpmake;
 public static class Constants
 {
     public const string DEFAULT_SOURCE_FOLDER = "src";
-    public const string MAIN_SHARPMAKE_FILE = "Main.sharpmake.cs";
+    public const string MAIN_SHARPMAKE_FILE = "main.sharpmake.cs";
 
     public const string EXTERNAL_VS_CATEGORY = "external";
     public const string MODULE_VS_CATEGORY = "module";
     public const string PLUGIN_VS_CATEGORY = "plugin";
     public const string EXPERIMENTAL_VS_CATEGORY = "experimental";
 
-    public const string EXTERNAL_FOLDER = "External";
-    public const string MODULE_FOLDER = "Module";
-    public const string PLUGIN_FOLDER = "Plugin";
-    public const string SOLUTION_FOLDER = "Solution";
-    public const string EXPERIMENTAL_FOLDER = "Experimental";
-    public static string[] SHARPMAKE_FOLDERS = { Constants.EXTERNAL_FOLDER, Constants.MODULE_FOLDER, Constants.PLUGIN_FOLDER, Constants.SOLUTION_FOLDER, Constants.EXPERIMENTAL_FOLDER };
+    public const string MODULE_FOLDER = "module";
+    public static string[] SHARPMAKE_FOLDERS = { Constants.MODULE_FOLDER };
 }
 
 public static class Paths

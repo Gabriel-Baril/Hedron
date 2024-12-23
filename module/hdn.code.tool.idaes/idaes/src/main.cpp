@@ -1,7 +1,7 @@
 #include "ideation_parse.h"
 #include "ideation_database.h"
 
-#include "core/Core.h"
+#include "core/core.h"
 
 int main()
 {

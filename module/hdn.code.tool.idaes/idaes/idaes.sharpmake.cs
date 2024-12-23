@@ -12,7 +12,7 @@ public class IdaesProject : BaseCppProject
     }
     
     [Configure]
-    public void ConfigureAll(Project.Configuration conf, Target target)
+    public new void ConfigureAll(Project.Configuration conf, Target target)
     {
         base.ConfigureAll(conf, target);
         
