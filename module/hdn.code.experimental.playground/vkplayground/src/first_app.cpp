@@ -98,7 +98,7 @@ namespace hdn
 		IdaesImgui idaesUI;
 		IdeonImgui ideonUI;
 
-		ideonUI.LoadTestResultFile("test_results/test_result.xml");
+		//ideonUI.LoadTestResultFile("test_results/test_result.xml");
 #endif
 
 		while (!m_Window.ShouldClose())

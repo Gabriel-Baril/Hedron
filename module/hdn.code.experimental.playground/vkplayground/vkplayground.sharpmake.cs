@@ -36,5 +36,6 @@ public class VulkanPlaygroundProject : BaseCppProject
 
         // TODO: Ideon specific dependencies, remove once we have a proper way to have an independent ui setup for tools 
         conf.AddPublicDependency<PugiXMLProject>(target);
+        conf.AddPublicDependency<TinyProcessLibraryProject>(target);
     }
 }

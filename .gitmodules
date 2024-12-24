@@ -25,3 +25,6 @@
 [submodule "module/hdn.code.external.pugixml"]
 	path = module/hdn.code.external.pugixml
 	url = https://github.com/Gabriel-Baril/pugixml.git
+[submodule "module/hdn.code.external.tiny-process-library"]
+	path = module/hdn.code.external.tiny-process-library
+	url = https://gitlab.com/Gabriel-Baril/tiny-process-library
