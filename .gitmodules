@@ -28,3 +28,6 @@
 [submodule "module/hdn.code.external.tiny-process-library"]
 	path = module/hdn.code.external.tiny-process-library
 	url = https://gitlab.com/Gabriel-Baril/tiny-process-library
+[submodule "module/hdn.code.external.inih"]
+	path = module/hdn.code.external.inih
+	url = https://github.com/Gabriel-Baril/inih.git
