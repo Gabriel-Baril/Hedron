@@ -1,20 +1,26 @@
-using Sharpmake;
+using System.IO; // For Path.Combine
+using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class PolySolution : Solution
+public class PolyProject : BaseCppProject
 {
-    public PolySolution()
+    public PolyProject()
     {
         Name = "poly";
-
+        SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
 
     [Configure]
-    public void ConfigureAll(Solution.Configuration conf, Target target)
+    public new void ConfigureAll(Project.Configuration conf, Target target)
     {
-        conf.AddProject<PolyProject>(target);
+        base.ConfigureAll(conf, target);
 
-        conf.SetStartupProject<PolyProject>();
+        conf.Output = Project.Configuration.OutputType.Exe;
+        conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
+        conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
+
+        conf.AddPublicDependency<CoreProject>(target);
+        conf.AddPublicDependency<OctreeCppProject>(target);
     }
 }

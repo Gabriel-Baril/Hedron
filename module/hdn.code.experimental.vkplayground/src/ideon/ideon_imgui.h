@@ -462,7 +462,7 @@ namespace hdn
 					// TODO: Refactor, proper multhreading management
 					m_WaitThread = std::thread([this]() {
 						this->m_RunningTests = true;
-						std::string command = "python D:/_DEV/hedron/module/hdn.tests/build_test_projects.py"; // TODO: Remove hardcoded path and read it from hedron.ini file
+						std::string command = "python D:/_DEV/hedron/module/hdn.solution.tests/build_test_projects.py"; // TODO: Remove hardcoded path and read it from hedron.ini file
 
 						// 2. Compile the list of test projects concurently
 						TinyProcessLib::Process process(
@@ -479,7 +479,7 @@ namespace hdn
 						HWARN("----------- Finished Running build_test_projects.py -----------");
 
 						// 3. Run the test project executable with the right arguments (--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml)
-						std::string filePath = "D:/_DEV/hedron/module/hdn.tests/test_executable_list.txt"; // TODO: Refactor, Proper file loading library
+						std::string filePath = "D:/_DEV/hedron/module/hdn.solution.tests/test_executable_list.txt"; // TODO: Refactor, Proper file loading library
 						std::ifstream inputFile(filePath);
 						if (!inputFile.is_open())
 						{

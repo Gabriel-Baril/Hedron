@@ -2,11 +2,11 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class DataTraceProject : BaseCppProject
+public class CfgPlaygroundProject : BaseCppProject
 {
-    public DataTraceProject()
+    public CfgPlaygroundProject()
     {
-        Name = "datatrace";
+        Name = "cfgplayground";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

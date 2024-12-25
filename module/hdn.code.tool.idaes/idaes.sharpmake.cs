@@ -1,21 +1,27 @@
-using Sharpmake;
+using System.IO; // For Path.Combine
+using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class IdaesSolution : Solution
+public class IdaesProject : BaseCppProject
 {
-    public IdaesSolution()
+    public IdaesProject()
     {
         Name = "idaes";
-
+        SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
-
+    
     [Configure]
-    public void ConfigureAll(Solution.Configuration conf, Target target)
+    public new void ConfigureAll(Project.Configuration conf, Target target)
     {
-        conf.AddProject<SheredomJsonProject>(target);
-        conf.AddProject<IdaesProject>(target);
+        base.ConfigureAll(conf, target);
+        
+        conf.Output = Project.Configuration.OutputType.Exe;
+        conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
+        conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
+        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\include");
 
-        conf.SetStartupProject<IdaesProject>();
+        conf.AddPublicDependency<SheredomJsonProject>(target);
+        conf.AddPublicDependency<CoreProject>(target);
     }
 }
