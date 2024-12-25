@@ -38,5 +38,6 @@ public class VulkanPlaygroundProject : BaseCppProject
         conf.AddPublicDependency<PugiXMLProject>(target);
         conf.AddPublicDependency<TinyProcessLibraryProject>(target);
         conf.AddPublicDependency<INIHProject>(target);
+        conf.AddPublicDependency<CLI11Project>(target);
     }
 }

@@ -31,3 +31,6 @@
 [submodule "module/hdn.code.external.inih"]
 	path = module/hdn.code.external.inih
 	url = https://github.com/Gabriel-Baril/inih.git
+[submodule "module/hdn.code.external.cli11"]
+	path = module/hdn.code.external.cli11
+	url = https://github.com/Gabriel-Baril/CLI11.git

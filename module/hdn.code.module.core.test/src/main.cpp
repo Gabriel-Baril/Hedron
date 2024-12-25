@@ -1,33 +1,6 @@
 #include <iostream>
 #include <catch2/catch_all.hpp>
 
-// class CustomReporter : public Catch::EventListenerBase
-// {
-// public:
-// 	using EventListenerBase::EventListenerBase;
-// 
-// 	void testCaseStarting(const Catch::TestCaseInfo& testInfo) override
-// 	{
-// 		std::cout << "[TEST_CASE] [" << testInfo.name << "]" << std::endl;
-// 	}
-// 
-// 	void sectionStarting(const Catch::SectionInfo& sectionInfo) override
-// 	{
-// 		std::cout << " [SECTION] [" << sectionInfo.name << "]" << std::endl;
-// 	}
-// 
-// 	void assertionEnded(const Catch::AssertionStats& assertionInfo)
-// 	{
-// 		std::cout << "  [ASSERTION]: [" << assertionInfo.assertionResult.getExpressionInMacro() << "] [" << (assertionInfo.assertionResult.succeeded() ? "PASS" : "FAIL") << "]" << std::endl;
-// 	}
-// 
-// 	void testCaseEnded(const Catch::TestCaseStats& testCaseStats) override {
-// 		// std::cout << "" << testCaseStats.testInfo->name << std::endl;
-// 	}
-// };
-// 
-// CATCH_REGISTER_LISTENER(CustomReporter);
-
 TEST_CASE("Dummy Test Bonjour", "[fast]")
 {
 

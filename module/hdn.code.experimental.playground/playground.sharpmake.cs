@@ -16,6 +16,7 @@ public class PlaygroundSolution : Solution
     {
         conf.AddProject<DataTraceProject>(target);
         conf.AddProject<VulkanPlaygroundProject>(target);
+        conf.AddProject<CfgPlaygroundProject>(target);
 
         conf.SetStartupProject<VulkanPlaygroundProject>();
     }
