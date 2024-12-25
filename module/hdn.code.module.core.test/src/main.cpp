@@ -49,6 +49,55 @@ TEST_CASE("Dummy Test Bonjour", "[fast]")
 		REQUIRE(2 - 1 == 1);
 		// CHECK(2 == 3);
 	};
+
+	SECTION("Multiplication Test")
+	{
+		// CHECK(1 == 2);
+		REQUIRE(4 == 4);
+		REQUIRE(3 == 3);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(4 == 4);
+		REQUIRE(2 * 5 == 9);
+	};
+	// REQUIRE(2 * 5 == 9);
+	// REQUIRE(2 * 5 == 9);
+	// REQUIRE(2 * 5 == 9);
 };
 
 

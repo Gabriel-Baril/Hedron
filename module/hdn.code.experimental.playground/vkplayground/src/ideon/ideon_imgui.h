@@ -282,18 +282,6 @@ namespace hdn
 			}
 		}
 
-		void LoadTestResultFile(const std::string& path, TestResult& testResult)
-		{
-			pugi::xml_document doc; // Already contains the root node (Catch2TestRun)
-			pugi::xml_parse_result result = doc.load_file(path.c_str());
-			if (!result)
-			{
-				return;
-			}
-			ParseRootNode(doc.first_child(), testResult);
-			HINFO("File parsed!");
-		}
-
 		void LoadTestResultFromMemory(const std::string& buffer, TestResult& testResult)
 		{
 			pugi::xml_document doc; // Already contains the root node (Catch2TestRun)
@@ -305,41 +293,57 @@ namespace hdn
 			ParseRootNode(doc.first_child(), testResult);
 		}
 
+		// TODO: Move in string library
+		std::string trim(const std::string& str) {
+			auto start = str.begin();
+			while (start != str.end() && std::isspace(*start)) {
+				++start;
+			}
+
+			auto end = str.end();
+			do {
+				--end;
+			} while (std::distance(start, end) > 0 && std::isspace(*end));
+
+			return std::string(start, end + 1);
+		}
 
 		void DisplayTestNode(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags)
 		{
 			ImGui::TableNextRow();
-
+			SetRowColor(expression.success > 0);
+			std::string expandedExpression = trim(expression.expandedExpression);
 			ImGui::TableNextColumn();
-			ImGui::TreeNodeEx(expression.originalExpression.c_str(), treeNodeFlags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_NoTreePushOnOpen);
+			ImGui::TreeNodeEx(expandedExpression.c_str(), treeNodeFlags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("Expression");
+			ImGui::Text("Expression");
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", expression.success);
+			ColoredTextIfValid(expression.success > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), expression.success);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", !expression.success);
+			ColoredTextIfValid(!expression.success != 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !expression.success);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%s", expression.filename.c_str());
+			ImGui::Text("%s", expression.filename.string().c_str());
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", expression.line);
+			ImGui::Text("%i", expression.line);
 		}
 
 		void DisplayTestNode(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags)
 		{
 			ImGui::TableNextRow();
+			SetRowColor(section.overallResults.failures <= 0);
 
 			ImGui::TableNextColumn();
 			bool open = ImGui::TreeNodeEx(section.name.c_str(), treeNodeFlags);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("Section");
+			ImGui::Text("Section");
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", section.overallResults.successes);
+			ColoredTextIfValid(section.overallResults.successes > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), section.overallResults.successes);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", section.overallResults.failures);
+			ColoredTextIfValid(section.overallResults.failures > 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), section.overallResults.failures);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%s", section.filename.c_str());
+			ImGui::Text("%s", section.filename.string().c_str());
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", section.line);
+			ImGui::Text("%i", section.line);
 
 			if (open)
 			{
@@ -354,19 +358,20 @@ namespace hdn
 		void DisplayTestNode(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags)
 		{
 			ImGui::TableNextRow();
+			SetRowColor(testCase.overallResult.success > 0);
 
 			ImGui::TableNextColumn();
 			bool open = ImGui::TreeNodeEx(testCase.name.c_str(), treeNodeFlags);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("Test Case");
+			ImGui::Text("Test Case");
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", testCase.overallResult.success);
+			ColoredTextIfValid(testCase.overallResult.success > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), testCase.overallResult.success);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", !testCase.overallResult.success);
+			ColoredTextIfValid(!testCase.overallResult.success != 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !testCase.overallResult.success);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%s", testCase.filename.c_str());
+			ImGui::Text("%s", testCase.filename.string().c_str());
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", testCase.line);
+			ImGui::Text("%i", testCase.line);
 
 			if (open)
 			{
@@ -385,15 +390,16 @@ namespace hdn
 		void DisplayTestNode(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags)
 		{
 			ImGui::TableNextRow();
+			SetRowColor(result.overallResultsCases.failures <= 0);
 
 			ImGui::TableNextColumn();
 			bool open = ImGui::TreeNodeEx(result.context.testExecutableName.c_str(), treeNodeFlags);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("Module");
+			ImGui::Text("Module");
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", result.overallResultsCases.successes);
+			ColoredTextIfValid(result.overallResultsCases.successes > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), result.overallResultsCases.successes);
 			ImGui::TableNextColumn();
-			ImGui::TextDisabled("%i", result.overallResultsCases.failures);
+			ColoredTextIfValid(result.overallResultsCases.failures > 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), result.overallResultsCases.failures);
 			ImGui::TableNextColumn();
 			ImGui::TextDisabled("--");
 			ImGui::TableNextColumn();
@@ -414,6 +420,32 @@ namespace hdn
 			for (const TestResult& result : results)
 			{
 				DisplayTestNode(result, treeNodeFlags);
+			}
+		}
+
+		void ColoredTextIfValid(bool condition, ImVec4 color, int value)
+		{
+			if (condition)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, color);
+				ImGui::Text("%i", value);
+				ImGui::PopStyleColor();
+			}
+			else
+			{
+				ImGui::Text("%i", value);
+			}
+		}
+
+		void SetRowColor(bool condition)
+		{
+			if (condition)
+			{
+				ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, IM_COL32(0, 255, 0, 35));
+			}
+			else
+			{
+				ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, IM_COL32(255, 0, 0, 35));
 			}
 		}
 
@@ -547,37 +579,6 @@ namespace hdn
 					ImGui::TableSetupColumn("Line", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 18.0f);
 					ImGui::TableHeadersRow();
 
-					// Simple storage to output a dummy file-system.
-					/*
-					static void DisplayNode(const MyTreeNode* node, const MyTreeNode* all_nodes)
-					{
-						ImGui::TableNextRow();
-						ImGui::TableNextColumn();
-						const bool is_folder = (node->ChildCount > 0);
-						if (is_folder)
-						{
-							bool open = ImGui::TreeNodeEx(node->Name, tree_node_flags);
-							ImGui::TableNextColumn();
-							ImGui::TextDisabled("--");
-							ImGui::TableNextColumn();
-							ImGui::TextUnformatted(node->Type);
-							if (open)
-							{
-								for (int child_n = 0; child_n < node->ChildCount; child_n++)
-									DisplayNode(&all_nodes[node->ChildIdx + child_n], all_nodes);
-								ImGui::TreePop();
-							}
-						}
-						else
-						{
-							ImGui::TreeNodeEx(node->Name, tree_node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_NoTreePushOnOpen);
-							ImGui::TableNextColumn();
-							ImGui::Text("%d", node->Size);
-							ImGui::TableNextColumn();
-							ImGui::TextUnformatted(node->Type);
-						}
-					}
-					*/
 					const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_SpanAllColumns;
 					DisplayTestNode(m_TestResults, treeNodeFlags);
 

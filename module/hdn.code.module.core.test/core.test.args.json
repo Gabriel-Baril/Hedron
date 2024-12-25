@@ -31,7 +31,7 @@
     },
     {
       "Id": "1cbfca47-f53f-492f-a7ee-de6146bc9aee",
-      "Command": "--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml"
+      "Command": "--success --durations yes --verbosity high --allow-running-no-tests --reporter xml"
     },
     {
       "Id": "4e56031e-d310-4c06-ac4b-7e859c024dc1",
