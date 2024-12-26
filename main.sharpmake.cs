@@ -77,5 +77,6 @@ public static class Main
         args.Generate<PlaygroundSolution>();
         args.Generate<AllSharpmakeSolution>();
         args.Generate<TestsSolution>();
+        args.Generate<LightthornedSolution>();
     }
 }

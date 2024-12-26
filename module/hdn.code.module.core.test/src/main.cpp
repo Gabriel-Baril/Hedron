@@ -66,7 +66,7 @@ TEST_CASE("Dummy Test Bonjour", "[fast]")
 		REQUIRE(4 == 4);
 		REQUIRE(4 == 4);
 		REQUIRE(4 == 4);
-		REQUIRE(2 * 5 == 9);
+		REQUIRE(2 * 5 == 10);
 	};
 	// REQUIRE(2 * 5 == 9);
 	// REQUIRE(2 * 5 == 9);

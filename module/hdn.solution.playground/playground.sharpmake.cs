@@ -15,9 +15,8 @@ public class PlaygroundSolution : Solution
     public void ConfigureAll(Solution.Configuration conf, Target target)
     {
         conf.AddProject<DataTraceProject>(target);
-        conf.AddProject<VulkanPlaygroundProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
 
-        conf.SetStartupProject<VulkanPlaygroundProject>();
+        conf.SetStartupProject<CfgPlaygroundProject>();
     }
 }

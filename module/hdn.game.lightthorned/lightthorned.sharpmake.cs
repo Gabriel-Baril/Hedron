@@ -2,11 +2,11 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 using System.IO; // For Path.Combine
 
 [Generate]
-public class VulkanPlaygroundProject : BaseCppProject
+public class LightthornedProject : BaseCppProject
 {
-    public VulkanPlaygroundProject()
+    public LightthornedProject()
     {
-        Name = "vkplayground";
+        Name = "lightthorned";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
