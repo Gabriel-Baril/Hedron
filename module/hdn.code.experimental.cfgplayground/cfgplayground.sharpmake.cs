@@ -1,4 +1,3 @@
-using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
@@ -10,7 +9,7 @@ public class CfgPlaygroundProject : BaseCppProject
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
-    
+
     [Configure]
     public new void ConfigureAll(Project.Configuration conf, Target target)
     {
@@ -21,5 +20,7 @@ public class CfgPlaygroundProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<CoreProject>(target);
+        conf.AddPublicDependency<ConfigProject>(target);
+        conf.AddPublicDependency<CLI11Project>(target);
     }
 }

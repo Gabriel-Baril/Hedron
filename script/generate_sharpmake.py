@@ -1,6 +1,7 @@
 import os
 import subprocess
 import argparse
+import shutil
 
 OUT_DIR_PATH = "out"
 
@@ -51,20 +52,27 @@ def run_sharpmake(sharpmake_exe, sharpmake_files):
     except subprocess.CalledProcessError as e:
         print(f"Error running Sharpmake: {e.stderr}")
 
-def try_clean_path(path):
-        try:
-            os.remove(path)
-            print(f"CLEANED '{path}'")
-        except PermissionError:
-            print(f"[PermissionError] Cannot clean '{path}'")
+def try_clean_file(path):
+    try:
+        os.remove(path)
+        print(f"CLEANED '{path}'")
+    except PermissionError:
+        print(f"[PermissionError] Cannot clean '{path}'")
     
+def try_clean_folder(path):
+    try:
+        shutil.rmtree(path)
+        print(f"CLEANED '{path}'")
+    except PermissionError:
+        print(f"[PermissionError] Cannot clean '{path}'")
+
 
 def clean_generated_files(base_path, allowed_folders, extensions):
     files_to_remove = find_files_with_extensions(base_path, allowed_folders, extensions)
     print(f"---------- CLEANING GENERATED FILES ----------")
     print(f"Found {len(files_to_remove)} Files to Clean")
     for file in files_to_remove:
-        try_clean_path(file)
+        try_clean_file(file)
 
 def count_files_and_size(directory):
     total_files = 0
@@ -94,7 +102,7 @@ def clean_output_files(base_path, allowed_folders):
                     files_size += folder_stat[1]
     print(f"Found {files_size / (1024 ** 2):.2f} MB ({files_size} bytes) to clean across {len(path_to_remove)} folders ({files_count} total files)")
     for path in path_to_remove:
-        try_clean_path(path)
+        try_clean_folder(path)
 
 def main():
     # Define the base path and Sharpmake executable path
@@ -137,4 +145,5 @@ def main():
     run_sharpmake(sharpmake_exe, sharpmake_files)
 
 if __name__ == "__main__":
+    os.chdir(os.environ['HDN_ROOT'])
     main()

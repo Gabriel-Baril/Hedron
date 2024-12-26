@@ -1,4 +1,5 @@
 #include "core/core.h"
+#include "config/config.h"
 
 int main()
 {
@@ -7,5 +8,9 @@ int main()
 	Log_Init();
 #endif
 
-	HINFO("Test!");
+	std::filesystem::path rootConfig = Configuration::GetRootConfigPath();
+	HINFO("HDN_ROOT={0}", rootConfig.string().c_str());
+
+	std::string testSolution = Configuration::Get().GetRootConfigVariable("test", "ExecutableListFilePath", "");
+	HINFO(testSolution.c_str());
 }

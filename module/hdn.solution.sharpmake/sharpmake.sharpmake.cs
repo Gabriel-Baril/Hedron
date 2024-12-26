@@ -1,6 +1,4 @@
 using Sharpmake;
-using System;
-using System.Diagnostics;
 using System.IO;
 
 [Generate]
@@ -38,8 +36,6 @@ public class SharpmakeFilesProject : CSharpProject
                 }
             }
         }
-
-        SourceFiles.Add(@"[project.SharpmakeCsPath]\AllSharpmake.sharpmake.cs");
         SourceFiles.Add(Path.Combine(Paths.MainFileDirectory, Constants.MAIN_SHARPMAKE_FILE));
     }
 
