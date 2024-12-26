@@ -43,8 +43,8 @@ public class SharpmakeFilesProject : CSharpProject
     public void ConfigureAll(Project.Configuration conf, Target target)
     {
         conf.ReferencesByPath.Add(Path.Combine(Paths.MainFileDirectory, @"Vendor\Sharpmake\Sharpmake.Application\bin\Release\net6.0\Sharpmake.dll"));
-        conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
-        conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
+        conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
+        conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
     }
 }
 

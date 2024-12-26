@@ -16,10 +16,10 @@ public class ConfigProject : BaseCppProject
         base.ConfigureAll(conf, target);
 
         conf.SolutionFolder = Constants.MODULE_VS_CATEGORY;
-        
+
         conf.Output = Project.Configuration.OutputType.Lib;
-        conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
-        conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
+        conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
+        conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
         conf.AddPublicDependency<CoreProject>(target);

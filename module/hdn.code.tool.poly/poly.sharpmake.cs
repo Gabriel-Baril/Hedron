@@ -17,8 +17,8 @@ public class PolyProject : BaseCppProject
         base.ConfigureAll(conf, target);
 
         conf.Output = Project.Configuration.OutputType.Exe;
-        conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
-        conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
+        conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
+        conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<OctreeCppProject>(target);
