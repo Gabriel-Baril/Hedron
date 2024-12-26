@@ -34,3 +34,6 @@
 [submodule "module/hdn.code.external.cli11"]
 	path = module/hdn.code.external.cli11
 	url = https://github.com/Gabriel-Baril/CLI11.git
+[submodule "module/hdn.code.external.fmt"]
+	path = module/hdn.code.external.fmt
+	url = https://github.com/Gabriel-Baril/fmt.git

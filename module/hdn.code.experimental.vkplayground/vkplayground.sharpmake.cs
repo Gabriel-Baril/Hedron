@@ -29,10 +29,10 @@ public class VulkanPlaygroundProject : BaseCppProject
         conf.TargetPath = @"[project.SharpmakeCsPath]\Out\Bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\Out\Intermediate\[target.Platform]-[target.Optimization]";
 
+        conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<TinyObjLoaderProject>(target);
         conf.AddPublicDependency<GLFWProject>(target);
         conf.AddPublicDependency<ImguiProject>(target);
-        conf.AddPublicDependency<CoreProject>(target);
 
         // TODO: Ideon specific dependencies, remove once we have a proper way to have an independent ui setup for tools
         conf.AddPublicDependency<ConfigProject>(target);
@@ -40,5 +40,6 @@ public class VulkanPlaygroundProject : BaseCppProject
         conf.AddPublicDependency<TinyProcessLibraryProject>(target);
         conf.AddPublicDependency<INIHProject>(target);
         conf.AddPublicDependency<CLI11Project>(target);
+        conf.AddPublicDependency<FmtProject>(target);
     }
 }
