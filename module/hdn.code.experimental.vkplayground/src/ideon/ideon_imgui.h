@@ -3,6 +3,8 @@
 #include "imgui.h"
 #include "pugixml/pugixml.hpp"
 #include "tiny-process-library/process.hpp"
+#include "fmt/core.h"
+#include "config/config.h"
 
 #include <filesystem>
 #include <vector>
@@ -462,12 +464,15 @@ namespace hdn
 					// TODO: Refactor, proper multhreading management
 					m_WaitThread = std::thread([this]() {
 						this->m_RunningTests = true;
-						std::string command = "python D:/_DEV/hedron/module/hdn.solution.tests/build_test_projects.py"; // TODO: Remove hardcoded path and read it from hedron.ini file
+
+						const std::string testSolutionPath = Configuration::Get().GetRootConfigVariable("test", "TestSolution", "");
+						const std::string buildTestProjectScriptPath = Configuration::Get().GetRootConfigVariable("test", "BuildTestProjectScriptPath", "");
+						const std::string command = fmt::format("python {0}", buildTestProjectScriptPath);
 
 						// 2. Compile the list of test projects concurently
 						TinyProcessLib::Process process(
 							command,
-							"D:/_DEV/hedron/module/hdn.tests",
+							testSolutionPath.c_str(),
 							[](const char* /*output*/, size_t /*n*/) {
 								// Do nothing for stdout
 							},
@@ -479,27 +484,20 @@ namespace hdn
 						HWARN("----------- Finished Running build_test_projects.py -----------");
 
 						// 3. Run the test project executable with the right arguments (--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml)
-						std::string filePath = "D:/_DEV/hedron/module/hdn.solution.tests/test_executable_list.txt"; // TODO: Refactor, Proper file loading library
-						std::ifstream inputFile(filePath);
+						const std::string executableListFilePath = Configuration::Get().GetRootConfigVariable("test", "ExecutableListFilePath", "");
+						std::ifstream inputFile(executableListFilePath);
 						if (!inputFile.is_open())
 						{
-							HERR("Error: Could not open the file '{0}'", filePath.c_str());
+							HERR("Error: Could not open the file '{0}'", executableListFilePath.c_str());
 						}
 
 						std::string line;
-						std::vector<std::string> outTestResultPaths;
 						std::vector<std::string> executableCommands;
-						outTestResultPaths.reserve(10);
 						executableCommands.reserve(10);
 						while (std::getline(inputFile, line))
 						{
-							std::filesystem::path executableFile = line;
-							std::string executableName = executableFile.stem().string();
-							std::string outTestResultFilePath = "D:/_DEV/hedron/module/hdn.tests/" + executableName + ".xml";
-							// std::string executableCommand = line + " --success --durations yes --verbosity high --allow-running-no-tests --reporter xml > " + outTestResultFilePath; // TODO: Refactor, proper string format library
-							std::string executableCommand = line + " --success --durations yes --verbosity high --allow-running-no-tests --reporter xml"; // TODO: Refactor, proper string format library
+							std::string executableCommand = fmt::format("{0} --success --durations yes --verbosity high --allow-running-no-tests --reporter xml", line);
 							executableCommands.push_back(executableCommand);
-							outTestResultPaths.push_back(outTestResultFilePath);
 							HINFO("Executable -> '{0}' '{1}'", line.c_str(), executableCommand.c_str());
 						}
 
