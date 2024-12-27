@@ -34,7 +34,7 @@ namespace hdn
 			return false;
 		}
 
-#ifdef _WIN32
+#if USING(HDN_PLATFORM_WINDOWS)
 		// Windows-specific implementation
 		std::wstring wPath = std::filesystem::canonical(path).wstring();
 
@@ -67,7 +67,7 @@ namespace hdn
 
 	bool FileSystem::IsSocket(const fspath& path)
 	{
-#ifdef _WIN32
+#if USING(HDN_PLATFORM_WINDOWS)
 		// Sockets as filesystem objects are not a common concept on Windows.
 		// You can throw an exception or return false here.
 		return false;

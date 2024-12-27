@@ -2,22 +2,23 @@
 
 #include "core/core_define.h"
 #include "core/core_type.h"
+#include "core/core_internal_api.h"
 
 namespace hdn
 {
-	class Timestep
+	class HDN_MODULE_CORE_API Timestep
 	{
 	public:
-		Timestep(float32 time = 0.0f)
+		Timestep(f32 time = 0.0f)
 			: m_Time(time)
 		{
 		}
 
-		float32 Seconds() const { return m_Time; }
-		float32 Milliseconds() const { return m_Time * 1000; }
+		f32 Seconds() const { return m_Time; }
+		f32 Milliseconds() const { return m_Time * 1000; }
 
-		operator float32() { return m_Time; }
+		operator f32() { return m_Time; }
 	private:
-		float32 m_Time;
+		f32 m_Time;
 	};
 }

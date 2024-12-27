@@ -33,6 +33,46 @@
 #define HDN_RETAIL NOT_IN_USE
 #endif
 
+#define HDN_PLATFORM_WINDOWS		NOT_IN_USE
+#define HDN_PLATFORM_IOS			NOT_IN_USE
+#define HDN_PLATFORM_MACOS			NOT_IN_USE
+#define HDN_PLATFORM_ANDROID		NOT_IN_USE
+#define HDN_PLATFORM_LINUX			NOT_IN_USE
+
+#if defined(_WIN32)
+	#if defined(_WIN64)
+		#undef HDN_PLATFORM_WINDOWS
+		#define HDN_PLATFORM_WINDOWS IN_USE
+	#else
+		#error "x86 builds are not supported!"
+	#endif
+#elif defined(__APPLE__) || defined(_MACH__)
+	#include <TargetConditionals.h>
+	#if TARGET_IPHONE_SIMULATOR == 1
+		#error "IOS simulator is not supported!"
+	#elif TARGET_OS_IPHONE == 1
+		#undef HDN_PLATFORM_IOS
+		#define HDN_PLATFORM_IOS IN_USE
+		#error "IOS is not supported!"
+	#elif TARGET_OS_MAC == 1
+		#undef HDN_PLATFORM_MACOS
+		#define HDN_PLATFORM_MACOS IN_USE
+		#error "MaxOS is not supported!"
+	#else
+		#error "Unknown Apple platform!"
+	#endif
+#elif defined(__ANDROID__)
+	#undef HDN_PLATFORM_ANDROID
+	#define HDN_PLATFORM_ANDROID IN_USE
+	#error "Android is not supported!"
+#elif defined(__linux__)
+	#undef HDN_PLATFORM_LINUX
+	#define HDN_PLATFORM_LINUX IN_USE
+	#error "Linux is not supported!"
+#else
+	#error "Unknown platform!"
+#endif
+
 #define DEV					USE_IF( USING(HDN_DEBUG) )
 #define ENABLE_LOG			USE_IF( USING(DEV) )
 #define ENABLE_ASSERT		USE_IF( USING(DEV) )

@@ -5,11 +5,12 @@
 
 #include "core/core_define.h"
 #include "core/core_macro.h"
+#include "core/core_internal_api.h"
 
 namespace hdn
 {
-	void Log_Init();
-	Ref<spdlog::logger>& Log_GetCoreLogger();
+	HDN_MODULE_CORE_API void Log_Init();
+	HDN_MODULE_CORE_API Ref<spdlog::logger>& Log_GetCoreLogger();
 }
 
 

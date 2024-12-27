@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/core.h"
+#include "core/core_internal_api.h"
 
 #include <filesystem>
 #include <functional>
@@ -9,7 +10,7 @@ namespace hdn
 {
 	using fspath = std::filesystem::path;
 
-	class FileSystem
+	class HDN_MODULE_CORE_API FileSystem
 	{
 		// Same order as std::filesystem::file_type
 		enum class FileType

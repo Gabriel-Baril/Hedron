@@ -1,10 +1,12 @@
 #pragma once
+#include "config_internal_api.h"
+
 #include "inih/INIReader.h"
 #include <filesystem>
 
 namespace hdn
 {
-	class Configuration
+	class HDN_MODULE_CONFIG_API Configuration
 	{
 	private:
 		Configuration(const std::filesystem::path& rootConfigPath);
