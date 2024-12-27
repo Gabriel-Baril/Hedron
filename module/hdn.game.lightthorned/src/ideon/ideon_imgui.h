@@ -5,6 +5,7 @@
 #include "tiny-process-library/process.hpp"
 #include "fmt/core.h"
 #include "config/config.h"
+#include "core/core_filesystem.h"
 
 #include <filesystem>
 #include <vector>
@@ -17,6 +18,16 @@ namespace hdn
 		Unknown,
 		Check,
 		Require
+	};
+
+	struct ModuleInfo
+	{
+		string name;
+		u64 version;
+		string author;
+		string source;
+		string semantic;
+		string kind;
 	};
 
 	struct TestContext
@@ -549,6 +560,10 @@ namespace hdn
 				}
 			}
 
+			const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
+			const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
+			const ImGuiTableFlags flags = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
+
 			if (m_RunningTests)
 			{
 				ImGui::Text("Running Tests...");
@@ -561,10 +576,6 @@ namespace hdn
 			{
 				HelpMarker("See \"Columns flags\" section to configure how indentation is applied to individual columns.");
 
-				const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
-				const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
-
-				const ImGuiTableFlags flags = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
 
 				if (ImGui::BeginTable("ideon", 6, flags))
 				{
@@ -584,12 +595,73 @@ namespace hdn
 				}
 			}
 
+			ImGui::Separator();
+
+			if (ImGui::Button("Get Module Info"))
+			{
+				m_ModuleInfo.clear();
+				const std::string rootModuleFolder = Configuration::Get().GetRootConfigVariable("path", "ModuleFolder", "");
+				const TVector<fspath> moduleFolders = FileSystem::Walk(rootModuleFolder);
+				for (const auto& modulefolder : moduleFolders)
+				{
+					fspath moduleFilename = ".module";
+					fspath moduleConfigFile = modulefolder / moduleFilename;
+
+					if (!FileSystem::Exists(moduleConfigFile))
+					{
+						continue;
+					}
+
+					INIReader reader(moduleConfigFile.string());
+					ModuleInfo info;
+					info.name = FileSystem::Filename(FileSystem::Parent(moduleConfigFile)).string();
+					info.version = reader.GetUnsigned64("module", "Version", 0);
+					info.author = reader.GetString("module", "Author", "unknown");
+					info.source = reader.GetString("module", "Source", "unknown");
+					info.semantic = reader.GetString("module", "Semantic", "unknown");
+					info.kind = reader.GetString("module", "Kind", "unknown");
+					m_ModuleInfo.push_back(info);
+				}
+			}
+
+			if (m_ModuleInfo.size() > 0 && ImGui::BeginTable("module", 6, flags))
+			{
+				// The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
+				ImGui::TableSetupColumn("Module", ImGuiTableColumnFlags_NoHide);
+				ImGui::TableSetupColumn("Version", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
+				ImGui::TableSetupColumn("Author", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
+				ImGui::TableSetupColumn("Source", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
+				ImGui::TableSetupColumn("Semantic", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
+				ImGui::TableSetupColumn("Kind", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
+				ImGui::TableHeadersRow();
+
+				for (const auto& moduleInfo : m_ModuleInfo)
+				{
+					ImGui::TableNextRow();
+					ImGui::TableNextColumn();
+					ImGui::Text("%s", moduleInfo.name.c_str());
+					ImGui::TableNextColumn();
+					ImGui::Text("%i", moduleInfo.version);
+					ImGui::TableNextColumn();
+					ImGui::Text("%s", moduleInfo.author.c_str());
+					ImGui::TableNextColumn();
+					ImGui::Text("%s", moduleInfo.source.c_str());
+					ImGui::TableNextColumn();
+					ImGui::Text("%s", moduleInfo.semantic.c_str());
+					ImGui::TableNextColumn();
+					ImGui::Text("%s", moduleInfo.kind.c_str());
+				}
+
+				ImGui::EndTable();
+			}
+
 			ImGui::End();
 		}
 
 	private:
 		std::thread m_WaitThread;
-		std::vector<TestResult> m_TestResults;
+		TVector<TestResult> m_TestResults;
+		TVector<ModuleInfo> m_ModuleInfo;
 		bool m_RunningTests = false;
 		bool m_RanTestsAtLeastOneTime = false;
 	};
