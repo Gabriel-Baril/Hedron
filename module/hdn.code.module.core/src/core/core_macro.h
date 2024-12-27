@@ -2,6 +2,9 @@
 
 #include <type_traits>
 #include <memory>
+#include <optional>
+#include <vector>
+#include <string>
 
 namespace hdn
 {
@@ -18,8 +21,8 @@ namespace hdn
 	template<typename ReturnType, typename EnumType>
 	inline constexpr ReturnType BitOn(EnumType value, EnumType flag)
 	{
-		const auto rFlag = underlying(flag);
-		return static_cast<ReturnType>(((underlying(value) & rFlag) == rFlag));
+		const auto rFlag = Underlying(flag);
+		return static_cast<ReturnType>(((Underlying(value) & rFlag) == rFlag));
 	}
 
 	template<typename EnumType>
@@ -56,4 +59,12 @@ namespace hdn
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
+
+	template<typename T>
+	using TOptional = std::optional<T>;
+
+	template<typename T>
+	using TVector = std::vector<T>;
+
+	using string = std::string;
 }

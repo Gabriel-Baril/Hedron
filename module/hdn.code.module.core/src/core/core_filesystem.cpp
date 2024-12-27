@@ -1,75 +1,399 @@
 #include "core/core_filesystem.h"
 
 #include <filesystem>
+#include <regex>
 
 #include "core/core_string.h"
 
 namespace hdn
 {
-	bool FS_FileExist(const char* path)
+	bool FileSystem::IsFile(const fspath& path)
+	{
+		return std::filesystem::is_regular_file(path);
+	}
+
+	bool FileSystem::IsDirectory(const fspath& path)
+	{
+		return std::filesystem::is_directory(path);
+	}
+
+	bool FileSystem::IsSymlink(const fspath& path)
+	{
+		return std::filesystem::is_symlink(path);
+	}
+
+	bool FileSystem::IsJunction(const fspath& path)
+	{
+		return IsSymlink(path);
+	}
+
+	bool FileSystem::IsMount(const fspath& path)
+	{
+		if (!FileSystem::Exists(path))
+		{
+			return false;
+		}
+
+#ifdef _WIN32
+		// Windows-specific implementation
+		std::wstring wPath = std::filesystem::canonical(path).wstring();
+
+		if (wPath.length() < 3) // e.g., "C:\" or "\\?\C:\"
+			return false;
+
+		if (wPath[1] == L':' && (wPath[2] == L'\\' || wPath[2] == L'/'))
+		{
+			// Check if it's a root drive
+			UINT driveType = GetDriveTypeW(wPath.c_str());
+			return driveType == DRIVE_FIXED || driveType == DRIVE_REMOVABLE || driveType == DRIVE_CDROM || driveType == DRIVE_REMOTE;
+		}
+		return false;
+#else
+		// POSIX implementation
+		struct stat pathStat, parentStat;
+
+		string canonicalPath = std::filesystem::canonical(path).string();
+		string parentPath = std::filesystem::canonical(path.parent_path()).string();
+
+		if (stat(canonicalPath.c_str(), &pathStat) != 0)
+			return false;
+		if (stat(parentPath.c_str(), &parentStat) != 0)
+			return false;
+
+		// Compare device IDs
+		return pathStat.st_dev != parentStat.st_dev;
+#endif
+	}
+
+	bool FileSystem::IsSocket(const fspath& path)
+	{
+#ifdef _WIN32
+		// Sockets as filesystem objects are not a common concept on Windows.
+		// You can throw an exception or return false here.
+		return false;
+#else
+		std::filesystem::path filePath(path);
+		return std::filesystem::is_socket(filePath);
+#endif
+	}
+
+	bool FileSystem::IsFifo(const fspath& path)
+	{
+		return std::filesystem::is_fifo(path);
+	}
+
+	bool FileSystem::Same(const fspath& p0, const fspath& p1)
+	{
+		return std::filesystem::equivalent(p0, p1);
+	}
+
+	bool FileSystem::IsAbsolute(const fspath& path)
+	{
+		return path.is_absolute();
+	}
+
+	bool FileSystem::IsRelative(const fspath& path)
+	{
+		return path.is_relative();
+	}
+
+	bool FileSystem::IsRelativeTo(const fspath& base, const fspath& target)
+	{
+		return target.string().find(base.string()) == 0;
+	}
+
+	bool FileSystem::HasRoot(const fspath& path)
+	{
+		return path.has_root_path();
+	}
+
+	bool FileSystem::HasStem(const fspath& path)
+	{
+		return path.has_stem();
+	}
+
+	bool FileSystem::HasExtension(const fspath& path)
+	{
+		return path.has_extension();
+	}
+
+	bool FileSystem::HasParent(const fspath& path)
+	{
+		return path.has_parent_path();
+	}
+
+	bool FileSystem::FullMatch(const fspath& path, const string& match, bool caseSensitive)
+	{
+		// Convert wildcard pattern to regex pattern
+		string regexPattern = std::regex_replace(match, std::regex("\\*"), ".*");
+		regexPattern = std::regex_replace(regexPattern, std::regex("\\?"), ".");
+
+		// Escape special regex characters except for * and ?
+		regexPattern = std::regex_replace(regexPattern, std::regex("([\\.\\[\\]\\(\\)\\+\\^\\$\\|\\\\])"), "\\$1");
+
+		// Add anchors for full match
+		regexPattern = "^" + regexPattern + "$";
+
+		// Adjust for case sensitivity
+		std::regex::flag_type flags = std::regex::ECMAScript;
+		if (!caseSensitive)
+		{
+			flags |= std::regex::icase;
+		}
+
+		std::regex pattern(regexPattern, flags);
+
+		// Perform regex match
+		return std::regex_match(path.string(), pattern);
+	}
+
+	std::vector<string> FileSystem::Parts(const fspath& path)
+	{
+		std::vector<string> parts;
+		if (FileSystem::HasRoot(path))
+		{
+			parts.push_back(FileSystem::Root(path).string());
+		}
+
+		for (const auto& part : path.relative_path())
+		{
+			parts.push_back(part.string());
+		}
+		return parts;
+	}
+
+	string FileSystem::ForwardSlash(const string& path)
+	{
+		string forwardSlashPath = path;
+		std::replace(forwardSlashPath.begin(), forwardSlashPath.end(), '\\', '/');
+		return forwardSlashPath;
+	}
+
+	string FileSystem::BackwardSlash(const string& path)
+	{
+		string forwardSlashPath = path;
+		std::replace(forwardSlashPath.begin(), forwardSlashPath.end(), '/', '\\');
+		return forwardSlashPath;
+	}
+
+	TOptional<fspath> FileSystem::RelativeTo(const fspath& p0, const fspath& p1)
+	{
+		try
+		{
+			return std::filesystem::relative(p0, p1);
+		}
+		catch (const std::filesystem::filesystem_error& e)
+		{
+			return TOptional<fspath>();
+		}
+	}
+
+	TOptional<fspath> FileSystem::WithName(const fspath& path, const string& name)
+	{
+		if (!FileSystem::Exists(path) || !FileSystem::IsFile(path))
+		{
+			return TOptional<fspath>();
+		}
+
+		return FileSystem::Parent(path) / name;
+	}
+
+	FileSystem::FileStats FileSystem::Stats(const fspath& path)
+	{
+		FileStats stats;
+
+		const std::filesystem::file_status status = std::filesystem::status(path);
+		const std::filesystem::perms permissions = status.permissions();
+
+		stats.type = static_cast<FileType>(status.type());
+		stats.size = FileSystem::FileSize(path);
+		stats.readable = (permissions & std::filesystem::perms::owner_read) != std::filesystem::perms::none;
+		stats.writable = (permissions & std::filesystem::perms::owner_write) != std::filesystem::perms::none;
+		stats.executable = (permissions & std::filesystem::perms::owner_exec) != std::filesystem::perms::none;
+
+		return stats;
+	}
+
+	u64 FileSystem::FileSize(const fspath& path)
+	{
+		if (!FileSystem::IsFile(path))
+		{
+			return 0;
+		}
+		return std::filesystem::file_size(path);
+	}
+
+	TOptional<fspath> FileSystem::ReadLink(const fspath& path)
+	{
+		if (FileSystem::IsSymlink(path))
+		{
+			return std::filesystem::read_symlink(path);
+		}
+		return TOptional<fspath>();
+	}
+
+	void FileSystem::CreateLink(const fspath& target, const fspath& link)
+	{
+		std::filesystem::create_symlink(target, link);
+	}
+
+	bool FileSystem::Unlink(const fspath& path)
+	{
+		if (FileSystem::IsSymlink(path))
+		{
+			return FileSystem::Delete(path, false);
+		}
+		return false;
+	}
+
+	fspath FileSystem::CurrentPath()
+	{
+		return std::filesystem::current_path();
+	}
+
+	fspath FileSystem::Extension(const fspath& path)
+	{
+		return path.extension();
+	}
+
+	fspath FileSystem::Filename(const fspath& path)
+	{
+		return path.filename();
+	}
+
+	fspath FileSystem::Stem(const fspath& path)
+	{
+		return path.stem();
+	}
+
+	fspath FileSystem::Parent(const fspath& path)
+	{
+		return path.parent_path();
+	}
+
+	fspath FileSystem::Root(const fspath& path)
+	{
+		return path.root_path();
+	}
+
+	fspath FileSystem::Drive(const fspath& path)
+	{
+		return path.root_name();
+	}
+
+	fspath FileSystem::Resolve(const fspath& path)
+	{
+		return std::filesystem::canonical(path);
+	}
+
+	TVector<fspath> FileSystem::Walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate, bool recursive)
+	{
+		TVector<fspath> directories;
+		if (!FileSystem::Exists(path) || !FileSystem::IsDirectory(path))
+		{
+			return directories;
+		}
+
+		if (recursive)
+		{
+			for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path))
+			{
+				if (!predicate || predicate(entry))
+				{
+					directories.push_back(entry);
+				}
+			}
+		}
+		else
+		{
+			for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(path))
+			{
+				if (!predicate || predicate(entry))
+				{
+					directories.push_back(entry);
+				}
+			}
+		}
+		return directories;
+	}
+
+	bool FileSystem::Touch(const fspath& path)
+	{
+		if (FileSystem::Exists(path))
+		{
+			return false;
+		}
+		std::ofstream file(path);
+		file.close();
+		return true;
+	}
+
+	bool FileSystem::CreateDirectory(const fspath& path)
+	{
+		if (FileSystem::Exists(path))
+		{
+			return false;
+		}
+		return std::filesystem::create_directory(path);
+	}
+
+	bool FileSystem::Rename(const fspath& source, const fspath& destination)
+	{
+		if (!FileSystem::Exists(source))
+		{
+			return false;
+		}
+		std::filesystem::rename(source, destination);
+		return true;
+	}
+
+	u64 FileSystem::Delete(const fspath& path, bool force)
+	{
+		if (force)
+		{
+			// Recursively remove directories and files
+			return std::filesystem::remove_all(path);
+		}
+		else
+		{
+			// Remove a single file or empty directory
+			return std::filesystem::remove(path);
+		}
+	}
+
+	bool FileSystem::Copy(const fspath& source, const fspath& destination, bool force)
+	{
+		if (!FileSystem::Exists(source))
+		{
+			return false;
+		}
+
+		if (FileSystem::Exists(destination))
+		{
+			if (force)
+			{
+				FileSystem::Delete(destination, true);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		if (FileSystem::IsDirectory(source))
+		{
+			std::filesystem::copy(source, destination, std::filesystem::copy_options::recursive);
+		}
+		else
+		{
+			std::filesystem::copy(source, destination, std::filesystem::copy_options::none);
+		}
+
+		return true;
+	}
+
+	bool FileSystem::Exists(const fspath& path)
 	{
 		return std::filesystem::exists(path);
-	}
-
-	static void FS_NormalizePathSlash(char* dest, const char* path, size_t count)
-	{
-		Str_Copy(dest, path);
-		std::replace(dest, dest + count, '/', '\\');
-	}
-
-	u64 FS_GetStemFromPath(char* dest, const char* path)
-	{
-		size_t pathLen = strlen(path);
-		char normalizedPath[256];
-		FS_NormalizePathSlash(normalizedPath, path, pathLen);
-		const char* lastSlashPtr = strrchr(normalizedPath, '\\');
-		const u64 lastSlashIndex = lastSlashPtr ? lastSlashPtr - normalizedPath : 0;
-		const char* lastDotPtr = strrchr(normalizedPath, '.');
-		const u64 lastDotIndex = lastDotPtr ? lastDotPtr - normalizedPath : pathLen;
-		const u64 len = lastDotIndex - lastSlashIndex - 1;
-		memcpy(dest, normalizedPath + lastSlashIndex, len + 1);
-		dest[len + 1] = '\0';
-		return len;
-	}
-
-	u64 FS_GetNameFromPath(char* dest, const char* path)
-	{
-		size_t pathLen = strlen(path);
-		char normalizedPath[256];
-		FS_NormalizePathSlash(normalizedPath, path, pathLen);
-		const char* lastSlashPtr = strrchr(normalizedPath, '\\');
-		const u64 lastSlashIndex = lastSlashPtr ? lastSlashPtr - normalizedPath : 0;
-		const u64 len = pathLen - lastSlashIndex - 1;
-		memcpy(dest, normalizedPath + lastSlashIndex + 1, len);
-		dest[len] = '\0';
-		return len;
-	}
-
-	u64 FS_GetPathWithoutExtension(char* dest, const char* path)
-	{
-		const char* lastDotPtr = strrchr(path, '.');
-		const u64 lastDotIndex = lastDotPtr ? lastDotPtr - path : strlen(path);
-		const u64 len = lastDotIndex - 1;
-		memcpy(dest, path, len + 1);
-		dest[len + 1] = '\0';
-		return len;
-	}
-
-	void FS_SplitPathAndName(char* destPath, char* destName, const char* path)
-	{
-		size_t pathLen = strlen(path);
-		char normalizedPath[256];
-		FS_NormalizePathSlash(normalizedPath, path, pathLen);
-		const char* lastSlashPtr = strrchr(normalizedPath, '\\');
-		const u64 lastSlashIndex = lastSlashPtr ? lastSlashPtr - normalizedPath : 0;
-		memcpy(destPath, normalizedPath, lastSlashIndex);
-		memcpy(destName, normalizedPath + (lastSlashIndex + (bool)lastSlashPtr), pathLen - lastSlashIndex);
-		destPath[lastSlashIndex] = '\0';
-		destName[pathLen - lastSlashIndex] = '\0';
-	}
-	
-	bool FS_MakePath(const char* path)
-	{
-		return std::filesystem::create_directories(path);
 	}
 }
