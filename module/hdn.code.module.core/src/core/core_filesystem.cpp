@@ -72,8 +72,7 @@ namespace hdn
 		// You can throw an exception or return false here.
 		return false;
 #else
-		std::filesystem::path filePath(path);
-		return std::filesystem::is_socket(filePath);
+		return std::filesystem::is_socket(path);
 #endif
 	}
 
