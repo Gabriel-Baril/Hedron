@@ -15,9 +15,7 @@ namespace hdn
 int main()
 {
 	using namespace hdn;
-#if USING(ENABLE_LOG)
 	Log_Init();
-#endif
 
 	std::filesystem::path rootConfig = Configuration::GetRootConfigPath();
 	HINFO("HDN_ROOT={0}", rootConfig.string().c_str());

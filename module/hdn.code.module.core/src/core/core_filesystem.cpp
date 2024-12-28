@@ -2,8 +2,13 @@
 
 #include <filesystem>
 #include <regex>
+#include <iostream>
 
 #include "core/core_string.h"
+
+#if USING(HDN_PLATFORM_WINDOWS)
+#include <wtypes.h>
+#endif
 
 namespace hdn
 {

@@ -1,16 +1,20 @@
 #pragma once
 
-#include <spdlog/spdlog.h>
-#include <spdlog/fmt/ostr.h>
 
 #include "core/core_define.h"
 #include "core/core_macro.h"
 #include "core/core_internal_api.h"
 
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+
 namespace hdn
 {
 	HDN_MODULE_CORE_API void Log_Init();
+#if USING(LOG_ENABLE)
 	HDN_MODULE_CORE_API Ref<spdlog::logger>& Log_GetCoreLogger();
+#endif
 }
 
 
@@ -21,15 +25,17 @@ namespace hdn
 #endif
 
 
-#if USING(ENABLE_LOG)
-#define HTRACE(...) { ::hdn::Log_GetCoreLogger()->trace(__VA_ARGS__); }
-#define HINFO(...)  { ::hdn::Log_GetCoreLogger()->info(__VA_ARGS__); }
-#define HWARN(...)  { ::hdn::Log_GetCoreLogger()->warn(__VA_ARGS__); }
-#define HERR(...)	{ ::hdn::Log_GetCoreLogger()->error(__VA_ARGS__); }
-#define HCRIT(...)	{ ::hdn::Log_GetCoreLogger()->critical(__VA_ARGS__); }
+#if USING(LOG_ENABLE)
+#define HTRACE(...) { SPDLOG_LOGGER_TRACE(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
+#define HDEBUG(...)  { SPDLOG_LOGGER_DEBUG(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
+#define HINFO(...)  { SPDLOG_LOGGER_INFO(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
+#define HWARN(...)  { SPDLOG_LOGGER_WARN(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
+#define HERR(...)	{ SPDLOG_LOGGER_ERROR(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
+#define HCRIT(...)	{ SPDLOG_LOGGER_CRITICAL(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
 #define HFATAL(...) { HCRIT(__VA_ARGS__); HBREAK(); }
 #else
 #define HTRACE(...)
+#define HDEBUG(...)
 #define HINFO(...)
 #define HWARN(...)
 #define HERR(...)
@@ -37,7 +43,7 @@ namespace hdn
 #define HFATAL(...)
 #endif
 
-#if USING(ENABLE_ASSERT)
+#if USING(ASSERT_ENABLE)
 #define HASSERT(x, ...) { if(!(x)) { HFATAL(__VA_ARGS__); } }
 #define HASSERT_PTR(x, ...) { if(x == nullptr) { HFATAL(__VA_ARGS__); } }
 #define HASSERT_INDEX(min, index, max, ...) { if(!(index >= 0 && index <= max)) { HFATAL(__VA_ARGS__); } }
@@ -47,7 +53,7 @@ namespace hdn
 #define HASSERT_INDEX(...)
 #endif
 
-#if USING(ENABLE_THROW)
+#if USING(THROW_ENABLE)
 #define HTHROW(exception, message) { throw exception(message); }
 #else
 #define HTHROW(exception, message) { HFATAL(message); }

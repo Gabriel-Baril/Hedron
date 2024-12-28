@@ -53,9 +53,7 @@ namespace hdn
 int main()
 {
 	using namespace hdn;
-#if USING(ENABLE_LOG)
 	Log_Init();
-#endif
 
 	byte* buffer = new byte[4096];
 	byte* metaBuffer = new byte[4096];

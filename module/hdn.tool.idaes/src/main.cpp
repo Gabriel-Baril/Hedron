@@ -5,9 +5,8 @@
 
 int main()
 {
-#if USING( HDN_DEBUG )
-	hdn::Log_Init();
-#endif
+	using namespace hdn;
+	Log_Init();
 
 	IdeationNode node;
 	parse_ideation_file("../data/ideation.json", node);
