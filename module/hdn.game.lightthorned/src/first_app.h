@@ -7,6 +7,8 @@
 #include "hdn_renderer.h"
 #include "hdn_descriptors.h"
 
+#include "physics/physics_world.h"
+
 #include <memory>
 #include <vector>
 
@@ -28,7 +30,6 @@ namespace hdn
 	private:
 		void LoadGameObjects();
 	private:
-		vec3f32 m_FlatVaseTranslation = { -0.5f, 0.5f, 0.0f };
 
 		HDNWindow m_Window{ WIDTH, HEIGHT, "First App"};
 		HDNDevice m_Device{ m_Window };
@@ -37,6 +38,7 @@ namespace hdn
 		// Order of declarations matters
 		Scope<HDNDescriptorPool> globalPool{}; // System that require descriptors only relevant to their work should create their own HDNDescriptorPool
 
+		PhysicsWorld m_PhysicsWorld;
 		HDNGameObject::Map m_GameObjects;
 	};
 }

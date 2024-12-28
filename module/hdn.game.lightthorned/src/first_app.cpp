@@ -6,6 +6,7 @@
 
 #include "simple_render_system.h"
 #include "point_light_system.h"
+#include "physics/physics_gameobject_system.h"
 
 #include "hdn_imgui.h"
 #include "idaes/idaes_imgui.h"
@@ -28,12 +29,14 @@ namespace hdn
 			.SetMaxSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
 			.AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
 			.Build();
-		
+
+		m_PhysicsWorld.Init();
 		LoadGameObjects();
 	}
 
 	FirstApp::~FirstApp()
 	{
+		m_PhysicsWorld.Shutdown();
 	}
 
 	void FirstApp::Run()
@@ -66,6 +69,7 @@ namespace hdn
 
 		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
 		PointLightSystem pointLightSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
+		PhysicsGameObjectSystem physicsGameObjectSystem;
 		HDNCamera camera{};
 
 		auto viewerObject = HDNGameObject::CreateGameObject();
@@ -135,9 +139,8 @@ namespace hdn
 				ubo.inverseView = camera.GetInverseView();
 
 				pointLightSystem.Update(frameInfo, ubo);
-
-				HDNGameObject::id_t id = 0;
-				m_GameObjects.at(id).transform.translation = m_FlatVaseTranslation; // TODO: Remove
+				m_PhysicsWorld.Update(frameTime);
+				physicsGameObjectSystem.Update(frameInfo);
 
 				uboBuffers[frameIndex]->WriteToBuffer((void*)&ubo);
 				uboBuffers[frameIndex]->Flush();
@@ -155,7 +158,6 @@ namespace hdn
 				ImGui::Begin("Hello, world!");
 				ImGui::Text("This is some useful text.");
 				ImGui::Text("dt: %.4f", frameTime * 1000);
-				ImGui::DragFloat3("Flat Vase Position", (f32*)&m_FlatVaseTranslation, 0.01f, -2.0f, 2.0f);
 				ImGui::End();
 
 				// ImGui::ShowDemoWindow();
@@ -176,25 +178,38 @@ namespace hdn
 	void FirstApp::LoadGameObjects()
 	{
 		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromFile(&m_Device, "models/flat_vase.obj");
-		auto flatVase = HDNGameObject::CreateGameObject();
-		flatVase.model = hdnModel;
-		flatVase.transform.translation = m_FlatVaseTranslation;
-		flatVase.transform.scale = vec3f32{3.0f, 1.5f, 3.0f};
-		m_GameObjects.emplace(flatVase.GetID(), std::move(flatVase));
 
-		hdnModel = HDNModel::CreateModelFromFile(&m_Device, "models/smooth_vase.obj");
-		auto smoothVase = HDNGameObject::CreateGameObject();
-		smoothVase.model = hdnModel;
-		smoothVase.transform.translation = { -1.0f, 0.5f, 0.0f };
-		smoothVase.transform.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
-		m_GameObjects.emplace(smoothVase.GetID(), std::move(smoothVase));
+		for(int i = 0;i < 300; i++)
+		{
+			auto flatVase = HDNGameObject::CreateGameObject();
+			flatVase.name = "vase";
+			flatVase.model = hdnModel;
+			flatVase.transform.translation = { cos(i), -1 - (float)sin(i), sin(i)};
+			flatVase.transform.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
 
-		hdnModel = HDNModel::CreateModelFromFile(&m_Device, "models/quad.obj");
-		auto floor = HDNGameObject::CreateGameObject();
-		floor.model = hdnModel;
-		floor.transform.translation = { 0.0f, 0.5f, 0.0f };
-		floor.transform.scale = vec3f32{ 3.0f, 1.0f, 3.0f };
-		m_GameObjects.emplace(floor.GetID(), std::move(floor));
+			flatVase.physicsComponent = CreateScope<PhysicsComponent>();
+			physx::PxVec3 position = physx::PxVec3(flatVase.transform.translation.x, flatVase.transform.translation.y, -flatVase.transform.translation.z);
+			physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
+			flatVase.physicsComponent->physicsActor = m_PhysicsWorld.CreateDynamicActor(position, dimension);
+
+			m_GameObjects.emplace(flatVase.GetID(), std::move(flatVase));
+		}
+
+		{
+			hdnModel = HDNModel::CreateModelFromFile(&m_Device, "models/quad.obj");
+			auto floor = HDNGameObject::CreateGameObject();
+			floor.name = "floor";
+			floor.model = hdnModel;
+			floor.transform.translation = { 0.0f, 2.0f, 0.0f };
+			floor.transform.scale = vec3f32{ 3.0f, 1.0f, 3.0f };
+
+			floor.physicsComponent = CreateScope<PhysicsComponent>();
+			physx::PxVec3 position = physx::PxVec3(floor.transform.translation.x, floor.transform.translation.y, -floor.transform.translation.z);
+			physx::PxVec3 dimension = physx::PxVec3(3.0f, 0.001f, 3.0f);
+			floor.physicsComponent->physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
+
+			m_GameObjects.emplace(floor.GetID(), std::move(floor));
+		}
 
 		std::vector<glm::vec3> lightColors{
 			{1.f, .1f, .1f},

@@ -10,6 +10,7 @@ namespace hdn
 	public:
 		void Init();
 		physx::PxRigidDynamic* CreateDynamicActor(const physx::PxVec3& position, const physx::PxVec3& dimension);
+		physx::PxRigidStatic* CreateStaticActor(const physx::PxVec3& position, const physx::PxVec3& dimension);
 		void Update(f32 deltaTime);
 		void Shutdown();
 	private:

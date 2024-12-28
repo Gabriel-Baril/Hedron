@@ -4,6 +4,7 @@
 
 #include "hdn_model.h"
 
+#include <PxPhysicsAPI.h>
 #include <unordered_map>
 
 namespace hdn
@@ -12,7 +13,7 @@ namespace hdn
 	{
 		vec3f32 translation{};
 		vec3f32 scale{ 1.0f, 1.0f, 1.0f };
-		vec3f32 rotation{}; // In radians
+		vec3f32 rotation{}; // In radians (Euler YXZ)
 
 		mat4f32 Mat4();
 		mat3f32 NormalMatrix();
@@ -21,6 +22,11 @@ namespace hdn
 	struct PointLightComponent
 	{
 		float lightIntensity = 1.0f;
+	};
+
+	struct PhysicsComponent
+	{
+		physx::PxRigidActor* physicsActor;
 	};
 
 	// TODO: We should use entt instead
@@ -45,12 +51,14 @@ namespace hdn
 
 		id_t GetID() const { return m_ID; }
 
+		std::string name;
 		vec3f32 color{};
 		TransformComponent transform{};
 		
 		// Optional Pointer Components
 		Ref<HDNModel> model{};
 		Scope<PointLightComponent> pointLight = nullptr;
+		Scope<PhysicsComponent> physicsComponent = nullptr;
 
 	private:
 		HDNGameObject(id_t objId) : m_ID{ objId } {}
