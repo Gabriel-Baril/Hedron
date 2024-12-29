@@ -75,7 +75,7 @@ namespace hdn
 		static string BackwardSlash(const string& path);
 		static TOptional<fspath> RelativeTo(const fspath& p0, const fspath& p1);
 		static TOptional<fspath> WithName(const fspath& path, const string& name);
-
+		static fspath ToAbsolute(const fspath& path);
 
 		static TVector<fspath> Walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate = nullptr, bool recursive = false);
 		static bool Touch(const fspath& path);

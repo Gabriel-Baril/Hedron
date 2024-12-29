@@ -1,15 +1,15 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text;
-using CommandLine;
+﻿using CommandLine;
 using CommandLine.Text;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+#nullable enable
 
 namespace Hedron.Client
 {
-    using System.Reflection.Metadata;
-    using System.Reflection;
-    using System.Dynamic;
     using Hedron.Feature;
+    using System.Reflection;
 
     class Program
     {
@@ -112,8 +112,8 @@ namespace Hedron.Client
             }
 
             // Find feature class
-            
-            if(opts.FeatureName != string.Empty)
+
+            if (opts.FeatureName != string.Empty)
             {
                 Type? featureType = GetFeature(assembly, opts.FeatureName);
                 if (featureType == null)
@@ -124,7 +124,7 @@ namespace Hedron.Client
 
                 CompileFeature(binderType, featureType, opts.OutFolder, opts.RecursiveFeatureCompilation);
             }
-            else if(opts.CompileAll)
+            else if (opts.CompileAll)
             {
                 foreach (var featureType in GetFeatureTypes(assembly))
                 {

@@ -202,6 +202,11 @@ namespace hdn
 		return FileSystem::Parent(path) / name;
 	}
 
+	fspath FileSystem::ToAbsolute(const fspath& path)
+	{
+		return std::filesystem::absolute(path);
+	}
+
 	FileSystem::FileStats FileSystem::Stats(const fspath& path)
 	{
 		FileStats stats;

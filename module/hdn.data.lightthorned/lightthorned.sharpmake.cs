@@ -6,7 +6,7 @@ public class DataLightthornedCoreProject : CSharpProject
     public DataLightthornedCoreProject()
     {
         Name = "data.lightthorned";
-        RootPath = @"[project.SharpmakeCsPath]/src";
+        SourceRootPath = @"[project.SharpmakeCsPath]/src";
         AddTargets(TargetUtil.DefaultCSharpTarget8_0);
     }
 
@@ -19,7 +19,7 @@ public class DataLightthornedCoreProject : CSharpProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<HdefProject>(target);
-        conf.EventPreBuild.Add("rd /s /q $(ProjectDir)generated");
-        conf.EventPreBuild.Add("call $(ProjectDir)generate_flatbuffers.bat");
+        // conf.EventPreBuild.Add("rd /s /q $(ProjectDir)generated");
+        // conf.EventPreBuild.Add("call $(ProjectDir)generate_flatbuffers.bat");
     }
 }

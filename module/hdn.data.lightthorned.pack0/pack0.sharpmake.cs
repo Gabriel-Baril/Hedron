@@ -6,7 +6,7 @@ public class DataLightthornedPack0Project : CSharpProject
     public DataLightthornedPack0Project()
     {
         Name = "data.lightthorned.pack0";
-        RootPath = @"[project.SharpmakeCsPath]/src";
+        SourceRootPath = @"[project.SharpmakeCsPath]/src";
         AddTargets(TargetUtil.DefaultCSharpTarget8_0);
     }
 

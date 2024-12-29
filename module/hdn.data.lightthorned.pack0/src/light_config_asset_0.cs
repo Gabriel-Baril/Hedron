@@ -1,11 +1,13 @@
 ﻿using Hedron.Feature;
 
+#nullable enable
+
 namespace Hedron.Client
 {
     [Feature(Version: 0)]
     public class light_config_asset_0 : ILightConfig
     {
-        [FeatureParam] Platform platform;
+        // [FeatureParam] Platform platform;
 
         public override ushort MaxPrimaryLight()
         {

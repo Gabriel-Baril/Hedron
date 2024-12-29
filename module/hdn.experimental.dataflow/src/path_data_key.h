@@ -2,6 +2,7 @@
 
 #include "key_mapper.h"
 #include "image_loader.h"
+#include "core/core_filesystem.h"
 
 namespace hdn
 {
@@ -37,12 +38,14 @@ namespace hdn
 			{
 			case path_data_key::Image:
 			{
-				Ref<Image> image = ImageRegistry::Get().Get(key.path);
+				std::string absolutePath = FileSystem::ToAbsolute(key.path).string();
+
+				Ref<Image> image = ImageRegistry::Get().Get(absolutePath.c_str());
 				if (!image)
 				{
 					image = CreateRef<Image>();
-					image->Load(key.path);
-					ImageRegistry::Get().Register(key.path, image);
+					image->Load(absolutePath.c_str());
+					ImageRegistry::Get().Register(absolutePath.c_str(), image);
 				}
 				out.payload = image.get();
 				out.payloadByteSize = sizeof(image.get());

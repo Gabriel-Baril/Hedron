@@ -2,10 +2,10 @@
 using HedronFeatureDescriptor;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Hedron.Feature
 {
@@ -20,7 +20,7 @@ namespace Hedron.Feature
             FeatureMetadata.StartFeatureMetadata(builder);
 
             FeatureAttribute? attribute = (FeatureAttribute?)feature.GetType().GetCustomAttribute(typeof(FeatureAttribute), false);
-            if(attribute != null)
+            if (attribute != null)
             {
                 FeatureMetadata.AddVersion(builder, attribute.Version);
             }
@@ -37,7 +37,7 @@ namespace Hedron.Feature
         public static Offset<FeatureSignature> ConstructFeatureSignature(FlatBufferBuilder builder, IFeature? feature)
         {
             string featureName = string.Empty;
-            if(feature != null)
+            if (feature != null)
             {
                 featureName = feature.GetName();
             }
@@ -78,7 +78,7 @@ namespace Hedron.Feature
 
         public dynamic GetParam(string ParamName, dynamic Default)
         {
-            if(Binder == null)
+            if (Binder == null)
             {
                 return Default;
             }
@@ -147,7 +147,7 @@ namespace Hedron.Feature
 
         public virtual void RegisterDependencies()
         {
-            if(Binder != null)
+            if (Binder != null)
             {
                 // AddDependency(Binder);
             }
@@ -163,12 +163,12 @@ namespace Hedron.Feature
         public virtual void Print()
         {
             Console.WriteLine($"Name: {GetName()}");
-            if(Binder != null)
+            if (Binder != null)
             {
                 Console.WriteLine($"Binder: {Binder.GetName()}");
             }
             Console.WriteLine($"Dependencies:");
-            if(Dependencies.Count != 0)
+            if (Dependencies.Count != 0)
             {
                 foreach (IFeature feature in Dependencies)
                 {
@@ -183,7 +183,7 @@ namespace Hedron.Feature
 
         protected void AddDependency(IFeature feature)
         {
-            if(!Dependencies.Contains(feature))
+            if (!Dependencies.Contains(feature))
             {
                 Dependencies.Add(feature);
             }

@@ -1,11 +1,4 @@
 ﻿using Google.FlatBuffers;
-using Hedron.Feature;
-using HedronFeatureDescriptor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hedron.Feature
 {

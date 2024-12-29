@@ -1,11 +1,4 @@
-﻿using Hedron.Feature;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hedron.Feature
+﻿namespace Hedron.Feature
 {
     [ArchFeature(Version: 0, Name: "filefeature")]
     public abstract class IFileFeature : IFeature

@@ -6,7 +6,7 @@ public class HdefcProject : CSharpProject
     public HdefcProject()
     {
         Name = "hdefc";
-        RootPath = @"[project.SharpmakeCsPath]/src";
+        SourceRootPath = @"[project.SharpmakeCsPath]/src";
         AddTargets(TargetUtil.DefaultCSharpTarget8_0);
     }
 

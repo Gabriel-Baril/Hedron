@@ -36,5 +36,4 @@ int main()
 	// 	HINFO("Image Ptr: {0}", (void*)image);
 	// }
 
-	while (true) {}
 }

@@ -1,5 +1,7 @@
 ﻿using Hedron.Feature;
 
+#nullable enable
+
 namespace Hedron.Client
 {
     [Feature(Version: 0)]
@@ -21,7 +23,7 @@ namespace Hedron.Client
             return param0 > 5;
         }
 
-        public override ILightConfig LightConfig()
+        public override ILightConfig? LightConfig()
         {
             return lightConfig;
         }
