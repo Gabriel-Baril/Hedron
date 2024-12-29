@@ -21,6 +21,7 @@ public class DataFlowProject : BaseCppProject
 
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<StbImageProject>(target);
+        conf.AddPublicDependency<XXHashProject>(target);
         conf.AddPublicDependency<ConfigProject>(target);
         conf.AddPublicDependency<CLI11Project>(target);
     }

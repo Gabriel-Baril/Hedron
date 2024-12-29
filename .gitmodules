@@ -40,3 +40,6 @@
 [submodule "module/hdn.code.external.stb"]
 	path = module/hdn.code.external.stb
 	url = https://github.com/Gabriel-Baril/stb.git
+[submodule "module/hdn.code.external.xxhash"]
+	path = module/hdn.code.external.xxhash
+	url = https://github.com/Gabriel-Baril/xxHash.git
