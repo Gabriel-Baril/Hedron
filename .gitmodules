@@ -37,3 +37,6 @@
 [submodule "module/hdn.code.external.fmt"]
 	path = module/hdn.code.external.fmt
 	url = https://github.com/Gabriel-Baril/fmt.git
+[submodule "module/hdn.code.external.stb"]
+	path = module/hdn.code.external.stb
+	url = https://github.com/Gabriel-Baril/stb.git
