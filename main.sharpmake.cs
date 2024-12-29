@@ -24,6 +24,22 @@ public static class Paths
 public static class TargetUtil
 {
     public static readonly Target DefaultTarget = new Target(Platform.win32 | Platform.win64, DevEnv.vs2022, Optimization.Debug | Optimization.Release | Optimization.Retail);
+    public static readonly Target DefaultCSharpTarget6_0 = new Target(
+                Platform.anycpu,
+                DevEnv.vs2022,
+                Optimization.Debug | Optimization.Release,
+                OutputType.Dll,
+                Blob.NoBlob,
+                BuildSystem.MSBuild,
+                DotNetFramework.net6_0);
+    public static readonly Target DefaultCSharpTarget8_0 = new Target(
+                Platform.anycpu,
+                DevEnv.vs2022,
+                Optimization.Debug | Optimization.Release,
+                OutputType.Dll,
+                Blob.NoBlob,
+                BuildSystem.MSBuild,
+                DotNetFramework.net8_0);
 }
 
 public abstract class BaseCppProject : Project
@@ -71,12 +87,16 @@ public static class Main
     [Sharpmake.Main]
     public static void SharpmakeMain(Sharpmake.Arguments args)
     {
+        // C++ Solution
         args.Generate<IdaesSolution>();
         args.Generate<IdeonSolution>();
         args.Generate<PolySolution>();
         args.Generate<PlaygroundSolution>();
-        args.Generate<AllSharpmakeSolution>();
         args.Generate<TestsSolution>();
         args.Generate<LightthornedSolution>();
+
+        // C# Solutions
+        args.Generate<HdefSolution>();
+        args.Generate<AllSharpmakeSolution>();
     }
 }

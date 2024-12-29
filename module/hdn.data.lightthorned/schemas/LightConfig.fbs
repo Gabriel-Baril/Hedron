@@ -1,0 +1,8 @@
+namespace Hedron.Feature;
+
+table LightConfig {
+    max_primary_light:ushort = 0;
+    max_probes:ushort = 0;
+}
+
+root_type LightConfig;

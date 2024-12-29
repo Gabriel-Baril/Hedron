@@ -1,0 +1,6 @@
+[module]
+Version=20241229
+Author=gbaril
+Source=Internal
+Semantic=Library
+Kind=Code

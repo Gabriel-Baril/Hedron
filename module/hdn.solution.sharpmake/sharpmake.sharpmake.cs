@@ -10,14 +10,7 @@ public class SharpmakeFilesProject : CSharpProject
         RootPath = @"[project.SharpmakeCsPath]";
         SourceFilesExtensions.Clear();
 
-        AddTargets(new Target(
-                Platform.anycpu,
-                DevEnv.vs2022,
-                Optimization.Debug | Optimization.Release,
-                OutputType.Dll,
-                Blob.NoBlob,
-                BuildSystem.MSBuild,
-                DotNetFramework.net6_0));
+        AddTargets(TargetUtil.DefaultCSharpTarget6_0);
 
         foreach (var folder in Constants.SHARPMAKE_FOLDERS)
         {
@@ -54,14 +47,7 @@ public class AllSharpmakeSolution : CSharpSolution
     public AllSharpmakeSolution()
     {
         Name = "sharpmake";
-        AddTargets(new Target(
-                Platform.anycpu,
-                DevEnv.vs2022,
-                Optimization.Debug | Optimization.Release,
-                OutputType.Dll,
-                Blob.NoBlob,
-                BuildSystem.MSBuild,
-                DotNetFramework.net6_0));
+        AddTargets(TargetUtil.DefaultCSharpTarget6_0);
 
     }
 

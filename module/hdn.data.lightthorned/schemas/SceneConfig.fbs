@@ -1,0 +1,10 @@
+include "LightConfig.fbs";
+
+namespace Hedron.Feature;
+
+table SceneConfig {
+    generate_proxy_geo:bool;
+    light_config:LightConfig;
+}
+
+root_type SceneConfig;
