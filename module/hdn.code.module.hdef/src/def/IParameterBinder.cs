@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Hedron.Feature
+namespace Hedron.Definition
 {
-    [FeatureParameterLess]
-    [ArchFeature(Version: 0, Name: "parambinder")]
-    public abstract class IParameterBinder : IFeature
+    [Definition(Version: 0, Name: "parambinder")]
+    public abstract class IParameterBinder : IDefinition
     {
         public abstract dynamic Get(string ParamName, dynamic Default);
 

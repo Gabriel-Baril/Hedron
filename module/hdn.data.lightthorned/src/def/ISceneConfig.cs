@@ -1,6 +1,6 @@
 ﻿using Google.FlatBuffers;
 
-namespace Hedron.Feature
+namespace Hedron.Definition
 {
     public static class ISceneConfigUtil
     {
@@ -15,8 +15,8 @@ namespace Hedron.Feature
         }
     }
 
-    [ArchFeature(Version: 0, Name: "sceneconfig")]
-    public abstract class ISceneConfig : IFeature
+    [Definition(Version: 0, Name: "sceneconfig")]
+    public abstract class ISceneConfig : IDefinition
     {
         public abstract bool ShouldGenerateProxyGeo();
         public abstract ILightConfig LightConfig();

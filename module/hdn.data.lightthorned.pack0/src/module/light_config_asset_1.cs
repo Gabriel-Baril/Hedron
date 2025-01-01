@@ -1,13 +1,13 @@
-﻿using Hedron.Feature;
+﻿using Hedron.Definition;
 
 namespace Hedron.Client
 {
-    [Feature(Version: 0)]
+    [Module(Version: 0)]
     public class light_config_asset_1 : ILightConfig
     {
-        [FeatureParam] ushort param0;
-        [FeatureParam] ushort param1;
-        [FeatureParam] Platform Platform;
+        ushort param0;
+        ushort param1;
+        Platform Platform;
 
         public light_config_asset_1()
         {

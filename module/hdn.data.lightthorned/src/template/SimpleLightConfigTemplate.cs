@@ -1,8 +1,8 @@
-﻿using Hedron.Feature;
+﻿using Hedron.Definition;
 
 namespace Hedron.Client
 {
-    [FeatureTemplate]
+    [DefinitionTemplate]
     public class SimpleLightConfigTemplate : ILightConfig
     {
         ushort maxPrimaryLight;

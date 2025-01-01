@@ -1,11 +1,11 @@
-﻿using Hedron.Feature;
+﻿using Hedron.Definition;
 using System.Collections.Generic;
 
 #nullable enable
 
 namespace Hedron.Client
 {
-    [Feature(Version: 0)]
+    [Module(Version: 0)]
     public class param_binder_test : IParameterBinder
     {
         Dictionary<string, dynamic> Params = new Dictionary<string, dynamic>();

@@ -1,4 +1,4 @@
-namespace Hedron.Feature;
+namespace Hedron.Definition;
 
 table LightConfig {
     max_primary_light:ushort = 0;

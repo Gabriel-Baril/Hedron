@@ -8,39 +8,39 @@ using System.Linq;
 
 namespace Hedron.Client
 {
-    using Hedron.Feature;
+    using Hedron.Definition;
     using System.Reflection;
 
     class Program
     {
         public class Options
         {
-            [Option('a', "assembly", Required = true, HelpText = "The assembly containing the feature descriptor")]
+            [Option('a', "assembly", Required = true, HelpText = "The assembly containing the definition descriptor")]
             public string AssemblyPath { get; set; } = string.Empty;
 
 
-            [Option('f', "feature", Required = false, HelpText = "The feature to compile")]
-            public string FeatureName { get; set; } = string.Empty;
+            [Option('f', "definition", Required = false, HelpText = "The definition to compile")]
+            public string DefinitionName { get; set; } = string.Empty;
 
-            [Option('o', "out", Required = true, HelpText = "The output feature folder")]
+            [Option('o', "out", Required = true, HelpText = "The output definition folder")]
             public string OutFolder { get; set; } = string.Empty;
 
 
-            [Option('r', "recursive", Required = false, HelpText = "Should the dependencies of the feature also be compiled?")]
-            public bool RecursiveFeatureCompilation { get; set; } = false;
+            [Option('r', "recursive", Required = false, HelpText = "Should the dependencies of the definition also be compiled?")]
+            public bool RecursiveDefinitionCompilation { get; set; } = false;
 
 
             [Option('b', "binder", Required = true, HelpText = "Which binder parameter should we use?")]
             public string BinderName { get; set; } = string.Empty;
 
-            [Option('a', "all", Required = false, HelpText = "Convert all features in the specified assembly?")]
+            [Option('a', "all", Required = false, HelpText = "Convert all definitions in the specified assembly?")]
             public bool CompileAll { get; set; } = false;
 
         }
 
-        public static IEnumerable<Type> GetFeatureTypes(Assembly assembly)
+        public static IEnumerable<Type> GetDefinitionTypes(Assembly assembly)
         {
-            return assembly.GetTypes().Where(type => type.GetCustomAttributes(typeof(FeatureAttribute), false).Length > 0);
+            return assembly.GetTypes().Where(type => type.GetCustomAttributes(typeof(DefinitionAttribute), false).Length > 0);
         }
 
         static void Main(string[] args)
@@ -50,85 +50,85 @@ namespace Hedron.Client
                 .WithNotParsed(errors => HandleErrors(errors));
         }
 
-        public static Type? GetFeature(Assembly assembly, string featureName)
+        public static Type? GetDefinition(Assembly assembly, string definitionName)
         {
-            Type? featureType = assembly.GetTypes().FirstOrDefault(t => t.Name == featureName); ;
+            Type? definitionType = assembly.GetTypes().FirstOrDefault(t => t.Name == definitionName); ;
 
-            if (featureType != null)
+            if (definitionType != null)
             {
-                Console.WriteLine($"{featureName} feature found");
+                Console.WriteLine($"{definitionName} definition found");
             }
             else
             {
-                Console.WriteLine($"Cannot find {featureName} feature");
+                Console.WriteLine($"Cannot find {definitionName} definition");
             }
-            return featureType;
+            return definitionType;
         }
 
-        public static void CompileFeature(Type binderType, Type featureType, string outFolder, bool recursiveCompilation)
+        public static void CompileDefinition(Type binderType, Type definitionType, string outFolder, bool recursiveCompilation)
         {
-            object? featureInstance = Activator.CreateInstance(featureType);
+            object? definitionInstance = Activator.CreateInstance(definitionType);
 
-            MethodInfo? bindMethod = featureType.GetMethod("SetBinderFromType");
+            MethodInfo? bindMethod = definitionType.GetMethod("SetBinderFromType");
             if (bindMethod != null)
             {
                 object[] methodArgs = new object[] { binderType };
-                bindMethod.Invoke(featureInstance, methodArgs);
+                bindMethod.Invoke(definitionInstance, methodArgs);
             }
             else
             {
-                Console.WriteLine($"Cannot find bind method in feature!");
+                Console.WriteLine($"Cannot find bind method in definition!");
             }
 
-            MethodInfo? saveMethod = recursiveCompilation ? featureType.GetMethod("SaveAll") : featureType.GetMethod("Save");
+            MethodInfo? saveMethod = recursiveCompilation ? definitionType.GetMethod("SaveAll") : definitionType.GetMethod("Save");
             if (saveMethod != null)
             {
                 object[] methodArgs = new object[] { outFolder };
-                saveMethod.Invoke(featureInstance, methodArgs);
+                saveMethod.Invoke(definitionInstance, methodArgs);
             }
             else
             {
-                Console.WriteLine($"Cannot find saving method in feature!");
+                Console.WriteLine($"Cannot find saving method in definition!");
             }
         }
 
         static void Run(Options opts)
         {
-            Console.WriteLine($"RecursiveFeatureCompilation : {opts.RecursiveFeatureCompilation}");
+            Console.WriteLine($"RecursiveDefinitionCompilation : {opts.RecursiveDefinitionCompilation}");
             Console.WriteLine($"AssemblyPath : {opts.AssemblyPath}");
             Console.WriteLine($"BinderName : {opts.BinderName}");
-            Console.WriteLine($"FeatureName : {opts.FeatureName}");
+            Console.WriteLine($"DefinitionName : {opts.DefinitionName}");
             Console.WriteLine($"OutFolder : {opts.OutFolder}");
 
             // Load Assembly Path
             Assembly assembly = Assembly.LoadFrom(opts.AssemblyPath);
 
-            // Find Feature Binder Class
-            Type? binderType = GetFeature(assembly, opts.BinderName);
+            // Find Definition Binder Class
+            Type? binderType = GetDefinition(assembly, opts.BinderName);
             if (binderType == null)
             {
-                Console.WriteLine("Binder feature not found cancelling...");
+                Console.WriteLine("Binder definition not found cancelling...");
                 return;
             }
 
-            // Find feature class
+            // Find definition class
 
-            if (opts.FeatureName != string.Empty)
+            if (opts.DefinitionName != string.Empty)
             {
-                Type? featureType = GetFeature(assembly, opts.FeatureName);
-                if (featureType == null)
+                Type? definitionType = GetDefinition(assembly, opts.DefinitionName);
+                if (definitionType == null)
                 {
-                    Console.WriteLine("Feature not found cancelling...");
+                    Console.WriteLine("Definition not found cancelling...");
                     return;
                 }
 
-                CompileFeature(binderType, featureType, opts.OutFolder, opts.RecursiveFeatureCompilation);
+                CompileDefinition(binderType, definitionType, opts.OutFolder, opts.RecursiveDefinitionCompilation);
             }
             else if (opts.CompileAll)
             {
-                foreach (var featureType in GetFeatureTypes(assembly))
+                foreach (var definitionType in GetDefinitionTypes(assembly))
                 {
-                    CompileFeature(binderType, featureType, opts.OutFolder, opts.RecursiveFeatureCompilation);
+                    CompileDefinition(binderType, definitionType, opts.OutFolder, opts.RecursiveDefinitionCompilation);
                 }
             }
         }

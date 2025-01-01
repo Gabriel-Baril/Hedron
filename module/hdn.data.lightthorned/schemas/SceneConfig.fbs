@@ -1,6 +1,6 @@
 include "LightConfig.fbs";
 
-namespace Hedron.Feature;
+namespace Hedron.Definition;
 
 table SceneConfig {
     generate_proxy_geo:bool;

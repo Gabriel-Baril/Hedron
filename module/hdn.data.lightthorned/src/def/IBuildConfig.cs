@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace Hedron.Feature
+namespace Hedron.Definition
 {
-    [ArchFeature(Version: 0, Name: "buildconfig")]
-    public abstract class IBuildConfig : IFeature
+    [Definition(Version: 0, Name: "buildconfig")]
+    public abstract class IBuildConfig : IDefinition
     {
         public abstract List<IScene> SceneToBuild();
 

@@ -1,10 +1,10 @@
-﻿using Hedron.Feature;
+﻿using Hedron.Definition;
 
 #nullable enable
 
 namespace Hedron.Client
 {
-    [Feature(Version: 0)]
+    [Module(Version: 0)]
     public class scene_config_asset_1 : ISceneConfig
     {
         // Parameters

@@ -1,24 +1,24 @@
-namespace Hedron.Feature;
+namespace Hedron.Definition;
 
-table FeatureMetadata
+table DefinitionMetadata
 {
     version: uint;
     arch_type: string;
     type_chain: string;
 }
 
-table FeatureSignature
+table DefinitionSignature
 {
     name: string;
 }
 
-table Feature
+table Definition
 {
-    metadata: FeatureMetadata;
-    signature: FeatureSignature;
-    binder: FeatureSignature;
-    dependencies: [FeatureSignature];
+    metadata: DefinitionMetadata;
+    signature: DefinitionSignature;
+    binder: DefinitionSignature;
+    dependencies: [DefinitionSignature];
     data: [ubyte];
 }
 
-root_type Feature;
+root_type Definition;

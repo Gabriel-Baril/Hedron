@@ -1,7 +1,7 @@
-﻿namespace Hedron.Feature
+﻿namespace Hedron.Definition
 {
-    [ArchFeature(Version: 0, Name: "filefeature")]
-    public abstract class IFileFeature : IFeature
+    [Definition(Version: 0, Name: "filedef")]
+    public abstract class IFileDefinition : IDefinition
     {
         // TODO: public abstract IFilePathFeature FilePath(); // For example, feature_output_path. You could have a chain of IFilePathFeature
 

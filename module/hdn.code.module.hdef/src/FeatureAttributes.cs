@@ -1,49 +1,32 @@
 ﻿using System;
 
-namespace Hedron.Feature
+namespace Hedron.Definition
 {
-    public class FeatureAttribute : Attribute
+    public class ModuleAttribute : Attribute
     {
         public uint Version { get; }
 
-        public FeatureAttribute(uint Version)
+        public ModuleAttribute(uint Version)
         {
             this.Version = Version;
         }
     }
 
-    public class ArchFeatureAttribute : Attribute
+    public class DefinitionAttribute : Attribute
     {
         public uint Version { get; }
         public string Name { get; }
 
-        public ArchFeatureAttribute(uint Version, string Name)
+        public DefinitionAttribute(uint Version, string Name)
         {
             this.Version = Version;
             this.Name = Name;
         }
     }
 
-    public class FeatureTemplateAttribute : Attribute
+    public class DefinitionTemplateAttribute : Attribute
     {
-        public FeatureTemplateAttribute()
-        {
-
-        }
-    }
-
-    public class FeatureParam : Attribute
-    {
-        public string ExposedName { get; }
-        public FeatureParam(string ExposedName = "")
-        {
-            this.ExposedName = ExposedName;
-        }
-    }
-
-    public class FeatureParameterLessAttribute : Attribute
-    {
-        public FeatureParameterLessAttribute()
+        public DefinitionTemplateAttribute()
         {
 
         }

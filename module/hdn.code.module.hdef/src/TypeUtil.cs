@@ -3,7 +3,7 @@ using System.Text;
 
 #nullable enable
 
-namespace Hedron.Feature
+namespace Hedron.Definition
 {
     public static class TypeUtil
     {

@@ -1,25 +1,24 @@
 ﻿using Google.FlatBuffers;
-using HedronFeatureDescriptor;
 using System.Collections.Generic;
 
-namespace Hedron.Feature
+namespace Hedron.Definition
 {
     public static class ILightConfigUtil
     {
-        public static Offset<LightConfig> ConstructLightConfig(FlatBufferBuilder builder, ILightConfig feature)
+        public static Offset<LightConfig> ConstructLightConfig(FlatBufferBuilder builder, ILightConfig definition)
         {
             LightConfig.StartLightConfig(builder);
-            LightConfig.AddMaxPrimaryLight(builder, feature.MaxPrimaryLight());
-            LightConfig.AddMaxProbes(builder, feature.MaxProbes());
+            LightConfig.AddMaxPrimaryLight(builder, definition.MaxPrimaryLight());
+            LightConfig.AddMaxProbes(builder, definition.MaxProbes());
             return LightConfig.EndLightConfig(builder);
         }
 
-        public class MaxProbeLimitError : FeatureValidationMessage
+        public class MaxProbeLimitError : DefinitionValidationMessage
         {
             public ushort given;
             public ushort max;
 
-            public MaxProbeLimitError(IFeature feature, ushort given, ushort max) : base(FeatureValidationMessageType.Error, feature)
+            public MaxProbeLimitError(IDefinition definition, ushort given, ushort max) : base(DefinitionValidationMessageType.Error, definition)
             {
                 this.max = max;
                 this.given = given;
@@ -31,12 +30,12 @@ namespace Hedron.Feature
             }
         }
 
-        public class MaxPrimaryLightLimitError : FeatureValidationMessage
+        public class MaxPrimaryLightLimitError : DefinitionValidationMessage
         {
             public ushort given;
             public ushort max;
 
-            public MaxPrimaryLightLimitError(IFeature feature, ushort given, ushort max) : base(FeatureValidationMessageType.Error, feature)
+            public MaxPrimaryLightLimitError(IDefinition definition, ushort given, ushort max) : base(DefinitionValidationMessageType.Error, definition)
             {
                 this.max = max;
                 this.given = given;
@@ -49,8 +48,8 @@ namespace Hedron.Feature
         }
     }
 
-    [ArchFeature(Version: 0, Name: "lightconfig")]
-    public abstract class ILightConfig : IFeature
+    [Definition(Version: 0, Name: "lightconfig")]
+    public abstract class ILightConfig : IDefinition
     {
         public const ushort MAX_PROBES_LIMIT = 128;
         public const ushort MAX_PRIMARY_LIGHT_LIMIT = 128;
@@ -58,9 +57,9 @@ namespace Hedron.Feature
         public abstract ushort MaxPrimaryLight();
         public abstract ushort MaxProbes();
 
-        public sealed override List<FeatureValidationMessage> Validate()
+        public sealed override List<DefinitionValidationMessage> Validate()
         {
-            List<FeatureValidationMessage> errors = new List<FeatureValidationMessage>();
+            List<DefinitionValidationMessage> errors = new List<DefinitionValidationMessage>();
 
             ushort maxProbes = MaxProbes();
             ushort maxPrimaryLight = MaxPrimaryLight();

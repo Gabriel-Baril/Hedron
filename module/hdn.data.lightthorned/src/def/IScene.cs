@@ -1,7 +1,7 @@
-﻿namespace Hedron.Feature
+﻿namespace Hedron.Definition
 {
-    [ArchFeature(Version: 0, Name: "scene")]
-    public abstract class IScene : IFeature
+    [Definition(Version: 0, Name: "scene")]
+    public abstract class IScene : IDefinition
     {
         public abstract ISceneConfig SceneConfig();
 

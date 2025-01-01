@@ -1,8 +1,8 @@
-﻿using Hedron.Feature;
+﻿using Hedron.Definition;
 
 namespace Hedron.Client
 {
-    [Feature(Version: 1)]
+    [Module(Version: 1)]
     public class scene_config_asset_0 : ISceneConfig
     {
         public override bool ShouldGenerateProxyGeo()
