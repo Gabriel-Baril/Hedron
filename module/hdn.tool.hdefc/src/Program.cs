@@ -29,10 +29,6 @@ namespace Hedron.Client
             [Option('r', "recursive", Required = false, HelpText = "Should the dependencies of the definition also be compiled?")]
             public bool RecursiveDefinitionCompilation { get; set; } = false;
 
-
-            [Option('b', "binder", Required = true, HelpText = "Which binder parameter should we use?")]
-            public string BinderName { get; set; } = string.Empty;
-
             [Option('a', "all", Required = false, HelpText = "Convert all definitions in the specified assembly?")]
             public bool CompileAll { get; set; } = false;
 
@@ -65,20 +61,9 @@ namespace Hedron.Client
             return definitionType;
         }
 
-        public static void CompileDefinition(Type binderType, Type definitionType, string outFolder, bool recursiveCompilation)
+        public static void CompileDefinition(Type definitionType, string outFolder, bool recursiveCompilation)
         {
             object? definitionInstance = Activator.CreateInstance(definitionType);
-
-            MethodInfo? bindMethod = definitionType.GetMethod("SetBinderFromType");
-            if (bindMethod != null)
-            {
-                object[] methodArgs = new object[] { binderType };
-                bindMethod.Invoke(definitionInstance, methodArgs);
-            }
-            else
-            {
-                Console.WriteLine($"Cannot find bind method in definition!");
-            }
 
             MethodInfo? saveMethod = recursiveCompilation ? definitionType.GetMethod("SaveAll") : definitionType.GetMethod("Save");
             if (saveMethod != null)
@@ -96,23 +81,13 @@ namespace Hedron.Client
         {
             Console.WriteLine($"RecursiveDefinitionCompilation : {opts.RecursiveDefinitionCompilation}");
             Console.WriteLine($"AssemblyPath : {opts.AssemblyPath}");
-            Console.WriteLine($"BinderName : {opts.BinderName}");
             Console.WriteLine($"DefinitionName : {opts.DefinitionName}");
             Console.WriteLine($"OutFolder : {opts.OutFolder}");
 
             // Load Assembly Path
             Assembly assembly = Assembly.LoadFrom(opts.AssemblyPath);
 
-            // Find Definition Binder Class
-            Type? binderType = GetDefinition(assembly, opts.BinderName);
-            if (binderType == null)
-            {
-                Console.WriteLine("Binder definition not found cancelling...");
-                return;
-            }
-
             // Find definition class
-
             if (opts.DefinitionName != string.Empty)
             {
                 Type? definitionType = GetDefinition(assembly, opts.DefinitionName);
@@ -122,13 +97,13 @@ namespace Hedron.Client
                     return;
                 }
 
-                CompileDefinition(binderType, definitionType, opts.OutFolder, opts.RecursiveDefinitionCompilation);
+                CompileDefinition(definitionType, opts.OutFolder, opts.RecursiveDefinitionCompilation);
             }
             else if (opts.CompileAll)
             {
                 foreach (var definitionType in GetDefinitionTypes(assembly))
                 {
-                    CompileDefinition(binderType, definitionType, opts.OutFolder, opts.RecursiveDefinitionCompilation);
+                    CompileDefinition(definitionType, opts.OutFolder, opts.RecursiveDefinitionCompilation);
                 }
             }
         }

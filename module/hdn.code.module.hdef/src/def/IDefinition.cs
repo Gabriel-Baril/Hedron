@@ -63,26 +63,9 @@ namespace Hedron.Definition
     {
         public bool Constructed { get; set; } = false;
         public List<IDefinition> Dependencies { get; set; } = new List<IDefinition>();
-        IParameterBinder? Binder { get; set; } = null;
 
         public IDefinition()
         {
-        }
-
-        // Used by the definition compiler
-        public void SetBinderFromType(Type binderType)
-        {
-            Binder = (IParameterBinder?)Activator.CreateInstance(binderType);
-        }
-
-        public dynamic GetParam(string ParamName, dynamic Default)
-        {
-            if (Binder == null)
-            {
-                return Default;
-            }
-            Binder.Construct();
-            return Binder.Get(ParamName, Default);
         }
 
         public void SaveAll(string path)
@@ -90,7 +73,6 @@ namespace Hedron.Definition
             Save(path);
             foreach (IDefinition definition in Dependencies)
             {
-                definition.Binder = (definition is IParameterBinder) ? null : Binder;
                 definition.SaveAll(path);
             }
         }
@@ -119,7 +101,7 @@ namespace Hedron.Definition
                 Console.ResetColor();
             }
             string outFile = $"{Path.Combine(outFolder, definitionName)}.hdef";
-            Console.WriteLine($"Writing to {outFile}");
+            // Console.WriteLine($"Writing to {outFile}");
             File.WriteAllBytes(outFile, Serialize());
             // Print();
         }
@@ -129,13 +111,11 @@ namespace Hedron.Definition
             FlatBufferBuilder builder = new FlatBufferBuilder(1024);
             var metadataOffset = IDefinitionUtil.ConstructDefinitionMetadata(builder, this);
             var signatureOffset = IDefinitionUtil.ConstructDefinitionSignature(builder, this);
-            var binderOffset = IDefinitionUtil.ConstructDefinitionSignature(builder, Binder);
             var dependenciesOffset = IDefinitionUtil.ConstructDefinitionSignatureList(builder, Dependencies, Definition.CreateDependenciesVector);
             var dataOffset = Definition.CreateDataVector(builder, SerializeData());
             Definition.StartDefinition(builder);
             Definition.AddMetadata(builder, metadataOffset);
             Definition.AddSignature(builder, signatureOffset);
-            Definition.AddBinder(builder, binderOffset);
             Definition.AddDependencies(builder, dependenciesOffset);
             Definition.AddData(builder, dataOffset);
             var definitionOffset = Definition.EndDefinition(builder);
@@ -161,10 +141,6 @@ namespace Hedron.Definition
 
         public virtual void RegisterDependencies()
         {
-            if (Binder != null)
-            {
-                // AddDependency(Binder);
-            }
         }
 
         public abstract byte[] SerializeData();
@@ -177,10 +153,6 @@ namespace Hedron.Definition
         public virtual void Print()
         {
             Console.WriteLine($"Name: {GetName()}");
-            if (Binder != null)
-            {
-                Console.WriteLine($"Binder: {Binder.GetName()}");
-            }
             Console.WriteLine($"Dependencies:");
             if (Dependencies.Count != 0)
             {

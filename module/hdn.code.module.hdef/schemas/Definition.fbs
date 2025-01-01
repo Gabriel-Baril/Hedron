@@ -16,7 +16,6 @@ table Definition
 {
     metadata: DefinitionMetadata;
     signature: DefinitionSignature;
-    binder: DefinitionSignature;
     dependencies: [DefinitionSignature];
     data: [ubyte];
 }

@@ -5,9 +5,7 @@ namespace Hedron.Client
     [Module(Version: 0)]
     public class light_config_asset_1 : ILightConfig
     {
-        ushort param0;
-        ushort param1;
-        Platform Platform;
+        ushort param0 = 0;
 
         public light_config_asset_1()
         {
@@ -30,9 +28,6 @@ namespace Hedron.Client
                 return;
             }
 
-            this.param0 = GetParam(BinderUtil.PARAM0_PARAM, default(ushort));
-            this.param1 = GetParam("Param1", default(ushort));
-            this.Platform = GetParam(BinderUtil.PLATFORM_PARAM, Platform.Window);
             base.Construct();
         }
     }
