@@ -8,7 +8,7 @@ namespace Hedron.Client
     public class scene_config_asset_1 : ISceneConfig
     {
         // Parameters
-        ushort param0;
+        ushort param0 = 0;
 
         // Caching
         ILightConfig? lightConfig;

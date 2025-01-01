@@ -1,0 +1,10 @@
+{
+  "FileVersion": 2,
+  "Id": "f2a841f9-4947-7869-76fc-7648ded362b4",
+  "Items": [
+    {
+      "Id": "cfd4fc7e-f2fd-4eac-a725-3466da569415",
+      "Command": "--assembly D:\\_DEV\\_HEDRON\\module\\hdn.data.lightthorned.pack0\\out\\bin\\anycpu-debug\\net8.0\\data.lightthorned.pack0.dll --out D:\\_DEV\\_HEDRON\\module\\hdn.data.lightthorned.pack0\\defout --binder param_binder_test --recursive False --definition scene_config_asset_0"
+    }
+  ]
+}

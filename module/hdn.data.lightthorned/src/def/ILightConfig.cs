@@ -35,7 +35,7 @@ namespace Hedron.Definition
             public ushort given;
             public ushort max;
 
-            public MaxPrimaryLightLimitError(IDefinition definition, ushort given, ushort max) : base(DefinitionValidationMessageType.Error, definition)
+            public MaxPrimaryLightLimitError(IDefinition definition, ushort given, ushort max) : base(DefinitionValidationMessageType.Info, definition)
             {
                 this.max = max;
                 this.given = given;

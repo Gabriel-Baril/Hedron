@@ -103,10 +103,25 @@ namespace Hedron.Definition
             List<DefinitionValidationMessage> validationMessages = Validate();
             foreach (DefinitionValidationMessage validationMessage in validationMessages)
             {
+                switch (validationMessage.MessageType)
+                {
+                    case DefinitionValidationMessageType.Error:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    case DefinitionValidationMessageType.Warning:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    case DefinitionValidationMessageType.Info:
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        break;
+                }
                 Console.WriteLine($"[{validationMessage.MessageType}][{definitionName}]: {validationMessage}");
+                Console.ResetColor();
             }
-            Console.WriteLine($"Writing to {outFolder}{definitionName}.hdef");
-            File.WriteAllBytes($"{outFolder}{definitionName}.hdef", Serialize());
+            string outFile = $"{Path.Combine(outFolder, definitionName)}.hdef";
+            Console.WriteLine($"Writing to {outFile}");
+            File.WriteAllBytes(outFile, Serialize());
+            // Print();
         }
 
         public byte[] Serialize()
