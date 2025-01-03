@@ -19,7 +19,7 @@ public class HdefcProject : CSharpProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<HdefProject>(target);
-        conf.ReferencesByNuGetPackage.Add("CommandLineParser", "2.9.1");
-        conf.ReferencesByNuGetPackage.Add("Google.FlatBuffers", "24.3.25");
+        conf.ReferencesByNuGetPackage.Add(Constants.NUGET_PACKAGE_COMMAND_LINE_PARSER_NAME, Constants.NUGET_PACKAGE_COMMAND_LINE_PARSER_VERSION);
+        conf.ReferencesByNuGetPackage.Add(Constants.NUGET_PACKAGE_FLATBUFFER_NAME, Constants.NUGET_PACKAGE_FLATBUFFER_VERSION);
     }
 }

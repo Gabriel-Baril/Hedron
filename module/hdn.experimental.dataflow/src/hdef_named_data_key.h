@@ -1,6 +1,7 @@
 #pragma once
 
 #include "key_mapper.h"
+#include "hdef_loader.h"
 
 namespace hdn
 {
@@ -12,6 +13,7 @@ namespace hdn
 		{
 		}
 		const char* assetName = nullptr;
+		const char* nspace = "D:\\_DEV\\_HEDRON\\module\\hdn.data.lightthorned.pack0\\out\\bin\\anycpu-debug\\net8.0\\data.lightthorned.pack0.dll"; // The actual dll containing the definition, TODO: Refactor
 	};
 
 	template<>
@@ -19,6 +21,10 @@ namespace hdn
 	{
 		static void get(const hdef_named_data_key& key, DataResult& out)
 		{
+			// Invoke the hdef compiler with the provided information
+			hdef_compile();
+
+
 			out.payload = nullptr;
 			out.payloadByteSize = 0;
 			out.found = false;

@@ -151,6 +151,18 @@ namespace hdn
 		return std::regex_match(path.string(), pattern);
 	}
 
+	bool FileSystem::DirectoryHasFile(const fspath& directory, const fspath& file)
+	{
+		if (FileSystem::IsDirectory(directory)) {
+			for (const auto& entry : std::filesystem::directory_iterator(directory)) {
+				if (entry.is_regular_file() && entry.path() == file) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	std::vector<string> FileSystem::Parts(const fspath& path)
 	{
 		std::vector<string> parts;

@@ -3,12 +3,18 @@ using System.IO;
 
 public static class Constants
 {
+    public const string NUGET_PACKAGE_FLATBUFFER_NAME = "Google.FlatBuffers";
+    public const string NUGET_PACKAGE_FLATBUFFER_VERSION = "24.12.23";
+    public const string NUGET_PACKAGE_COMMAND_LINE_PARSER_NAME = "CommandLineParser";
+    public const string NUGET_PACKAGE_COMMAND_LINE_PARSER_VERSION = "2.9.1";
+
     public const string DEFAULT_SOURCE_FOLDER = "src";
     public const string MAIN_SHARPMAKE_FILE = "main.sharpmake.cs";
 
     public const string EXTERNAL_VS_CATEGORY = "external";
     public const string MODULE_VS_CATEGORY = "module";
     public const string TEST_VS_CATEGORY = "test";
+    public const string DATA_VS_CATEGORY = "data";
     public const string PLUGIN_VS_CATEGORY = "plugin";
     public const string EXPERIMENTAL_VS_CATEGORY = "experimental";
 

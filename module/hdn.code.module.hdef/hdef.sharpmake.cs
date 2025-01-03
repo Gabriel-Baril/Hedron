@@ -1,5 +1,6 @@
 using Sharpmake;
 
+
 [Generate]
 public class HdefProject : CSharpProject
 {
@@ -15,10 +16,13 @@ public class HdefProject : CSharpProject
     {
         conf.Output = Project.Configuration.OutputType.DotNetClassLibrary;
 
+        conf.SolutionFolder = Constants.DATA_VS_CATEGORY;
+
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
-        conf.ReferencesByNuGetPackage.Add("Google.FlatBuffers", "24.3.25");
+        conf.ReferencesByNuGetPackage.Add(Constants.NUGET_PACKAGE_FLATBUFFER_NAME, Constants.NUGET_PACKAGE_FLATBUFFER_VERSION);
+
         // conf.EventPreBuild.Add("rd /s /q $(ProjectDir)generated");
         // conf.EventPreBuild.Add("call $(ProjectDir)generate_flatbuffers.bat");
     }

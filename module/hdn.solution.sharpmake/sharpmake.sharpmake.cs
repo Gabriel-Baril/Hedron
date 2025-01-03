@@ -1,4 +1,5 @@
 using Sharpmake;
+using System.Collections.Generic;
 using System.IO;
 
 [Generate]
@@ -17,13 +18,27 @@ public class SharpmakeFilesProject : CSharpProject
             string fullPath = Path.Combine(Directory.GetCurrentDirectory(), folder);
             if (Directory.Exists(fullPath))
             {
-                string[] sharpmakeFiles = Directory.GetFiles(
+                List<string> files = new List<string>();
+
+                files.AddRange(Directory.GetFiles(
                     fullPath,
                     "*.sharpmake.cs",
                     SearchOption.AllDirectories // Recursive search within each folder
-                );
+                ));
 
-                foreach (string file in sharpmakeFiles)
+                files.AddRange(Directory.GetFiles(
+                    fullPath,
+                    "*.vcxproj",
+                    SearchOption.AllDirectories // Recursive search within each folder
+                ));
+
+                files.AddRange(Directory.GetFiles(
+                    fullPath,
+                    "*.csproj",
+                    SearchOption.AllDirectories // Recursive search within each folder
+                ));
+
+                foreach (string file in files)
                 {
                     SourceFiles.Add(file);
                 }

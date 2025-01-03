@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class DataFlowProject : BaseCppProject
+public class DataProject : BaseCppProject
 {
-    public DataFlowProject()
+    public DataProject()
     {
-        Name = "dataflow";
+        Name = "hdn.data";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -15,17 +15,18 @@ public class DataFlowProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
-        conf.Output = Project.Configuration.OutputType.Exe;
+        conf.SolutionFolder = Constants.DATA_VS_CATEGORY;
+
+        conf.Output = Project.Configuration.OutputType.Lib;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
+        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
+
         conf.AddPublicDependency<CoreProject>(target);
-        conf.AddPublicDependency<StbImageProject>(target);
-        conf.AddPublicDependency<XXHashProject>(target);
-        conf.AddPublicDependency<ConfigProject>(target);
-        conf.AddPublicDependency<CLI11Project>(target);
-        conf.AddPublicDependency<FmtProject>(target);
-        
-        conf.AddPublicDependency<DataProject>(target);
+        conf.AddPublicDependency<FlatbuffersProject>(target);
+
+        // TODO: Add EventPreBuild which run build_data_projects.bat
+        conf.EventPreBuild.Add($"call \"build_data_projects.bat\"");
     }
 }

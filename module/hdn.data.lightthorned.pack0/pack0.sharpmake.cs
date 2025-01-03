@@ -15,6 +15,8 @@ public class DataLightthornedPack0Project : CSharpProject
     {
         conf.Output = Project.Configuration.OutputType.DotNetClassLibrary;
 
+        conf.SolutionFolder = Constants.DATA_VS_CATEGORY;
+
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 

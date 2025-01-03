@@ -13,6 +13,11 @@ namespace hdn
 	{
 		key_mapper<T>::get(key, result);
 	}
+
+	void GetDefinition()
+	{
+
+	}
 }
 
 int main()
@@ -27,13 +32,4 @@ int main()
 		HINFO("Image Dimension ({0}, {1})", image->GetWidth(), image->GetHeight());
 		HINFO("Image Ptr: {0}", (void*)image);
 	}
-
-	// {
-	// 	DataResult result;
-	// 	GetData(path_data_key{ "content/SnippetArticulationRC.PNG", path_data_key::Image }, result);
-	// 	Image* image = static_cast<Image*>(result.payload);
-	// 	HINFO("Image Dimension ({0}, {1})", image->GetWidth(), image->GetHeight());
-	// 	HINFO("Image Ptr: {0}", (void*)image);
-	// }
-
 }

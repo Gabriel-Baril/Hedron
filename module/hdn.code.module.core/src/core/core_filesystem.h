@@ -56,6 +56,7 @@ namespace hdn
 		static bool HasExtension(const fspath& path);
 		static bool HasParent(const fspath& path);
 		static bool FullMatch(const fspath& path, const string& match, bool caseSensitive);
+		static bool DirectoryHasFile(const fspath& directory, const fspath& file);
 		static TVector<string> Parts(const fspath& path);
 
 		static FileStats Stats(const fspath& path);

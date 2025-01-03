@@ -15,11 +15,13 @@ public class DataLightthornedCoreProject : CSharpProject
     {
         conf.Output = Project.Configuration.OutputType.DotNetClassLibrary;
 
+        conf.SolutionFolder = Constants.DATA_VS_CATEGORY;
+
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<HdefProject>(target);
         // conf.EventPreBuild.Add("rd /s /q $(ProjectDir)generated");
-        // conf.EventPreBuild.Add("call $(ProjectDir)generate_flatbuffers.bat");
+        // conf.EventPreBuild.Add("call \"$(ProjectDir)generate_flatbuffers.bat\"");
     }
 }

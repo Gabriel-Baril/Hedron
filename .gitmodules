@@ -43,3 +43,6 @@
 [submodule "module/hdn.code.external.xxhash"]
 	path = module/hdn.code.external.xxhash
 	url = https://github.com/Gabriel-Baril/xxHash.git
+[submodule "module/hdn.code.external.flatbuffers"]
+	path = module/hdn.code.external.flatbuffers
+	url = https://github.com/Gabriel-Baril/flatbuffers.git
