@@ -3,11 +3,22 @@
 #include <filesystem>
 #include <regex>
 #include <iostream>
+#include <limits>
 
 #include "core/core_string.h"
 
 #if USING(HDN_PLATFORM_WINDOWS)
 #include <wtypes.h>
+#include <windows.h>
+#endif
+
+#if USING(HDN_PLATFORM_LINUX)
+#include <unistd.h>
+#endif
+
+#if USING(HDN_PLATFORM_MACOS)
+#include <mach-o/dyld.h>
+#include <stdlib.h>
 #endif
 
 namespace hdn
@@ -270,6 +281,33 @@ namespace hdn
 	fspath FileSystem::CurrentPath()
 	{
 		return std::filesystem::current_path();
+	}
+
+	fspath FileSystem::GetExecutableDirectory()
+	{
+#if USING(HDN_PLATFORM_WINDOWS)
+		char buffer[MAX_PATH];
+		GetModuleFileName(NULL, buffer, MAX_PATH);
+		return FileSystem::Parent(buffer);
+#elif USING(HDN_PLATFORM_LINUX)
+		char buffer[PATH_MAX];
+		ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
+		if (len != -1)
+		{
+			buffer[len] = '\0';
+			return FileSystem::Parent(buffer);
+		}
+#elif USING(HDN_PLATFORM_MACOS)
+		char buffer[PATH_MAX];
+		u32 size = sizeof(buffer);
+		if (_NSGetExecutablePath(buffer, &size) == 0)
+		{
+			return FileSystem::Parent(realpath(buffer, NULL));
+		}
+#else
+		HFATAL("The current platform cannot retreive the executable path");
+#endif
+		return "";
 	}
 
 	fspath FileSystem::Extension(const fspath& path)

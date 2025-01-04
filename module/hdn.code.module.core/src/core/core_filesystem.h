@@ -64,7 +64,10 @@ namespace hdn
 		static TOptional<fspath> ReadLink(const fspath& path);
 		static void CreateLink(const fspath& target, const fspath& link);
 		static bool Unlink(const fspath& path);
+		
 		static fspath CurrentPath();
+		static fspath GetExecutableDirectory();
+
 		static fspath Extension(const fspath& path);
 		static fspath Filename(const fspath& path);
 		static fspath Stem(const fspath& path);

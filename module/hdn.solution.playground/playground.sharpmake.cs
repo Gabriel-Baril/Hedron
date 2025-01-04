@@ -17,6 +17,7 @@ public class PlaygroundSolution : Solution
         conf.AddProject<DataFlowProject>(target);
         conf.AddProject<DataTraceProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
+        conf.AddProject<BuildPackagingProject>(target);
 
         conf.SetStartupProject<CfgPlaygroundProject>();
     }
