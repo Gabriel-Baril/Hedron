@@ -18,6 +18,7 @@ public class PlaygroundSolution : Solution
         conf.AddProject<DataTraceProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<BuildPackagingProject>(target);
+        conf.AddProject<SelfModifyingCodeProject>(target);
 
         conf.SetStartupProject<CfgPlaygroundProject>();
     }
