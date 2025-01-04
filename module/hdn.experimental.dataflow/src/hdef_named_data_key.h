@@ -22,8 +22,8 @@ namespace hdn
 		static void get(const hdef_named_data_key& key, DataResult& out)
 		{
 			// Invoke the hdef compiler with the provided information
-			hdef_compile();
-
+			// hdef_compile();
+			HdefCompile(key.assetName);
 
 			out.payload = nullptr;
 			out.payloadByteSize = 0;

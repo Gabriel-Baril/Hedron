@@ -2,7 +2,7 @@
   "profiles": {
     "hdefc": {
       "commandName": "Project",
-      "commandLineArgs": "--assembly D:\\_DEV\\_HEDRON\\module\\hdn.data.lightthorned.pack0\\out\\bin\\anycpu-debug\\net8.0\\data.lightthorned.pack0.dll --out D:\\_DEV\\_HEDRON\\module\\hdn.data.lightthorned.pack0\\defout -recursive False --definition scene_config_asset_0"
+      "commandLineArgs": "--assembly D:\\_DEV\\_HEDRON\\module\\hdn.data.lightthorned.pack0\\out\\bin\\anycpu-debug\\net8.0\\data.lightthorned.pack0.dll --out D:\\_DEV\\_HEDRON\\module\\hdn.data\\cache --recursive --all"
     }
   }
 }

@@ -1,1 +1,2 @@
 python build_data_projects.py
+pause

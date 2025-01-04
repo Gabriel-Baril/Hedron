@@ -10,7 +10,7 @@ namespace Hedron.Definition
 {
     public static class IDefinitionUtil
     {
-        public delegate VectorOffset CreateDependencyVectorFunc(FlatBufferBuilder builder, Offset<Hedron.Definition.DefinitionSignature>[] list);
+        public delegate VectorOffset CreateDependencyVectorFunc(FlatBufferBuilder builder, StringOffset[] list);
 
         public static Offset<DefinitionMetadata> ConstructDefinitionMetadata(FlatBufferBuilder builder, IDefinition definition)
         {
@@ -49,10 +49,10 @@ namespace Hedron.Definition
 
         public static VectorOffset ConstructDefinitionSignatureList(FlatBufferBuilder builder, List<IDefinition> definitionList, CreateDependencyVectorFunc createDependencyVectorFunc)
         {
-            var dependenciesOffsets = new List<Offset<DefinitionSignature>>();
+            var dependenciesOffsets = new List<StringOffset>();
             foreach (IDefinition definition in definitionList)
             {
-                var offset = ConstructDefinitionSignature(builder, definition);
+                var offset = builder.CreateString(definition.GetName());
                 dependenciesOffsets.Add(offset);
             }
             return createDependencyVectorFunc(builder, dependenciesOffsets.ToArray());
@@ -110,7 +110,7 @@ namespace Hedron.Definition
         {
             FlatBufferBuilder builder = new FlatBufferBuilder(1024);
             var metadataOffset = IDefinitionUtil.ConstructDefinitionMetadata(builder, this);
-            var signatureOffset = IDefinitionUtil.ConstructDefinitionSignature(builder, this);
+            var signatureOffset = builder.CreateString(GetName());
             var dependenciesOffset = IDefinitionUtil.ConstructDefinitionSignatureList(builder, Dependencies, Definition.CreateDependenciesVector);
             var dataOffset = Definition.CreateDataVector(builder, SerializeData());
             Definition.StartDefinition(builder);

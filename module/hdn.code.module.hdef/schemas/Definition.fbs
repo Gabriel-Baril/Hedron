@@ -7,16 +7,11 @@ table DefinitionMetadata
     type_chain: string;
 }
 
-table DefinitionSignature
-{
-    name: string;
-}
-
 table Definition
 {
     metadata: DefinitionMetadata;
-    signature: DefinitionSignature;
-    dependencies: [DefinitionSignature];
+    signature: string;
+    dependencies: [string];
     data: [ubyte];
 }
 

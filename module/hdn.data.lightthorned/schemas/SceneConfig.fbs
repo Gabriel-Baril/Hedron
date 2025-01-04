@@ -4,7 +4,7 @@ namespace Hedron.Definition;
 
 table SceneConfig {
     generate_proxy_geo:bool;
-    light_config:LightConfig;
+    light_config:string;
 }
 
 root_type SceneConfig;

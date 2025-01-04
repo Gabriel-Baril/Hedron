@@ -17,7 +17,7 @@ public class DataProject : BaseCppProject
 
         conf.SolutionFolder = Constants.DATA_VS_CATEGORY;
 
-        conf.Output = Project.Configuration.OutputType.Lib;
+        conf.Output = Project.Configuration.OutputType.None;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
@@ -26,7 +26,6 @@ public class DataProject : BaseCppProject
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<FlatbuffersProject>(target);
 
-        // TODO: Add EventPreBuild which run build_data_projects.bat
         conf.EventPreBuild.Add($"call \"build_data_projects.bat\"");
     }
 }

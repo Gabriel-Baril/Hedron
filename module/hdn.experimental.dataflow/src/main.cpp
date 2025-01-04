@@ -31,5 +31,9 @@ int main()
 		Image* image = static_cast<Image*>(result.payload);
 		HINFO("Image Dimension ({0}, {1})", image->GetWidth(), image->GetHeight());
 		HINFO("Image Ptr: {0}", (void*)image);
+
+
+		GetData(hdef_named_data_key{ "scene_config_asset_1" }, result);
+
 	}
 }

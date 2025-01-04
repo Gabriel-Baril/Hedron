@@ -34,9 +34,16 @@ namespace Hedron.Client
 
         }
 
+        // Return the types representing the abstract classes for definition
         public static IEnumerable<Type> GetDefinitionTypes(Assembly assembly)
         {
             return assembly.GetTypes().Where(type => type.GetCustomAttributes(typeof(DefinitionAttribute), false).Length > 0);
+        }
+
+        // Return the actual definitions (also called modules) inheriting from abstract definition types
+        public static IEnumerable<Type> GetDefinitions(Assembly assembly)
+        {
+            return assembly.GetTypes().Where(type => type.GetCustomAttributes(typeof(ModuleAttribute), false).Length > 0);
         }
 
         static void Main(string[] args)
@@ -80,6 +87,7 @@ namespace Hedron.Client
         static void Run(Options opts)
         {
             Console.WriteLine($"RecursiveDefinitionCompilation : {opts.RecursiveDefinitionCompilation}");
+            Console.WriteLine($"CompileAll : {opts.CompileAll}");
             Console.WriteLine($"AssemblyPath : {opts.AssemblyPath}");
             Console.WriteLine($"DefinitionName : {opts.DefinitionName}");
             Console.WriteLine($"OutFolder : {opts.OutFolder}");
@@ -88,7 +96,17 @@ namespace Hedron.Client
             Assembly assembly = Assembly.LoadFrom(opts.AssemblyPath);
 
             // Find definition class
-            if (opts.DefinitionName != string.Empty)
+            if (opts.CompileAll)
+            {
+                IEnumerable<Type> definitions = GetDefinitions(assembly);
+                Console.WriteLine($"{definitions.Count()} definitions found");
+                foreach (var definitionType in definitions)
+                {
+                    Console.WriteLine($"{definitionType.FullName}");
+                    CompileDefinition(definitionType, opts.OutFolder, false);
+                }
+            }
+            else if (opts.DefinitionName != string.Empty)
             {
                 Type? definitionType = GetDefinition(assembly, opts.DefinitionName);
                 if (definitionType == null)
@@ -98,13 +116,6 @@ namespace Hedron.Client
                 }
 
                 CompileDefinition(definitionType, opts.OutFolder, opts.RecursiveDefinitionCompilation);
-            }
-            else if (opts.CompileAll)
-            {
-                foreach (var definitionType in GetDefinitionTypes(assembly))
-                {
-                    CompileDefinition(definitionType, opts.OutFolder, opts.RecursiveDefinitionCompilation);
-                }
             }
         }
 

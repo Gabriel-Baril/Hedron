@@ -6,7 +6,7 @@ namespace Hedron.Definition
     {
         public static Offset<SceneConfig> ConstructSceneConfig(FlatBufferBuilder builder, ISceneConfig feature)
         {
-            var lightOffset = ILightConfigUtil.ConstructLightConfig(builder, feature.LightConfig());
+            var lightOffset = builder.CreateString(feature.LightConfig().GetName());
 
             SceneConfig.StartSceneConfig(builder);
             SceneConfig.AddGenerateProxyGeo(builder, feature.ShouldGenerateProxyGeo());
