@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/core_type.h"
+#include "core/core_macro.h"
 #include "core/core_internal_api.h"
 
 #include <stdio.h>
@@ -22,4 +23,6 @@ namespace hdn
 	HDN_MODULE_CORE_API int Str_CountOccurences(const char* str, char c);
 	HDN_MODULE_CORE_API i64 Str_FindFirstNotOfIndex(const char* str, char c);
 	HDN_MODULE_CORE_API void Str_CopySubstring(char* dest, const char* begin, const char* end = nullptr);
+
+	HDN_MODULE_CORE_API std::string trim(const std::string& str);
 }

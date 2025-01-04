@@ -98,5 +98,9 @@ public class LightthornedProject : BaseCppProject
         conf.AddPublicDependency<INIHProject>(target);
         conf.AddPublicDependency<CLI11Project>(target);
         conf.AddPublicDependency<FmtProject>(target);
+
+        // TODO: Idaes specific dependencies, don't forget to remove those once Idaes has it's own proper setup
+        // TODO: Don't forget to also move the ideations folder during the migration
+        conf.AddPublicDependency<NlohmannJsonProject>(target);
     }
 }
