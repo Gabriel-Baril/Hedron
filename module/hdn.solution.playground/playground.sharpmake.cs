@@ -15,7 +15,6 @@ public class PlaygroundSolution : Solution
     public void ConfigureAll(Solution.Configuration conf, Target target)
     {
         conf.AddProject<DataFlowProject>(target);
-        conf.AddProject<DataTraceProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<BuildPackagingProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
