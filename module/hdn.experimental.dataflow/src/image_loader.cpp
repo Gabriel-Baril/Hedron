@@ -35,14 +35,14 @@ namespace hdn
 		return s_Instance;
 	}
 
-	bool ImageRegistry::Contains(did_t name)
+	bool ImageRegistry::Contains(defid_t name)
 	{
 		size_t length = strlen(name);
 		u64 hash = XXH64(name, length, 0);
 		return m_ImageRegistry.contains(hash);
 	}
 
-	void ImageRegistry::Register(did_t name, Ref<Image> image)
+	void ImageRegistry::Register(defid_t name, Ref<Image> image)
 	{
 		size_t length = strlen(name);
 		u64 hash = XXH64(name, length, 0); // TODO: Find better seed than 0
@@ -53,7 +53,7 @@ namespace hdn
 		m_ImageRegistry[hash] = image;
 	}
 
-	Ref<Image> ImageRegistry::Get(did_t name)
+	Ref<Image> ImageRegistry::Get(defid_t name)
 	{
 		size_t length = strlen(name);
 		u64 hash = XXH64(name, length, 0); // TODO: Find better seed than 0

@@ -2,9 +2,11 @@
 #include <iostream>
 
 #include "key_mapper.h"
-#include "hdef_packed_data_key.h"
-#include "hdef_named_data_key.h"
+#include "hdef/hdef_packed_data_key.h"
+#include "hdef/hdef_named_data_key.h"
 #include "path_data_key.h"
+
+#include "homogeneous_memory_pool.h"
 
 namespace hdn
 {
@@ -13,27 +15,30 @@ namespace hdn
 	{
 		key_mapper<T>::get(key, result);
 	}
-
-	void GetDefinition()
-	{
-
-	}
 }
+
+struct Point
+{
+	float x;
+	float y;
+};
 
 int main()
 {
 	using namespace hdn;
 	Log_Init();
 
-	{
-		DataResult result;
-		GetData(path_data_key{ "content/SnippetArticulationRC.PNG", path_data_key::Image }, result);
-		Image* image = static_cast<Image*>(result.payload);
-		HINFO("Image Dimension ({0}, {1})", image->GetWidth(), image->GetHeight());
-		HINFO("Image Ptr: {0}", (void*)image);
+	void* mem = new byte[sizeof(Point) * 10];
+	pool_allocator pool(sizeof(Point), 10, mem);
+	Point* point = static_cast<Point*>(pool.Allocate());
 
 
-		GetData(hdef_named_data_key{ "scene_config_asset_1" }, result);
-
-	}
+	// {
+	// 	DataResult result;
+	// 	GetData(path_data_key{ "content/SnippetArticulationRC.PNG", path_data_key::Image }, result);
+	// 	Image* image = static_cast<Image*>(result.payload);
+	// 	HINFO("Image Dimension ({0}, {1})", image->GetWidth(), image->GetHeight());
+	// 	HINFO("Image Ptr: {0}", (void*)image);
+	// 	GetData(hdef_named_data_key{ "scene_config_asset_1" }, result);
+	// }
 }

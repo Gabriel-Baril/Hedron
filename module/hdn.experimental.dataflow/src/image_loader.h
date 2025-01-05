@@ -29,9 +29,9 @@ namespace hdn
 	public:
 		static ImageRegistry& Get();
 
-		bool Contains(did_t name);
-		void Register(did_t name, Ref<Image> image);
-		Ref<Image> Get(did_t name);
+		bool Contains(defid_t name);
+		void Register(defid_t name, Ref<Image> image);
+		Ref<Image> Get(defid_t name);
 	private:
 		ImageRegistry() = default;
 	private:
