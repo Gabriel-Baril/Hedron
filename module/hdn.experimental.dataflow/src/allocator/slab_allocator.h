@@ -34,7 +34,7 @@ namespace hdn
 	private:
 		void CreateSlab()
 		{
-			void* slab = std::malloc(m_BlockSize * m_BlocksPerSlab); // TODO: Fix
+			void* slab = std::malloc(m_BlockSize * m_BlocksPerSlab); // TODO: Fix, should not heap allocate
 			slabs.push_back(slab);
 			byte* current = static_cast<byte*>(slab);
 			for (size_t i = 0;i < m_BlocksPerSlab; i++)
