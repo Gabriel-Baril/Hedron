@@ -49,3 +49,6 @@
 [submodule "module/hdn.code.external.nlohmann-json"]
 	path = module/hdn.code.external.nlohmann-json
 	url = https://github.com/Gabriel-Baril/nlohmann-json.git
+[submodule "module/hdn.code.external.openfbx"]
+	path = module/hdn.code.external.openfbx
+	url = https://github.com/Gabriel-Baril/OpenFBX.git
