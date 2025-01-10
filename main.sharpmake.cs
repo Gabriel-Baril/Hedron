@@ -102,7 +102,6 @@ public static class Main
         args.Generate<LightthornedSolution>();
 
         // C# Solutions
-        args.Generate<HdefSolution>();
         args.Generate<AllSharpmakeSolution>();
     }
 }

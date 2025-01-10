@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/core.h"
-#include "data.h"
 
 #include <unordered_map>
 
@@ -29,9 +28,9 @@ namespace hdn
 	public:
 		static ImageRegistry& Get();
 
-		bool Contains(defid_t name);
-		void Register(defid_t name, Ref<Image> image);
-		Ref<Image> Get(defid_t name);
+		bool Contains(const char* name);
+		void Register(const char* name, Ref<Image> image);
+		Ref<Image> Get(const char* name);
 	private:
 		ImageRegistry() = default;
 	private:

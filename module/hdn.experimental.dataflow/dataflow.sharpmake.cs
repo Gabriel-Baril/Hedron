@@ -25,7 +25,5 @@ public class DataFlowProject : BaseCppProject
         conf.AddPublicDependency<ConfigProject>(target);
         conf.AddPublicDependency<CLI11Project>(target);
         conf.AddPublicDependency<FmtProject>(target);
-        
-        conf.AddPublicDependency<DataProject>(target);
     }
 }
