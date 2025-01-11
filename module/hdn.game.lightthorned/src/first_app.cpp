@@ -100,7 +100,7 @@ namespace hdn
 		);
 
 		IdaesImgui idaesUI;
-		idaesUI.Init();
+		// TODO: idaesUI.Init();
 
 		IdeonImgui ideonUI;
 
@@ -179,9 +179,9 @@ namespace hdn
 
 	void FirstApp::LoadGameObjects()
 	{
-		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromFile(&m_Device, "models/flat_vase.obj");
+		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
 
-		for(int i = 0;i < 300; i++)
+		for(int i = 0;i < 1; i++)
 		{
 			auto flatVase = HDNGameObject::CreateGameObject();
 			flatVase.name = "vase";
@@ -198,7 +198,7 @@ namespace hdn
 		}
 
 		{
-			hdnModel = HDNModel::CreateModelFromFile(&m_Device, "models/quad.obj");
+			hdnModel = HDNModel::CreateModelFromObjFile(&m_Device, "models/quad.obj");
 			auto floor = HDNGameObject::CreateGameObject();
 			floor.name = "floor";
 			floor.model = hdnModel;
@@ -211,6 +211,17 @@ namespace hdn
 			floor.physicsComponent->physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
 
 			m_GameObjects.emplace(floor.GetID(), std::move(floor));
+		}
+
+		{
+			hdnModel = HDNModel::CreateModelFromFbxFile(&m_Device, "models/cube.fbx"); // models/cube.fbx
+			auto pot = HDNGameObject::CreateGameObject();
+			pot.name = "pot";
+			pot.model = hdnModel;
+			pot.transform.translation = { 0.0f, 0.0f, 0.0f };
+			pot.transform.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
+
+			m_GameObjects.emplace(pot.GetID(), std::move(pot));
 		}
 
 		std::vector<glm::vec3> lightColors{

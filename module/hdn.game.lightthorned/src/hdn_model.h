@@ -38,7 +38,8 @@ namespace hdn
 			std::vector<Vertex> vertices{};
 			std::vector<u32> indices{};
 
-			void LoadModel(const std::string& filepath);
+			void LoadObjModel(const std::string& filepath);
+			void LoadFbxModel(const std::string& filepath);
 		};
 
 		HDNModel(HDNDevice* device, const HDNModel::Builder& builder);
@@ -46,7 +47,8 @@ namespace hdn
 		HDNModel(const HDNModel&) = delete;
 		HDNModel& operator=(const HDNModel&) = delete;
 
-		static Scope<HDNModel> CreateModelFromFile(HDNDevice* device, const std::string& filepath);
+		static Scope<HDNModel> CreateModelFromObjFile(HDNDevice* device, const std::string& filepath);
+		static Scope<HDNModel> CreateModelFromFbxFile(HDNDevice* device, const std::string& filepath);
 
 		void Bind(VkCommandBuffer commandBuffer);
 		void Draw(VkCommandBuffer commandBuffer);

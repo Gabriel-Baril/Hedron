@@ -54,8 +54,10 @@ namespace hdn
 #endif
 
 #if USING(THROW_ENABLE)
+#define HTHROW(exception, message, ...) { throw exception(message); }
 #define HTHROW(exception, message) { throw exception(message); }
 #else
+#define HTHROW(exception, message, ...) { HFATAL(message, __VA_ARGS__); }
 #define HTHROW(exception, message) { HFATAL(message); }
 #endif
 

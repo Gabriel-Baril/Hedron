@@ -50,7 +50,7 @@ namespace hdn
 				ImGui::TableNextColumn();
 				ImGui::Text(ideation.name.c_str());
 			}
-			HINFO("eLEMENT cOUNT: {0}", i);
+			// HDEBUG("eLEMENT cOUNT: {0}", i);
 			ImGui::EndTable();
 		}
 		ImGui::End();

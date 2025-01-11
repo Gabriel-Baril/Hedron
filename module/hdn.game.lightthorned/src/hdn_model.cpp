@@ -3,6 +3,7 @@
 #include "hdn_utils.h"
 
 #include <tinyobjloader/tiny_obj_loader.h>
+#include <ofbx.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
@@ -38,11 +39,17 @@ namespace hdn
 	{
 	}
 
-	Scope<HDNModel> HDNModel::CreateModelFromFile(HDNDevice* device, const std::string& filepath)
+	Scope<HDNModel> HDNModel::CreateModelFromObjFile(HDNDevice* device, const std::string& filepath)
 	{
 		Builder builder{};
-		builder.LoadModel(filepath);
-		// HDN_CORE_INFO("Vertex Count: {0}", builder.vertices.size());
+		builder.LoadObjModel(filepath);
+		return CreateScope<HDNModel>(device, builder);
+	}
+
+	Scope<HDNModel> HDNModel::CreateModelFromFbxFile(HDNDevice* device, const std::string& filepath)
+	{
+		Builder builder{};
+		builder.LoadFbxModel(filepath);
 		return CreateScope<HDNModel>(device, builder);
 	}
 
@@ -154,7 +161,7 @@ namespace hdn
 		return attributeDescriptions;
 	}
 
-	void HDNModel::Builder::LoadModel(const std::string& filepath)
+	void HDNModel::Builder::LoadObjModel(const std::string& filepath)
 	{
 		tinyobj::attrib_t attrib; // Store positions, colors, uvs
 		std::vector<tinyobj::shape_t> shapes; // Index values for each elements
@@ -215,6 +222,91 @@ namespace hdn
 				}
 				indices.push_back(uniqueVertices[vertex]);
 			}
+		}
+	}
+
+	void HDNModel::Builder::LoadFbxModel(const std::string& filepath)
+	{
+		std::ifstream file(filepath.c_str(), std::ios::binary | std::ios::ate);
+		if (!file)
+		{
+			HTHROW(std::runtime_error, "Failed to open file '{0}'", filepath.c_str());
+		}
+
+		size_t fileSize = file.tellg();
+		file.seekg(0, std::ios::beg);
+		TVector<u8> buffer(fileSize);
+		if (!file.read(reinterpret_cast<char*>(buffer.data()), fileSize))
+		{
+			HTHROW(std::runtime_error, "Failed to read file '{0}'", filepath.c_str());
+		}
+
+		vertices.clear();
+		indices.clear();
+
+		std::unordered_map<Vertex, u32> uniqueVertices;
+		const ofbx::IScene* scene = ofbx::load(buffer.data(), fileSize, static_cast<ofbx::u16>(ofbx::LoadFlags::NONE));
+		HDEBUG("Mesh Count: {0}", scene->getMeshCount());
+		for (int i = 0;i < scene->getMeshCount(); i++)
+		{
+			const ofbx::Mesh* fbxMesh = scene->getMesh(i);
+			const ofbx::Geometry* geom = fbxMesh->getGeometry();
+			if (!geom)
+			{
+				continue;
+			}
+
+			const ofbx::Vec3Attributes positions = geom->getGeometryData().getPositions();
+			const ofbx::Vec3Attributes normals = geom->getGeometryData().getNormals();
+			const ofbx::Vec2Attributes uvs = geom->getGeometryData().getUVs();
+			const ofbx::Vec4Attributes colors = geom->getGeometryData().getColors();
+
+			HDEBUG("Position Count: {0}, {1}", positions.count, positions.values_count);
+			HDEBUG("Normal Count: {0}, {1}", normals.count, normals.values_count);
+			HDEBUG("UV Count: {0}", uvs.count);
+			HDEBUG("Color Count: {0}", colors.count);
+
+			for (int i = 0; i < positions.count; i++) // positions.count is the amount of indices
+			{
+				Vertex vertex{};
+
+				ofbx::Vec3 position = positions.get(i);
+				vertex.position = {
+					position.x,
+					position.y,
+					position.z
+				};
+
+				ofbx::Vec3 normal = normals.get(i);
+				vertex.normal = {
+					normal.x,
+					normal.y,
+					normal.z
+				};
+
+				ofbx::Vec2 uv = uvs.get(i);
+				vertex.uv = {
+					uv.x,
+					uv.y
+				};
+
+				vertex.color = {
+					1.0f,
+					1.0f,
+					1.0f
+				};
+
+				if (!uniqueVertices.contains(vertex))
+				{
+					uniqueVertices[vertex] = static_cast<u32>(vertices.size());
+					vertices.push_back(vertex);
+				}
+				indices.push_back(uniqueVertices[vertex]);
+			}
+
+			int meshMemorySavedFromVertexDedupByte = (positions.count - vertices.size()) * sizeof(Vertex) - indices.size() * sizeof(u32);
+			HDEBUG("Vertex Count After Deduplication: {0}", vertices.size());
+			HDEBUG("Mesh Memory Saved From Deduplication: {0} bytes", meshMemorySavedFromVertexDedupByte);
 		}
 	}
 }

@@ -88,6 +88,7 @@ public class LightthornedProject : BaseCppProject
 
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<TinyObjLoaderProject>(target);
+        conf.AddPublicDependency<OpenFBXProject>(target);
         conf.AddPublicDependency<GLFWProject>(target);
         conf.AddPublicDependency<ImguiProject>(target);
 
