@@ -18,6 +18,7 @@ public class PlaygroundSolution : Solution
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<BuildPackagingProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
+        conf.AddProject<ListenDirectoryProject>(target);
 
         conf.SetStartupProject<CfgPlaygroundProject>();
     }
