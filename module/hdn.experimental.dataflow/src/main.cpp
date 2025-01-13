@@ -43,9 +43,7 @@ namespace hdn
 
 	void LoadObjectExample()
 	{
-		HObjPtr<HScene> scene = HObjectUtil::GetObjectFromPath<HScene>("object/scene.ho");
-		Print(*scene);
-		scene = HObjectUtil::GetObjectFromPath<HScene>("object/scene.ho");
+		HObjPtr<HLightConfig> scene = HObjectUtil::GetObjectFromPath<HLightConfig>("object/scene.ho");
 		Print(*scene);
 	}
 
@@ -85,7 +83,7 @@ int main()
 {
 	using namespace hdn;
 	Log_Init();
-	// CreateObjectExample();
+	CreateObjectExample();
 	IterateHObject();
 	LoadObjectExample();
 }

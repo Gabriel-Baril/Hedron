@@ -118,10 +118,7 @@ namespace hdn
 				return nullptr;
 			}
 			object->Load(reader, flags);
-			if (absoluteSavePath != object->m_Path)
-			{
-				object->SetPath(absoluteSavePath);
-			}
+			object->SetPath(absoluteSavePath);
 			object->SetLoadState(HObjectLoadState::Realized);
 
 			HObjectRegistry::Get().Register(object->GetKey(), object);

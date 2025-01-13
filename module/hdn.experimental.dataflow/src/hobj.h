@@ -71,7 +71,6 @@ namespace hdn
 			archive.Advance<HObjectTypeHash>(); // The first bytes always contains the serialized object type, since we don't need to them for loading, skip them
 			bin::Read(archive, m_Key);
 			bin::Read(archive, m_Path);
-			bin::Read(archive, m_DataHash);
 		}
 
 		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) const
@@ -82,7 +81,6 @@ namespace hdn
 			bin::Write(archive, typeHash);
 			bin::Write(archive, m_Key);
 			bin::Write(archive, m_Path);
-			bin::Write(archive, m_DataHash);
 		}
 
 		inline virtual HObjectTypeHash GetTypeHash() const { return TYPE_HASH(HObject); }
@@ -98,7 +96,7 @@ namespace hdn
 		}
 	protected:
 		HObject()
-			: m_Key{ HOBJ_NULL_KEY }, m_DataHash{ 0 }, m_LoadState{ HObjectLoadState::Unloaded }
+			: m_Key{ HOBJ_NULL_KEY }, m_LoadState{ HObjectLoadState::Unloaded }
 		{
 		}
 	private:
@@ -118,7 +116,6 @@ namespace hdn
 		}
 	private:
 		HObjectKey m_Key = HOBJ_NULL_KEY;
-		u64 m_DataHash = 0;
 		std::string m_Path = ""; // TODO: Make this field available only in debug mode?
 
 		// Transient
