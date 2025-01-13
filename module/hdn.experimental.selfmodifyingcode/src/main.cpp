@@ -7,11 +7,8 @@ unsigned char code[] = {
 	0xC3
 };
 
-int main()
+void ExecSelfModifyingFunc()
 {
-	using namespace hdn;
-	Log_Init();
-
 	void* execMemory = VirtualAlloc(
 		nullptr,
 		sizeof(code),
@@ -22,7 +19,7 @@ int main()
 	if (!execMemory)
 	{
 		HERR("Virtual Alloc Failed");
-		return 1;
+		return;
 	}
 
 	memcpy(execMemory, code, sizeof(code));
@@ -35,6 +32,14 @@ int main()
 	HINFO("Result is '{0}'", result);
 
 	VirtualFree(execMemory, 0, MEM_RELEASE);
+}
+
+
+
+int main()
+{
+	using namespace hdn;
+	Log_Init();
 
 	return 0;
 }

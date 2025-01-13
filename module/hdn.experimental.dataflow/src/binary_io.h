@@ -4,6 +4,7 @@
 
 #include "core/core_type.h"
 
+#include "buffer_reader.h"
 #include "buffer_writer.h"
 #include "group_buffer_writer.h"
 
@@ -64,73 +65,27 @@ namespace hdn::bin
 	}
 
 	void Pop(FGroupBufferWriter& writer);
-
-	/* START -- Functions to make the interface more uniform */
+	
 	template<IsPrimitive T>
-	inline void Write(const T& object, FBufferWriter& writer)
+	inline void Write(FBufferWriter& writer, const T& object)
 	{
 		writer.Write(object);
 	}
 
 	template<typename T>
-	inline void Write(const T& object, FGroupBufferWriter& writer, const char* semantic)
+	inline void Write(FGroupBufferWriter& writer, const T& object, const char* semantic)
 	{
 		writer.Push(semantic);
 		Write(object, writer);
 		writer.Pop();
 	}
 
-	void Write(const std::string& object, FBufferWriter& writer);
+	void Write(FBufferWriter& writer, const std::string& object);
+	void Read(FBufferReader& reader, std::string& object);
 
-	/* END -- Functions to make the interface more uniform */
-
-	/* START -- Functions to make the interface more uniform */
-	// void Read(bool& object, BinaryReader& reader);
-	// 
-	// void Read(int8& object, BinaryReader& reader);
-	// void Read(uint8& object, BinaryReader& reader);
-	// void Read(int16& object, BinaryReader& reader);
-	// void Read(uint16& object, BinaryReader& reader);
-	// void Read(int32& object, BinaryReader& reader);
-	// void Read(uint32& object, BinaryReader& reader);
-	// void Read(int64& object, BinaryReader& reader);
-	// void Read(uint64& object, BinaryReader& reader);
-	// void Read(float32& object, BinaryReader& reader);
-	// void Read(float64& object, BinaryReader& reader);
-	// 
-	// void Read(vec2i8& object, BinaryReader& reader);
-	// void Read(vec2ui8& object, BinaryReader& reader);
-	// void Read(vec2i16& object, BinaryReader& reader);
-	// void Read(vec2ui16& object, BinaryReader& reader);
-	// void Read(vec2i32& object, BinaryReader& reader);
-	// void Read(vec2ui32& object, BinaryReader& reader);
-	// void Read(vec2i64& object, BinaryReader& reader);
-	// void Read(vec2ui64& object, BinaryReader& reader);
-	// void Read(vec2f32& object, BinaryReader& reader);
-	// void Read(vec2f64& object, BinaryReader& reader);
-	// 
-	// void Read(vec3i8& object, BinaryReader& reader);
-	// void Read(vec3ui8& object, BinaryReader& reader);
-	// void Read(vec3i16& object, BinaryReader& reader);
-	// void Read(vec3ui16& object, BinaryReader& reader);
-	// void Read(vec3i32& object, BinaryReader& reader);
-	// void Read(vec3ui32& object, BinaryReader& reader);
-	// void Read(vec3i64& object, BinaryReader& reader);
-	// void Read(vec3ui64& object, BinaryReader& reader);
-	// void Read(vec3f32& object, BinaryReader& reader);
-	// void Read(vec3f64& object, BinaryReader& reader);
-	// 
-	// void Read(vec4i8& object, BinaryReader& reader);
-	// void Read(vec4ui8& object, BinaryReader& reader);
-	// void Read(vec4i16& object, BinaryReader& reader);
-	// void Read(vec4ui16& object, BinaryReader& reader);
-	// void Read(vec4i32& object, BinaryReader& reader);
-	// void Read(vec4ui32& object, BinaryReader& reader);
-	// void Read(vec4i64& object, BinaryReader& reader);
-	// void Read(vec4ui64& object, BinaryReader& reader);
-	// void Read(vec4f32& object, BinaryReader& reader);
-	// void Read(vec4f64& object, BinaryReader& reader);
-	// 
-	// void Read(std::string& out, BinaryReader& reader);
-	/* END -- Functions to make the interface more uniform */
+	template<IsPrimitive T>
+	inline void Read(FBufferReader& reader, T& object)
+	{
+		reader.Read(&object);
+	}
 }
