@@ -29,7 +29,7 @@ namespace hdn
 		inline u32 GetMaxSecondaryLightCount() const { return m_MaxSecondaryLightCount; }
 		inline void SetMaxSecondaryLightCount(u32 count) { m_MaxSecondaryLightCount = count; }
 
-		~HLightConfig() = default;
+		virtual ~HLightConfig() = default;
 	private:
 		u32 m_MaxPrimaryLightCount = 0;
 		u32 m_MaxSecondaryLightCount = 0;

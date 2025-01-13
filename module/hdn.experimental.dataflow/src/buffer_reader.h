@@ -45,6 +45,13 @@ namespace hdn
 		}
 
 		template<typename T>
+		inline void Backtrack()
+		{
+			const auto size = sizeof(T);
+			m_CurrentPtr -= size;
+		}
+
+		template<typename T>
 		inline void Advance()
 		{
 			const auto size = sizeof(T);

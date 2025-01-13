@@ -15,6 +15,40 @@
 #define BIT(x) (1 << x)
 #define ARRLEN(arr) (sizeof(arr) / sizeof(*arr))
 
+// Macro to enable bitwise operations for an enum class
+#define ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(EnumType)                                      \
+    inline EnumType operator|(EnumType lhs, EnumType rhs) {                                 \
+        return static_cast<EnumType>(                                                       \
+            static_cast<std::underlying_type_t<EnumType>>(lhs) |                            \
+            static_cast<std::underlying_type_t<EnumType>>(rhs));                            \
+    }                                                                                       \
+    inline EnumType& operator|=(EnumType& lhs, EnumType rhs) {                              \
+        lhs = lhs | rhs;                                                                    \
+        return lhs;                                                                         \
+    }                                                                                       \
+    inline EnumType operator&(EnumType lhs, EnumType rhs) {                                 \
+        return static_cast<EnumType>(                                                       \
+            static_cast<std::underlying_type_t<EnumType>>(lhs) &                            \
+            static_cast<std::underlying_type_t<EnumType>>(rhs));                            \
+    }                                                                                       \
+    inline EnumType& operator&=(EnumType& lhs, EnumType rhs) {                              \
+        lhs = lhs & rhs;                                                                    \
+        return lhs;                                                                         \
+    }                                                                                       \
+    inline EnumType operator^(EnumType lhs, EnumType rhs) {                                 \
+        return static_cast<EnumType>(                                                       \
+            static_cast<std::underlying_type_t<EnumType>>(lhs) ^                            \
+            static_cast<std::underlying_type_t<EnumType>>(rhs));                            \
+    }                                                                                       \
+    inline EnumType& operator^=(EnumType& lhs, EnumType rhs) {                              \
+        lhs = lhs ^ rhs;                                                                    \
+        return lhs;                                                                         \
+    }                                                                                       \
+    inline EnumType operator~(EnumType lhs) {                                               \
+        return static_cast<EnumType>(~static_cast<std::underlying_type_t<EnumType>>(lhs));  \
+    }
+
+
 #ifdef _HDN_DEBUG
 #define HDN_DEBUG IN_USE
 #else

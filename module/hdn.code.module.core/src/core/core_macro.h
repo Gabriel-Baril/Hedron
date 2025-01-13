@@ -5,6 +5,7 @@
 #include <optional>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 namespace hdn
 {
@@ -65,6 +66,9 @@ namespace hdn
 
 	template<typename T>
 	using TVector = std::vector<T>;
+
+	template<typename K, typename T>
+	using TUnorderedMap = std::unordered_map<K, T>;
 
 	using string = std::string;
 }

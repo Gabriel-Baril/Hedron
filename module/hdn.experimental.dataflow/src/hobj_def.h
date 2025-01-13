@@ -20,6 +20,6 @@ namespace hdn
 
 		inline virtual u64 GetTypeHash() const override { return TYPE_HASH(HDefinition); }
 
-		~HDefinition() = default;
+		virtual ~HDefinition() = default;
 	};
 }
