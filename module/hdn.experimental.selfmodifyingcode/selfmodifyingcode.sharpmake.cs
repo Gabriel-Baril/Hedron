@@ -14,6 +14,8 @@ public class SelfModifyingCodeProject : BaseCppProject
     public new void ConfigureAll(Project.Configuration conf, Target target)
     {
         base.ConfigureAll(conf, target);
+        
+        conf.SolutionFolder = Constants.EXPERIMENTAL_VS_CATEGORY;
 
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";

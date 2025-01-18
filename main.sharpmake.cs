@@ -15,6 +15,8 @@ public static class Constants
     public const string MODULE_VS_CATEGORY = "module";
     public const string TEST_VS_CATEGORY = "test";
     public const string DATA_VS_CATEGORY = "data";
+    public const string GAME_VS_CATEGORY = "game";
+    public const string TOOL_VS_CATEGORY = "tool";
     public const string PLUGIN_VS_CATEGORY = "plugin";
     public const string EXPERIMENTAL_VS_CATEGORY = "experimental";
 

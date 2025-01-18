@@ -44,5 +44,8 @@ public class AllSolution : Solution
         conf.AddProject<ListenDirectoryProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
         conf.AddProject<LightthornedProject>(target);
+        conf.AddProject<PolyProject>(target);
+        conf.AddProject<IdeonProject>(target);
+        conf.AddProject<IdaesProject>(target);
     }
 }

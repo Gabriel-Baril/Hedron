@@ -15,6 +15,8 @@ public class BuildPackagingProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
+        conf.SolutionFolder = Constants.EXPERIMENTAL_VS_CATEGORY;
+        
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
