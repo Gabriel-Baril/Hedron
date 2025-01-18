@@ -11,7 +11,7 @@ public static class Constants
     public const string DEFAULT_SOURCE_FOLDER = "src";
     public const string MAIN_SHARPMAKE_FILE = "main.sharpmake.cs";
 
-    public const string EXTERNAL_VS_CATEGORY = "external";
+    public const string EXTERNAL_VS_CATEGORY = "_external";
     public const string MODULE_VS_CATEGORY = "module";
     public const string TEST_VS_CATEGORY = "test";
     public const string DATA_VS_CATEGORY = "data";
