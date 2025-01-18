@@ -100,6 +100,7 @@ public static class Main
         args.Generate<PlaygroundSolution>();
         args.Generate<TestsSolution>();
         args.Generate<LightthornedSolution>();
+        args.Generate<AllSolution>();
 
         // C# Solutions
         args.Generate<AllSharpmakeSolution>();
