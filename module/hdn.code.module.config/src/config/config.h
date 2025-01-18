@@ -1,21 +1,22 @@
 #pragma once
 #include "config_internal_api.h"
 
+#include "core/core_filesystem.h"
+
 #include "inih/INIReader.h"
-#include <filesystem>
 
 namespace hdn
 {
 	class HDN_MODULE_CONFIG_API Configuration
 	{
 	private:
-		Configuration(const std::filesystem::path& rootConfigPath);
+		Configuration(const fspath& rootConfigPath);
 	private:
 		INIReader m_Reader;
 	public:
 		static Configuration& Get();
-		static std::filesystem::path GetRootConfigPath();
+		static fspath GetRootConfigPath();
 
-		std::string GetRootConfigVariable(const std::string& section, const std::string& name, const std::string& defaultValue);
+		string GetRootConfigVariable(const string& section, const string& name, const string& defaultValue);
 	};
 }

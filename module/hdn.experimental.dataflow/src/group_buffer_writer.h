@@ -1,7 +1,8 @@
 #pragma once
 
+#include "core/stl/vector.h"
+
 #include <stack>
-#include <vector>
 
 #include "buffer_writer.h"
 
@@ -24,7 +25,7 @@ namespace hdn
 			Children.push_back(childIndex);
 		}
 
-		const std::vector<size_t>& GetChildren() const
+		const vector<size_t>& GetChildren() const
 		{
 			return Children;
 		}
@@ -74,7 +75,7 @@ namespace hdn
 		u64 BeginByteMeta = 0;
 		u64 EndByteMeta = 0;
 		const char* Semantic = nullptr; // This field could more complex metadata if we want/need to
-		std::vector<size_t> Children = {};
+		vector<size_t> Children = {};
 	};
 
 	/**
@@ -140,7 +141,7 @@ namespace hdn
 			m_GroupDataStack.pop();
 		}
 
-		const std::vector<GroupData>& GetGroups() const
+		const vector<GroupData>& GetGroups() const
 		{
 			return m_GroupDataVector;
 		}
@@ -148,7 +149,7 @@ namespace hdn
 		virtual ~FGroupBufferWriter() = default;
 	private:
 		std::stack<size_t> m_GroupDataStack;
-		std::vector<GroupData> m_GroupDataVector;
+		vector<GroupData> m_GroupDataVector;
 		FBufferWriter m_MetadataBuffer;
 	};
 

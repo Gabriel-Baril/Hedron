@@ -1,11 +1,9 @@
 #include "point_light_system.h"
 
 #include "core/core.h"
-#include <glm/gtc/constants.hpp>
+#include "core/stl/map.h"
 
-#include <stdexcept>
-#include <array>
-#include <map>
+#include <glm/gtc/constants.hpp>
 
 namespace hdn
 {
@@ -35,7 +33,7 @@ namespace hdn
 		pushConstantRange.offset = 0;
 		pushConstantRange.size = sizeof(PointLightPushConstants);
 
-		std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
+		vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -89,7 +87,7 @@ namespace hdn
 	void PointLightSystem::Render(FrameInfo& frameInfo)
 	{
 		// Sort Lights
-		std::map<float, HDNGameObject::id_t> sorted;
+		map<float, HDNGameObject::id_t> sorted;
 		for (auto& [key, obj] : *frameInfo.gameObjects)
 		{
 			if (obj.pointLight == nullptr) continue;

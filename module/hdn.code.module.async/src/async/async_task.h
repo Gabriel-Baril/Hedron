@@ -4,7 +4,6 @@
 #include "core/stl/unordered_set.h"
 
 #include <chrono>
-#include <set>
 
 #define HASSERT_TASK(task) HASSERT(task, "Task cannot be null!")
 
@@ -53,7 +52,7 @@ namespace hdn
 
 		void PrintTimeHierarchy(int tabCount = 0)
 		{
-			std::string tabs(tabCount, ' ');
+			string tabs(tabCount, ' ');
 			HINFO("{0}{1}: {2}ms", tabs, GetName(), GetExecutionTime<std::chrono::milliseconds>());
 			for (const auto& internalDep : m_InternalDep)
 			{

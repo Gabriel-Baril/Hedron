@@ -16,7 +16,7 @@ namespace hdn
 	class IdeationParser
 	{
 	public:
-		void ParseIdeationFile(const std::string& path, Ideation& ideation);
+		void ParseIdeationFile(const string& path, Ideation& ideation);
 	private:
 	};
 }

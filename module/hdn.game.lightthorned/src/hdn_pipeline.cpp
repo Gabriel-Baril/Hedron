@@ -2,14 +2,12 @@
 
 #include "core/core.h"
 #include <fstream>
-#include <stdexcept>
-#include <cassert> // TODO: Use HDN_ASSERT
 
 #include "hdn_model.h"
 
 namespace hdn
 {
-	HDNPipeline::HDNPipeline(HDNDevice* device, const std::string& vertFilepath, const std::string& fragFilepath, const PipelineConfigInfo& configInfo)
+	HDNPipeline::HDNPipeline(HDNDevice* device, const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
 		: m_Device{ device }
 	{
 		CreateGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
@@ -117,12 +115,12 @@ namespace hdn
 		configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 	}
 
-	vector<char> HDNPipeline::ReadFile(const std::string& filepath)
+	vector<char> HDNPipeline::ReadFile(const string& filepath)
 	{
 		std::ifstream file(filepath, std::ios::ate | std::ios::binary); // std::ios::ate -> When the file open we seek to the end immediately
 		if (!file.is_open())
 		{
-			HTHROW(std::runtime_error, "Failed to open file: " + filepath);
+			HTHROW(std::runtime_error, "Failed to open file: {0}", filepath);
 		}
 		size_t fileSize = static_cast<size_t>(file.tellg());
 		vector<char> buffer(fileSize);
@@ -132,7 +130,7 @@ namespace hdn
 		return buffer;
 	}
 
-	void HDNPipeline::CreateGraphicsPipeline(const std::string& vertFilepath, const std::string& fragFilepath, const PipelineConfigInfo& configInfo)
+	void HDNPipeline::CreateGraphicsPipeline(const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
 	{
 		assert(configInfo.pipelineLayout != VK_NULL_HANDLE);
 		assert(configInfo.renderPass != VK_NULL_HANDLE);

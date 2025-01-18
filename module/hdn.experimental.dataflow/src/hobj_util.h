@@ -76,7 +76,7 @@ namespace hdn
 		template<typename T>
 		static HObjPtr<T> LoadFromPath(const char* path, HObjectLoadFlags flags = HObjectLoadFlags::Default)
 		{
-			std::string absoluteSavePath = FileSystem::ToAbsolute(path).string();
+			string absoluteSavePath = FileSystem::ToAbsolute(path).string();
 			std::ifstream inFile(absoluteSavePath, std::ios::binary | std::ios::ate);
 
 			if (!inFile) {

@@ -3,9 +3,6 @@
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
 
-#include <stdexcept>
-#include <array>
-
 namespace hdn
 {
 	struct SimplePushConstantData
@@ -33,7 +30,7 @@ namespace hdn
 		pushConstantRange.offset = 0;
 		pushConstantRange.size = sizeof(SimplePushConstantData);
 
-		std::vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
+		vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;

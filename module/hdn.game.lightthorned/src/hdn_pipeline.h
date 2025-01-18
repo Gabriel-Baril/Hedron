@@ -35,8 +35,8 @@ namespace hdn
 	public:
 		HDNPipeline(
 			HDNDevice* device, 
-			const std::string& vertFilepath, 
-			const std::string& fragFilepath, 
+			const string& vertFilepath, 
+			const string& fragFilepath, 
 			const PipelineConfigInfo& configInfo);
 		virtual ~HDNPipeline();
 		HDNPipeline() = default;
@@ -49,10 +49,10 @@ namespace hdn
 		static void DefaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
 		static void EnableAlphaBlending(PipelineConfigInfo& configInfo);
 	private:
-		static vector<char> ReadFile(const std::string& filepath);
+		static vector<char> ReadFile(const string& filepath);
 		void CreateGraphicsPipeline(
-			const std::string& vertFilepath,
-			const std::string& fragFilepath,
+			const string& vertFilepath,
+			const string& fragFilepath,
 			const PipelineConfigInfo& configInfo);
 		void CreateShaderModule(const vector<char>& code, VkShaderModule* module);
 	private:

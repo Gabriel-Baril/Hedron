@@ -1,10 +1,8 @@
 #include "hdn_device.h"
 
-// std headers
-#include <cstring>
-#include <iostream>
-#include <set>
-#include <unordered_set>
+#include "core/stl/set.h"
+#include "core/stl/unordered_set.h"
+
 
 namespace hdn {
 
@@ -13,9 +11,9 @@ namespace hdn {
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
 		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-		void* pUserData) {
-		std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
-
+		void* pUserData)
+	{
+		HERR("Validation Layer: {0}", pCallbackData->pMessage);
 		return VK_FALSE;
 	}
 
@@ -117,7 +115,7 @@ namespace hdn {
 			HTHROW(std::runtime_error, "failed to find GPUs with Vulkan support!");
 		}
 		HINFO("Device Count: {0}", deviceCount);
-		std::vector<VkPhysicalDevice> devices(deviceCount);
+		vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
 
 		for (const auto& device : devices) {
@@ -138,8 +136,8 @@ namespace hdn {
 	void HDNDevice::CreateLogicalDevice() {
 		QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
 
-		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-		std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };
+		vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+		set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };
 
 		float queuePriority = 1.0f;
 		for (uint32_t queueFamily : uniqueQueueFamilies) {
@@ -242,7 +240,7 @@ namespace hdn {
 		uint32_t layerCount;
 		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
-		std::vector<VkLayerProperties> availableLayers(layerCount);
+		vector<VkLayerProperties> availableLayers(layerCount);
 		vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
 		for (const char* layerName : m_ValidationLayers) {
@@ -263,12 +261,12 @@ namespace hdn {
 		return true;
 	}
 
-	std::vector<const char*> HDNDevice::GetRequiredExtensions() {
+	vector<const char*> HDNDevice::GetRequiredExtensions() {
 		uint32_t glfwExtensionCount = 0;
 		const char** glfwExtensions;
 		glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-		std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+		vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
 		if (enableValidationLayers) {
 			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
@@ -280,11 +278,11 @@ namespace hdn {
 	void HDNDevice::HasGflwRequiredInstanceExtensions() {
 		uint32_t extensionCount = 0;
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-		std::vector<VkExtensionProperties> extensions(extensionCount);
+		vector<VkExtensionProperties> extensions(extensionCount);
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
 		HINFO("Available Extensions:");
-		std::unordered_set<std::string> available;
+		unordered_set<string> available;
 		for (const auto& extension : extensions) {
 			HINFO("\t{0}", extension.extensionName);
 			available.insert(extension.extensionName);
@@ -304,14 +302,14 @@ namespace hdn {
 		uint32_t extensionCount;
 		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
-		std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+		vector<VkExtensionProperties> availableExtensions(extensionCount);
 		vkEnumerateDeviceExtensionProperties(
 			device,
 			nullptr,
 			&extensionCount,
 			availableExtensions.data());
 
-		std::set<std::string> requiredExtensions(m_DeviceExtensions.begin(), m_DeviceExtensions.end());
+		set<string> requiredExtensions(m_DeviceExtensions.begin(), m_DeviceExtensions.end());
 
 		for (const auto& extension : availableExtensions) {
 			requiredExtensions.erase(extension.extensionName);
@@ -326,7 +324,7 @@ namespace hdn {
 		uint32_t queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
 
-		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
 		int i = 0;
@@ -378,7 +376,7 @@ namespace hdn {
 	}
 
 	VkFormat HDNDevice::FindSupportedFormat(
-		const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
+		const vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
 		for (VkFormat format : candidates) {
 			VkFormatProperties props;
 			vkGetPhysicalDeviceFormatProperties(m_PhysicalDevice, format, &props);

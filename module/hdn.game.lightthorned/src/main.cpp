@@ -1,7 +1,3 @@
-#include <iostream>
-#include <cstdlib>
-#include <stdexcept>
-
 #include "first_app.h"
 
 int main()
@@ -17,7 +13,7 @@ int main()
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << e.what() << "\n";
+		HERR("{0}", e.what());
 		return EXIT_FAILURE;
 	}
 

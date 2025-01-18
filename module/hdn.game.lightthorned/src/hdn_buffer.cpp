@@ -7,10 +7,6 @@
 
 #include "hdn_buffer.h"
 
- // std
-#include <cassert>
-#include <cstring>
-
 namespace hdn {
 
     /**

@@ -2,10 +2,8 @@
 
 #include "hdn_device.h"
 
-// std
-#include <memory>
-#include <unordered_map>
-#include <vector>
+#include "core/stl/vector.h"
+#include "core/stl/unordered_map.h"
 
 namespace hdn {
 
@@ -24,11 +22,11 @@ namespace hdn {
 
 		private:
 			HDNDevice& m_Device;
-			std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_Bindings{};
+			unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_Bindings{};
 		};
 
 		HDNDescriptorSetLayout(
-			HDNDevice& device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
+			HDNDevice& device, unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
 		~HDNDescriptorSetLayout();
 		HDNDescriptorSetLayout(const HDNDescriptorSetLayout&) = delete;
 		HDNDescriptorSetLayout& operator=(const HDNDescriptorSetLayout&) = delete;
@@ -38,7 +36,7 @@ namespace hdn {
 	private:
 		HDNDevice& m_Device;
 		VkDescriptorSetLayout m_DescriptorSetLayout;
-		std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_Bindings;
+		unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_Bindings;
 
 		friend class HDNDescriptorWriter;
 	};
@@ -56,7 +54,7 @@ namespace hdn {
 
 		private:
 			HDNDevice& m_Device;
-			std::vector<VkDescriptorPoolSize> m_PoolSizes{};
+			vector<VkDescriptorPoolSize> m_PoolSizes{};
 			uint32_t m_MaxSets = 1000;
 			VkDescriptorPoolCreateFlags m_PoolFlags = 0;
 		};
@@ -65,7 +63,7 @@ namespace hdn {
 			HDNDevice& device,
 			uint32_t maxSets,
 			VkDescriptorPoolCreateFlags poolFlags,
-			const std::vector<VkDescriptorPoolSize>& poolSizes);
+			const vector<VkDescriptorPoolSize>& poolSizes);
 		~HDNDescriptorPool();
 		HDNDescriptorPool(const HDNDescriptorPool&) = delete;
 		HDNDescriptorPool& operator=(const HDNDescriptorPool&) = delete;
@@ -73,7 +71,7 @@ namespace hdn {
 		bool AllocateDescriptor(
 			const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const;
 
-		void FreeDescriptors(std::vector<VkDescriptorSet>& descriptors) const;
+		void FreeDescriptors(vector<VkDescriptorSet>& descriptors) const;
 
 		void ResetPool();
 
@@ -99,6 +97,6 @@ namespace hdn {
 	private:
 		HDNDescriptorSetLayout& m_SetLayout;
 		HDNDescriptorPool& m_Pool;
-		std::vector<VkWriteDescriptorSet> m_Writes;
+		vector<VkWriteDescriptorSet> m_Writes;
 	};
 }

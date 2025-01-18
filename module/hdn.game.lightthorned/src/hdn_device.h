@@ -2,17 +2,15 @@
 
 #include "hdn_window.h"
 
-// std lib headers
-#include <string>
-#include <vector>
+#include "core/stl/vector.h"
 
 namespace hdn {
 
 	struct SwapChainSupportDetails
 	{
 		VkSurfaceCapabilitiesKHR capabilities;
-		std::vector<VkSurfaceFormatKHR> formats;
-		std::vector<VkPresentModeKHR> presentModes;
+		vector<VkSurfaceFormatKHR> formats;
+		vector<VkPresentModeKHR> presentModes;
 	};
 
 	struct QueueFamilyIndices
@@ -54,7 +52,7 @@ namespace hdn {
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(m_PhysicalDevice); }
 		VkFormat FindSupportedFormat(
-			const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+			const vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
 		// Buffer Helper Functions
 		void CreateBuffer(
@@ -87,7 +85,7 @@ namespace hdn {
 
 		// helper functions
 		bool IsDeviceSuitable(VkPhysicalDevice device);
-		std::vector<const char*> GetRequiredExtensions();
+		vector<const char*> GetRequiredExtensions();
 		bool CheckValidationLayerSupport();
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
@@ -106,8 +104,8 @@ namespace hdn {
 		VkQueue m_GraphicsQueue;
 		VkQueue m_PresentQueue;
 
-		const std::vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
-		const std::vector<const char*> m_DeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+		const vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
+		const vector<const char*> m_DeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	};
 
 }

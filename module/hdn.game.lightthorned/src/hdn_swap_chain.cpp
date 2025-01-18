@@ -1,13 +1,6 @@
 #include "hdn_swap_chain.h"
 
-// std
-#include <array>
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
-#include <limits>
-#include <set>
-#include <stdexcept>
+#include "core/stl/array.h"
 
 namespace hdn {
 
@@ -377,7 +370,7 @@ namespace hdn {
 	}
 
 	VkSurfaceFormatKHR HDNSwapChain::ChooseSwapSurfaceFormat(
-		const std::vector<VkSurfaceFormatKHR>& availableFormats) {
+		const vector<VkSurfaceFormatKHR>& availableFormats) {
 		for (const auto& availableFormat : availableFormats) {
 			if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
 				availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
@@ -390,7 +383,7 @@ namespace hdn {
 
 	VkPresentModeKHR HDNSwapChain::ChooseSwapPresentMode(
 		// The present mode configuration control how our swapchain handle synchronization with our display
-		const std::vector<VkPresentModeKHR>& availablePresentModes) {
+		const vector<VkPresentModeKHR>& availablePresentModes) {
 		for (const auto& availablePresentMode : availablePresentModes) {
 			if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
 				HINFO("Present mode: Mailbox");

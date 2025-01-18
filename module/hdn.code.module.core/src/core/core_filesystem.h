@@ -4,6 +4,7 @@
 #include "core/core_internal_api.h"
 
 #include "core/stl/vector.h"
+#include "core/stl/optional.h"
 
 #include <filesystem>
 #include <functional>
@@ -63,7 +64,7 @@ namespace hdn
 
 		static FileStats Stats(const fspath& path);
 		static u64 FileSize(const fspath& path);
-		static TOptional<fspath> ReadLink(const fspath& path);
+		static optional<fspath> ReadLink(const fspath& path);
 		static void CreateLink(const fspath& target, const fspath& link);
 		static bool Unlink(const fspath& path);
 		
@@ -79,8 +80,8 @@ namespace hdn
 		static fspath Resolve(const fspath& path);
 		static string ForwardSlash(const string& path);
 		static string BackwardSlash(const string& path);
-		static TOptional<fspath> RelativeTo(const fspath& p0, const fspath& p1);
-		static TOptional<fspath> WithName(const fspath& path, const string& name);
+		static optional<fspath> RelativeTo(const fspath& p0, const fspath& p1);
+		static optional<fspath> WithName(const fspath& path, const string& name);
 		static fspath ToAbsolute(const fspath& path);
 
 		static vector<fspath> Walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate = nullptr, bool recursive = false);

@@ -1,7 +1,6 @@
 #pragma once
 #include "core/core.h"
-
-#include <stack>
+#include "core/stl/stack.h"
 
 namespace hdn
 {
@@ -44,6 +43,6 @@ namespace hdn
 		void* m_Memory;
 		size_t m_TotalSize;
 		size_t m_StackOffset;
-		std::stack<size_t> m_AllocationStack; // Stack of offets
+		stack<size_t> m_AllocationStack; // Stack of offets
 	};
 }

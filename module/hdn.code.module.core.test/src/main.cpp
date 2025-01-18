@@ -1,4 +1,3 @@
-#include <iostream>
 #include <catch2/catch_all.hpp>
 
 TEST_CASE("Dummy Test Bonjour", "[fast]")

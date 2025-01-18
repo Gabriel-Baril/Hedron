@@ -4,14 +4,13 @@
 #include "GLFW/glfw3.h"
 
 #include "core/core.h"
-#include <string>
 
 namespace hdn
 {
 	class HDNWindow
 	{
 	public:
-		HDNWindow(u32 width, u32 height, const std::string& name);
+		HDNWindow(u32 width, u32 height, const string& name);
 		virtual ~HDNWindow();
 		HDNWindow(const HDNWindow&) = delete;
 		HDNWindow& operator=(const HDNWindow&) = delete;
@@ -33,7 +32,7 @@ namespace hdn
 		u32 m_Height;
 		bool m_FramebufferResized = false;
 		
-		std::string m_WindowName;
+		string m_WindowName;
 		GLFWwindow* m_Window = nullptr;
 	};
 }

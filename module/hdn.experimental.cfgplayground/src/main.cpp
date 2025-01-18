@@ -19,13 +19,13 @@ int main()
 	using namespace hdn;
 	Log_Init();
 
-	std::filesystem::path rootConfig = Configuration::GetRootConfigPath();
+	fspath rootConfig = Configuration::GetRootConfigPath();
 	HINFO("HDN_ROOT={0}", rootConfig.string().c_str());
 
-	std::string testSolution = Configuration::Get().GetRootConfigVariable("test", "ExecutableListFilePath", "");
+	string testSolution = Configuration::Get().GetRootConfigVariable("test", "ExecutableListFilePath", "");
 	HINFO(testSolution.c_str());
 
-	std::string moduleFolder = Configuration::Get().GetRootConfigVariable("path", "ModuleFolder", "");
+	string moduleFolder = Configuration::Get().GetRootConfigVariable("path", "ModuleFolder", "");
 
 	HINFO("Module Folder -> '{0}'", moduleFolder.c_str());
 	

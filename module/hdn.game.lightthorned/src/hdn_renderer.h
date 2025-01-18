@@ -6,9 +6,7 @@
 #include "hdn_swap_chain.h"
 #include "hdn_model.h"
 
-#include <memory>
-#include <vector>
-#include <cassert>
+#include "core/stl/vector.h"
 
 namespace hdn
 {
@@ -49,7 +47,7 @@ namespace hdn
 		HDNWindow* m_Window;
 		HDNDevice* m_Device;
 		Scope<HDNSwapChain> m_Swapchain;
-		std::vector<VkCommandBuffer> m_CommandBuffers;
+		vector<VkCommandBuffer> m_CommandBuffers;
 
 		u32 m_CurrentImageIndex = 0;
 		i32 m_CurrentFrameIndex = 0;

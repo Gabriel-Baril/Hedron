@@ -29,7 +29,7 @@ namespace hdn
 
 	struct TestContext
 	{
-		std::string testExecutableName;
+		string testExecutableName;
 		u32 rngSeed;
 	};
 
@@ -52,34 +52,34 @@ namespace hdn
 		TestExpressionType type;
 		std::filesystem::path filename;
 		u32 line;
-		std::string originalExpression;
-		std::string expandedExpression;
+		string originalExpression;
+		string expandedExpression;
 	};
 
 	struct SectionResult
 	{
-		std::string name;
+		string name;
 		std::filesystem::path filename;
 		u32 line;
-		std::vector<ExpressionResult> expressionResults;
+		vector<ExpressionResult> expressionResults;
 		OverallResults overallResults;
 	};
 
 	struct TestCaseResult
 	{
-		std::string name;
-		std::string tags;
+		string name;
+		string tags;
 		std::filesystem::path filename;
 		u32 line;
-		std::vector<SectionResult> sectionResults;
-		std::vector<ExpressionResult> expressionResults;
+		vector<SectionResult> sectionResults;
+		vector<ExpressionResult> expressionResults;
 		OverallResult overallResult;
 	};
 
 	struct TestResult
 	{
 		TestContext context;
-		std::vector<TestCaseResult> testCaseResults;
+		vector<TestCaseResult> testCaseResults;
 		OverallResults overallResultsExpressions;
 		OverallResults overallResultsCases;
 	};
@@ -104,7 +104,7 @@ namespace hdn
 		void ParseExpressionNode(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult);
 		void ParseTestCaseNode(const pugi::xml_node& testCase, TestCaseResult& testCaseResult);
 		void ParseRootNode(const pugi::xml_node& root, TestResult& out);
-		void LoadTestResultFromMemory(const std::string& buffer, TestResult& testResult);
+		void LoadTestResultFromMemory(const string& buffer, TestResult& testResult);
 		void DisplayTestNode(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags);
 		void DisplayTestNode(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags);
 		void DisplayTestNode(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags);

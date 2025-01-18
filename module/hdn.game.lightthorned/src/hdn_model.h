@@ -6,9 +6,6 @@
 #include "core/core.h"
 #include "core/stl/vector.h"
 
-#include <memory>
-#include <vector>
-
 namespace hdn
 {
 	class HDNModel
@@ -39,8 +36,8 @@ namespace hdn
 			vector<Vertex> vertices{};
 			vector<u32> indices{};
 
-			void LoadObjModel(const std::string& filepath);
-			void LoadFbxModel(const std::string& filepath);
+			void LoadObjModel(const string& filepath);
+			void LoadFbxModel(const string& filepath);
 		};
 
 		HDNModel(HDNDevice* device, const HDNModel::Builder& builder);
@@ -48,8 +45,8 @@ namespace hdn
 		HDNModel(const HDNModel&) = delete;
 		HDNModel& operator=(const HDNModel&) = delete;
 
-		static Scope<HDNModel> CreateModelFromObjFile(HDNDevice* device, const std::string& filepath);
-		static Scope<HDNModel> CreateModelFromFbxFile(HDNDevice* device, const std::string& filepath);
+		static Scope<HDNModel> CreateModelFromObjFile(HDNDevice* device, const string& filepath);
+		static Scope<HDNModel> CreateModelFromFbxFile(HDNDevice* device, const string& filepath);
 
 		void Bind(VkCommandBuffer commandBuffer);
 		void Draw(VkCommandBuffer commandBuffer);

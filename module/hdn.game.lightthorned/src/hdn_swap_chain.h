@@ -2,13 +2,10 @@
 
 #include "hdn_device.h"
 
+#include "core/stl/vector.h"
+
 // vulkan headers
 #include <vulkan/vulkan.h>
-
-// std lib headers
-#include <memory>
-#include <string>
-#include <vector>
 
 namespace hdn {
 
@@ -59,23 +56,23 @@ namespace hdn {
 		void CreateSyncObjects();
 		// Helper functions
 		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
-			const std::vector<VkSurfaceFormatKHR>& availableFormats);
+			const vector<VkSurfaceFormatKHR>& availableFormats);
 		VkPresentModeKHR ChooseSwapPresentMode(
-			const std::vector<VkPresentModeKHR>& availablePresentModes);
+			const vector<VkPresentModeKHR>& availablePresentModes);
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 	private:
 		VkFormat m_SwapChainImageFormat;
 		VkFormat m_SwapChainDepthFormat;
 		VkExtent2D m_SwapChainExtent;
 
-		std::vector<VkFramebuffer> m_SwapChainFramebuffers;
+		vector<VkFramebuffer> m_SwapChainFramebuffers;
 		VkRenderPass m_RenderPass;
 
-		std::vector<VkImage> m_DepthImages;
-		std::vector<VkDeviceMemory> m_DepthImageMemorys;
-		std::vector<VkImageView> m_DepthImageViews;
-		std::vector<VkImage> m_SwapChainImages;
-		std::vector<VkImageView> m_SwapChainImageViews;
+		vector<VkImage> m_DepthImages;
+		vector<VkDeviceMemory> m_DepthImageMemorys;
+		vector<VkImageView> m_DepthImageViews;
+		vector<VkImage> m_SwapChainImages;
+		vector<VkImageView> m_SwapChainImageViews;
 
 		HDNDevice& m_Device;
 		VkExtent2D m_WindowExtent;
@@ -83,10 +80,10 @@ namespace hdn {
 		VkSwapchainKHR m_SwapChain;
 		std::shared_ptr<HDNSwapChain> m_OldSwapChain;
 
-		std::vector<VkSemaphore> m_ImageAvailableSemaphores;
-		std::vector<VkSemaphore> m_RenderFinishedSemaphores;
-		std::vector<VkFence> m_InFlightFences;
-		std::vector<VkFence> m_ImagesInFlight;
+		vector<VkSemaphore> m_ImageAvailableSemaphores;
+		vector<VkSemaphore> m_RenderFinishedSemaphores;
+		vector<VkFence> m_InFlightFences;
+		vector<VkFence> m_ImagesInFlight;
 		size_t m_CurrentFrame = 0;
 	};
 

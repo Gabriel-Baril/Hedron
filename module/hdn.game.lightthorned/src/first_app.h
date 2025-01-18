@@ -9,9 +9,6 @@
 
 #include "physics/physics_world.h"
 
-#include <memory>
-#include <vector>
-
 namespace hdn
 {
 

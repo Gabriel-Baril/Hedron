@@ -1,10 +1,8 @@
 #include "hdn_window.h"
 
-#include <stdexcept>
-
 namespace hdn
 {
-	HDNWindow::HDNWindow(u32 width, u32 height, const std::string& name)
+	HDNWindow::HDNWindow(u32 width, u32 height, const string& name)
 		: m_Width{ width }, m_Height{ height }, m_WindowName{ name }
 	{
 		InitWindow();

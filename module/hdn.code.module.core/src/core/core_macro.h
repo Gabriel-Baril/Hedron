@@ -2,9 +2,6 @@
 
 #include <type_traits>
 #include <memory>
-#include <optional>
-#include <string>
-#include <unordered_map>
 
 namespace hdn
 {
@@ -59,12 +56,4 @@ namespace hdn
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
-
-	template<typename T>
-	using TOptional = std::optional<T>;
-
-	template<typename K, typename T>
-	using TUnorderedMap = std::unordered_map<K, T>;
-
-	using string = std::string;
 }

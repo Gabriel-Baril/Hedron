@@ -1,11 +1,10 @@
 #include "core/core_filesystem.h"
 
-#include <filesystem>
 #include <regex>
-#include <iostream>
 #include <limits>
 
 #include "core/core_string.h"
+#include "core/stl/optional.h"
 
 #if USING(HDN_PLATFORM_WINDOWS)
 #include <wtypes.h>
@@ -203,7 +202,7 @@ namespace hdn
 		return forwardSlashPath;
 	}
 
-	TOptional<fspath> FileSystem::RelativeTo(const fspath& p0, const fspath& p1)
+	optional<fspath> FileSystem::RelativeTo(const fspath& p0, const fspath& p1)
 	{
 		try
 		{
@@ -211,15 +210,15 @@ namespace hdn
 		}
 		catch (const std::filesystem::filesystem_error& e)
 		{
-			return TOptional<fspath>();
+			return optional<fspath>();
 		}
 	}
 
-	TOptional<fspath> FileSystem::WithName(const fspath& path, const string& name)
+	optional<fspath> FileSystem::WithName(const fspath& path, const string& name)
 	{
 		if (!FileSystem::Exists(path) || !FileSystem::IsFile(path))
 		{
-			return TOptional<fspath>();
+			return optional<fspath>();
 		}
 
 		return FileSystem::Parent(path) / name;
@@ -255,13 +254,13 @@ namespace hdn
 		return std::filesystem::file_size(path);
 	}
 
-	TOptional<fspath> FileSystem::ReadLink(const fspath& path)
+	optional<fspath> FileSystem::ReadLink(const fspath& path)
 	{
 		if (FileSystem::IsSymlink(path))
 		{
 			return std::filesystem::read_symlink(path);
 		}
-		return TOptional<fspath>();
+		return optional<fspath>();
 	}
 
 	void FileSystem::CreateLink(const fspath& target, const fspath& link)

@@ -192,7 +192,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::LoadTestResultFromMemory(const std::string& buffer, TestResult& testResult)
+	void IdeonImgui::LoadTestResultFromMemory(const string& buffer, TestResult& testResult)
 	{
 		pugi::xml_document doc; // Already contains the root node (Catch2TestRun)
 		pugi::xml_parse_result result = doc.load_buffer(buffer.c_str(), buffer.size());
@@ -207,7 +207,7 @@ namespace hdn
 	{
 		ImGui::TableNextRow();
 		SetRowColor(expression.success > 0);
-		std::string expandedExpression = trim(expression.expandedExpression);
+		string expandedExpression = trim(expression.expandedExpression);
 		ImGui::TableNextColumn();
 		ImGui::TreeNodeEx(expandedExpression.c_str(), treeNodeFlags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen);
 		ImGui::TableNextColumn();
@@ -358,9 +358,9 @@ namespace hdn
 				m_WaitThread = std::thread([this]() {
 					this->m_RunningTests = true;
 
-					const std::string testSolutionPath = Configuration::Get().GetRootConfigVariable("test", "TestSolution", "");
-					const std::string buildTestProjectScriptPath = Configuration::Get().GetRootConfigVariable("test", "BuildTestProjectScriptPath", "");
-					const std::string command = fmt::format("python {0}", buildTestProjectScriptPath);
+					const string testSolutionPath = Configuration::Get().GetRootConfigVariable("test", "TestSolution", "");
+					const string buildTestProjectScriptPath = Configuration::Get().GetRootConfigVariable("test", "BuildTestProjectScriptPath", "");
+					const string command = fmt::format("python {0}", buildTestProjectScriptPath);
 
 					// 2. Compile the list of test projects concurently
 					TinyProcessLib::Process process(
@@ -377,31 +377,31 @@ namespace hdn
 					HWARN("----------- Finished Running build_test_projects.py -----------");
 
 					// 3. Run the test project executable with the right arguments (--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml)
-					const std::string executableListFilePath = Configuration::Get().GetRootConfigVariable("test", "ExecutableListFilePath", "");
+					const string executableListFilePath = Configuration::Get().GetRootConfigVariable("test", "ExecutableListFilePath", "");
 					std::ifstream inputFile(executableListFilePath);
 					if (!inputFile.is_open())
 					{
 						HERR("Error: Could not open the file '{0}'", executableListFilePath.c_str());
 					}
 
-					std::string line;
-					std::vector<std::string> executableCommands;
+					string line;
+					vector<string> executableCommands;
 					executableCommands.reserve(10);
 					while (std::getline(inputFile, line))
 					{
-						std::string executableCommand = fmt::format("{0} --success --durations yes --verbosity high --allow-running-no-tests --reporter xml", line);
+						string executableCommand = fmt::format("{0} --success --durations yes --verbosity high --allow-running-no-tests --reporter xml", line);
 						executableCommands.push_back(executableCommand);
 						HINFO("Executable -> '{0}' '{1}'", line.c_str(), executableCommand.c_str());
 					}
 
 					// TODO: Make this concurrent
-					std::vector<std::string> testResultsStrs;
+					vector<string> testResultsStrs;
 					testResultsStrs.reserve(10);
 					for (const auto& testCommand : executableCommands)
 					{
 						HINFO("Running -> '{0}'", testCommand);
-						testResultsStrs.emplace_back(std::string{});
-						std::string& testResultXML = testResultsStrs.back();
+						testResultsStrs.emplace_back(string{});
+						string& testResultXML = testResultsStrs.back();
 						TinyProcessLib::Process testExecutableProcess(
 							testCommand,
 							"",
@@ -478,7 +478,7 @@ namespace hdn
 		if (ImGui::Button("Get Module Info"))
 		{
 			m_ModuleInfo.clear();
-			const std::string rootModuleFolder = Configuration::Get().GetRootConfigVariable("path", "ModuleFolder", "");
+			const string rootModuleFolder = Configuration::Get().GetRootConfigVariable("path", "ModuleFolder", "");
 			const vector<fspath> moduleFolders = FileSystem::Walk(rootModuleFolder);
 			for (const auto& modulefolder : moduleFolders)
 			{

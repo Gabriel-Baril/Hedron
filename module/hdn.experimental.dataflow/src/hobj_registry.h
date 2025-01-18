@@ -1,5 +1,7 @@
 #pragma once
 #include "core/core.h"
+#include "core/stl/unordered_map.h"
+
 #include "hobj.h"
 
 namespace hdn
@@ -20,8 +22,8 @@ namespace hdn
 	private:
 		HObjectRegistry() = default;
 	private:
-		TUnorderedMap<HObjectKey, HObjPtr<HObject>> m_HObjectRegistry{};
-		TUnorderedMap<HObjectKey, fspath> m_HObjectPaths{};
-		TUnorderedMap<fspath, HObjectKey> m_HObjectKeys{};
+		unordered_map<HObjectKey, HObjPtr<HObject>> m_HObjectRegistry{};
+		unordered_map<HObjectKey, fspath> m_HObjectPaths{};
+		unordered_map<fspath, HObjectKey> m_HObjectKeys{};
 	};
 }

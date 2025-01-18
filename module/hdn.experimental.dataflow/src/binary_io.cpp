@@ -12,14 +12,14 @@ namespace hdn::bin
 		writer.Pop();
 	}
 
-	void Write(FBufferWriter& writer, const std::string& object)
+	void Write(FBufferWriter& writer, const string& object)
 	{
 		const auto size = object.size();
 		writer.Write<size_t>(size + 1);
 		writer.Write(object.c_str(), size + 1);
 	}
 
-	void Read(FBufferReader& reader, std::string& object)
+	void Read(FBufferReader& reader, string& object)
 	{
 		size_t length = reader.Read<size_t>();
 		object.reserve(length);

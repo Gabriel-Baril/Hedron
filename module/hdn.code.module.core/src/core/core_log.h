@@ -54,18 +54,18 @@ namespace hdn
 #endif
 
 #if USING(THROW_ENABLE)
-#define HTHROW(exception, message, ...) { throw exception(message); }
+#define HTHROW_FMT(exception, message, ...) { throw exception(message); }
 #define HTHROW(exception, message) { throw exception(message); }
 #else
-#define HTHROW(exception, message, ...) { HFATAL(message, __VA_ARGS__); }
+#define HTHROW_FMT(exception, message, ...) { HFATAL(message, __VA_ARGS__); }
 #define HTHROW(exception, message) { HFATAL(message); }
 #endif
 
 // Compared to an assert and check will exist even in non debug build
 #if !USING(DEV)
-#define HCHECK(x)		{ if(!(x)) { HBREAK(); } }
-#define HCHECK(x, ...)	HCHECK(x)
+#define HCHECK_FMT(x, ...)	HCHECK(x)
+#define HCHECK(x)			{ if(!(x)) { HBREAK(); } }
 #else
-#define HCHECK(x)		HASSERT(x);
-#define HCHECK(x, ...)	HASSERT(x, __VA_ARGS__);
+#define HCHECK_FMT(x, ...)	HASSERT(x, __VA_ARGS__);
+#define HCHECK(x)			HASSERT(x);
 #endif

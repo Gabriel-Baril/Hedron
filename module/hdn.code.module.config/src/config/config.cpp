@@ -24,17 +24,17 @@ namespace hdn
 		return rootPath / configName;
 	}
 
-	std::string Configuration::GetRootConfigVariable(const std::string& section, const std::string& name, const std::string& defaultValue)
+	string Configuration::GetRootConfigVariable(const string& section, const string& name, const string& defaultValue)
 	{
-		std::string result = m_Reader.Get(section, name, defaultValue);
+		string result = m_Reader.Get(section, name, defaultValue);
 		HASSERT(result != defaultValue, "Configuration Variable '[{0}]{1}' not found", section.c_str(), name.c_str());
 		std::regex variablePattern(R"(\$\{([^:}]+)(?::([^}]+))?\})"); // Regex to match ${prefix:key} or ${key} (environment variable)
 		std::smatch match;
 		while (std::regex_search(result, match, variablePattern)) {
-			std::string fullMatch = match[0].str();
-			std::string section = match[1].str(); // Prefix or key if no colon
-			std::string key = match[2].str();    // Key (optional)
-			std::string replacement;
+			string fullMatch = match[0].str();
+			string section = match[1].str(); // Prefix or key if no colon
+			string key = match[2].str();    // Key (optional)
+			string replacement;
 			if (key.empty())
 			{
 				// No prefix: This is an environment variable
@@ -44,7 +44,7 @@ namespace hdn
 			}
 			else
 			{
-				std::string rep = GetRootConfigVariable(section, key, "");
+				string rep = GetRootConfigVariable(section, key, "");
 				HASSERT(rep != "", "Configuration Variable '[{0}]{1}' not found while parsing '{2}'", section.c_str(), key.c_str(), result.c_str());
 				replacement = rep;
 			}

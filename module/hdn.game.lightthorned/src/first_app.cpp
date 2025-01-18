@@ -15,10 +15,6 @@
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
 
-#include <stdexcept>
-#include <array>
-#include <chrono>
-
 namespace hdn
 {
 	static constexpr f32 MAX_FRAME_TIME = 0.5f;
@@ -41,7 +37,7 @@ namespace hdn
 
 	void FirstApp::Run()
 	{
-		std::vector<Scope<HDNBuffer>> uboBuffers(HDNSwapChain::MAX_FRAMES_IN_FLIGHT);
+		vector<Scope<HDNBuffer>> uboBuffers(HDNSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0;i < uboBuffers.size(); i++)
 		{
 			uboBuffers[i] = CreateScope<HDNBuffer>(
@@ -58,7 +54,7 @@ namespace hdn
 			.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
 			.Build();
 
-		std::vector<VkDescriptorSet> globalDescriptorSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT); // One descriptor set per frame
+		vector<VkDescriptorSet> globalDescriptorSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT); // One descriptor set per frame
 		for (int i = 0;i < globalDescriptorSets.size(); i++)
 		{
 			auto bufferInfo = uboBuffers[i]->DescriptorInfo();
@@ -224,7 +220,7 @@ namespace hdn
 			m_GameObjects.emplace(pot.GetID(), std::move(pot));
 		}
 
-		std::vector<glm::vec3> lightColors{
+		vector<glm::vec3> lightColors{
 			{1.f, .1f, .1f},
 			{.1f, .1f, 1.f},
 			{.1f, 1.f, .1f},

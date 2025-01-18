@@ -1,15 +1,15 @@
 #include "hdn_model.h"
 
+#include "core/stl/unordered_map.h"
+
 #include "hdn_utils.h"
 
 #include <tinyobjloader/tiny_obj_loader.h>
+
 #include <ofbx.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
-
-#include <cassert>
-#include <unordered_map>
 
 namespace std
 {
@@ -21,6 +21,15 @@ namespace std
 			size_t seed = 0;
 			hdn::HashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
 			return seed;
+		}
+	};
+}
+
+namespace eastl {
+	template <>
+	struct hash<hdn::HDNModel::Vertex> {
+		size_t operator()(const hdn::HDNModel::Vertex& vertex) const noexcept {
+			return std::hash<hdn::HDNModel::Vertex>()(vertex);
 		}
 	};
 }
@@ -39,14 +48,14 @@ namespace hdn
 	{
 	}
 
-	Scope<HDNModel> HDNModel::CreateModelFromObjFile(HDNDevice* device, const std::string& filepath)
+	Scope<HDNModel> HDNModel::CreateModelFromObjFile(HDNDevice* device, const string& filepath)
 	{
 		Builder builder{};
 		builder.LoadObjModel(filepath);
 		return CreateScope<HDNModel>(device, builder);
 	}
 
-	Scope<HDNModel> HDNModel::CreateModelFromFbxFile(HDNDevice* device, const std::string& filepath)
+	Scope<HDNModel> HDNModel::CreateModelFromFbxFile(HDNDevice* device, const string& filepath)
 	{
 		Builder builder{};
 		builder.LoadFbxModel(filepath);
@@ -161,12 +170,12 @@ namespace hdn
 		return attributeDescriptions;
 	}
 
-	void HDNModel::Builder::LoadObjModel(const std::string& filepath)
+	void HDNModel::Builder::LoadObjModel(const string& filepath)
 	{
 		tinyobj::attrib_t attrib; // Store positions, colors, uvs
 		std::vector<tinyobj::shape_t> shapes; // Index values for each elements
 		std::vector<tinyobj::material_t> materials;
-		std::string warns, errors;
+		string warns, errors;
 		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warns, &errors, filepath.c_str()))
 		{
 			HTHROW(std::runtime_error, warns + errors);
@@ -175,7 +184,7 @@ namespace hdn
 		vertices.clear();
 		indices.clear();
 
-		std::unordered_map<Vertex, u32> uniqueVertices;
+		unordered_map<Vertex, u32> uniqueVertices;
 
 		for (const auto& shape : shapes)
 		{
@@ -225,7 +234,7 @@ namespace hdn
 		}
 	}
 
-	void HDNModel::Builder::LoadFbxModel(const std::string& filepath)
+	void HDNModel::Builder::LoadFbxModel(const string& filepath)
 	{
 		std::ifstream file(filepath.c_str(), std::ios::binary | std::ios::ate);
 		if (!file)
@@ -244,7 +253,7 @@ namespace hdn
 		vertices.clear();
 		indices.clear();
 
-		std::unordered_map<Vertex, u32> uniqueVertices;
+		unordered_map<Vertex, u32> uniqueVertices;
 		const ofbx::IScene* scene = ofbx::load(buffer.data(), fileSize, static_cast<ofbx::u16>(ofbx::LoadFlags::NONE));
 		HDEBUG("Mesh Count: {0}", scene->getMeshCount());
 		for (int i = 0;i < scene->getMeshCount(); i++)

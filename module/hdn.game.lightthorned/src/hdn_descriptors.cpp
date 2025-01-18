@@ -1,10 +1,5 @@
 #include "hdn_descriptors.h"
 
-
-// std
-#include <cassert>
-#include <stdexcept>
-
 namespace hdn {
 
 	// *************** Descriptor Set Layout Builder *********************
@@ -31,9 +26,9 @@ namespace hdn {
 	// *************** Descriptor Set Layout *********************
 
 	HDNDescriptorSetLayout::HDNDescriptorSetLayout(
-		HDNDevice& device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
+		HDNDevice& device, unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
 		: m_Device{ device }, m_Bindings{ bindings } {
-		std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings{};
+		vector<VkDescriptorSetLayoutBinding> setLayoutBindings{};
 		for (auto kv : bindings) {
 			setLayoutBindings.push_back(kv.second);
 		}
@@ -84,7 +79,7 @@ namespace hdn {
 		HDNDevice& device,
 		uint32_t maxSets,
 		VkDescriptorPoolCreateFlags poolFlags,
-		const std::vector<VkDescriptorPoolSize>& poolSizes)
+		const vector<VkDescriptorPoolSize>& poolSizes)
 		: m_Device{ device } {
 		VkDescriptorPoolCreateInfo descriptorPoolInfo{};
 		descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -121,7 +116,7 @@ namespace hdn {
 		return true;
 	}
 
-	void HDNDescriptorPool::FreeDescriptors(std::vector<VkDescriptorSet>& descriptors) const {
+	void HDNDescriptorPool::FreeDescriptors(vector<VkDescriptorSet>& descriptors) const {
 		vkFreeDescriptorSets(
 			m_Device.GetDevice(),
 			m_DescriptorPool,

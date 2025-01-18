@@ -1,8 +1,5 @@
 #include "hdn_camera.h"
 
-#include <cassert>
-#include <limits>
-
 namespace hdn
 {
 	void HDNCamera::SetOrthographicProjection(float left, float right, float top, float bottom, float nearPlane, float farPlane)

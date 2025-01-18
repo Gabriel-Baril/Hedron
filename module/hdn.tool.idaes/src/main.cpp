@@ -1,6 +1,3 @@
-#include "ideation_parse.h"
-#include "ideation_database.h"
-
 #include "core/core.h"
 
 int main()
@@ -8,7 +5,7 @@ int main()
 	using namespace hdn;
 	Log_Init();
 
-	IdeationNode node;
-	parse_ideation_file("../data/ideation.json", node);
+	HINFO("Hello Idaes!");
+
 	return 0;
 }

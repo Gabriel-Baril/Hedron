@@ -1,7 +1,6 @@
 #include "core/core.h"
 #include "core/core_filesystem.h"
 
-
 int main()
 {
 	using namespace hdn;

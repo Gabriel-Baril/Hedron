@@ -1,11 +1,11 @@
 #pragma once
 
 #include "core/core.h"
+#include "core/stl/unordered_map.h"
 
 #include "hdn_model.h"
 
 #include <PxPhysicsAPI.h>
-#include <unordered_map>
 
 namespace hdn
 {
@@ -34,7 +34,7 @@ namespace hdn
 	{
 	public:
 		using id_t = u32;
-		using Map = std::unordered_map<id_t, HDNGameObject>;
+		using Map = unordered_map<id_t, HDNGameObject>;
 
 		HDNGameObject(const HDNGameObject&) = delete;
 		HDNGameObject& operator=(const HDNGameObject&) = delete;
@@ -51,7 +51,7 @@ namespace hdn
 
 		id_t GetID() const { return m_ID; }
 
-		std::string name;
+		string name;
 		vec3f32 color{};
 		TransformComponent transform{};
 		

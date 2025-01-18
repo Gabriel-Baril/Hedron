@@ -1,8 +1,7 @@
 #pragma once
 
 #include "core/core.h"
-
-#include <unordered_map>
+#include "core/stl/unordered_map.h"
 
 namespace hdn
 {
@@ -34,6 +33,6 @@ namespace hdn
 	private:
 		ImageRegistry() = default;
 	private:
-		std::unordered_map<u64, Ref<Image>> m_ImageRegistry{};
+		unordered_map<u64, Ref<Image>> m_ImageRegistry{};
 	};
 }

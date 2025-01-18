@@ -1,7 +1,6 @@
 #pragma once
 
-#include <string>
-
+#include "core/core.h"
 #include "core/core_type.h"
 
 #include "buffer_reader.h"
@@ -80,8 +79,8 @@ namespace hdn::bin
 		writer.Pop();
 	}
 
-	void Write(FBufferWriter& writer, const std::string& object);
-	void Read(FBufferReader& reader, std::string& object);
+	void Write(FBufferWriter& writer, const string& object);
+	void Read(FBufferReader& reader, string& object);
 
 	template<IsPrimitive T>
 	inline void Read(FBufferReader& reader, T& object)

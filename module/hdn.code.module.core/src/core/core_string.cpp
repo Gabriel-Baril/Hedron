@@ -141,7 +141,7 @@ namespace hdn
 		strcpy(dest, begin);
 	}
 
-	std::string trim(const std::string& str)
+	string trim(const string& str)
 	{
 		auto start = str.begin();
 		while (start != str.end() && std::isspace(*start)) {
@@ -153,6 +153,6 @@ namespace hdn
 			--end;
 		} while (std::distance(start, end) > 0 && std::isspace(*end));
 
-		return std::string(start, end + 1);
+		return string(start, end + 1);
 	}
 }

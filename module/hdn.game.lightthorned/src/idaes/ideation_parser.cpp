@@ -6,7 +6,7 @@ namespace hdn
 {
 	using json = nlohmann::json;
 
-	void IdeationParser::ParseIdeationFile(const std::string& path, Ideation& ideation)
+	void IdeationParser::ParseIdeationFile(const string& path, Ideation& ideation)
 	{
 		std::ifstream file(path);
 		json jsonData;
@@ -28,15 +28,15 @@ namespace hdn
 					const auto& payload = node["Payload"];
 
 					// TODO: Refactor field getted based on NodeType
-					std::string semantic = payload.value("Semantic", "N/A");
-					std::string text = payload.value("Text", "N/A");
+					string semantic = payload.value("Semantic", "N/A");
+					string text = payload.value("Text", "N/A");
 
 				}
 
 				// Access nested Metadata object
 				if (node.contains("Metadata")) {
 					const auto& metadata = node["Metadata"];
-					std::string author = metadata.value("Author", "Unknown");
+					string author = metadata.value("Author", "Unknown");
 					int createdDate = metadata.value("CreatedDate", 0);
 					bool inlineFlag = metadata.value("Inline", false);
 

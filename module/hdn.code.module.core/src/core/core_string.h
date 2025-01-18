@@ -4,6 +4,8 @@
 #include "core/core_macro.h"
 #include "core/core_internal_api.h"
 
+#include "core/stl/string.h"
+
 #include <stdio.h>
 
 #define SYMTOSTR(var) #var
@@ -24,5 +26,5 @@ namespace hdn
 	HDN_MODULE_CORE_API i64 Str_FindFirstNotOfIndex(const char* str, char c);
 	HDN_MODULE_CORE_API void Str_CopySubstring(char* dest, const char* begin, const char* end = nullptr);
 
-	HDN_MODULE_CORE_API std::string trim(const std::string& str);
+	HDN_MODULE_CORE_API string trim(const string& str);
 }

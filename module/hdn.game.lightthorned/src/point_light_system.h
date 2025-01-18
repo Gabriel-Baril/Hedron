@@ -7,8 +7,7 @@
 #include "hdn_camera.h"
 #include "hdn_frame_info.h"
 
-#include <memory>
-#include <vector>
+#include "core/stl/vector.h"
 
 namespace hdn
 {

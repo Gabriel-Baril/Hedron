@@ -1,14 +1,14 @@
 #include "core/core_log.h"
 
 #if USING(LOG_ENABLE)
+#include "core/core_macro.h"
+#include "core/stl/vector.h"
+
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
-#include "core/core_macro.h"
-
 #include <iostream>
 #include <csignal>
-#include <vector>
 
 #if USING(HDN_PLATFORM_WINDOWS)
 #include <windows.h>
@@ -70,7 +70,7 @@ namespace hdn
 			SetConsoleCtrlHandler(ConsoleHandlerCallback, TRUE);
 #endif
 
-			std::vector<spdlog::sink_ptr> sinks;
+			vector<spdlog::sink_ptr> sinks;
 
 #if USING(LOG_CONSOLE_ENABLE)
 			auto consoleSink = CreateRef<spdlog::sinks::stdout_color_sink_mt>();

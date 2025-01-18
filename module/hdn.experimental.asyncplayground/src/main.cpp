@@ -1,14 +1,15 @@
 #include "core/core.h"
-#include "async/async.h"
+#include "core/stl/vector.h"
+#include "core/stl/ds_base.h"
 
-#include <string>
+#include "async/async.h"
 
 namespace hdn
 {
 	class ExampleTaskLeaf : public ITaskLeaf
 	{
 	public:
-		ExampleTaskLeaf(const std::string& prefixMessage)
+		ExampleTaskLeaf(const string& prefixMessage)
 			: m_PrefixMessage{ prefixMessage }
 		{
 		}
@@ -27,7 +28,7 @@ namespace hdn
 			return m_PrefixMessage.c_str();
 		}
 	private:
-		std::string m_PrefixMessage;
+		string m_PrefixMessage;
 	};
 
 	class ExampleTaskParallel : public ITaskParallel
@@ -145,16 +146,22 @@ int main()
 	using namespace std::chrono_literals;
 	Log_Init();
 
-	ExampleTaskGraph task;
-	task.Enqueue();
-	while (!task.Completed())
 	{
-		std::this_thread::sleep_for(2000ms);
+		ExampleTaskGraph task;
+		task.Enqueue();
+		while (!task.Completed())
+		{
+			std::this_thread::sleep_for(2000ms);
+		}
+
+		HINFO("-----------------------");
+
+		task.PrintTimeHierarchy();
+
+		AsyncOrchestrator::Get().Shutdown();
 	}
 
-	HINFO("-----------------------");
-
-	task.PrintTimeHierarchy();
-
-	AsyncOrchestrator::Get().Shutdown();
+	HINFO("Allocation Byte: {0}", GetMemStat().allocated);
+	HINFO("Allocation Count: {0}", GetMemStat().allocationCount);
+	HINFO("Deallocation Count: {0}", GetMemStat().deallocationCount);
 }

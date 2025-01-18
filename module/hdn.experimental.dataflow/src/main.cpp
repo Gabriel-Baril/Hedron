@@ -1,8 +1,6 @@
 #include "core/core.h"
 #include "core/stl/vector.h"
 
-#include <iostream>
-
 #include "hobj_def_lightcfg.h"
 #include "hobj_def_scene.h"
 
@@ -61,7 +59,7 @@ namespace hdn
 		{
 			std::ifstream inFile(file, std::ios::binary);
 			if (!inFile) {
-				std::cerr << "Error: Could not open file " << file << " for reading.\n";
+				HERR("Error: Could not open file '{0}' for reading", file.string().c_str());
 				continue;
 			}
 
@@ -69,7 +67,7 @@ namespace hdn
 			char fileData[bufferSize];
 			inFile.read(fileData, bufferSize);
 			if (!inFile) {
-				std::cerr << "Error: Failed to read from the file.\n";
+				HERR("Error: Failed to read from the file");
 				continue;
 			}
 

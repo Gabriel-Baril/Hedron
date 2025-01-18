@@ -1,9 +1,7 @@
 #include "hdn_renderer.h"
 
 #include "core/core.h"
-
-#include <stdexcept>
-#include <array>
+#include "core/stl/array.h"
 
 namespace hdn
 {
@@ -79,7 +77,7 @@ namespace hdn
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = m_Swapchain->GetSwapChainExtent();
 
-		std::array<VkClearValue, 2> clearValues{}; // Control what should be the initial value of our attachment
+		array<VkClearValue, 2> clearValues{}; // Control what should be the initial value of our attachment
 		clearValues[0].color = { 0.1f, 0.1f, 0.1f, 0.1f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 		renderPassInfo.clearValueCount = static_cast<u32>(clearValues.size());

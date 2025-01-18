@@ -88,7 +88,7 @@ namespace hdn
 		virtual void Realize() {}
 
 		HObjectKey GetKey() const { return m_Key; }
-		std::string GetPath() const { return m_Path; }
+		string GetPath() const { return m_Path; }
 
 		virtual ~HObject()
 		{
@@ -105,7 +105,7 @@ namespace hdn
 			m_Key = key;
 		}
 
-		void SetPath(const std::string& path)
+		void SetPath(const string& path)
 		{
 			m_Path = path;
 		}
@@ -116,7 +116,7 @@ namespace hdn
 		}
 	private:
 		HObjectKey m_Key = HOBJ_NULL_KEY;
-		std::string m_Path = ""; // TODO: Make this field available only in debug mode?
+		string m_Path = ""; // TODO: Make this field available only in debug mode?
 
 		// Transient
 		HObjectLoadState m_LoadState = HObjectLoadState::Unloaded;
