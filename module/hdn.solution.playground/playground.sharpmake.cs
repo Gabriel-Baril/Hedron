@@ -14,11 +14,12 @@ public class PlaygroundSolution : Solution
     [Configure]
     public void ConfigureAll(Solution.Configuration conf, Target target)
     {
-        conf.AddProject<DataFlowProject>(target);
-        conf.AddProject<CfgPlaygroundProject>(target);
+        conf.AddProject<AsyncPlaygroundProject>(target);
         conf.AddProject<BuildPackagingProject>(target);
-        conf.AddProject<SelfModifyingCodeProject>(target);
+        conf.AddProject<CfgPlaygroundProject>(target);
+        conf.AddProject<DataFlowProject>(target);
         conf.AddProject<ListenDirectoryProject>(target);
+        conf.AddProject<SelfModifyingCodeProject>(target);
 
         conf.SetStartupProject<CfgPlaygroundProject>();
     }
