@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/core.h"
+#include "core/stl/unordered_set.h"
 
 #include <chrono>
 #include <set>
@@ -71,16 +72,16 @@ namespace hdn
 		// This function is called each time a task is completed to let the out dependencies that the task is completed
 		virtual void DependencyCompletionNotification(ITask* task) = 0;
 
-		const TSet<ITask*>& GetInternalDependencies() const;
-		const TSet<ITask*>& GetInDependencies() const;
-		const TSet<ITask*>& GetOutDependencies() const;
+		const unordered_set<ITask*>& GetInternalDependencies() const;
+		const unordered_set<ITask*>& GetInDependencies() const;
+		const unordered_set<ITask*>& GetOutDependencies() const;
 	protected:
 		bool AreInDepResolved() const;
 		bool AreInternalDepResolved() const;
 	private:
-		TSet<ITask*> m_InDep;
-		TSet<ITask*> m_OutDep;
-		TSet<ITask*> m_InternalDep;
+		unordered_set<ITask*> m_InDep;
+		unordered_set<ITask*> m_OutDep;
+		unordered_set<ITask*> m_InternalDep;
 		ITask* m_Parent = nullptr;
 		bool m_Enqueued = false;
 

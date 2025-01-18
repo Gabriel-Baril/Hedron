@@ -76,7 +76,7 @@ namespace hdn
 		}
 	}
 
-	void HDNModel::CreateVertexBuffers(const std::vector<Vertex>& vertices)
+	void HDNModel::CreateVertexBuffers(const vector<Vertex>& vertices)
 	{
 		m_VertexCount = static_cast<u32>(vertices.size());
 		assert(m_VertexCount >= 3 && "Vertex count must be at least 3");
@@ -105,7 +105,7 @@ namespace hdn
 		m_Device->CopyBuffer(stagingBuffer.GetBuffer(), m_VertexBuffer->GetBuffer(), bufferSize);
 	}
 
-	void HDNModel::CreateIndexBuffers(const std::vector<u32>& indices)
+	void HDNModel::CreateIndexBuffers(const vector<u32>& indices)
 	{
 		m_IndexCount = static_cast<u32>(indices.size());
 		m_HasIndexBuffer = m_IndexCount > 0;
@@ -139,18 +139,18 @@ namespace hdn
 		m_Device->CopyBuffer(stagingBuffer.GetBuffer(), m_IndexBuffer->GetBuffer(), bufferSize);
 	}
 
-	std::vector<VkVertexInputBindingDescription> HDNModel::Vertex::GetBindingDescriptions()
+	vector<VkVertexInputBindingDescription> HDNModel::Vertex::GetBindingDescriptions()
 	{
-		std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
+		vector<VkVertexInputBindingDescription> bindingDescriptions(1);
 		bindingDescriptions[0].binding = 0;
 		bindingDescriptions[0].stride = sizeof(Vertex);
 		bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 		return bindingDescriptions;
 	}
 
-	std::vector<VkVertexInputAttributeDescription> HDNModel::Vertex::GetAttributeDescriptions()
+	vector<VkVertexInputAttributeDescription> HDNModel::Vertex::GetAttributeDescriptions()
 	{
-		std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
+		vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 		attributeDescriptions.reserve(4);
 		attributeDescriptions.push_back({ 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position) });
 		attributeDescriptions.push_back({ 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) });
@@ -235,7 +235,7 @@ namespace hdn
 
 		size_t fileSize = file.tellg();
 		file.seekg(0, std::ios::beg);
-		TVector<u8> buffer(fileSize);
+		vector<u8> buffer(fileSize);
 		if (!file.read(reinterpret_cast<char*>(buffer.data()), fileSize))
 		{
 			HTHROW(std::runtime_error, "Failed to read file '{0}'", filepath.c_str());

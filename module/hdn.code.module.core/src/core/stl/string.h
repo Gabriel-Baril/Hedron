@@ -17,8 +17,7 @@ namespace hdn
 	using u8string = eastl::u8string;
 	using u16string = eastl::u16string;
 	using u32string = eastl::u32string;
-
-
+	
 	using string_view = eastl::string_view;
 	using wstring_view = eastl::wstring_view;
 

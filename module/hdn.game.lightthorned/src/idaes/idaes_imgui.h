@@ -2,7 +2,9 @@
 
 #include "imgui.h"
 #include "ideation_parser.h"
+
 #include "core/core.h"
+#include "core/stl/vector.h"
 
 namespace hdn
 {
@@ -13,6 +15,6 @@ namespace hdn
 		void Draw();
 	private:
 		IdeationParser m_Parser;
-		TVector<Ideation> m_Ideations;
+		vector<Ideation> m_Ideations;
 	};
 }

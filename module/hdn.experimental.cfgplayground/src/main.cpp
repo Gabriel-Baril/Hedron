@@ -1,5 +1,7 @@
 #include "core/core.h"
 #include "core/core_filesystem.h"
+#include "core/stl/vector.h"
+
 #include "config/config.h"
 
 namespace hdn
@@ -30,7 +32,7 @@ int main()
 	fspath corePath = "hdn.code.module.core";
 
 	try {
-		TVector<fspath> paths = FileSystem::Walk(moduleFolder, hdn::Predicate, true);
+		vector<fspath> paths = FileSystem::Walk(moduleFolder, hdn::Predicate, true);
 		for (const auto& path : paths)
 		{
 			HINFO("{0}", path.filename().string().c_str());

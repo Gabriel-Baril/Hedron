@@ -1,4 +1,6 @@
 #include "core/core.h"
+#include "core/stl/vector.h"
+
 #include <iostream>
 
 #include "hobj_def_lightcfg.h"
@@ -54,7 +56,7 @@ namespace hdn
 
 	void IterateHObject()
 	{
-		TVector<fspath> files = FileSystem::Walk("object/", IsHObjectFile);
+		vector<fspath> files = FileSystem::Walk("object/", IsHObjectFile);
 		for (const auto& file : files)
 		{
 			std::ifstream inFile(file, std::ios::binary);

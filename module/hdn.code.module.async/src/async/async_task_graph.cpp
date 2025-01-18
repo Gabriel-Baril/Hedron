@@ -19,8 +19,8 @@ namespace hdn
 
 	bool ITaskGraph::HasCycle() const
 	{
-		TSet<ITask*> visited;
-		TSet<ITask*> recStack;
+		unordered_set<ITask*> visited;
+		unordered_set<ITask*> recStack;
 
 		auto dfs = [&](ITask* task, auto& dfs_ref) -> bool {
 			if (recStack.count(task)) return true;

@@ -3,10 +3,8 @@
 #include <type_traits>
 #include <memory>
 #include <optional>
-#include <vector>
 #include <string>
 #include <unordered_map>
-#include <set>
 
 namespace hdn
 {
@@ -65,14 +63,8 @@ namespace hdn
 	template<typename T>
 	using TOptional = std::optional<T>;
 
-	template<typename T>
-	using TVector = std::vector<T>;
-
 	template<typename K, typename T>
 	using TUnorderedMap = std::unordered_map<K, T>;
-
-	template<typename T>
-	using TSet = std::set<T>;
 
 	using string = std::string;
 }

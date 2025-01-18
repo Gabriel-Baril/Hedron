@@ -1,7 +1,6 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include "core/stl/vector.h"
 
 #include "hdn_device.h"
 
@@ -13,8 +12,8 @@ namespace hdn
 		PipelineConfigInfo(const PipelineConfigInfo&) = delete;
 		PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
 
-		std::vector<VkVertexInputBindingDescription> bindingDescriptions{};
-		std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
+		vector<VkVertexInputBindingDescription> bindingDescriptions{};
+		vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 
 		VkPipelineViewportStateCreateInfo viewportInfo;
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
@@ -23,7 +22,7 @@ namespace hdn
 		VkPipelineColorBlendAttachmentState colorBlendAttachment;
 		VkPipelineColorBlendStateCreateInfo colorBlendInfo;
 		VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
-		std::vector<VkDynamicState> dynamicStateEnables;
+		vector<VkDynamicState> dynamicStateEnables;
 		VkPipelineDynamicStateCreateInfo dynamicStateInfo;
 
 		VkPipelineLayout pipelineLayout = nullptr;
@@ -50,12 +49,12 @@ namespace hdn
 		static void DefaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
 		static void EnableAlphaBlending(PipelineConfigInfo& configInfo);
 	private:
-		static std::vector<char> ReadFile(const std::string& filepath);
+		static vector<char> ReadFile(const std::string& filepath);
 		void CreateGraphicsPipeline(
 			const std::string& vertFilepath,
 			const std::string& fragFilepath,
 			const PipelineConfigInfo& configInfo);
-		void CreateShaderModule(const std::vector<char>& code, VkShaderModule* module);
+		void CreateShaderModule(const vector<char>& code, VkShaderModule* module);
 	private:
 		HDNDevice* m_Device;
 		VkPipeline m_GraphicsPipeline;

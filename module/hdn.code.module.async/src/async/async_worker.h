@@ -1,6 +1,8 @@
 #pragma once
 
 #include "core/core.h"
+#include "core/stl/vector.h"
+
 #include "async_task.h"
 #include "async_thread.h"
 
@@ -8,7 +10,6 @@
 #include <queue>
 #include <condition_variable>
 #include <atomic>
-#include <vector>
 
 namespace hdn
 {
@@ -24,8 +25,8 @@ namespace hdn
 		void InsertTaskSorted(ITask* task);
 		void WorkerThread();
 	private:
-		TVector<std::thread> m_Workers;
-		TVector<ITask*> m_PendingTasks;
+		vector<std::thread> m_Workers;
+		vector<ITask*> m_PendingTasks;
 		std::mutex m_QueueMutex;
 		std::condition_variable m_Condition;
 		std::atomic<bool> m_StopFlag;

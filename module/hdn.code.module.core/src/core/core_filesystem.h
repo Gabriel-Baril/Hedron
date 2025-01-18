@@ -3,6 +3,8 @@
 #include "core/core.h"
 #include "core/core_internal_api.h"
 
+#include "core/stl/vector.h"
+
 #include <filesystem>
 #include <functional>
 
@@ -57,7 +59,7 @@ namespace hdn
 		static bool HasParent(const fspath& path);
 		static bool FullMatch(const fspath& path, const string& match, bool caseSensitive);
 		static bool DirectoryHasFile(const fspath& directory, const fspath& file);
-		static TVector<string> Parts(const fspath& path);
+		static vector<string> Parts(const fspath& path);
 
 		static FileStats Stats(const fspath& path);
 		static u64 FileSize(const fspath& path);
@@ -81,7 +83,7 @@ namespace hdn
 		static TOptional<fspath> WithName(const fspath& path, const string& name);
 		static fspath ToAbsolute(const fspath& path);
 
-		static TVector<fspath> Walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate = nullptr, bool recursive = false);
+		static vector<fspath> Walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate = nullptr, bool recursive = false);
 		static bool Touch(const fspath& path);
 		static bool CreateDirectory(const fspath& path);
 		static bool Rename(const fspath& source, const fspath& destination);

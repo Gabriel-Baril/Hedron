@@ -4,6 +4,7 @@
 #include "hdn_buffer.h"
 
 #include "core/core.h"
+#include "core/stl/vector.h"
 
 #include <memory>
 #include <vector>
@@ -20,8 +21,8 @@ namespace hdn
 			vec3f32 normal{};
 			vec2f32 uv{};
 		
-			static std::vector<VkVertexInputBindingDescription> GetBindingDescriptions();
-			static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions();
+			static vector<VkVertexInputBindingDescription> GetBindingDescriptions();
+			static vector<VkVertexInputAttributeDescription> GetAttributeDescriptions();
 
 			bool operator==(const Vertex& other) const
 			{
@@ -35,8 +36,8 @@ namespace hdn
 
 		struct Builder
 		{
-			std::vector<Vertex> vertices{};
-			std::vector<u32> indices{};
+			vector<Vertex> vertices{};
+			vector<u32> indices{};
 
 			void LoadObjModel(const std::string& filepath);
 			void LoadFbxModel(const std::string& filepath);
@@ -53,8 +54,8 @@ namespace hdn
 		void Bind(VkCommandBuffer commandBuffer);
 		void Draw(VkCommandBuffer commandBuffer);
 	private:
-		void CreateVertexBuffers(const std::vector<Vertex>& vertices);
-		void CreateIndexBuffers(const std::vector<u32>& indices);
+		void CreateVertexBuffers(const vector<Vertex>& vertices);
+		void CreateIndexBuffers(const vector<u32>& indices);
 	private:
 		HDNDevice* m_Device;
 		

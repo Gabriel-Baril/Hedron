@@ -117,7 +117,7 @@ namespace hdn
 		configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 	}
 
-	std::vector<char> HDNPipeline::ReadFile(const std::string& filepath)
+	vector<char> HDNPipeline::ReadFile(const std::string& filepath)
 	{
 		std::ifstream file(filepath, std::ios::ate | std::ios::binary); // std::ios::ate -> When the file open we seek to the end immediately
 		if (!file.is_open())
@@ -125,7 +125,7 @@ namespace hdn
 			HTHROW(std::runtime_error, "Failed to open file: " + filepath);
 		}
 		size_t fileSize = static_cast<size_t>(file.tellg());
-		std::vector<char> buffer(fileSize);
+		vector<char> buffer(fileSize);
 		file.seekg(0);
 		file.read(buffer.data(), fileSize);
 		file.close();
@@ -197,12 +197,12 @@ namespace hdn
 		}
 	}
 
-	void HDNPipeline::CreateShaderModule(const std::vector<char>& code, VkShaderModule* module)
+	void HDNPipeline::CreateShaderModule(const vector<char>& code, VkShaderModule* module)
 	{
 		VkShaderModuleCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = code.size();
-		createInfo.pCode = reinterpret_cast<const u32*>(code.data()); // Since std::vector take into account the worst case alignment scenario, thisd reinterpret_cast is valid. It wouldn't be true for a c-style array
+		createInfo.pCode = reinterpret_cast<const u32*>(code.data()); // Since vector take into account the worst case alignment scenario, thisd reinterpret_cast is valid. It wouldn't be true for a c-style array
 		if (vkCreateShaderModule(m_Device->GetDevice(), &createInfo, nullptr, module) != VK_SUCCESS)
 		{
 			HTHROW(std::runtime_error, "Failed to create shader module");

@@ -1,12 +1,13 @@
 #include "idaes_imgui.h"
 
+#include "core/stl/vector.h"
 #include "core/core_filesystem.h"
 
 namespace hdn
 {
 	void IdaesImgui::Init()
 	{
-		TVector<fspath> ideationFiles = FileSystem::Walk("ideations");
+		vector<fspath> ideationFiles = FileSystem::Walk("ideations");
 
 		for (const auto& ideationFile : ideationFiles)
 		{

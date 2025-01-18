@@ -1,9 +1,14 @@
 #include "ideon_imgui.h"
 
-#include "tiny-process-library/process.hpp"
-#include "fmt/core.h"
-#include "config/config.h"
 #include "core/core_filesystem.h"
+#include "core/stl/vector.h"
+
+#include "tiny-process-library/process.hpp"
+
+#include "fmt/core.h"
+
+#include "config/config.h"
+
 
 namespace hdn
 {
@@ -305,7 +310,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::DisplayTestNode(const std::vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags)
+	void IdeonImgui::DisplayTestNode(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		for (const TestResult& result : results)
 		{
@@ -474,7 +479,7 @@ namespace hdn
 		{
 			m_ModuleInfo.clear();
 			const std::string rootModuleFolder = Configuration::Get().GetRootConfigVariable("path", "ModuleFolder", "");
-			const TVector<fspath> moduleFolders = FileSystem::Walk(rootModuleFolder);
+			const vector<fspath> moduleFolders = FileSystem::Walk(rootModuleFolder);
 			for (const auto& modulefolder : moduleFolders)
 			{
 				fspath moduleFilename = ".module";

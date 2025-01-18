@@ -23,6 +23,6 @@ namespace hdn
 
 		virtual const char* GetName() const override;
 	private:
-		TSet<ITask*> m_SourceTasks; // Tasks with no in dependencies after graph construction
+		unordered_set<ITask*> m_SourceTasks; // Tasks with no in dependencies after graph construction
 	};
 }

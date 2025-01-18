@@ -97,17 +97,17 @@ namespace hdn
 		return true;
 	}
 
-	const TSet<ITask*>& ITask::GetInternalDependencies() const
+	const unordered_set<ITask*>& ITask::GetInternalDependencies() const
 	{
 		return m_InternalDep;
 	}
 
-	const TSet<ITask*>& ITask::GetInDependencies() const
+	const unordered_set<ITask*>& ITask::GetInDependencies() const
 	{
 		return m_InDep;
 	}
 
-	const TSet<ITask*>& ITask::GetOutDependencies() const
+	const unordered_set<ITask*>& ITask::GetOutDependencies() const
 	{
 		return m_OutDep;
 	}

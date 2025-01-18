@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <csignal>
+#include <vector>
 
 #if USING(HDN_PLATFORM_WINDOWS)
 #include <windows.h>
@@ -69,7 +70,7 @@ namespace hdn
 			SetConsoleCtrlHandler(ConsoleHandlerCallback, TRUE);
 #endif
 
-			TVector<spdlog::sink_ptr> sinks;
+			std::vector<spdlog::sink_ptr> sinks;
 
 #if USING(LOG_CONSOLE_ENABLE)
 			auto consoleSink = CreateRef<spdlog::sinks::stdout_color_sink_mt>();

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "core/core.h"
+#include "core/stl/unordered_set.h"
+
 #include "async_task.h"
 
 namespace hdn
@@ -17,6 +19,6 @@ namespace hdn
 
 		virtual const char* GetName() const override;
 	private:
-		TSet<ITask*> m_Tasks;
+		unordered_set<ITask*> m_Tasks;
 	};
 }

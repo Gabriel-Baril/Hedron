@@ -174,9 +174,9 @@ namespace hdn
 		return false;
 	}
 
-	std::vector<string> FileSystem::Parts(const fspath& path)
+	vector<string> FileSystem::Parts(const fspath& path)
 	{
-		std::vector<string> parts;
+		vector<string> parts;
 		if (FileSystem::HasRoot(path))
 		{
 			parts.push_back(FileSystem::Root(path).string());
@@ -345,9 +345,9 @@ namespace hdn
 		return std::filesystem::canonical(path);
 	}
 
-	TVector<fspath> FileSystem::Walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate, bool recursive)
+	vector<fspath> FileSystem::Walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate, bool recursive)
 	{
-		TVector<fspath> directories;
+		vector<fspath> directories;
 		if (!FileSystem::Exists(path) || !FileSystem::IsDirectory(path))
 		{
 			return directories;
