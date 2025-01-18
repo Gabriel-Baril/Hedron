@@ -15,15 +15,15 @@ namespace hdn
 		vector<VkVertexInputBindingDescription> bindingDescriptions{};
 		vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 
-		VkPipelineViewportStateCreateInfo viewportInfo;
-		VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
-		VkPipelineRasterizationStateCreateInfo rasterizationInfo;
-		VkPipelineMultisampleStateCreateInfo multisampleInfo;
-		VkPipelineColorBlendAttachmentState colorBlendAttachment;
-		VkPipelineColorBlendStateCreateInfo colorBlendInfo;
-		VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
-		vector<VkDynamicState> dynamicStateEnables;
-		VkPipelineDynamicStateCreateInfo dynamicStateInfo;
+		VkPipelineViewportStateCreateInfo viewportInfo{};
+		VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo{};
+		VkPipelineRasterizationStateCreateInfo rasterizationInfo{};
+		VkPipelineMultisampleStateCreateInfo multisampleInfo{};
+		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+		VkPipelineColorBlendStateCreateInfo colorBlendInfo{};
+		VkPipelineDepthStencilStateCreateInfo depthStencilInfo{};
+		vector<VkDynamicState> dynamicStateEnables{};
+		VkPipelineDynamicStateCreateInfo dynamicStateInfo{};
 
 		VkPipelineLayout pipelineLayout = nullptr;
 		VkRenderPass renderPass = nullptr;

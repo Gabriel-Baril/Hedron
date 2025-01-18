@@ -32,20 +32,20 @@ namespace hdn
 		std::smatch match;
 		while (std::regex_search(result, match, variablePattern)) {
 			string fullMatch = match[0].str();
-			string section = match[1].str(); // Prefix or key if no colon
-			string key = match[2].str();    // Key (optional)
+			string matchedSection = match[1].str(); // Prefix or key if no colon
+			string matchedKey = match[2].str();    // Key (optional)
 			string replacement;
-			if (key.empty())
+			if (matchedKey.empty())
 			{
 				// No prefix: This is an environment variable
-				const char* envValue = std::getenv(section.c_str());
-				HASSERT(envValue != nullptr, "Environment variable '{0}' not found while parsing '{1}'", section.c_str(), result.c_str());
+				const char* envValue = std::getenv(matchedSection.c_str());
+				HASSERT(envValue != nullptr, "Environment variable '{0}' not found while parsing '{1}'", matchedSection.c_str(), result.c_str());
 				replacement = envValue;
 			}
 			else
 			{
-				string rep = GetRootConfigVariable(section, key, "");
-				HASSERT(rep != "", "Configuration Variable '[{0}]{1}' not found while parsing '{2}'", section.c_str(), key.c_str(), result.c_str());
+				string rep = GetRootConfigVariable(matchedSection, matchedKey, "");
+				HASSERT(rep != "", "Configuration Variable '[{0}]{1}' not found while parsing '{2}'", matchedSection.c_str(), matchedKey.c_str(), result.c_str());
 				replacement = rep;
 			}
 			result.replace(match.position(0), fullMatch.length(), replacement);

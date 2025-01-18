@@ -8,15 +8,15 @@ namespace hdn {
 
 	struct SwapChainSupportDetails
 	{
-		VkSurfaceCapabilitiesKHR capabilities;
-		vector<VkSurfaceFormatKHR> formats;
-		vector<VkPresentModeKHR> presentModes;
+		VkSurfaceCapabilitiesKHR capabilities{};
+		vector<VkSurfaceFormatKHR> formats{};
+		vector<VkPresentModeKHR> presentModes{};
 	};
 
 	struct QueueFamilyIndices
 	{
-		uint32_t graphicsFamily;
-		uint32_t presentFamily;
+		uint32_t graphicsFamily = 0;
+		uint32_t presentFamily = 0;
 		bool graphicsFamilyHasValue = false;
 		bool presentFamilyHasValue = false;
 		bool IsComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
@@ -47,6 +47,7 @@ namespace hdn {
 		VkPhysicalDevice GetPhysicalDevice() { return m_PhysicalDevice; }
 		VkQueue GetGraphicsQueue() { return m_GraphicsQueue; }
 		VkQueue GetPresentQueue() { return m_PresentQueue; }
+		VkPhysicalDeviceProperties GetPhysicalDeviceProperties() { return m_Properties; }
 
 		SwapChainSupportDetails GetSwapChainSupport() { return QuerySwapChainSupport(m_PhysicalDevice); }
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
@@ -72,9 +73,6 @@ namespace hdn {
 			VkMemoryPropertyFlags properties,
 			VkImage& image,
 			VkDeviceMemory& imageMemory);
-
-		VkPhysicalDeviceProperties properties;
-
 	private:
 		void CreateInstance();
 		void SetupDebugMessenger();
@@ -103,6 +101,8 @@ namespace hdn {
 		VkSurfaceKHR m_Surface;
 		VkQueue m_GraphicsQueue;
 		VkQueue m_PresentQueue;
+
+		VkPhysicalDeviceProperties m_Properties;
 
 		const vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 		const vector<const char*> m_DeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };

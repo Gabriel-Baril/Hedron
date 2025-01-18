@@ -1,6 +1,7 @@
 #pragma once
 #include "core/core.h"
 #include "core/stl/unordered_map.h"
+#include "core/stl/optional.h"
 
 #include "hobj.h"
 
@@ -15,7 +16,7 @@ namespace hdn
 		HObjPtr<HObject> Get(HObjectKey key);
 
 		void RegisterObjectPath(HObjectKey key, const fspath& path);
-		const fspath& GetObjectPath(HObjectKey key);
+		optional<fspath> GetObjectPath(HObjectKey key);
 		HObjectKey GetObjectKey(const fspath& path);
 
 		virtual ~HObjectRegistry();

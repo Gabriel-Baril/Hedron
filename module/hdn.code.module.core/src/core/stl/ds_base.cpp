@@ -10,6 +10,11 @@ static MemStat s_MemStat;
 
 void* operator new[](size_t size, const char* name, int flags, unsigned debugFlags, const char* file, int line)
 {
+	MAYBE_UNUSED(name);
+	MAYBE_UNUSED(flags);
+	MAYBE_UNUSED(debugFlags);
+	MAYBE_UNUSED(file);
+	MAYBE_UNUSED(line);
 	// HDEBUG("Allocating {0} bytes at {1} : {2} (name: {3}, flags: {4}, debugFlags: {5})", size, file, line, name, flags, debugFlags);
 
 	// Use the standard new operator for allocation
@@ -18,12 +23,24 @@ void* operator new[](size_t size, const char* name, int flags, unsigned debugFla
 
 void operator delete[](void* ptr, const char* name, int flags, unsigned debugFlags, const char* file, int line) noexcept
 {
+	MAYBE_UNUSED(name);
+	MAYBE_UNUSED(flags);
+	MAYBE_UNUSED(debugFlags);
+	MAYBE_UNUSED(file);
+	MAYBE_UNUSED(line);
 	// HDEBUG("Deallocating Memory");
 	::operator delete[](ptr);
 }
 
 void* operator new[](size_t size, size_t alignment, size_t offset, const char* name, int flags, unsigned debugFlags, const char* file, int line)
 {
+	MAYBE_UNUSED(alignment);
+	MAYBE_UNUSED(offset);
+	MAYBE_UNUSED(name);
+	MAYBE_UNUSED(flags);
+	MAYBE_UNUSED(debugFlags);
+	MAYBE_UNUSED(file);
+	MAYBE_UNUSED(line);
 	// HDEBUG("Allocating {0} bytes with alignment {1} and offset {2} at {3} : {4} (name: {5}, flags: {6} debugFlags: {7})", size, alignment, offset, file, line, name, flags, debugFlags);
 	
 	// Ensure alignment and offset are respected
@@ -41,6 +58,14 @@ void* operator new[](size_t size, size_t alignment, size_t offset, const char* n
 
 void operator delete[](void* ptr, size_t alignment, size_t offset, const char* name, int flags, unsigned debugFlags, const char* file, int line) noexcept
 {
+	MAYBE_UNUSED(alignment);
+	MAYBE_UNUSED(offset);
+	MAYBE_UNUSED(name);
+	MAYBE_UNUSED(flags);
+	MAYBE_UNUSED(debugFlags);
+	MAYBE_UNUSED(file);
+	MAYBE_UNUSED(line);
+
 	// HDEBUG("Deallocating Aligned Memory");
 	
 	// #if USING(HDN_PLATFORM_WINDOWS)

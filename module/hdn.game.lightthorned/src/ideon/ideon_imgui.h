@@ -30,7 +30,7 @@ namespace hdn
 	struct TestContext
 	{
 		string testExecutableName;
-		u32 rngSeed;
+		u32 rngSeed = 0;
 	};
 
 	struct OverallResult
@@ -71,17 +71,17 @@ namespace hdn
 		string tags;
 		std::filesystem::path filename;
 		u32 line;
-		vector<SectionResult> sectionResults;
-		vector<ExpressionResult> expressionResults;
-		OverallResult overallResult;
+		vector<SectionResult> sectionResults{};
+		vector<ExpressionResult> expressionResults{};
+		OverallResult overallResult{};
 	};
 
 	struct TestResult
 	{
-		TestContext context;
-		vector<TestCaseResult> testCaseResults;
-		OverallResults overallResultsExpressions;
-		OverallResults overallResultsCases;
+		TestContext context{};
+		vector<TestCaseResult> testCaseResults{};
+		OverallResults overallResultsExpressions{};
+		OverallResults overallResultsCases{};
 	};
 
 	class IdeonImgui

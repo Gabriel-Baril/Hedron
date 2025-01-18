@@ -189,6 +189,6 @@ namespace hdn {
 		for (auto& write : m_Writes) {
 			write.dstSet = set;
 		}
-		vkUpdateDescriptorSets(m_Pool.m_Device.GetDevice(), m_Writes.size(), m_Writes.data(), 0, nullptr);
+		vkUpdateDescriptorSets(m_Pool.m_Device.GetDevice(), static_cast<u32>(m_Writes.size()), m_Writes.data(), 0, nullptr);
 	}
 }

@@ -40,7 +40,7 @@ namespace hdn
 		}
 
 		template<typename T>
-		inline void Write(T* values, u32 count)
+		inline void Write(T* values, size_t count)
 		{
 			const auto size = sizeof(T) * count;
 			memcpy(m_CurrentPtr, values, size);

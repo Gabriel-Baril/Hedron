@@ -13,6 +13,10 @@ namespace hdn {
 		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 		void* pUserData)
 	{
+		MAYBE_UNUSED(messageSeverity);
+		MAYBE_UNUSED(messageType);
+		MAYBE_UNUSED(pUserData);
+
 		HERR("Validation Layer: {0}", pCallbackData->pMessage);
 		return VK_FALSE;
 	}
@@ -129,7 +133,7 @@ namespace hdn {
 			HTHROW(std::runtime_error, "failed to find a suitable GPU!");
 		}
 
-		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &properties);
+		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &m_Properties);
 		HINFO("Physical Device: {0}", deviceCount);
 	}
 
@@ -390,6 +394,7 @@ namespace hdn {
 			}
 		}
 		HTHROW(std::runtime_error, "failed to find supported format!");
+		return VK_FORMAT_UNDEFINED;
 	}
 
 	uint32_t HDNDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
@@ -401,8 +406,8 @@ namespace hdn {
 				return i;
 			}
 		}
-
 		HTHROW(std::runtime_error, "failed to find suitable memory type!");
+		return 0; // Will never reach
 	}
 
 	void HDNDevice::CreateBuffer(

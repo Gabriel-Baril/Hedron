@@ -82,6 +82,7 @@ namespace hdn
 
 	bool FileSystem::IsSocket(const fspath& path)
 	{
+		MAYBE_UNUSED(path);
 #if USING(HDN_PLATFORM_WINDOWS)
 		// Sockets as filesystem objects are not a common concept on Windows.
 		// You can throw an exception or return false here.
@@ -208,7 +209,7 @@ namespace hdn
 		{
 			return std::filesystem::relative(p0, p1);
 		}
-		catch (const std::filesystem::filesystem_error& e)
+		catch (const std::filesystem::filesystem_error&)
 		{
 			return optional<fspath>();
 		}

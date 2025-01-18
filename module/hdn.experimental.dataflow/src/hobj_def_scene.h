@@ -32,6 +32,6 @@ namespace hdn
 
 		virtual ~HScene() = default;
 	private:
-		HObjPtr<HLightConfig> m_LightConfig;
+		HObjPtr<HLightConfig> m_LightConfig = nullptr;
 	};
 }

@@ -23,6 +23,7 @@ namespace hdn
 	class CustomLevelFormatter : public spdlog::custom_flag_formatter {
 	public:
 		void format(const spdlog::details::log_msg& msg, const std::tm& tm_time, spdlog::memory_buf_t& dest) override {
+			MAYBE_UNUSED(tm_time);
 			const char* level_map[] = { "TRACE", "DEBUG", "INFO ", "WARN ", "ERR  ", "CRIT ", "OFF  " }; // Make sure each level have 5 characters to make the messages aligned in the console
 			auto level = static_cast<size_t>(msg.level);
 			if (level < sizeof(level_map) / sizeof(level_map[0])) {

@@ -120,7 +120,7 @@ namespace hdn
 		std::ifstream file(filepath, std::ios::ate | std::ios::binary); // std::ios::ate -> When the file open we seek to the end immediately
 		if (!file.is_open())
 		{
-			HTHROW(std::runtime_error, "Failed to open file: {0}", filepath);
+			HTHROW_FMT(std::runtime_error, "Failed to open file: {0}", filepath);
 		}
 		size_t fileSize = static_cast<size_t>(file.tellg());
 		vector<char> buffer(fileSize);

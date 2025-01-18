@@ -21,10 +21,8 @@ namespace hdn
 	void IdaesImgui::Draw()
 	{
 		const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
-		const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
 
 		const ImGuiTableFlags flags = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
-		const ImGuiTreeNodeFlags tree_node_flags = ImGuiTreeNodeFlags_SpanAllColumns;
 
 		ImGui::Begin("IdaesUI");
 		if (ImGui::BeginTable("idaes", 3, flags))

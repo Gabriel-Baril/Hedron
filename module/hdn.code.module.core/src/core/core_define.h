@@ -10,6 +10,7 @@
 #define NOT_IN_USE	&&!
 #define USE_IF( x )	&&((x) ? 1 : 0)&&
 #define USING( x )	(1 x 1)
+#define MAYBE_UNUSED(x) ((void)x)
 
 #define HDN_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 #define BIT(x) (1 << x)

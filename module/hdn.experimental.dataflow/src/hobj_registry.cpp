@@ -43,13 +43,13 @@ namespace hdn
 		m_HObjectKeys[absolutePath] = key;
 	}
 
-	const fspath& HObjectRegistry::GetObjectPath(HObjectKey key)
+	optional<fspath> HObjectRegistry::GetObjectPath(HObjectKey key)
 	{
 		if (m_HObjectPaths.contains(key))
 		{
 			return m_HObjectPaths.at(key);
 		}
-		return "";
+		return optional<fspath>{};
 	}
 
 	HObjectKey HObjectRegistry::GetObjectKey(const fspath& path)

@@ -239,7 +239,7 @@ namespace hdn
 		std::ifstream file(filepath.c_str(), std::ios::binary | std::ios::ate);
 		if (!file)
 		{
-			HTHROW(std::runtime_error, "Failed to open file '{0}'", filepath.c_str());
+			HTHROW_FMT(std::runtime_error, "Failed to open file '{0}'", filepath.c_str());
 		}
 
 		size_t fileSize = file.tellg();
@@ -247,7 +247,7 @@ namespace hdn
 		vector<u8> buffer(fileSize);
 		if (!file.read(reinterpret_cast<char*>(buffer.data()), fileSize))
 		{
-			HTHROW(std::runtime_error, "Failed to read file '{0}'", filepath.c_str());
+			HTHROW_FMT(std::runtime_error, "Failed to read file '{0}'", filepath.c_str());
 		}
 
 		vertices.clear();
@@ -275,25 +275,25 @@ namespace hdn
 			HDEBUG("UV Count: {0}", uvs.count);
 			HDEBUG("Color Count: {0}", colors.count);
 
-			for (int i = 0; i < positions.count; i++) // positions.count is the amount of indices
+			for (int j = 0; j < positions.count; j++) // positions.count is the amount of indices
 			{
 				Vertex vertex{};
 
-				ofbx::Vec3 position = positions.get(i);
+				ofbx::Vec3 position = positions.get(j);
 				vertex.position = {
 					position.x,
 					position.y,
 					position.z
 				};
 
-				ofbx::Vec3 normal = normals.get(i);
+				ofbx::Vec3 normal = normals.get(j);
 				vertex.normal = {
 					normal.x,
 					normal.y,
 					normal.z
 				};
 
-				ofbx::Vec2 uv = uvs.get(i);
+				ofbx::Vec2 uv = uvs.get(j);
 				vertex.uv = {
 					uv.x,
 					uv.y
@@ -313,7 +313,7 @@ namespace hdn
 				indices.push_back(uniqueVertices[vertex]);
 			}
 
-			int meshMemorySavedFromVertexDedupByte = (positions.count - vertices.size()) * sizeof(Vertex) - indices.size() * sizeof(u32);
+			size_t meshMemorySavedFromVertexDedupByte = (positions.count - vertices.size()) * sizeof(Vertex) - indices.size() * sizeof(u32);
 			HDEBUG("Vertex Count After Deduplication: {0}", vertices.size());
 			HDEBUG("Mesh Memory Saved From Deduplication: {0} bytes", meshMemorySavedFromVertexDedupByte);
 		}

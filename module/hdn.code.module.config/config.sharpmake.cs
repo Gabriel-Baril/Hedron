@@ -22,6 +22,8 @@ public class ConfigProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
+        conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
+        
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<INIHProject>(target);
     }

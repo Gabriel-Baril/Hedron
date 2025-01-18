@@ -25,7 +25,7 @@ void ExecSelfModifyingFunc()
 	memcpy(execMemory, code, sizeof(code));
 
 	unsigned char* codePtr = reinterpret_cast<unsigned char*>(execMemory);
-	// codePtr[1] = 0x63;
+	codePtr[1] = 0x63;
 
 	auto func = reinterpret_cast<int(*)()>(execMemory);
 	int result = func();

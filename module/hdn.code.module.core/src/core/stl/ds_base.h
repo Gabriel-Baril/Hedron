@@ -7,10 +7,10 @@
 
 struct MemStat
 {
-	int allocated = 0;
-	int allocationCount = 0;
-	int deallocated = 0;
-	int deallocationCount = 0;
+	size_t allocated = 0;
+	size_t allocationCount = 0;
+	size_t deallocated = 0;
+	size_t deallocationCount = 0;
 };
 
 // TODO: Take a look at this file 'module\hdn.code.external.eastl\include\EASTL\allocator.h' for further details about why we need to define these

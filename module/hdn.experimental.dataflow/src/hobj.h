@@ -67,6 +67,7 @@ namespace hdn
 	public:
 		virtual void Load(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default)
 		{
+			MAYBE_UNUSED(flags);
 			archive.Advance<u64>(); // Skip magic number
 			archive.Advance<HObjectTypeHash>(); // The first bytes always contains the serialized object type, since we don't need to them for loading, skip them
 			bin::Read(archive, m_Key);
@@ -75,8 +76,8 @@ namespace hdn
 
 		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) const
 		{
+			MAYBE_UNUSED(flags);
 			u64 typeHash = GetTypeHash();
-
 			bin::Write(archive, HOBJ_FILE_MAGIC_NUMBER);
 			bin::Write(archive, typeHash);
 			bin::Write(archive, m_Key);

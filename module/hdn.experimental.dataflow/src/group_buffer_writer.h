@@ -65,8 +65,9 @@ namespace hdn
 			this->EndByteMeta = endByteMeta;
 		}
 
-		int MetadataByteSize() const
+		u64 MetadataByteSize() const
 		{
+			HASSERT(EndByteMeta >= BeginByteMeta, "EndByteMeta < BeginByteMeta");
 			return EndByteMeta - BeginByteMeta;
 		}
 	private:

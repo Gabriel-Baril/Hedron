@@ -36,7 +36,7 @@ namespace hdn
 		}
 
 		template<typename T>
-		inline const T* Read(u32 count)
+		inline const T* Read(size_t count)
 		{
 			const auto size = sizeof(T) * count;
 			const T* out = reinterpret_cast<const T*>(m_CurrentPtr);

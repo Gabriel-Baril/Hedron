@@ -53,8 +53,15 @@ namespace hdn
 			if (object == nullptr)
 			{
 				// THe object was not found in the in-memory registry, we need to retreive the object from the persistent registry
-				const fspath& path = HObjectRegistry::Get().GetObjectPath(key);
-				object = HObjectUtil::LoadFromPath<T>(path.string().c_str(), flags);
+				optional<fspath> path = HObjectRegistry::Get().GetObjectPath(key);
+				if (path)
+				{
+					object = HObjectUtil::LoadFromPath<T>(path->string().c_str(), flags);
+				}
+				else
+				{
+					HERR("Object with key '{0}' not found", key);
+				}
 			}
 			return object;
 		}
@@ -62,6 +69,8 @@ namespace hdn
 		template<typename T>
 		static HObjPtr<T> GetObjectFromPath(const char* path, HObjectLoadFlags flags = HObjectLoadFlags::Default)
 		{
+			MAYBE_UNUSED(flags);
+
 			HObjectKey key = HObjectRegistry::Get().GetObjectKey(path);
 			HASSERT(key != HOBJ_NULL_KEY, "HObject not found");
 			return HObjectUtil::GetObjectFromKey<T>(key);

@@ -206,16 +206,16 @@ namespace hdn
 	void IdeonImgui::DisplayTestNode(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
-		SetRowColor(expression.success > 0);
+		SetRowColor(expression.success);
 		string expandedExpression = trim(expression.expandedExpression);
 		ImGui::TableNextColumn();
 		ImGui::TreeNodeEx(expandedExpression.c_str(), treeNodeFlags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen);
 		ImGui::TableNextColumn();
 		ImGui::Text("Expression");
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(expression.success > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), expression.success);
+		ColoredTextIfValid(expression.success, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), expression.success);
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(!expression.success != 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !expression.success);
+		ColoredTextIfValid(!expression.success, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !expression.success);
 		ImGui::TableNextColumn();
 		ImGui::Text("%s", expression.filename.string().c_str());
 		ImGui::TableNextColumn();
@@ -253,16 +253,16 @@ namespace hdn
 	void IdeonImgui::DisplayTestNode(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
-		SetRowColor(testCase.overallResult.success > 0);
+		SetRowColor(testCase.overallResult.success);
 
 		ImGui::TableNextColumn();
 		bool open = ImGui::TreeNodeEx(testCase.name.c_str(), treeNodeFlags);
 		ImGui::TableNextColumn();
 		ImGui::Text("Test Case");
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(testCase.overallResult.success > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), testCase.overallResult.success);
+		ColoredTextIfValid(testCase.overallResult.success, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), testCase.overallResult.success);
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(!testCase.overallResult.success != 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !testCase.overallResult.success);
+		ColoredTextIfValid(!testCase.overallResult.success, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !testCase.overallResult.success);
 		ImGui::TableNextColumn();
 		ImGui::Text("%s", testCase.filename.string().c_str());
 		ImGui::TableNextColumn();
@@ -374,6 +374,10 @@ namespace hdn
 						}
 					);
 					int exitStatus = process.get_exit_status();
+					if (exitStatus != 0)
+					{
+						HERR("Process terminated with errors");
+					}
 					HWARN("----------- Finished Running build_test_projects.py -----------");
 
 					// 3. Run the test project executable with the right arguments (--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml)
@@ -417,6 +421,10 @@ namespace hdn
 							}
 						);
 						int status = process.get_exit_status();
+						if (status != 0)
+						{
+							HERR("Process terminated with errors");
+						}
 					}
 
 					HWARN("Tests Results Finished!");
@@ -442,7 +450,6 @@ namespace hdn
 		}
 
 		const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
-		const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
 		const ImGuiTableFlags flags = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
 
 		if (m_RunningTests)

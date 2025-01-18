@@ -162,6 +162,8 @@ namespace hdn
 
 	void ImguiSystem::FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
 	{
+		MAYBE_UNUSED(wd);
+		MAYBE_UNUSED(draw_data);
 		// Record dear imgui primitives into command buffer
 	}
 
