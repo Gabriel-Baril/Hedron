@@ -55,3 +55,6 @@
 [submodule "module/hdn.code.external.eastl"]
 	path = module/hdn.code.external.eastl
 	url = https://github.com/Gabriel-Baril/EASTL.git
+[submodule "module/hdn.code.external.eabase"]
+	path = module/hdn.code.external.eabase
+	url = https://github.com/Gabriel-Baril/EABase.git
