@@ -52,3 +52,6 @@
 [submodule "module/hdn.code.external.openfbx"]
 	path = module/hdn.code.external.openfbx
 	url = https://github.com/Gabriel-Baril/OpenFBX.git
+[submodule "module/hdn.code.external.eastl"]
+	path = module/hdn.code.external.eastl
+	url = https://github.com/Gabriel-Baril/EASTL.git
