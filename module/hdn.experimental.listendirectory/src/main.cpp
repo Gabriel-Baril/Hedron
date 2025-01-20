@@ -57,7 +57,7 @@ int main()
 	using namespace hdn;
 	Log_Init();
 
-	string folderToMonitor = "D:/_DEV/_HEDRON/module/hdn.solution.playground/data";
+	string folderToMonitor = "D:/CLOUD/OneDrive/DEV/HEDRON/module/hdn.solution.playground/data";
 	HINFO("Monitoring folder: {0}", folderToMonitor.c_str());
 	
 	monitorFolder(folderToMonitor);
