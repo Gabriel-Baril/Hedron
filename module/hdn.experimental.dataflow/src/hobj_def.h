@@ -13,12 +13,12 @@ namespace hdn
 			HObject::Load(archive, flags);
 		}
 
-		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) const override
+		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override
 		{
 			HObject::Save(archive, flags);
 		}
 
-		inline virtual u64 GetTypeHash() const override { return TYPE_HASH(HDefinition); }
+		inline virtual hash64_t GetTypeHash() const override { return GenerateTypeHash<HDefinition>(); }
 
 		virtual ~HDefinition() = default;
 	};

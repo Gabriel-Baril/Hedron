@@ -15,14 +15,14 @@ namespace hdn
 			bin::Read(archive, m_MaxSecondaryLightCount);
 		}
 
-		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) const override
+		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override
 		{
 			HDefinition::Save(archive, flags);
 			bin::Write(archive, m_MaxPrimaryLightCount);
 			bin::Write(archive, m_MaxSecondaryLightCount);
 		}
 
-		virtual u64 GetTypeHash() const override { return TYPE_HASH(HLightConfig); }
+		virtual hash64_t GetTypeHash() const override { return GenerateTypeHash<HLightConfig>(); }
 
 		inline u32 GetMaxPrimaryLightCount() const { return m_MaxPrimaryLightCount; }
 		inline void SetMaxPrimaryLightCount(u32 count) { m_MaxPrimaryLightCount = count; }

@@ -28,5 +28,6 @@ public class CoreProject : BaseCppProject
         conf.AddPublicDependency<GlmProject>(target);
         conf.AddPublicDependency<SpdlogProject>(target);
         conf.AddPublicDependency<EASTLProject>(target);
+        conf.AddPublicDependency<XXHashProject>(target);
     }
 }

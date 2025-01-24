@@ -9,23 +9,22 @@ namespace hdn
 	{
 	public:
 		HScene() = default;
-
 		virtual void Load(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default) override
 		{
 			HDefinition::Load(archive, flags);
 
-			HObjectKey lightObjectKey;
+			hkey lightObjectKey;
 			bin::Read(archive, lightObjectKey);
 			m_LightConfig = HObjectUtil::GetObjectFromKey<HLightConfig>(lightObjectKey, flags);
 		}
 
-		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) const override
+		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override
 		{
 			HDefinition::Save(archive, flags);
 			bin::Write(archive, m_LightConfig->GetKey());
 		}
 
-		virtual u64 GetTypeHash() const override { return TYPE_HASH(HScene); }
+		virtual hash64_t GetTypeHash() const override { return GenerateTypeHash<HScene>(); }
 
 		void SetLightConfig(HObjPtr<HLightConfig> lightConfig) { m_LightConfig = lightConfig; }
 		HObjPtr<HLightConfig> GetLightConfig() const { return m_LightConfig; }

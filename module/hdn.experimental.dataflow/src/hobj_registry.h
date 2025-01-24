@@ -11,20 +11,20 @@ namespace hdn
 	{
 	public:
 		static HObjectRegistry& Get();
-		bool Contains(HObjectKey key);
-		void Register(HObjectKey key, HObjPtr<HObject> object);
-		HObjPtr<HObject> Get(HObjectKey key);
+		bool Contains(hkey key);
+		void Register(hkey key, HObjPtr<HObject> object);
+		HObjPtr<HObject> Get(hkey key);
 
-		void RegisterObjectPath(HObjectKey key, const fspath& path);
-		optional<fspath> GetObjectPath(HObjectKey key);
-		HObjectKey GetObjectKey(const fspath& path);
+		void RegisterObjectPath(hkey key, const fspath& path);
+		optional<fspath> GetObjectPath(hkey key);
+		hkey GetObjectKey(const fspath& path);
 
 		virtual ~HObjectRegistry();
 	private:
 		HObjectRegistry() = default;
 	private:
-		unordered_map<HObjectKey, HObjPtr<HObject>> m_HObjectRegistry{};
-		unordered_map<HObjectKey, fspath> m_HObjectPaths{};
-		unordered_map<fspath, HObjectKey> m_HObjectKeys{};
+		unordered_map<hkey, HObjPtr<HObject>> m_HObjectRegistry{};
+		unordered_map<hkey, fspath> m_HObjectPaths{};
+		unordered_map<fspath, hkey> m_HObjectKeys{};
 	};
 }

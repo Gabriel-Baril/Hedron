@@ -7,12 +7,18 @@ namespace hdn
 	class stack_allocator
 	{
 	public:
+		stack_allocator() = default;
 		stack_allocator(size_t size, void* memory)
 			: m_Memory{ memory }, m_TotalSize{ size }, m_StackOffset{ 0 }
 		{
 		}
 
 		virtual ~stack_allocator() {}
+
+		void SetMemory(void* memory)
+		{
+			m_Memory = memory;
+		}
 
 		void* Allocate(size_t allocSize)
 		{

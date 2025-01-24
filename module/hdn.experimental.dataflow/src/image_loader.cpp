@@ -1,7 +1,8 @@
 #include "image_loader.h"
 
+#include "core/hash.h"
+
 #include <stb_image/stb_image.h>
-#include <xxhash/xxhash.h>
 
 namespace hdn
 {
@@ -38,14 +39,14 @@ namespace hdn
 	bool ImageRegistry::Contains(const char* name)
 	{
 		size_t length = strlen(name);
-		u64 hash = XXH64(name, length, 0);
+		u64 hash = GenerateHash(name);
 		return m_ImageRegistry.contains(hash);
 	}
 
 	void ImageRegistry::Register(const char* name, Ref<Image> image)
 	{
 		size_t length = strlen(name);
-		u64 hash = XXH64(name, length, 0); // TODO: Find better seed than 0
+		u64 hash = GenerateHash(name);
 		if (m_ImageRegistry.contains(hash))
 		{
 			return;
@@ -56,7 +57,7 @@ namespace hdn
 	Ref<Image> ImageRegistry::Get(const char* name)
 	{
 		size_t length = strlen(name);
-		u64 hash = XXH64(name, length, 0); // TODO: Find better seed than 0
+		u64 hash = GenerateHash(name);
 		if (m_ImageRegistry.contains(hash))
 		{
 			return m_ImageRegistry.at(hash);

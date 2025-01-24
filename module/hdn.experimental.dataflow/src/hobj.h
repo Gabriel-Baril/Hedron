@@ -2,12 +2,14 @@
 
 #include "core/core.h"
 #include "core/core_filesystem.h"
+#include "core/hash.h"
+
+#include "hkey.h"
+
 #include "binary_io.h"
 #include "buffer_writer.h"
 #include "buffer_reader.h"
 #include "random.h"
-
-#include <xxhash/xxhash.h>
 
 constexpr std::size_t strlen_ct(const char* str) {
 	std::size_t length = 0;
@@ -17,8 +19,6 @@ constexpr std::size_t strlen_ct(const char* str) {
 	return length;
 }
 
-#define NAMEOF(type) #type
-#define TYPE_HASH(type) XXH64(NAMEOF(type), strlen_ct(NAMEOF(type)), 0)
 #define HOBJ_FILE_EXT ".ho"
 
 namespace hdn
@@ -57,9 +57,6 @@ namespace hdn
 	};
 	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectSaveFlags)
 
-	using HObjectKey = u64;
-	using HObjectTypeHash = u64;
-	
 	template<typename T> using HObjPtr = T*;
 
 	class HObject
@@ -69,12 +66,12 @@ namespace hdn
 		{
 			MAYBE_UNUSED(flags);
 			archive.Advance<u64>(); // Skip magic number
-			archive.Advance<HObjectTypeHash>(); // The first bytes always contains the serialized object type, since we don't need to them for loading, skip them
+			archive.Advance<hash64_t>(); // The first bytes always contains the serialized object type, since we don't need to them for loading, skip them
 			bin::Read(archive, m_Key);
 			bin::Read(archive, m_Path);
 		}
 
-		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) const
+		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default)
 		{
 			MAYBE_UNUSED(flags);
 			u64 typeHash = GetTypeHash();
@@ -84,11 +81,11 @@ namespace hdn
 			bin::Write(archive, m_Path);
 		}
 
-		inline virtual HObjectTypeHash GetTypeHash() const { return TYPE_HASH(HObject); }
+		inline virtual hash64_t GetTypeHash() const { return GenerateTypeHash<HObject>(); }
 
 		virtual void Realize() {}
 
-		HObjectKey GetKey() const { return m_Key; }
+		hkey GetKey() const { return m_Key; }
 		string GetPath() const { return m_Path; }
 
 		virtual ~HObject()
@@ -101,7 +98,7 @@ namespace hdn
 		{
 		}
 	private:
-		void SetKey(HObjectKey key)
+		void SetKey(hkey key)
 		{
 			m_Key = key;
 		}
@@ -116,7 +113,7 @@ namespace hdn
 			m_LoadState = state;
 		}
 	private:
-		HObjectKey m_Key = HOBJ_NULL_KEY;
+		hkey m_Key = HOBJ_NULL_KEY;
 		string m_Path = ""; // TODO: Make this field available only in debug mode?
 
 		// Transient

@@ -8,12 +8,12 @@ namespace hdn
 		return s_Instance;
 	}
 
-	bool HObjectRegistry::Contains(HObjectKey key)
+	bool HObjectRegistry::Contains(hkey key)
 	{
 		return m_HObjectRegistry.contains(key);
 	}
 
-	void HObjectRegistry::Register(HObjectKey key, HObjPtr<HObject> object)
+	void HObjectRegistry::Register(hkey key, HObjPtr<HObject> object)
 	{
 		if (m_HObjectRegistry.contains(key))
 		{
@@ -22,7 +22,7 @@ namespace hdn
 		m_HObjectRegistry[key] = object;
 	}
 
-	HObjPtr<HObject> HObjectRegistry::Get(HObjectKey key)
+	HObjPtr<HObject> HObjectRegistry::Get(hkey key)
 	{
 		if (m_HObjectRegistry.contains(key))
 		{
@@ -31,7 +31,7 @@ namespace hdn
 		return nullptr;
 	}
 
-	void HObjectRegistry::RegisterObjectPath(HObjectKey key, const fspath& path)
+	void HObjectRegistry::RegisterObjectPath(hkey key, const fspath& path)
 	{
 		fspath absolutePath = FileSystem::ToAbsolute(path);
 
@@ -43,7 +43,7 @@ namespace hdn
 		m_HObjectKeys[absolutePath] = key;
 	}
 
-	optional<fspath> HObjectRegistry::GetObjectPath(HObjectKey key)
+	optional<fspath> HObjectRegistry::GetObjectPath(hkey key)
 	{
 		if (m_HObjectPaths.contains(key))
 		{
@@ -52,7 +52,7 @@ namespace hdn
 		return optional<fspath>{};
 	}
 
-	HObjectKey HObjectRegistry::GetObjectKey(const fspath& path)
+	hkey HObjectRegistry::GetObjectKey(const fspath& path)
 	{
 		fspath absolutePath = FileSystem::ToAbsolute(path);
 		if (m_HObjectKeys.contains(absolutePath))

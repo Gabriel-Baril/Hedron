@@ -47,7 +47,7 @@ namespace hdn
 		}
 
 		template<typename T>
-		static HObjPtr<T> GetObjectFromKey(HObjectKey key, HObjectLoadFlags flags = HObjectLoadFlags::Default)
+		static HObjPtr<T> GetObjectFromKey(hkey key, HObjectLoadFlags flags = HObjectLoadFlags::Default)
 		{
 			HObjPtr<T> object = static_cast<T*>(HObjectRegistry::Get().Get(key));
 			if (object == nullptr)
@@ -71,14 +71,14 @@ namespace hdn
 		{
 			MAYBE_UNUSED(flags);
 
-			HObjectKey key = HObjectRegistry::Get().GetObjectKey(path);
+			hkey key = HObjectRegistry::Get().GetObjectKey(path);
 			HASSERT(key != HOBJ_NULL_KEY, "HObject not found");
 			return HObjectUtil::GetObjectFromKey<T>(key);
 		}
 
-		static HObjectKey GenerateKey()
+		static hkey GenerateKey()
 		{
-			HObjectKey key = static_cast<HObjectKey>(GenerateUUID64());
+			hkey key = static_cast<hkey>(GenerateUUID64());
 			return key;
 		}
 	private:
@@ -115,12 +115,12 @@ namespace hdn
 				HFATAL("Invalid deserialization instruction: The file '{0}' is not an .ho file!", path);
 			}
 
-			HObjectTypeHash serializedTypeHash = reader.Read<HObjectTypeHash>();
+			hash64_t serializedTypeHash = reader.Read<hash64_t>();
 
-			reader.Backtrack<HObjectTypeHash>();
+			reader.Backtrack<hash64_t>();
 			reader.Backtrack<u64>();
 
-			HObjectTypeHash typeHash = object->GetTypeHash();
+			hash64_t typeHash = object->GetTypeHash();
 			if (serializedTypeHash != typeHash)
 			{
 				HFATAL("Invalid deserialization instruction: trying to interpret and object of type '{0}' with an object of type '{1}'!", serializedTypeHash, typeHash);

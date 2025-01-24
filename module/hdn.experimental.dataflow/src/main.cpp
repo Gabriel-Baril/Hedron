@@ -9,6 +9,11 @@
 
 #include "core/core_filesystem.h"
 
+
+#include "pipeline/hzone.h"
+#include "pipeline/hzone_loader.h"
+#include "pipeline/hdata_point2d.h"
+
 namespace hdn
 {
 
@@ -63,7 +68,7 @@ namespace hdn
 				continue;
 			}
 
-			const size_t bufferSize = sizeof(u64) + sizeof(HObjectTypeHash) + sizeof(HObjectKey);
+			const size_t bufferSize = sizeof(u64) + sizeof(hash64_t) + sizeof(hkey);
 			char fileData[bufferSize];
 			inFile.read(fileData, bufferSize);
 			if (!inFile) {
@@ -73,17 +78,44 @@ namespace hdn
 
 			inFile.close();
 
-			HObjectKey key = *reinterpret_cast<HObjectKey*>(fileData + sizeof(u64) + sizeof(HObjectTypeHash));
+			hkey key = *reinterpret_cast<hkey*>(fileData + sizeof(u64) + sizeof(hash64_t));
 			HObjectRegistry::Get().RegisterObjectPath(key, file);
 		}
 	}
+}
+
+void Example0()
+{
+	using namespace hdn;
+	CreateObjectExample();
+	IterateHObject();
+	LoadObjectExample();
 }
 
 int main()
 {
 	using namespace hdn;
 	Log_Init();
-	CreateObjectExample();
-	IterateHObject();
-	LoadObjectExample();
+	
+	ZoneLoader::Get().Init();
+
+	if (true)
+	{
+		HObjPtr<HZone> zone = HObjectUtil::Create<HZone>();
+
+		point2d point0 = { 5.0f, 9.0f };
+		point2d point1 = { 1.0f, 2.0f };
+		point2d point2 = { 11.0f, 19.0f };
+
+		zone->AddEntry(&point0);
+		zone->AddEntry(&point1);
+		zone->AddEntry(&point2);
+
+		HObjectUtil::Save(zone, "object/zone.ho");
+	}
+	else
+	{
+		HObjPtr<HZone> scene = HObjectUtil::GetObjectFromPath<HZone>("object/zone.ho");
+	}
+
 }
