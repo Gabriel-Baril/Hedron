@@ -60,7 +60,7 @@ namespace hdn
 	class HObject
 	{
 	public:
-		virtual void Load(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default)
+		virtual void Deserialize(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default)
 		{
 			MAYBE_UNUSED(flags);
 			archive.Advance<u64>(); // Skip magic number
@@ -69,7 +69,7 @@ namespace hdn
 			bin::Read(archive, m_Path);
 		}
 
-		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default)
+		virtual void Serialize(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default)
 		{
 			MAYBE_UNUSED(flags);
 			u64 typeHash = GetTypeHash();

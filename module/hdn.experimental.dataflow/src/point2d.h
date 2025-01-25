@@ -6,6 +6,7 @@ namespace hdn
     struct point2d
     {
         float x;
+        char c;
         float y;
     };
 

@@ -7,8 +7,8 @@ namespace hdn
 	{
 	public:
 		HLightConfig() = default;
-		virtual void Load(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default) override;
-		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override;
+		virtual void Deserialize(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default) override;
+		virtual void Serialize(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override;
 		virtual hash64_t GetTypeHash() const override { return GenerateTypeHash<HLightConfig>(); }
 		inline u32 GetMaxPrimaryLightCount() const { return m_MaxPrimaryLightCount; }
 		inline void SetMaxPrimaryLightCount(u32 count) { m_MaxPrimaryLightCount = count; }

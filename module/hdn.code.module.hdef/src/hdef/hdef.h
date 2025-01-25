@@ -7,8 +7,8 @@ namespace hdn
 	{
 	public:
 		HDefinition() = default;
-		virtual void Load(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default) override;
-		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override;
+		virtual void Deserialize(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default) override;
+		virtual void Serialize(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override;
 		inline virtual hash64_t GetTypeHash() const override { return GenerateTypeHash<HDefinition>(); }
 		virtual ~HDefinition() = default;
 	};

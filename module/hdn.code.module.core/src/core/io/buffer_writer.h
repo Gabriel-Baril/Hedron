@@ -40,11 +40,13 @@ namespace hdn
 		}
 
 		template<typename T>
-		inline void Write(T* values, size_t count)
+		inline T* Write(T* values, size_t count)
 		{
+			T* base = Get<T>();
 			const auto size = sizeof(T) * count;
 			memcpy(m_CurrentPtr, values, size);
 			m_CurrentPtr += size;
+			return base;
 		}
 
 		template<typename T>

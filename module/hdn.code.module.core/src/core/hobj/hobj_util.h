@@ -29,7 +29,7 @@ namespace hdn
 
 			byte* serializationBuffer = new byte[1024]; // TODO: Use a per-frame linear allocator
 			FBufferWriter writer{ serializationBuffer };
-			object->Save(writer, flags);
+			object->Serialize(writer, flags);
 			std::ofstream outFile(absoluteSavePath, std::ios::binary);
 			if (!outFile)
 			{
@@ -126,7 +126,7 @@ namespace hdn
 				HFATAL("Invalid deserialization instruction: trying to interpret and object of type '{0}' with an object of type '{1}'!", serializedTypeHash, typeHash);
 				return nullptr;
 			}
-			object->Load(reader, flags);
+			object->Deserialize(reader, flags);
 			object->SetPath(absoluteSavePath);
 			object->SetLoadState(HObjectLoadState::Realized);
 

@@ -2,13 +2,13 @@
 
 namespace hdn
 {
-	void HDefinition::Load(FBufferReader& archive, HObjectLoadFlags flags)
+	void HDefinition::Deserialize(FBufferReader& archive, HObjectLoadFlags flags)
 	{
-		HObject::Load(archive, flags);
+		HObject::Deserialize(archive, flags);
 	}
 
-	void HDefinition::Save(FBufferWriter& archive, HObjectSaveFlags flags)
+	void HDefinition::Serialize(FBufferWriter& archive, HObjectSaveFlags flags)
 	{
-		HObject::Save(archive, flags);
+		HObject::Serialize(archive, flags);
 	}
 }

@@ -11,8 +11,8 @@ namespace hdn
 	{
 	public:
 		HScene() = default;
-		virtual void Load(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default) override;
-		virtual void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override;
+		virtual void Deserialize(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default) override;
+		virtual void Serialize(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override;
 		virtual hash64_t GetTypeHash() const override { return GenerateTypeHash<HScene>(); }
 		void SetLightConfig(HObjPtr<HLightConfig> lightConfig) { m_LightConfig = lightConfig; }
 		HObjPtr<HLightConfig> GetLightConfig() const { return m_LightConfig; }

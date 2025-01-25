@@ -3,6 +3,7 @@
 
 #include "core/core.h"
 #include "core/hobj/hobj.h"
+#include "zone.h"
 
 namespace hdn
 {
@@ -11,10 +12,11 @@ namespace hdn
 	public:
         HZone() = default;
 
-        void Load(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default) override;
-        void Save(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override;
+        void Deserialize(FBufferReader& archive, HObjectLoadFlags flags = HObjectLoadFlags::Default) override;
+        void Serialize(FBufferWriter& archive, HObjectSaveFlags flags = HObjectSaveFlags::Default) override;
 
         virtual ~HZone();
     private:
+		Zone m_Zone;
     };
 }

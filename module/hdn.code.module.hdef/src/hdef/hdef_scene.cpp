@@ -2,17 +2,17 @@
 
 namespace hdn
 {
-	void HScene::Load(FBufferReader& archive, HObjectLoadFlags flags)
+	void HScene::Deserialize(FBufferReader& archive, HObjectLoadFlags flags)
 	{
-		HDefinition::Load(archive, flags);
+		HDefinition::Deserialize(archive, flags);
 		hkey lightObjectKey;
 		bin::Read(archive, lightObjectKey);
 		m_LightConfig = HObjectUtil::GetObjectFromKey<HLightConfig>(lightObjectKey, flags);
 	}
 
-	void HScene::Save(FBufferWriter& archive, HObjectSaveFlags flags)
+	void HScene::Serialize(FBufferWriter& archive, HObjectSaveFlags flags)
 	{
-		HDefinition::Save(archive, flags);
+		HDefinition::Serialize(archive, flags);
 		bin::Write(archive, m_LightConfig->GetKey());
 	}
 }

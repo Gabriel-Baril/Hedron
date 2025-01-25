@@ -2,17 +2,15 @@
 #include "core/stl/vector.h"
 #include "core/hobj/hobj_util.h"
 #include "core/hobj/hobj_registry.h"
+#include "core/core_filesystem.h"
 
 #include "hdef/hdef_lightcfg.h"
 #include "hdef/hdef_scene.h"
 
-
-#include "core/core_filesystem.h"
-
 #include "hzone/hzone.h"
-#include "hzone/hzone_builder.h"
 #include "hzone/hzone_config.h"
-#include "hzone/hzone_loader.h"
+#include "hzone/zone_serializer.h"
+#include "hzone/zone_deserializer.h"
 
 #include "point2d.h"
 
@@ -94,6 +92,11 @@ void Example0()
 	LoadObjectExample();
 }
 
+struct test
+{
+	int a;
+};
+
 int main()
 {
 	using namespace hdn;
@@ -104,31 +107,46 @@ int main()
 	if (true)
 	{
 		// 1. Zone Building
-		HZoneBuilder zoneBuilder;
-		point2d point0 = { 5.0f, 9.0f };
-		point2d point1 = { 1.0f, 2.0f };
-		point2d point2 = { 11.0f, 19.0f };
-		zoneBuilder.AddEntry(&point0);
-		zoneBuilder.AddEntry(&point1);
-		zoneBuilder.AddEntry(&point2);
+		ZoneSerializer zoneSerializer;
+		zoneSerializer.SetMinKeyValue(1); // Since 0 is reserved for the "nullptr" key set the offset to 1
+
+		point2d point0 = { 5.0f, 1, 9.0f };
+		point2d point1 = { 1.0f, 2, 2.0f };
+		point2d point2 = { 11.0f, 3, 19.0f };
+		test t = { 2 };
+		test t2 = { 4 };
+		zoneSerializer.AddEntry(&point0);
+		zoneSerializer.AddEntry(&point1);
+		zoneSerializer.AddEntry(&t);
+		zoneSerializer.AddEntry(&point2);
+		zoneSerializer.AddEntry(&t2);
+
+
 
 		// 2. Serialization
-		byte* buffer = new byte[1024];
+		byte* buffer = new byte[1024 * 1024];
 		FBufferWriter zoneWriter{buffer};
-		zoneBuilder.Write(zoneWriter);
+		zoneSerializer.Serialize(zoneWriter);
 
-		// 3. Storage
-		// Store in file
-
-		// 4. Deserialization
-		// Load from file
-		FBufferReader reader{ zoneWriter.Base<byte>()};
-
-		// 5. Loading
-		ZoneLoader zoneLoader;
-		Zone zone = zoneLoader.Load(reader);
-
+		// 5. Deserialization
+		FBufferReader reader{ zoneWriter.Base<byte>() };
+		ZoneDeserializer zoneDeserializer;
+		Zone zone;
+		zoneDeserializer.Deserialize(reader, zone);
 		delete[] buffer;
+
+		point2d _point0 = *reinterpret_cast<const point2d*>(zone.GetKeyData(1));
+		point2d _point1 = *reinterpret_cast<const point2d*>(zone.GetKeyData(2));
+		point2d _point2 = *reinterpret_cast<const point2d*>(zone.GetKeyData(3));
+		test _test = *reinterpret_cast<const test*>(zone.GetKeyData(4));
+		test _test2 = *reinterpret_cast<const test*>(zone.GetKeyData(5));
+		HINFO("point0 -> {0}, {1}", _point0.x, _point0.y);
+		HINFO("point1 -> {0}, {1}", _point1.x, _point1.y);
+		HINFO("point2 -> {0}, {1}", _point2.x, _point2.y);
+		HINFO("test -> {0}", _test.a);
+		HINFO("test2 -> {0}", _test2.a);
+
+		delete[] zone.memoryBase;
 	}
 	else
 	{
