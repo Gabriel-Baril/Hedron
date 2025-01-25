@@ -3,13 +3,11 @@
 #include "core/core.h"
 #include "core/core_filesystem.h"
 #include "core/hash.h"
-
-#include "hkey.h"
-
-#include "binary_io.h"
-#include "buffer_writer.h"
-#include "buffer_reader.h"
-#include "random.h"
+#include "core/random.h"
+#include "core/hkey/hkey.h"
+#include "core/io/binary_io.h"
+#include "core/io/buffer_writer.h"
+#include "core/io/buffer_reader.h"
 
 constexpr std::size_t strlen_ct(const char* str) {
 	std::size_t length = 0;

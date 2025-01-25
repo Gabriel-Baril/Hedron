@@ -42,6 +42,8 @@ public class AllSolution : Solution
         conf.AddProject<ConfigProject>(target);
         conf.AddProject<CoreProject>(target);
         conf.AddProject<CoreProjectTest>(target);
+        conf.AddProject<HDefProject>(target);
+        conf.AddProject<HZoneProject>(target);
         conf.AddProject<AsyncPlaygroundProject>(target);
         conf.AddProject<BuildPackagingProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);

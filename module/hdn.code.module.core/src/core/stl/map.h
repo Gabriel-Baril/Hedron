@@ -6,5 +6,15 @@
 namespace hdn
 {
 	template <typename Key, typename T, typename Compare = eastl::less<Key>, typename Allocator = HDN_DEFAULT_ALLOCATOR>
-	using map = eastl::map<Key, T, Compare, Allocator>;
+	class map : public eastl::map<Key, T, Compare, Allocator>
+	{
+		using base = eastl::map<Key, T, Compare, Allocator>;
+	public:
+		using base::base; // Inherit constructors
+
+		// Add a contains() method
+		bool contains(const Key& key) const {
+			return this->find(key) != this->end();
+		}
+	};
 }

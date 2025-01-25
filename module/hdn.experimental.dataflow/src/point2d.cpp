@@ -1,4 +1,4 @@
-#include "hdata_point2d.h"
+#include "point2d.h"
 
 namespace hdn
 {
@@ -8,5 +8,10 @@ namespace hdn
         memcpy(outBuffer, data, sizeof(point2d));
         // TODO: Custom load step if required, for example, upload buffer to gpu etc
         return sizeof(point2d);
+    }
+
+    void zone_unload_point2d(const void* data)
+    {
+
     }
 }

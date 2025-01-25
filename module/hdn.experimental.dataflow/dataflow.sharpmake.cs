@@ -22,6 +22,8 @@ public class DataFlowProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<CoreProject>(target);
+        conf.AddPublicDependency<HDefProject>(target);
+        conf.AddPublicDependency<HZoneProject>(target);
         conf.AddPublicDependency<StbImageProject>(target);
         conf.AddPublicDependency<XXHashProject>(target);
         conf.AddPublicDependency<ConfigProject>(target);

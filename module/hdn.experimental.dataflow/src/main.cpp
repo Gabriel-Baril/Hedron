@@ -1,18 +1,20 @@
 #include "core/core.h"
 #include "core/stl/vector.h"
+#include "core/hobj/hobj_util.h"
+#include "core/hobj/hobj_registry.h"
 
-#include "hobj_def_lightcfg.h"
-#include "hobj_def_scene.h"
+#include "hdef/hdef_lightcfg.h"
+#include "hdef/hdef_scene.h"
 
-#include "hobj_util.h"
-#include "hobj_registry.h"
 
 #include "core/core_filesystem.h"
 
+#include "hzone/hzone.h"
+#include "hzone/hzone_builder.h"
+#include "hzone/hzone_config.h"
+#include "hzone/hzone_loader.h"
 
-#include "pipeline/hzone.h"
-#include "pipeline/hzone_loader.h"
-#include "pipeline/hdata_point2d.h"
+#include "point2d.h"
 
 namespace hdn
 {
@@ -97,21 +99,36 @@ int main()
 	using namespace hdn;
 	Log_Init();
 	
-	ZoneLoader::Get().Init();
+	// ZoneConfigurator::Get().Init();
 
 	if (true)
 	{
-		HObjPtr<HZone> zone = HObjectUtil::Create<HZone>();
-
+		// 1. Zone Building
+		HZoneBuilder zoneBuilder;
 		point2d point0 = { 5.0f, 9.0f };
 		point2d point1 = { 1.0f, 2.0f };
 		point2d point2 = { 11.0f, 19.0f };
+		zoneBuilder.AddEntry(&point0);
+		zoneBuilder.AddEntry(&point1);
+		zoneBuilder.AddEntry(&point2);
 
-		zone->AddEntry(&point0);
-		zone->AddEntry(&point1);
-		zone->AddEntry(&point2);
+		// 2. Serialization
+		byte* buffer = new byte[1024];
+		FBufferWriter zoneWriter{buffer};
+		zoneBuilder.Write(zoneWriter);
 
-		HObjectUtil::Save(zone, "object/zone.ho");
+		// 3. Storage
+		// Store in file
+
+		// 4. Deserialization
+		// Load from file
+		FBufferReader reader{ zoneWriter.Base<byte>()};
+
+		// 5. Loading
+		ZoneLoader zoneLoader;
+		Zone zone = zoneLoader.Load(reader);
+
+		delete[] buffer;
 	}
 	else
 	{

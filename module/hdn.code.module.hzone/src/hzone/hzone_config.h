@@ -1,4 +1,5 @@
 #pragma once
+
 #include "core/hash.h"
 #include "core/stl/map.h"
 #include "core/stl/multimap.h"
@@ -6,11 +7,11 @@
 
 namespace hdn
 {
-	class ZoneLoader
+	class ZoneConfigurator
 	{
 	public:
 		using ZoneLoadDataFunc = u64(*)(const void* dataBuffer, void* outBuffer); // We return the data written in outBuffer
-		static ZoneLoader& Get();
+		static ZoneConfigurator& Get();
 
 		template<typename T>
 		inline u64 Load(void* dataBuffer, void* outBuffer)
@@ -18,7 +19,7 @@ namespace hdn
 			return Load(GenerateTypeHash<T>(), dataBuffer, outBuffer);
 		}
 
-		void Register(hash64_t typeHash, const ZoneLoadDataFunc& func)
+		void Register(hash64_t typeHash, u64 typeSize, const ZoneLoadDataFunc& func)
 		{
 			if (m_LoadDataFuncs[typeHash])
 			{
@@ -26,15 +27,16 @@ namespace hdn
 			}
 			m_LoadDataFuncs[typeHash] = func;
 			AddTypeDependency(typeHash, typeHash);
+			m_TypeSize[typeHash] = typeSize;
+
 		}
 
 		template<typename T>
 		void Register(const ZoneLoadDataFunc& func)
 		{
-			Register(GenerateTypeHash<T>(), func);
+			Register(GenerateTypeHash<T>(), sizeof(T), func);
 		}
 
-		void Init();
 		void ResolveTypeDependency(vector<uint64_t>& type);
 
 		u64 Load(hash64_t typeHash, const void* dataBuffer, void* outBuffer)
@@ -64,6 +66,7 @@ namespace hdn
 		}
 	private:
 		map<hash64_t, ZoneLoadDataFunc> m_LoadDataFuncs;
+		map<hash64_t, u64> m_TypeSize;
 		multimap<hash64_t, hash64_t> m_TypeDependencies;
 	};
 
