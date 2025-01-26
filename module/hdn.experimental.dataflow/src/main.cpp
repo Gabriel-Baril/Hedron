@@ -8,7 +8,7 @@
 #include "hdef/hdef_scene.h"
 
 #include "hzone/hzone.h"
-#include "hzone/hzone_config.h"
+#include "hzone/zone_config.h"
 #include "hzone/zone_serializer.h"
 #include "hzone/zone_deserializer.h"
 
@@ -129,7 +129,7 @@ int main()
 		zoneSerializer.Serialize(zoneWriter);
 
 		// 5. Deserialization
-		FBufferReader reader{ zoneWriter.Base<byte>() };
+		FBufferReader reader{ zoneWriter.begin<byte>() };
 		ZoneDeserializer zoneDeserializer;
 		Zone zone;
 		zoneDeserializer.Deserialize(reader, zone);

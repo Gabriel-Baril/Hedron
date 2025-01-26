@@ -2,8 +2,9 @@
 
 #include "core/hash.h"
 #include "core/hkey/hkey.h"
-#include "core/io/binary_io.h"
+#include "core/io/common.h"
 #include "core/io/buffer_reader.h"
+#include "core/io/buffer_writer.h"
 
 namespace hdn
 {

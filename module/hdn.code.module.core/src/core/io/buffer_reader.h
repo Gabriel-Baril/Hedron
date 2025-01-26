@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/core.h"
+#include "common.h"
 
 namespace hdn
 {
@@ -87,4 +88,15 @@ namespace hdn
 		const byte* m_BufferBase = nullptr;
 		const byte* m_CurrentPtr = nullptr;
 	};
+
+	namespace bin
+	{
+		template<Primitive T>
+		inline void Read(FBufferReader& reader, T& object)
+		{
+			reader.Read(&object);
+		}
+
+		void Read(FBufferReader& reader, string& object);
+	}
 }

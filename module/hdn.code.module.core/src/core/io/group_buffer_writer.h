@@ -79,9 +79,6 @@ namespace hdn
 		vector<size_t> Children = {};
 	};
 
-	/**
-	 *
-	 */
 	class FGroupBufferWriter : public FBufferWriter
 	{
 	public:
@@ -154,4 +151,23 @@ namespace hdn
 		FBufferWriter m_MetadataBuffer;
 	};
 
+	namespace bin
+	{
+		template<typename T>
+		void Meta(FGroupBufferWriter& writer, KeyValueType type, const char* key, const T& value)
+		{
+			writer.Meta(type, key, value);
+		}
+
+		template<typename T>
+		inline void Write(FGroupBufferWriter& writer, const T& object, const char* semantic)
+		{
+			writer.Push(semantic);
+			Write(writer, object);
+			writer.Pop();
+		}
+
+		void Push(FGroupBufferWriter& writer, const char* semantic);
+		void Pop(FGroupBufferWriter& writer);
+	}
 }

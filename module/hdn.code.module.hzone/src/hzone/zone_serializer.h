@@ -5,6 +5,7 @@
 #include "core/stl/vector.h"
 #include "core/stl/map.h"
 #include "core/io/buffer_writer.h"
+#include "core/io/dynamic_buffer_writer.h"
 #include "core/hkey/hkey.h"
 
 namespace hdn
@@ -39,6 +40,8 @@ namespace hdn
 		map<hash64_t, vector<byte>> m_Data; // The actual data to be saved per type
 		map<hash64_t, vector<u64>> m_DataOffsets;
 		vector<hash64_t> m_Types; // Could we use a set instead?
+
+		FDynamicBufferWriter m_TempDynamicSerializationWriter{ 1024 };
 
 		// 
 		vector<u64> m_KeyMaxPerType;

@@ -1,6 +1,7 @@
 #include "zone_serializer.h"
+#include "zone_config.h"
 
-#include "core/io/binary_io.h"
+#include "core/io/common.h"
 
 namespace hdn
 {
@@ -16,7 +17,18 @@ namespace hdn
 		m_DataOffsets[typeHash].push_back(m_Data[typeHash].size());
 
 		auto& dataVector = m_Data[typeHash];
-		dataVector.insert(dataVector.end(), reinterpret_cast<const byte*>(data), reinterpret_cast<const byte*>(data) + dataSize); // TODO: Custom serializer per type, this line of code only work for POD type
+
+		if (ZoneSerializerConfig::Get().HasSerializeFunc(typeHash))
+		{
+			m_TempDynamicSerializationWriter.Reset();
+			ZoneSerializerConfig::Get().Serialize(typeHash, data, m_TempDynamicSerializationWriter);
+			dataVector.insert(dataVector.end(), m_TempDynamicSerializationWriter.begin<byte>(), m_TempDynamicSerializationWriter.end<byte>());
+		}
+		else
+		{
+			// Only work for POD type
+			dataVector.insert(dataVector.end(), reinterpret_cast<const byte*>(data), reinterpret_cast<const byte*>(data) + dataSize);
+		}
 	}
 
 	u64 ZoneSerializer::GetTotalEntryCount()

@@ -36,7 +36,7 @@ namespace hdn
 				HERR("Could not open file '{0}' for writing", absoluteSavePath.string().c_str());
 				return false;
 			}
-			outFile.write(writer.Base<char>(), writer.BytesWritten());
+			outFile.write(writer.begin<char>(), writer.BytesWritten());
 			outFile.close();
 			if (outFile.fail())
 			{

@@ -1,16 +1,11 @@
 #pragma once
 
-#include "core/core.h"
 #include "core/core_type.h"
-
-#include "buffer_reader.h"
-#include "buffer_writer.h"
-#include "group_buffer_writer.h"
 
 namespace hdn::bin
 {
 	template<typename T>
-	concept IsPrimitive =
+	concept Primitive =
 		std::is_same_v<T, bool> ||
 		std::is_same_v<T, byte> ||
 		std::is_same_v<T, ubyte> ||
@@ -54,37 +49,4 @@ namespace hdn::bin
 		std::is_same_v<T, vec4u64> ||
 		std::is_same_v<T, vec4f32> ||
 		std::is_same_v<T, vec4f64>;
-
-	void Push(FGroupBufferWriter& writer, const char* semantic);
-	
-	template<typename T>
-	void Meta(FGroupBufferWriter& writer, KeyValueType type, const char* key, const T& value)
-	{
-		writer.Meta(type, key, value);
-	}
-
-	void Pop(FGroupBufferWriter& writer);
-	
-	template<IsPrimitive T>
-	inline void Write(FBufferWriter& writer, const T& object)
-	{
-		writer.Write(object);
-	}
-
-	template<typename T>
-	inline void Write(FGroupBufferWriter& writer, const T& object, const char* semantic)
-	{
-		writer.Push(semantic);
-		Write(object, writer);
-		writer.Pop();
-	}
-
-	void Write(FBufferWriter& writer, const string& object);
-	void Read(FBufferReader& reader, string& object);
-
-	template<IsPrimitive T>
-	inline void Read(FBufferReader& reader, T& object)
-	{
-		reader.Read(&object);
-	}
 }

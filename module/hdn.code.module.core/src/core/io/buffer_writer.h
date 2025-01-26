@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/core.h"
+#include "common.h"
 
 namespace hdn
 {
@@ -42,7 +43,7 @@ namespace hdn
 		template<typename T>
 		inline T* Write(T* values, size_t count)
 		{
-			T* base = Get<T>();
+			T* base = end<T>();
 			const auto size = sizeof(T) * count;
 			memcpy(m_CurrentPtr, values, size);
 			m_CurrentPtr += size;
@@ -64,13 +65,13 @@ namespace hdn
 		}
 
 		template<typename T>
-		inline T* Get()
+		inline T* end()
 		{
 			return reinterpret_cast<T*>(m_CurrentPtr);
 		}
 
 		template<typename T>
-		inline T* Base()
+		inline T* begin()
 		{
 			return reinterpret_cast<T*>(m_BufferBase);
 		}
@@ -94,4 +95,16 @@ namespace hdn
 		byte* m_BufferBase = nullptr;
 		byte* m_CurrentPtr = nullptr;
 	};
+
+	namespace bin
+	{
+		template<Primitive T>
+		inline void Write(FBufferWriter& writer, const T& object)
+		{
+			writer.Write(object);
+		}
+
+		void Write(FBufferWriter& writer, const char& object);
+		void Write(FBufferWriter& writer, const string& object);
+	}
 }
