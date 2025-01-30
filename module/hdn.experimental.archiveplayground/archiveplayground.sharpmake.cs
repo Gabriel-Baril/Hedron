@@ -1,12 +1,11 @@
-using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class ArchiveProject : BaseCppProject
+public class ArchivePlaygroundProject : BaseCppProject
 {
-    public ArchiveProject()
+    public ArchivePlaygroundProject()
     {
-        Name = "archive";
+        Name = "archiveplayground";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -16,15 +15,12 @@ public class ArchiveProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
-        conf.SolutionFolder = Constants.TOOL_VS_CATEGORY;
+        conf.SolutionFolder = Constants.EXPERIMENTAL_VS_CATEGORY;
 
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
-        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
-        conf.AddPublicDependency<GlmProject>(target);
-        conf.AddPublicDependency<SpdlogProject>(target);
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<ArchiveLibProject>(target);
     }
