@@ -16,9 +16,9 @@ public class ArchiveProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
-        conf.SolutionFolder = Constants.MODULE_VS_CATEGORY;
+        conf.SolutionFolder = Constants.TOOL_VS_CATEGORY;
 
-        conf.Output = Project.Configuration.OutputType.Lib;
+        conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");

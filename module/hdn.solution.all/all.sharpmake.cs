@@ -38,14 +38,12 @@ public class AllSolution : Solution
         // conf.AddProject<TinyObjLoaderProject>(target);
         // conf.AddProject<XXHashProject>(target);
 
-        conf.AddProject<ArchiveProject>(target);
         conf.AddProject<AsyncProject>(target);
         conf.AddProject<ConfigProject>(target);
         conf.AddProject<CoreProject>(target);
         conf.AddProject<CoreProjectTest>(target);
         conf.AddProject<HDefProject>(target);
         conf.AddProject<HZoneProject>(target);
-        conf.AddProject<ArchivePlaygroundProject>(target);
         conf.AddProject<AsyncPlaygroundProject>(target);
         conf.AddProject<BuildPackagingProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
@@ -53,6 +51,7 @@ public class AllSolution : Solution
         conf.AddProject<ListenDirectoryProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
         conf.AddProject<LightthornedProject>(target);
+        conf.AddProject<ArchiveProject>(target);
         conf.AddProject<PolyProject>(target);
         conf.AddProject<IdeonProject>(target);
         conf.AddProject<IdaesProject>(target);

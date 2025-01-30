@@ -2,5 +2,5 @@
 Version=20250129
 Author=gbaril
 Source=Internal
-Semantic=Library
+Semantic=Tool
 Kind=Code

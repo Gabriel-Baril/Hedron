@@ -14,7 +14,6 @@ public class PlaygroundSolution : Solution
     [Configure]
     public void ConfigureAll(Solution.Configuration conf, Target target)
     {
-        conf.AddProject<ArchivePlaygroundProject>(target);
         conf.AddProject<AsyncPlaygroundProject>(target);
         conf.AddProject<BuildPackagingProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
