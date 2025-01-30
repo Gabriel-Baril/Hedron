@@ -38,12 +38,14 @@ public class AllSolution : Solution
         // conf.AddProject<TinyObjLoaderProject>(target);
         // conf.AddProject<XXHashProject>(target);
 
+        conf.AddProject<ArchiveProject>(target);
         conf.AddProject<AsyncProject>(target);
         conf.AddProject<ConfigProject>(target);
         conf.AddProject<CoreProject>(target);
         conf.AddProject<CoreProjectTest>(target);
         conf.AddProject<HDefProject>(target);
         conf.AddProject<HZoneProject>(target);
+        conf.AddProject<ArchivePlaygroundProject>(target);
         conf.AddProject<AsyncPlaygroundProject>(target);
         conf.AddProject<BuildPackagingProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
