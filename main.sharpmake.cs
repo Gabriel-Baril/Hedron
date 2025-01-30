@@ -96,9 +96,7 @@ public static class Main
     public static void SharpmakeMain(Sharpmake.Arguments args)
     {
         // C++ Solution
-        args.Generate<IdaesSolution>();
-        args.Generate<IdeonSolution>();
-        args.Generate<PolySolution>();
+        args.Generate<ToolsSolution>();
         args.Generate<PlaygroundSolution>();
         args.Generate<TestsSolution>();
         args.Generate<LightthornedSolution>();
