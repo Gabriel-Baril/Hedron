@@ -21,12 +21,24 @@ namespace hdn
 		return ArchiveStatementType::Null;
 	}
 
-	optional<string> CheckOrGetNamespaceName(const string& line)
+	optional<string> CheckOrGetStructName(const string& line)
 	{
-		static const std::regex namespaceRegex(R"(^\s*namespace\s+([a-zA-Z_]\w*)\s*(\{|\s*$))");
+		static const std::regex regex(R"(^\s*struct\s+([a-zA-Z_]\w*)\s*(\{|\s*$))");
 
 		std::smatch match;
-		if (std::regex_search(line, match, namespaceRegex))
+		if (std::regex_search(line, match, regex))
+		{
+			return match[1].str(); // Return captured namespace name
+		}
+		return eastl::nullopt; // No match found
+	}
+
+	optional<string> CheckOrGetNamespaceName(const string& line)
+	{
+		static const std::regex regex(R"(^\s*namespace\s+([a-zA-Z_]\w*)\s*(\{|\s*$))");
+
+		std::smatch match;
+		if (std::regex_search(line, match, regex))
 		{
 			return match[1].str(); // Return captured namespace name
 		}
@@ -36,31 +48,6 @@ namespace hdn
 	bool ContainsCharacter(const string& line, char character)
 	{
 		return line.find(character) != string::npos;
-	}
-
-	bool ParseArchiveFile(fspath sourcePath, ParseContext& context)
-	{
-		std::ifstream file(sourcePath);
-		if (!file)
-		{
-			HERR("Error: Cannot open file {0}", sourcePath.string().c_str());
-			return false;
-		}
-
-		string line;
-		while (std::getline(file, line))
-		{
-			optional<string> namespaceName = CheckOrGetNamespaceName(line);
-			if (namespaceName)
-			{
-
-			}
-			if (ContainsCharacter(line, '{'))
-			{
-
-			}
-		}
-		return true;
 	}
 
 	bool ParseArchiveStatement(string rawArchiveStatement, ArchiveStatement& outStatement)
@@ -98,4 +85,23 @@ namespace hdn
 		return true;
 	}
 
+	bool ParseArchiveFile(fspath sourcePath, ParseContext& context)
+	{
+		std::ifstream file(sourcePath);
+		if (!file)
+		{
+			HERR("Error: Cannot open file {0}", sourcePath.string().c_str());
+			return false;
+		}
+
+		string line;
+		while (std::getline(file, line))
+		{
+			if (optional<string> structName = CheckOrGetStructName(line))
+			{
+				HWARN("Struct found: {0}", structName->c_str());
+			}
+		}
+		return true;
+	}
 }

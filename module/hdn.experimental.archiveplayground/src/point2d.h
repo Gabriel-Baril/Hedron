@@ -3,6 +3,11 @@
 
 namespace hdn
 {
+	struct dummy_test
+	{
+
+	};
+
 	int GetDefaultArrayCount(int length)
 	{
 		return length + 4;
@@ -13,6 +18,12 @@ namespace hdn
 	{
 		float x;
 		float y;
+		
+		struct CustomStruct
+		{
+
+		};
+		CustomStruct var;
 
 		int arrLength0;
 		int arrLength1;
