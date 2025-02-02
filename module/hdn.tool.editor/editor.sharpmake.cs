@@ -2,11 +2,11 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class IdeonProject : BaseCppProject
+public class EditorProject : BaseCppProject
 {
-    public IdeonProject()
+    public EditorProject()
     {
-        Name = "ideon";
+        Name = "editor";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -21,8 +21,8 @@ public class IdeonProject : BaseCppProject
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
-        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\Source\Public");
 
         conf.AddPublicDependency<CoreProject>(target);
+        conf.AddPublicDependency<OctreeCppProject>(target);
     }
 }

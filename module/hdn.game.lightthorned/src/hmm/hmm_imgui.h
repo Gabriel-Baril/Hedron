@@ -84,7 +84,7 @@ namespace hdn
 		OverallResults overallResultsCases{};
 	};
 
-	class IdeonImgui
+	class HMMImgui
 	{
 	public:
 		static constexpr const char* ROOT_NODE_NAME = "Catch2TestRun";

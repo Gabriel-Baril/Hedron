@@ -10,7 +10,7 @@
 
 #include "hdn_imgui.h"
 #include "idaes/idaes_imgui.h"
-#include "ideon/ideon_imgui.h"
+#include "hmm/hmm_imgui.h"
 
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
@@ -98,7 +98,7 @@ namespace hdn
 		IdaesImgui idaesUI;
 		// TODO: idaesUI.Init();
 
-		IdeonImgui ideonUI;
+		HMMImgui ideonUI;
 
 		//ideonUI.LoadTestResultFile("test_results/test_result.xml");
 #endif

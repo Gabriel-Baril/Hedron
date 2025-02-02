@@ -1,4 +1,4 @@
-#include "ideon_imgui.h"
+#include "hmm_imgui.h"
 
 #include "core/core_filesystem.h"
 #include "core/stl/vector.h"
@@ -12,7 +12,7 @@
 
 namespace hdn
 {
-	void IdeonImgui::ParseOverallResultNode(const pugi::xml_node& resultNode, OverallResult& overallResult)
+	void HMMImgui::ParseOverallResultNode(const pugi::xml_node& resultNode, OverallResult& overallResult)
 	{
 		for (const auto& attribute : resultNode.attributes())
 		{
@@ -26,7 +26,7 @@ namespace hdn
 			}
 		}
 	}
-	void IdeonImgui::ParseOverallResultsNode(const pugi::xml_node& resultNode, OverallResults& overallResults)
+	void HMMImgui::ParseOverallResultsNode(const pugi::xml_node& resultNode, OverallResults& overallResults)
 	{
 		for (const auto& attribute : resultNode.attributes())
 		{
@@ -45,7 +45,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::ParseSectionNode(const pugi::xml_node& sectionNode, SectionResult& sectionResult)
+	void HMMImgui::ParseSectionNode(const pugi::xml_node& sectionNode, SectionResult& sectionResult)
 	{
 		for (const auto& attribute : sectionNode.attributes())
 		{
@@ -76,7 +76,7 @@ namespace hdn
 			}
 		}
 	}
-	void IdeonImgui::ParseExpressionNode(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult)
+	void HMMImgui::ParseExpressionNode(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult)
 	{
 		for (const auto& attribute : expressionNode.attributes())
 		{
@@ -120,7 +120,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::ParseTestCaseNode(const pugi::xml_node& testCase, TestCaseResult& testCaseResult)
+	void HMMImgui::ParseTestCaseNode(const pugi::xml_node& testCase, TestCaseResult& testCaseResult)
 	{
 		HASSERT(Str_Equals(testCase.name(), TEST_CASE_NODE_NAME), "Invalid Test Case Node");
 
@@ -167,7 +167,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::ParseRootNode(const pugi::xml_node& root, TestResult& out)
+	void HMMImgui::ParseRootNode(const pugi::xml_node& root, TestResult& out)
 	{
 		HASSERT(Str_Equals(root.name(), ROOT_NODE_NAME), "Invalid Root Node");
 
@@ -192,7 +192,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::LoadTestResultFromMemory(const string& buffer, TestResult& testResult)
+	void HMMImgui::LoadTestResultFromMemory(const string& buffer, TestResult& testResult)
 	{
 		pugi::xml_document doc; // Already contains the root node (Catch2TestRun)
 		pugi::xml_parse_result result = doc.load_buffer(buffer.c_str(), buffer.size());
@@ -203,7 +203,7 @@ namespace hdn
 		ParseRootNode(doc.first_child(), testResult);
 	}
 
-	void IdeonImgui::DisplayTestNode(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags)
+	void HMMImgui::DisplayTestNode(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		SetRowColor(expression.success);
@@ -222,7 +222,7 @@ namespace hdn
 		ImGui::Text("%i", expression.line);
 	}
 
-	void IdeonImgui::DisplayTestNode(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags)
+	void HMMImgui::DisplayTestNode(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		SetRowColor(section.overallResults.failures <= 0);
@@ -250,7 +250,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::DisplayTestNode(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags)
+	void HMMImgui::DisplayTestNode(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		SetRowColor(testCase.overallResult.success);
@@ -282,7 +282,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::DisplayTestNode(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags)
+	void HMMImgui::DisplayTestNode(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		SetRowColor(result.overallResultsCases.failures <= 0);
@@ -310,7 +310,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::DisplayTestNode(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags)
+	void HMMImgui::DisplayTestNode(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		for (const TestResult& result : results)
 		{
@@ -318,7 +318,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::ColoredTextIfValid(bool condition, ImVec4 color, int value)
+	void HMMImgui::ColoredTextIfValid(bool condition, ImVec4 color, int value)
 	{
 		if (condition)
 		{
@@ -332,7 +332,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::SetRowColor(bool condition)
+	void HMMImgui::SetRowColor(bool condition)
 	{
 		if (condition)
 		{
@@ -344,7 +344,7 @@ namespace hdn
 		}
 	}
 
-	void IdeonImgui::Draw()
+	void HMMImgui::Draw()
 	{
 		ImGui::Begin("IdeonUI");
 		if (ImGui::Button("Run All Tests"))

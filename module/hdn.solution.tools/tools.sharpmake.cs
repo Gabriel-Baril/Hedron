@@ -13,9 +13,9 @@ public class ToolsSolution : Solution
     [Configure]
     public void ConfigureAll(Solution.Configuration conf, Target target)
     {
-        conf.AddProject<IdeonProject>(target);
+        conf.AddProject<HMMProject>(target);
         conf.AddProject<IdaesProject>(target);
-        conf.AddProject<PolyProject>(target);
+        conf.AddProject<EditorProject>(target);
         conf.AddProject<ArchiveProject>(target);
 
         conf.SetStartupProject<ArchiveProject>();
