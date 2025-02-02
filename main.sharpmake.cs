@@ -19,6 +19,9 @@ public static class Constants
     public const string TOOL_VS_CATEGORY = "tool";
     public const string PLUGIN_VS_CATEGORY = "plugin";
     public const string EXPERIMENTAL_VS_CATEGORY = "experimental";
+    
+    public const string VULKAN_SDK_ENV = "VULKAN_SDK";
+    public const string PHYSX_SDK_ENV = "PHYSX_SDK";
 
     public const string MODULE_FOLDER = "module";
     public static string[] SHARPMAKE_FOLDERS = { Constants.MODULE_FOLDER };
