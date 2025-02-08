@@ -58,3 +58,9 @@
 [submodule "module/hdn.code.external.eabase"]
 	path = module/hdn.code.external.eabase
 	url = https://github.com/Gabriel-Baril/EABase.git
+[submodule "module/hdn.code.external.tree-sitter"]
+	path = module/hdn.code.external.tree-sitter
+	url = https://github.com/Gabriel-Baril/tree-sitter
+[submodule "module/hdn.code.external.tree-sitter-cpp"]
+	path = module/hdn.code.external.tree-sitter-cpp
+	url = https://github.com/Gabriel-Baril/tree-sitter-cpp
