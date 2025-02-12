@@ -51,6 +51,7 @@ public class AllSolution : Solution
         conf.AddProject<BuildPackagingProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<DataFlowProject>(target);
+        conf.AddProject<FileLoadingProject>(target);
         conf.AddProject<ListenDirectoryProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
         conf.AddProject<LightthornedProject>(target);
