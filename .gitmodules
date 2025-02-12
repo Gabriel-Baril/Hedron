@@ -64,3 +64,6 @@
 [submodule "module/hdn.code.external.tree-sitter-cpp"]
 	path = module/hdn.code.external.tree-sitter-cpp
 	url = https://github.com/Gabriel-Baril/tree-sitter-cpp
+[submodule "module/hdn.code.external.flecs"]
+	path = module/hdn.code.external.flecs
+	url = https://github.com/Gabriel-Baril/flecs

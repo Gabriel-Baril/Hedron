@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class ArchivePlaygroundProject : BaseCppProject
+public class EcsPlaygroundProject : BaseCppProject
 {
-    public ArchivePlaygroundProject()
+    public EcsPlaygroundProject()
     {
-        Name = "archiveplayground";
+        Name = "ecs-playground";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -16,12 +16,12 @@ public class ArchivePlaygroundProject : BaseCppProject
         base.ConfigureAll(conf, target);
 
         conf.SolutionFolder = Constants.EXPERIMENTAL_VS_CATEGORY;
-
+        
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<CoreProject>(target);
-        conf.AddPublicDependency<ArchiveLibProject>(target);
+        conf.AddPublicDependency<FlecsProject>(target);
     }
 }

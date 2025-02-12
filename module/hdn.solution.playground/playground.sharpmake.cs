@@ -19,6 +19,7 @@ public class PlaygroundSolution : Solution
         conf.AddProject<BuildPackagingProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<DataFlowProject>(target);
+        conf.AddProject<EcsPlaygroundProject>(target);
         conf.AddProject<ListenDirectoryProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
         conf.AddProject<FileLoadingProject>(target);

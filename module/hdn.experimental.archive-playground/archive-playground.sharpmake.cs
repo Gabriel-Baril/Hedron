@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class ListenDirectoryProject : BaseCppProject
+public class ArchivePlaygroundProject : BaseCppProject
 {
-    public ListenDirectoryProject()
+    public ArchivePlaygroundProject()
     {
-        Name = "listendirectory";
+        Name = "archive-playground";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -16,12 +16,12 @@ public class ListenDirectoryProject : BaseCppProject
         base.ConfigureAll(conf, target);
 
         conf.SolutionFolder = Constants.EXPERIMENTAL_VS_CATEGORY;
-        
+
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<CoreProject>(target);
-        conf.AddPublicDependency<ConfigProject>(target);
+        conf.AddPublicDependency<ArchiveLibProject>(target);
     }
 }

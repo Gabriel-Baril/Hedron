@@ -5,7 +5,7 @@ public class AsyncPlaygroundProject : BaseCppProject
 {
     public AsyncPlaygroundProject()
     {
-        Name = "asyncplayground";
+        Name = "async-playground";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

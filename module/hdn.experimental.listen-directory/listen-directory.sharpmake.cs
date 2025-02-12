@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class BuildPackagingProject : BaseCppProject
+public class ListenDirectoryProject : BaseCppProject
 {
-    public BuildPackagingProject()
+    public ListenDirectoryProject()
     {
-        Name = "buildpackaging";
+        Name = "listen-directory";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

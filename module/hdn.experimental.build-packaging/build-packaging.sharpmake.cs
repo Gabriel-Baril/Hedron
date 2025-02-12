@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class FileLoadingProject : BaseCppProject
+public class BuildPackagingProject : BaseCppProject
 {
-    public FileLoadingProject()
+    public BuildPackagingProject()
     {
-        Name = "fileloading";
+        Name = "build-packaging";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -22,5 +22,6 @@ public class FileLoadingProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<CoreProject>(target);
+        conf.AddPublicDependency<ConfigProject>(target);
     }
 }

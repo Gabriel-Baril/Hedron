@@ -416,4 +416,5 @@ FodyWeavers.xsd
 **/*.drawio.bkp
 **/*.drawio.dtmp
 
-hdn.experimental.manualcompilation/
+hdn.experimental.manual-compilation/
+console.log
