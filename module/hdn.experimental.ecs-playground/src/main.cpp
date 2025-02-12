@@ -71,8 +71,6 @@ void example_deserialize()
 	auto loadedPrefab = DeserializeEntity(ecs, savedData);
 }
 
-
-
 int main()
 {
 	using namespace hdn;
