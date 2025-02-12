@@ -23,5 +23,6 @@ public class EcsPlaygroundProject : BaseCppProject
 
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<FlecsProject>(target);
+        conf.AddPublicDependency<NlohmannJsonProject>(target);
     }
 }

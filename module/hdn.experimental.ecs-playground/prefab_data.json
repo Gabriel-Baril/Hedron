@@ -1,0 +1,24 @@
+{
+    "name": "Player",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "health": {
+        "value": 100
+    },
+    "children": [
+        {
+            "name": "Weapon",
+            "damage": {
+                "value": 10
+            },
+            "children": [
+                {
+                    "name": "Scope",
+                    "children": []
+                }
+            ]
+        }
+    ]
+}
