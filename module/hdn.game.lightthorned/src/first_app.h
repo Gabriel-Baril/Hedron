@@ -8,6 +8,7 @@
 #include "hdn_descriptors.h"
 
 #include "physics/physics_world.h"
+#include "flecs/flecs.h"
 
 namespace hdn
 {
@@ -36,6 +37,7 @@ namespace hdn
 		Scope<HDNDescriptorPool> globalPool{}; // System that require descriptors only relevant to their work should create their own HDNDescriptorPool
 
 		PhysicsWorld m_PhysicsWorld;
-		HDNGameObject::Map m_GameObjects;
+
+		flecs::world m_EcsWorld;
 	};
 }

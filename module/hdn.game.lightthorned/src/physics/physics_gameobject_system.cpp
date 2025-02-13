@@ -29,13 +29,18 @@ namespace hdn
 
 	void PhysicsGameObjectSystem::Update(FrameInfo& frameInfo)
 	{
-		for (auto& [key, obj] : *frameInfo.gameObjects)
-		{
-			if (obj.physicsComponent == nullptr || obj.physicsComponent->physicsActor == nullptr) continue;
-			physx::PxTransform pxTransform = obj.physicsComponent->physicsActor->getGlobalPose();
-			obj.transform.translation = glm::vec3(pxTransform.p.x, pxTransform.p.y, -pxTransform.p.z);
+
+		auto query = frameInfo.ecsWorld->query<TransformComponent, PhysicsComponent>();
+		query.each([&](flecs::entity e, TransformComponent& transformC, PhysicsComponent& physicsC) {
+			if (physicsC.physicsActor == nullptr)
+			{
+				return;
+			}
+
+			physx::PxTransform pxTransform = physicsC.physicsActor->getGlobalPose();
+			transformC.translation = glm::vec3(pxTransform.p.x, pxTransform.p.y, -pxTransform.p.z);
 			const glm::quat rotQuat = glm::quat(pxTransform.q.w, pxTransform.q.x, pxTransform.q.y, pxTransform.q.z);
-			obj.transform.rotation = QuaternionToEulerAngles(rotQuat);
-		}
+			transformC.rotation = QuaternionToEulerAngles(rotQuat);
+		});
 	}
 }

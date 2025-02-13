@@ -27,7 +27,6 @@ json SerializeEntity(flecs::entity e)
 	if (e.has<Damage>()) j["damage"] = SerializeComponent(*e.get<Damage>());
 	j["children"] = json::array();
 	e.children([&](flecs::entity child) {
-		HINFO("TEST");
 		j["children"].push_back(SerializeEntity(child));
 	});
 	return j;
@@ -39,7 +38,6 @@ flecs::entity DeserializeEntity(flecs::world& ecs, const json& j, flecs::entity 
 	if (j.contains("position")) e.set(DeserializePosition(j["position"]));
 	if (j.contains("health")) e.set(DeserializeHealth(j["health"]));
 	if (j.contains("damage")) e.set(DeserializeDamage(j["damage"]));
-
 	if (j.contains("children"))
 	{
 		for (const auto& childJson : j["children"])

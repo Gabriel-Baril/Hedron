@@ -33,6 +33,6 @@ namespace hdn
 		VkCommandBuffer commandBuffer;
 		HDNCamera* camera;
 		VkDescriptorSet globalDescriptorSet;
-		HDNGameObject::Map* gameObjects;
+		flecs::world* ecsWorld;
 	};
 }

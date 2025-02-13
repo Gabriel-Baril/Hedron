@@ -28,6 +28,8 @@ namespace hdn
 
 		m_PhysicsWorld.Init();
 		LoadGameObjects();
+
+		m_EcsWorld.set_threads(std::thread::hardware_concurrency());
 	}
 
 	FirstApp::~FirstApp()
@@ -68,8 +70,11 @@ namespace hdn
 		PhysicsGameObjectSystem physicsGameObjectSystem;
 		HDNCamera camera{};
 
-		auto viewerObject = HDNGameObject::CreateGameObject();
-		viewerObject.transform.translation.z = -2.5f;
+		auto viewerObject = HDNGameObject::CreateGameObject(m_EcsWorld);
+		TransformComponent transformC;
+		transformC.translation.z = -2.5f;
+		viewerObject.GetEntity().set(transformC);
+
 		KeyboardMovementController cameraController{};
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
@@ -114,7 +119,9 @@ namespace hdn
 			frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 
 			cameraController.MoveInPlaneXZ(m_Window.GetGLFWWindow(), frameTime, viewerObject);
-			camera.SetViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
+
+			TransformComponent* viewerObjectTransformC = viewerObject.GetMut<TransformComponent>();
+			camera.SetViewYXZ(viewerObjectTransformC->translation, viewerObjectTransformC->rotation);
 
 			f32 aspect = m_Renderer.GetAspectRatio();
 			camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
@@ -128,7 +135,7 @@ namespace hdn
 				frameInfo.commandBuffer = commandBuffer;
 				frameInfo.camera = &camera;
 				frameInfo.globalDescriptorSet = globalDescriptorSets[frameIndex];
-				frameInfo.gameObjects = &m_GameObjects;
+				frameInfo.ecsWorld = &m_EcsWorld;
 
 				// update
 				GlobalUbo ubo{};
@@ -177,50 +184,61 @@ namespace hdn
 	{
 		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
 
-		for(int i = 0;i < 1; i++)
+		for(int i = 0;i < 100; i++)
 		{
-			auto flatVase = HDNGameObject::CreateGameObject();
-			flatVase.name = "vase";
-			flatVase.model = hdnModel;
-			flatVase.transform.translation = { cos(i), -1 - (float)sin(i), sin(i)};
-			flatVase.transform.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
+			auto flatVase = HDNGameObject::CreateGameObject(m_EcsWorld);
 
-			flatVase.physicsComponent = CreateScope<PhysicsComponent>();
-			physx::PxVec3 position = physx::PxVec3(flatVase.transform.translation.x, flatVase.transform.translation.y, -flatVase.transform.translation.z);
+			TransformComponent transformC;
+			transformC.translation = { cos(i), -1 - (float)sin(i), sin(i) };
+			transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
+			flatVase.Set(transformC);
+
+			ModelComponent modelC;
+			modelC.model = hdnModel;
+			flatVase.Set(modelC);
+
+			PhysicsComponent physicsC;
+			physx::PxVec3 position = physx::PxVec3(transformC.translation.x, transformC.translation.y, -transformC.translation.z);
 			physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
-			flatVase.physicsComponent->physicsActor = m_PhysicsWorld.CreateDynamicActor(position, dimension);
-
-			m_GameObjects.emplace(flatVase.GetID(), std::move(flatVase));
+			physicsC.physicsActor = m_PhysicsWorld.CreateDynamicActor(position, dimension);
+			flatVase.Set(physicsC);
 		}
 
 		{
 			hdnModel = HDNModel::CreateModelFromObjFile(&m_Device, "models/quad.obj");
-			auto floor = HDNGameObject::CreateGameObject();
-			floor.name = "floor";
-			floor.model = hdnModel;
-			floor.transform.translation = { 0.0f, 2.0f, 0.0f };
-			floor.transform.scale = vec3f32{ 3.0f, 1.0f, 3.0f };
+			auto floor = HDNGameObject::CreateGameObject(m_EcsWorld, "floor");
 
-			floor.physicsComponent = CreateScope<PhysicsComponent>();
-			physx::PxVec3 position = physx::PxVec3(floor.transform.translation.x, floor.transform.translation.y, -floor.transform.translation.z);
+			TransformComponent transformC;
+			transformC.translation = { 0.0f, 2.0f, 0.0f };
+			transformC.scale = vec3f32{ 3.0f, 1.0f, 3.0f };
+			floor.Set(transformC);
+
+			ModelComponent modelC;
+			modelC.model = hdnModel;
+			floor.Set(modelC);
+
+			PhysicsComponent physicsC;
+			physx::PxVec3 position = physx::PxVec3(transformC.translation.x, transformC.translation.y, -transformC.translation.z);
 			physx::PxVec3 dimension = physx::PxVec3(3.0f, 0.001f, 3.0f);
-			floor.physicsComponent->physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
-
-			m_GameObjects.emplace(floor.GetID(), std::move(floor));
+			physicsC.physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
+			floor.Set(physicsC);
 		}
 
 		{
 			hdnModel = HDNModel::CreateModelFromFbxFile(&m_Device, "models/cube.fbx"); // models/cube.fbx
-			auto pot = HDNGameObject::CreateGameObject();
-			pot.name = "pot";
-			pot.model = hdnModel;
-			pot.transform.translation = { 0.0f, 0.0f, 0.0f };
-			pot.transform.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
+			auto pot = HDNGameObject::CreateGameObject(m_EcsWorld, "pot");
 
-			m_GameObjects.emplace(pot.GetID(), std::move(pot));
+			TransformComponent transformC;
+			transformC.translation = { 0.0f, 0.0f, 0.0f };
+			transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
+			pot.Set(transformC);
+
+			ModelComponent modelC;
+			modelC.model = hdnModel;
+			pot.Set(modelC);
 		}
 
-		vector<glm::vec3> lightColors{
+		vector<vec3f32> lightColors{
 			{1.f, .1f, .1f},
 			{.1f, .1f, 1.f},
 			{.1f, 1.f, .1f},
@@ -231,11 +249,14 @@ namespace hdn
 
 		for (int i = 0;i < lightColors.size(); i++)
 		{
-			auto pointLight = HDNGameObject::MakePointLight(0.2f);
-			pointLight.color = lightColors[i];
+			auto pointLight = HDNGameObject::MakePointLight(m_EcsWorld, 0.2f);
+
+			ColorComponent* colorC = pointLight.GetMut<ColorComponent>();
+			colorC->color = lightColors[i];
+
 			auto rotateLight = glm::rotate(mat4f32(1.0f), (i * glm::two_pi<f32>()) / lightColors.size(), {0.0f, -1.0f, 0.0f});
-			pointLight.transform.translation = vec3f32(rotateLight * vec4f32(-1.0f, -1.0f, -1.0f, 1.0f));
-			m_GameObjects.emplace(pointLight.GetID(), std::move(pointLight));
+			TransformComponent* transformC = pointLight.GetMut<TransformComponent>();
+			transformC->translation = vec3f32(rotateLight * vec4f32(-1.0f, -1.0f, -1.0f, 1.0f));
 		}
 	}
 }

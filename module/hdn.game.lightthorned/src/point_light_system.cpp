@@ -68,35 +68,30 @@ namespace hdn
 		auto rotateLight = glm::rotate(mat4f32(1.0f), frameInfo.frameTime, { 0.0f, -1.0f, 0.0f });
 
 		int lightIndex = 0;
-		for (auto& [key, obj] : *frameInfo.gameObjects)
-		{
-			if (obj.pointLight == nullptr) continue;
-
+		auto query = frameInfo.ecsWorld->query<TransformComponent, ColorComponent, PointLightComponent>();
+		query.each([&](flecs::entity e, TransformComponent& transformC, ColorComponent& colorC, PointLightComponent& pointLightC) {
 			assert(lightIndex < MAX_LIGHTS && "Point Light exceed maximum specified");
-
-			obj.transform.translation = vec3f32(rotateLight * vec4f32(obj.transform.translation, 1.0f));
+			transformC.translation = vec3f32(rotateLight * vec4f32(transformC.translation, 1.0f));
 
 			// copy light to ubo
-			ubo.pointLights[lightIndex].position = vec4f32(obj.transform.translation, 1.0f);
-			ubo.pointLights[lightIndex].color = vec4f32(obj.color, obj.pointLight->lightIntensity);
+			ubo.pointLights[lightIndex].position = vec4f32(transformC.translation, 1.0f);
+			ubo.pointLights[lightIndex].color = vec4f32(colorC.color, pointLightC.lightIntensity);
 			lightIndex += 1;
-		}
+		});
 		ubo.numLights = lightIndex;
 	}
 
 	void PointLightSystem::Render(FrameInfo& frameInfo)
 	{
 		// Sort Lights
-		map<float, HDNGameObject::id_t> sorted;
-		for (auto& [key, obj] : *frameInfo.gameObjects)
-		{
-			if (obj.pointLight == nullptr) continue;
+		map<float, flecs::entity> sorted;
+		auto query = frameInfo.ecsWorld->query<TransformComponent, PointLightComponent>();
+		query.each([&](flecs::entity e, TransformComponent& transformC, PointLightComponent& pointLightC) {
 			// Calculate Distance
-			auto offset = frameInfo.camera->GetPosition() - obj.transform.translation;
+			auto offset = frameInfo.camera->GetPosition() - transformC.translation;
 			float distSquared = glm::dot(offset, offset);
-			sorted[distSquared] = obj.GetID();
-		}
-
+			sorted[distSquared] = e;
+		});
 		m_Pipeline->Bind(frameInfo.commandBuffer);
 
 		vkCmdBindDescriptorSets(
@@ -111,12 +106,16 @@ namespace hdn
 		// iterate through sorted lights in reverse order (back to front)
 		for (auto it = sorted.rbegin(); it != sorted.rend(); it++)
 		{
-			auto& obj = frameInfo.gameObjects->at(it->second);
+			flecs::entity e = it->second;
+
+			const TransformComponent* transformC = e.get<TransformComponent>();
+			const ColorComponent* colorC = e.get<ColorComponent>();
+			const PointLightComponent* pointLightC = e.get<PointLightComponent>();
 
 			PointLightPushConstants push{};
-			push.position = vec4f32(obj.transform.translation, 1.0f);
-			push.color = vec4f32(obj.color, obj.pointLight->lightIntensity);
-			push.radius = obj.transform.scale.x;
+			push.position = vec4f32(transformC->translation, 1.0f);
+			push.color = vec4f32(colorC->color, pointLightC->lightIntensity);
+			push.radius = transformC->scale.x;
 			vkCmdPushConstants(frameInfo.commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PointLightPushConstants), &push);
 			vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
 		}

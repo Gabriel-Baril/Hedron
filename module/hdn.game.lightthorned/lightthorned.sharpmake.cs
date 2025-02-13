@@ -93,6 +93,7 @@ public class LightthornedProject : BaseCppProject
         conf.AddPublicDependency<OpenFBXProject>(target);
         conf.AddPublicDependency<GLFWProject>(target);
         conf.AddPublicDependency<ImguiProject>(target);
+        conf.AddPublicDependency<FlecsProject>(target);
 
         // TODO: Ideon specific dependencies, remove once we have a proper way to have an independent ui setup for tools
         conf.AddPublicDependency<ConfigProject>(target);

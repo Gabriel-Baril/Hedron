@@ -69,16 +69,15 @@ namespace hdn
 			0, nullptr
 		); // Low frequency descriptor sets needs to occupy the lowest index
 
-		for (auto& [key, obj] : *frameInfo.gameObjects)
-		{
-			if (obj.model == nullptr) continue; // TODO: We should query an ECS instead of manually creating such filter
+		auto query = frameInfo.ecsWorld->query<TransformComponent, ModelComponent>();
+		query.each([&](flecs::entity e, TransformComponent& transformC, ModelComponent& modelC) {
 
 			SimplePushConstantData push{};
-			push.modelMatrix = obj.transform.Mat4(); // Will be done in the shader once we have uniform buffer
-			push.normalMatrix = obj.transform.NormalMatrix();
+			push.modelMatrix = transformC.Mat4(); // Will be done in the shader once we have uniform buffer
+			push.normalMatrix = transformC.NormalMatrix();
 			vkCmdPushConstants(frameInfo.commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-			obj.model->Bind(frameInfo.commandBuffer);
-			obj.model->Draw(frameInfo.commandBuffer);
-		}
+			modelC.model->Bind(frameInfo.commandBuffer);
+			modelC.model->Draw(frameInfo.commandBuffer);
+		});
 	}
 }

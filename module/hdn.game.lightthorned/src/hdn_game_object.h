@@ -7,6 +7,8 @@
 
 #include <PxPhysicsAPI.h>
 
+#include "flecs/flecs.h"
+
 namespace hdn
 {
 	struct TransformComponent
@@ -19,9 +21,19 @@ namespace hdn
 		mat3f32 NormalMatrix();
 	};
 
+	struct ColorComponent
+	{
+		vec3f32 color{};
+	};
+
 	struct PointLightComponent
 	{
 		float lightIntensity = 1.0f;
+	};
+
+	struct ModelComponent
+	{
+		Ref<HDNModel> model{};
 	};
 
 	struct PhysicsComponent
@@ -33,35 +45,55 @@ namespace hdn
 	class HDNGameObject
 	{
 	public:
-		using id_t = u32;
-		using Map = unordered_map<id_t, HDNGameObject>;
+		using id_t = flecs::entity_t;
 
 		HDNGameObject(const HDNGameObject&) = delete;
 		HDNGameObject& operator=(const HDNGameObject&) = delete;
 		HDNGameObject(HDNGameObject&&) = default;
 		HDNGameObject& operator=(HDNGameObject&&) = default;
 
-		static HDNGameObject CreateGameObject()
+		static HDNGameObject CreateGameObject(flecs::world& ecs, const char* name = nullptr)
 		{
-			static id_t currentId = 0;
-			return HDNGameObject{ currentId++ };
+			flecs::entity e = ecs.entity(name);
+			return HDNGameObject{ e };
 		}
 
-		static HDNGameObject MakePointLight(f32 intensity = 10.0f, f32 radius = 0.1f, vec3f32 color = vec3f32{1.0f});
-
-		id_t GetID() const { return m_ID; }
-
-		string name;
-		vec3f32 color{};
-		TransformComponent transform{};
+		static HDNGameObject MakePointLight(flecs::world& ecs, f32 intensity = 10.0f, f32 radius = 0.1f, vec3f32 color = vec3f32{1.0f});
 		
-		// Optional Pointer Components
-		Ref<HDNModel> model{};
-		Scope<PointLightComponent> pointLight = nullptr;
-		Scope<PhysicsComponent> physicsComponent = nullptr;
+		template<typename T>
+		const T* Get()
+		{
+			return m_Entity.get<T>();
+		}
 
+		template<typename T>
+		T* GetMut()
+		{
+			return m_Entity.get_mut<T>();
+		}
+
+		template<typename T>
+		void Set(const T& component)
+		{
+			m_Entity.set(component);
+		}
+
+		flecs::entity GetEntity()
+		{
+			return m_Entity;
+		}
+
+		id_t GetID()
+		{
+			return m_Entity.id();
+		}
+
+		const char* Name()
+		{
+			return m_Entity.name();
+		}
 	private:
-		HDNGameObject(id_t objId) : m_ID{ objId } {}
-		id_t m_ID;
+		HDNGameObject(flecs::entity e) : m_Entity{ e } {}
+		flecs::entity m_Entity;
 	};
 }

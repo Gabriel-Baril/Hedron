@@ -12,15 +12,17 @@ namespace hdn
 		if (glfwGetKey(window, m_Keys.lookUp) == GLFW_PRESS) rotate.x += 1.0f;
 		if (glfwGetKey(window, m_Keys.lookDown) == GLFW_PRESS) rotate.x -= 1.0f;
 
+		TransformComponent* transformC = gameObject.GetMut<TransformComponent>();
+
 		if (glm::dot(rotate, rotate) > std::numeric_limits<f32>::epsilon())
 		{
-			gameObject.transform.rotation += m_LookSpeed * dt * glm::normalize(rotate);
+			transformC->rotation += m_LookSpeed * dt * glm::normalize(rotate);
 		}
 
-		gameObject.transform.rotation.x = glm::clamp(gameObject.transform.rotation.x, -1.5f, 1.5f); // Prevents the object to go upside down
-		gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y, glm::two_pi<f32>());
+		transformC->rotation.x = glm::clamp(transformC->rotation.x, -1.5f, 1.5f); // Prevents the object to go upside down
+		transformC->rotation.y = glm::mod(transformC->rotation.y, glm::two_pi<f32>());
 
-		f32 yaw = gameObject.transform.rotation.y;
+		f32 yaw = transformC->rotation.y;
 		const vec3f32 forwardDirection{ sin(yaw), 0.0f, cos(yaw) };
 		const vec3f32 rightDirection{ forwardDirection.z, 0.0f, -forwardDirection.x };
 		const vec3f32 upDirection{ 0.0f, -1.0f, 0.0f };
@@ -35,7 +37,7 @@ namespace hdn
 
 		if (glm::dot(moveDirection, moveDirection) > std::numeric_limits<f32>::epsilon())
 		{
-			gameObject.transform.translation += m_MoveSpeed * dt * glm::normalize(moveDirection);
+			transformC->translation += m_MoveSpeed * dt * glm::normalize(moveDirection);
 		}
 	}
 }
