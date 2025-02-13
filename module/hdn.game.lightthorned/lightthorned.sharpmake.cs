@@ -88,6 +88,8 @@ public class LightthornedProject : BaseCppProject
             }
         }
 
+        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
+        
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<TinyObjLoaderProject>(target);
         conf.AddPublicDependency<OpenFBXProject>(target);

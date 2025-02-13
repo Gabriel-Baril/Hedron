@@ -3,6 +3,9 @@
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
 
+#include "ecs/components/transform_component.h"
+#include "ecs/components/model_component.h"
+
 namespace hdn
 {
 	struct SimplePushConstantData

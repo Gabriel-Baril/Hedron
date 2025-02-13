@@ -1,56 +1,16 @@
 #pragma once
 
 #include "core/core.h"
-#include "core/stl/unordered_map.h"
-
-#include "hdn_model.h"
-
-#include <PxPhysicsAPI.h>
-
 #include "flecs/flecs.h"
+
+#include "ecs/components/native_script_component.h"
 
 namespace hdn
 {
-	struct TransformComponent
-	{
-		vec3f32 translation{};
-		vec3f32 scale{ 1.0f, 1.0f, 1.0f };
-		vec3f32 rotation{}; // In radians (Euler YXZ)
-
-		mat4f32 Mat4();
-		mat3f32 NormalMatrix();
-	};
-
-	struct ColorComponent
-	{
-		vec3f32 color{};
-	};
-
-	struct PointLightComponent
-	{
-		float lightIntensity = 1.0f;
-	};
-
-	struct ModelComponent
-	{
-		Ref<HDNModel> model{};
-	};
-
-	struct PhysicsComponent
-	{
-		physx::PxRigidActor* physicsActor;
-	};
-
-	// TODO: We should use entt instead
 	class HDNGameObject
 	{
 	public:
 		using id_t = flecs::entity_t;
-
-		HDNGameObject(const HDNGameObject&) = delete;
-		HDNGameObject& operator=(const HDNGameObject&) = delete;
-		HDNGameObject(HDNGameObject&&) = default;
-		HDNGameObject& operator=(HDNGameObject&&) = default;
 
 		static HDNGameObject CreateGameObject(flecs::world& ecs, const char* name = nullptr)
 		{
@@ -76,6 +36,18 @@ namespace hdn
 		void Set(const T& component)
 		{
 			m_Entity.set(component);
+		}
+
+		template<typename T>
+		void AddNativeScript()
+		{
+			if (!m_Entity.has<NativeScriptComponent>())
+			{
+				m_Entity.add<NativeScriptComponent>();
+			}
+			INativeScript* script = new T;
+			script->Bind(m_Entity);
+			m_Entity.get_mut<NativeScriptComponent>()->Add(script);
 		}
 
 		flecs::entity GetEntity()

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "core/core.h"
-#include "../hdn_frame_info.h"
+#include "hdn_frame_info.h"
 
 namespace hdn
 {
-	class PhysicsGameObjectSystem
+	class UpdateTransformSystem
 	{
 	public:
 		void Update(FrameInfo& frameInfo);

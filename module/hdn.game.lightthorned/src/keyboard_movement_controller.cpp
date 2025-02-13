@@ -2,6 +2,8 @@
 
 #include <limits>
 
+#include "ecs/components/transform_component.h"
+
 namespace hdn
 {
 	void KeyboardMovementController::MoveInPlaneXZ(GLFWwindow* window, f32 dt, HDNGameObject& gameObject)

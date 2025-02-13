@@ -2,6 +2,9 @@
 
 #include "PxPhysicsAPI.h"
 
+#include "ecs/components/transform_component.h"
+#include "ecs/components/physics_component.h"
+
 namespace hdn
 {
 	glm::vec3 QuaternionToEulerAngles(const glm::quat& q) {

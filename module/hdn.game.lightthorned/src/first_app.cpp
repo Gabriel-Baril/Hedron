@@ -4,9 +4,20 @@
 #include "hdn_buffer.h"
 #include "hdn_camera.h"
 
-#include "simple_render_system.h"
-#include "point_light_system.h"
-#include "physics/physics_gameobject_system.h"
+#include "ecs/components/transform_component.h"
+#include "ecs/components/color_component.h"
+#include "ecs/components/point_light_component.h"
+#include "ecs/components/physics_component.h"
+#include "ecs/components/model_component.h"
+
+#include "ecs/systems/simple_render_system.h"
+#include "ecs/systems/point_light_system.h"
+#include "ecs/systems/physics_gameobject_system.h"
+#include "ecs/systems/update_transform_system.h"
+#include "ecs/systems/update_script_system.h"
+
+#include "ecs/scripts/simple_log_script.h"
+#include "ecs/scripts/rotate_z_script.h"
 
 #include "hdn_imgui.h"
 #include "idaes/idaes_imgui.h"
@@ -65,6 +76,8 @@ namespace hdn
 				.Build(globalDescriptorSets[i]);
 		}
 
+		UpdateTransformSystem updateTransformSystem;
+		UpdateScriptSystem updateScriptSystem;
 		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
 		PointLightSystem pointLightSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
 		PhysicsGameObjectSystem physicsGameObjectSystem;
@@ -143,6 +156,8 @@ namespace hdn
 				ubo.view = camera.GetView();
 				ubo.inverseView = camera.GetInverseView();
 
+				updateTransformSystem.Update(frameInfo);
+				updateScriptSystem.Update(frameInfo);
 				pointLightSystem.Update(frameInfo, ubo);
 				m_PhysicsWorld.Update(frameTime);
 				physicsGameObjectSystem.Update(frameInfo);
@@ -186,7 +201,7 @@ namespace hdn
 
 		for(int i = 0;i < 100; i++)
 		{
-			auto flatVase = HDNGameObject::CreateGameObject(m_EcsWorld);
+			auto flatVase = HDNGameObject::CreateGameObject(m_EcsWorld); // TODO: Fix game object lifetime
 
 			TransformComponent transformC;
 			transformC.translation = { cos(i), -1 - (float)sin(i), sin(i) };
@@ -222,6 +237,9 @@ namespace hdn
 			physx::PxVec3 dimension = physx::PxVec3(3.0f, 0.001f, 3.0f);
 			physicsC.physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
 			floor.Set(physicsC);
+
+			floor.AddNativeScript<SimpleLogScript>();
+			floor.AddNativeScript<RotateZScript>();
 		}
 
 		{

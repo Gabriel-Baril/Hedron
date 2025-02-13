@@ -3,6 +3,10 @@
 #include "core/core.h"
 #include "core/stl/map.h"
 
+#include "ecs/components/transform_component.h"
+#include "ecs/components/color_component.h"
+#include "ecs/components/point_light_component.h"
+
 #include <glm/gtc/constants.hpp>
 
 namespace hdn
