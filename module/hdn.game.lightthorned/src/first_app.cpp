@@ -19,9 +19,10 @@
 #include "ecs/scripts/simple_log_script.h"
 #include "ecs/scripts/rotate_z_script.h"
 
+#include "plugins/idaes/idaes_imgui.h"
+#include "plugins/hmm/hmm_imgui.h"
+
 #include "hdn_imgui.h"
-#include "idaes/idaes_imgui.h"
-#include "hmm/hmm_imgui.h"
 
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
@@ -114,11 +115,7 @@ namespace hdn
 		);
 
 		IdaesImgui idaesUI;
-		// TODO: idaesUI.Init();
-
-		HMMImgui ideonUI;
-
-		//ideonUI.LoadTestResultFile("test_results/test_result.xml");
+		HMMImgui hmmUI;
 #endif
 
 		while (!m_Window.ShouldClose())
@@ -182,7 +179,7 @@ namespace hdn
 
 				// ImGui::ShowDemoWindow();
 				idaesUI.Draw();
-				ideonUI.Draw();
+				hmmUI.Draw();
 
 				imguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 #endif
@@ -238,8 +235,8 @@ namespace hdn
 			physicsC.physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
 			floor.Set(physicsC);
 
-			floor.AddNativeScript<SimpleLogScript>();
-			floor.AddNativeScript<RotateZScript>();
+			// floor.AddNativeScript<SimpleLogScript>();
+			// floor.AddNativeScript<RotateZScript>();
 		}
 
 		{
