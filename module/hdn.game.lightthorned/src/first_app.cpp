@@ -19,8 +19,9 @@
 #include "ecs/scripts/simple_log_script.h"
 #include "ecs/scripts/rotate_z_script.h"
 
-#include "plugins/idaes/idaes_imgui.h"
+#include "plugins/editor/editor.h"
 #include "plugins/hmm/hmm_imgui.h"
+#include "plugins/idaes/idaes_imgui.h"
 
 #include "hdn_imgui.h"
 
@@ -114,8 +115,9 @@ namespace hdn
 			imguiDescriptorPool->GetDescriptor()
 		);
 
-		IdaesImgui idaesUI;
+		// IdaesImgui idaesUI;
 		HMMImgui hmmUI;
+		Editor editor;
 #endif
 
 		while (!m_Window.ShouldClose())
@@ -178,8 +180,10 @@ namespace hdn
 				ImGui::End();
 
 				// ImGui::ShowDemoWindow();
-				idaesUI.Draw();
+				// idaesUI.Draw();
 				hmmUI.Draw();
+				editor.RenderEntityTable(m_EcsWorld);
+
 
 				imguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 #endif
@@ -196,9 +200,15 @@ namespace hdn
 	{
 		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
 
+		auto flatVaseGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "Flat Vase Group");
+		TransformComponent transformC;
+		flatVaseGroup.Set(transformC);
+
 		for(int i = 0;i < 100; i++)
 		{
-			auto flatVase = HDNGameObject::CreateGameObject(m_EcsWorld); // TODO: Fix game object lifetime
+			std::string eName = fmt::format("Vase {}", i);
+
+			auto flatVase = HDNGameObject::CreateGameObject(m_EcsWorld, eName.c_str()); // TODO: Fix game object lifetime
 
 			TransformComponent transformC;
 			transformC.translation = { cos(i), -1 - (float)sin(i), sin(i) };
@@ -214,6 +224,8 @@ namespace hdn
 			physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
 			physicsC.physicsActor = m_PhysicsWorld.CreateDynamicActor(position, dimension);
 			flatVase.Set(physicsC);
+
+			flatVase.GetEntity().child_of(flatVaseGroup.GetEntity());
 		}
 
 		{
@@ -235,7 +247,7 @@ namespace hdn
 			physicsC.physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
 			floor.Set(physicsC);
 
-			// floor.AddNativeScript<SimpleLogScript>();
+			floor.AddNativeScript<SimpleLogScript>();
 			// floor.AddNativeScript<RotateZScript>();
 		}
 

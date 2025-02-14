@@ -346,7 +346,7 @@ namespace hdn
 
 	void HMMImgui::Draw()
 	{
-		ImGui::Begin("IdeonUI");
+		ImGui::Begin("hmm");
 		if (ImGui::Button("Run All Tests"))
 		{
 			// 1. Run build_test_projects.py
