@@ -21,6 +21,7 @@ public class PlaygroundSolution : Solution
         conf.AddProject<DataFlowProject>(target);
         conf.AddProject<EcsPlaygroundProject>(target);
         conf.AddProject<HdefPlaygroundProject>(target);
+        conf.AddProject<HsonPlaygroundProject>(target);
         conf.AddProject<FileLoadingProject>(target);
         conf.AddProject<ListenDirectoryProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);

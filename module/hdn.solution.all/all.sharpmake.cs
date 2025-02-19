@@ -54,6 +54,7 @@ public class AllSolution : Solution
         conf.AddProject<EcsPlaygroundProject>(target);
         conf.AddProject<FileLoadingProject>(target);
         conf.AddProject<HdefPlaygroundProject>(target);
+        conf.AddProject<HsonPlaygroundProject>(target);
         conf.AddProject<ListenDirectoryProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
         conf.AddProject<LightthornedProject>(target);
