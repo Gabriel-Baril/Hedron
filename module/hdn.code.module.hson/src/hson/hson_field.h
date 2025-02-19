@@ -4,7 +4,7 @@
 
 namespace hdn
 {
-	enum class hson_field_t
+	enum class hson_field_t : u8
 	{
 		hson_undefined,
 		hson_object,
@@ -125,6 +125,17 @@ namespace hdn
 		{
 			const byte* bytes = reinterpret_cast<const byte*>(data);
 			write_bytes( out, bytes, sizeof( f32 ) * count );
+		}
+	};
+
+	template<>
+	struct hson_field_traits_t<f64>
+	{
+		static constexpr typename hson_field_t type = hson_field_t::hson_f64;
+		static void serialize(const f64* data, u64 count, vector<byte>& out)
+		{
+			const byte* bytes = reinterpret_cast<const byte*>(data);
+			write_bytes(out, bytes, sizeof(f64) * count);
 		}
 	};
 

@@ -85,7 +85,7 @@ namespace hdn
 		field_hash_t hash = 0;
 		field_hash_t parentHash = 0;
 
-		enum class key_kind_t
+		enum class key_kind_t : u8
 		{
 			string,
 			integer

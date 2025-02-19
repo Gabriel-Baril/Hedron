@@ -3,10 +3,11 @@
 
 namespace hdn
 {
-	void write_bytes( vector<byte> &payload, const void *data, u64 byteSize )
+	u64 write_bytes( vector<byte> &payload, const void *data, u64 byteSize )
 	{
 		const byte *bytes = reinterpret_cast<const byte *>(data);
 		payload.insert( payload.end(), bytes, bytes + byteSize );
+		return byteSize;
 	}
 
 	field_hash_t get_field_hash( u64 index, u64 seed )

@@ -69,12 +69,45 @@ namespace hdn
 				write_pod<u64>( out, totalSize );
 			}
 
+			{
+				vector<byte> tempFieldNameBuffer;
+				vector<byte> tempFieldNameBufferByteOffsets;
+				u64 localOffset = 0;
+				for (const auto& field : allLeafFields)
+				{
+					localOffset += write_pod<hson_field_definition_t::key_kind_t>(tempFieldNameBuffer, field->keyKind);
+					switch (field->keyKind)
+					{
+					case hson_field_definition_t::key_kind_t::integer:
+						localOffset += write_bytes(tempFieldNameBuffer, &field->key.index, sizeof(field->key.index));
+						break;
+					case hson_field_definition_t::key_kind_t::string:
+						localOffset += write_bytes(tempFieldNameBuffer, field->key.name, strlen(field->key.name) + 1);
+						break;
+					}
+					write_pod<u64>(tempFieldNameBufferByteOffsets, localOffset);
+				}
+
+				write_pod<u64>(out, tempFieldNameBuffer.size());
+				write_bytes(out, tempFieldNameBufferByteOffsets.data(), tempFieldNameBufferByteOffsets.size());
+				write_bytes(out, tempFieldNameBuffer.data(), tempFieldNameBuffer.size());
+			}
+
 			for ( const auto &field : allLeafFields )
 			{
 				write_pod<field_hash_t>( out, field->hash );
 			}
 
-			// TODO: Write field payload "count", Write field name, Write field type
+			for (const auto& field : allLeafFields)
+			{
+				write_pod<u64>(out, field->count);
+			}
+
+			for (const auto& field : allLeafFields)
+			{
+				write_pod<hson_field_t>(out, field->fieldType);
+			}
+			
 
 			u64 absoluteOffset = 0;
 			for ( const auto &field : allLeafFields )

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "hson_util.h"
+#include "hson_field.h"
 #include "core/io/buffer_reader.h"
 
 namespace hdn
@@ -44,7 +45,12 @@ namespace hdn
 			FBufferReader reader( _payload.data() );
 			fieldCount = reader.Read<u64>();
 			payloadByteSize = reader.Read<u64>();
-			sortedFieldHashes = reader.Read<field_hash_t>( fieldCount );
+			fieldNamePayloadByteSize = reader.Read<u64>();
+			fieldNamePayloadByteOffsets = reader.Read<u64>(fieldCount);
+			fieldNamePayload = reader.Read<byte>(fieldNamePayloadByteSize);
+			sortedFieldHashes = reader.Read<field_hash_t>(fieldCount);
+			sortedFieldElementCount = reader.Read<u64>(fieldCount);
+			sortedFieldType = reader.Read<hson_field_t>(fieldCount);
 			payloadByteOffsets = reader.Read<u64>( fieldCount );
 			payload = reader.Read<byte>( payloadByteSize );
 		}
@@ -56,11 +62,44 @@ namespace hdn
 			return f[key];
 		}
 
+
+		int get_field_index(field_hash_t hash)
+		{
+			if (!hash) {
+				return -1;
+			}
+
+			const u64* found = std::lower_bound(sortedFieldHashes, sortedFieldHashes + fieldCount, hash);
+			if (found != sortedFieldHashes + fieldCount && *found == hash)
+			{
+				ptrdiff_t index = found - sortedFieldHashes;
+				return index;
+			}
+			return -1;
+		}
+
+		const char* get_field_name(field_hash_t hash) const
+		{
+			if (!hash || !payloadByteOffsets || !payload) {
+				return nullptr; // Safeguard against invalid memory access
+			}
+
+			const u64* found = std::lower_bound(sortedFieldHashes, sortedFieldHashes + fieldCount, hash);
+			if (found != sortedFieldHashes + fieldCount && *found == hash)
+			{
+				ptrdiff_t index = found - sortedFieldHashes;
+				return (const char*)fieldNamePayload + fieldNamePayloadByteOffsets[index] + sizeof(u8); // sizeof(u8) is skipping the type of key of the field
+			}
+			return nullptr; // Key not found
+		}
+
 		const byte *get_field_payload( field_hash_t hash ) const
 		{
 			if ( !hash || !payloadByteOffsets || !payload ) {
 				return nullptr; // Safeguard against invalid memory access
 			}
+
+			HINFO("Field Name: {0}", get_field_name(hash));
 
 			const u64 *found = std::lower_bound( sortedFieldHashes, sortedFieldHashes + fieldCount, hash );
 			if ( found != sortedFieldHashes + fieldCount && *found == hash )
@@ -73,7 +112,12 @@ namespace hdn
 
 		u64 fieldCount = 0;
 		u64 payloadByteSize = 0;
+		u64 fieldNamePayloadByteSize = 0;
+		const u64* fieldNamePayloadByteOffsets = nullptr;
+		const byte* fieldNamePayload = nullptr; // The first 8 bits encode the type of key (integer or string)
 		const field_hash_t *sortedFieldHashes = nullptr;
+		const u64* sortedFieldElementCount = nullptr;
+		const hson_field_t* sortedFieldType = nullptr;
 		const u64 *payloadByteOffsets = nullptr;
 		const byte *payload = nullptr;
 	};
