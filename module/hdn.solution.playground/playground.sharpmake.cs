@@ -20,6 +20,7 @@ public class PlaygroundSolution : Solution
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<DataFlowProject>(target);
         conf.AddProject<EcsPlaygroundProject>(target);
+        conf.AddProject<GoogleBenchmarkPlaygroundProject>(target);
         conf.AddProject<HdefPlaygroundProject>(target);
         conf.AddProject<HsonPlaygroundProject>(target);
         conf.AddProject<FileLoadingProject>(target);

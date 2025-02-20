@@ -67,3 +67,6 @@
 [submodule "module/hdn.code.external.flecs"]
 	path = module/hdn.code.external.flecs
 	url = https://github.com/Gabriel-Baril/flecs
+[submodule "module/hdn.code.external.google-benchmark"]
+	path = module/hdn.code.external.google-benchmark
+	url = https://github.com/Gabriel-Baril/google-benchmark.git
