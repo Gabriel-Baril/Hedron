@@ -1,12 +1,12 @@
 #pragma once
 
 #include "core/core.h"
-#include "hdn_model.h"
+#include "r_vk_model.h"
 
 namespace hdn
 {
 	struct ModelComponent
 	{
-		Ref<HDNModel> model{};
+		Ref<VulkanModel> model{};
 	};
 }

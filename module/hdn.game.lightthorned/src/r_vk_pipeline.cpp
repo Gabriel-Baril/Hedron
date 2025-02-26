@@ -1,31 +1,31 @@
-#include "hdn_pipeline.h"
+#include "r_vk_pipeline.h"
 
 #include "core/core.h"
 #include <fstream>
 
-#include "hdn_model.h"
+#include "r_vk_model.h"
 
 namespace hdn
 {
-	HDNPipeline::HDNPipeline(HDNDevice* device, const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
+	VulkanPipeline::VulkanPipeline(VulkanDevice* device, const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
 		: m_Device{ device }
 	{
 		CreateGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
 	}
 
-	HDNPipeline::~HDNPipeline()
+	VulkanPipeline::~VulkanPipeline()
 	{
 		vkDestroyShaderModule(m_Device->GetDevice(), m_VertShaderModule, nullptr);
 		vkDestroyShaderModule(m_Device->GetDevice(), m_FragShaderModule, nullptr);
 		vkDestroyPipeline(m_Device->GetDevice(), m_GraphicsPipeline, nullptr);
 	}
 
-	void HDNPipeline::Bind(VkCommandBuffer commandBuffer)
+	void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)
 	{
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline); // Signal that we want to bind a graphics pipeline
 	}
 
-	void HDNPipeline::DefaultPipelineConfigInfo(PipelineConfigInfo& configInfo)
+	void VulkanPipeline::DefaultPipelineConfigInfo(PipelineConfigInfo& configInfo)
 	{
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; // Define how our vertex are related topologically
@@ -97,11 +97,11 @@ namespace hdn
 		configInfo.dynamicStateInfo.dynamicStateCount = static_cast<u32>(configInfo.dynamicStateEnables.size());
 		configInfo.dynamicStateInfo.flags = 0;
 
-		configInfo.bindingDescriptions = HDNModel::Vertex::GetBindingDescriptions();
-		configInfo.attributeDescriptions = HDNModel::Vertex::GetAttributeDescriptions();
+		configInfo.bindingDescriptions = VulkanModel::Vertex::GetBindingDescriptions();
+		configInfo.attributeDescriptions = VulkanModel::Vertex::GetAttributeDescriptions();
 	}
 
-	void HDNPipeline::EnableAlphaBlending(PipelineConfigInfo& configInfo)
+	void VulkanPipeline::EnableAlphaBlending(PipelineConfigInfo& configInfo)
 	{
 		configInfo.colorBlendAttachment.blendEnable = VK_TRUE; // Do we want to mix the current output with the color value already in the framebuffer if any
 
@@ -115,7 +115,7 @@ namespace hdn
 		configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 	}
 
-	vector<char> HDNPipeline::ReadFile(const string& filepath)
+	vector<char> VulkanPipeline::ReadFile(const string& filepath)
 	{
 		std::ifstream file(filepath, std::ios::ate | std::ios::binary); // std::ios::ate -> When the file open we seek to the end immediately
 		if (!file.is_open())
@@ -130,7 +130,7 @@ namespace hdn
 		return buffer;
 	}
 
-	void HDNPipeline::CreateGraphicsPipeline(const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
+	void VulkanPipeline::CreateGraphicsPipeline(const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
 	{
 		assert(configInfo.pipelineLayout != VK_NULL_HANDLE);
 		assert(configInfo.renderPass != VK_NULL_HANDLE);
@@ -195,7 +195,7 @@ namespace hdn
 		}
 	}
 
-	void HDNPipeline::CreateShaderModule(const vector<char>& code, VkShaderModule* module)
+	void VulkanPipeline::CreateShaderModule(const vector<char>& code, VkShaderModule* module)
 	{
 		VkShaderModuleCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

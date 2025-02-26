@@ -14,7 +14,7 @@ namespace hdn
 		mat4f32 normalMatrix{ 1.0f };
 	};
 
-	SimpleRenderSystem::SimpleRenderSystem(HDNDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+	SimpleRenderSystem::SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
 		: m_Device{ device }
 	{
 		CreatePipelineLayout(globalSetLayout);
@@ -52,11 +52,11 @@ namespace hdn
 		assert(m_PipelineLayout);
 
 		PipelineConfigInfo pipelineConfig{};
-		HDNPipeline::DefaultPipelineConfigInfo(pipelineConfig);
+		VulkanPipeline::DefaultPipelineConfigInfo(pipelineConfig);
 
 		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
 		pipelineConfig.pipelineLayout = m_PipelineLayout;
-		m_Pipeline = CreateScope<HDNPipeline>(m_Device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
+		m_Pipeline = CreateScope<VulkanPipeline>(m_Device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
 	}
 
 	void SimpleRenderSystem::RenderGameObjects(FrameInfo& frameInfo)

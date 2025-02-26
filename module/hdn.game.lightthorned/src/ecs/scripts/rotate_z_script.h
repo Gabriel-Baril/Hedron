@@ -3,7 +3,8 @@
 #include "ecs/components/native_script_component.h"
 #include "ecs/components/transform_component.h"
 
-#include "hdn_game_object.h"
+#include "../../gameobject.h"
+
 #include <glm/gtc/constants.hpp>
 
 namespace hdn

@@ -2,7 +2,7 @@
 
 #include "core/stl/vector.h"
 
-#include "hdn_device.h"
+#include "r_vk_device.h"
 
 namespace hdn
 {
@@ -30,20 +30,20 @@ namespace hdn
 		uint32_t subpass = 0;
 	};
 
-	class HDNPipeline
+	class VulkanPipeline
 	{
 	public:
-		HDNPipeline(
-			HDNDevice* device, 
+		VulkanPipeline(
+			VulkanDevice* device, 
 			const string& vertFilepath, 
 			const string& fragFilepath, 
 			const PipelineConfigInfo& configInfo);
-		virtual ~HDNPipeline();
-		HDNPipeline() = default;
-		HDNPipeline(const HDNPipeline&) = delete;
-		HDNPipeline& operator=(const HDNPipeline&) = delete;
-		HDNPipeline(HDNPipeline&&) = delete;
-		HDNPipeline& operator=(HDNPipeline&&) = delete;
+		virtual ~VulkanPipeline();
+		VulkanPipeline() = default;
+		VulkanPipeline(const VulkanPipeline&) = delete;
+		VulkanPipeline& operator=(const VulkanPipeline&) = delete;
+		VulkanPipeline(VulkanPipeline&&) = delete;
+		VulkanPipeline& operator=(VulkanPipeline&&) = delete;
 
 		void Bind(VkCommandBuffer commandBuffer);
 		static void DefaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
@@ -56,7 +56,7 @@ namespace hdn
 			const PipelineConfigInfo& configInfo);
 		void CreateShaderModule(const vector<char>& code, VkShaderModule* module);
 	private:
-		HDNDevice* m_Device;
+		VulkanDevice* m_Device;
 		VkPipeline m_GraphicsPipeline;
 		VkShaderModule m_VertShaderModule;
 		VkShaderModule m_FragShaderModule;

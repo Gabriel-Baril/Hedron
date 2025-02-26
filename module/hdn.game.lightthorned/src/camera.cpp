@@ -1,4 +1,4 @@
-#include "hdn_camera.h"
+#include "camera.h"
 
 namespace hdn
 {

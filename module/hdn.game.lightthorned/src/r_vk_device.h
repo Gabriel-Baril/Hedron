@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hdn_window.h"
+#include "r_vk_window.h"
 
 #include "core/stl/vector.h"
 
@@ -22,7 +22,7 @@ namespace hdn {
 		bool IsComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
 	};
 
-	class HDNDevice
+	class VulkanDevice
 	{
 	public:
 #ifdef NDEBUG
@@ -31,14 +31,14 @@ namespace hdn {
 		const bool enableValidationLayers = true;
 #endif
 
-		HDNDevice(HDNWindow& window);
-		~HDNDevice();
+		VulkanDevice(VulkanWindow& window);
+		~VulkanDevice();
 
 		// Not copyable or movable
-		HDNDevice(const HDNDevice&) = delete;
-		HDNDevice& operator=(const HDNDevice&) = delete;
-		HDNDevice(HDNDevice&&) = delete;
-		HDNDevice& operator=(HDNDevice&&) = delete;
+		VulkanDevice(const VulkanDevice&) = delete;
+		VulkanDevice& operator=(const VulkanDevice&) = delete;
+		VulkanDevice(VulkanDevice&&) = delete;
+		VulkanDevice& operator=(VulkanDevice&&) = delete;
 
 		VkCommandPool GetCommandPool() { return m_CommandPool; }
 		VkDevice GetDevice() { return m_Device; }
@@ -94,7 +94,7 @@ namespace hdn {
 		VkInstance m_Instance;
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
 		VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
-		HDNWindow& m_Window;
+		VulkanWindow& m_Window;
 		VkCommandPool m_CommandPool;
 
 		VkDevice m_Device;

@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "hdn_device.h"
-#include "hdn_game_object.h"
-#include "hdn_pipeline.h"
-#include "hdn_camera.h"
-#include "hdn_frame_info.h"
+#include "r_vk_device.h"
+#include "r_vk_pipeline.h"
+#include "gameobject.h"
+#include "camera.h"
+#include "frame_info.h"
 
 #include "core/stl/vector.h"
 
@@ -15,7 +15,7 @@ namespace hdn
 	class PointLightSystem
 	{
 	public:
-		PointLightSystem(HDNDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+		PointLightSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		virtual ~PointLightSystem();
 		PointLightSystem(const PointLightSystem&) = delete;
 		PointLightSystem& operator=(const PointLightSystem&) = delete;
@@ -26,8 +26,8 @@ namespace hdn
 		void CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void CreatePipeline(VkRenderPass renderPass);
 	private:
-		HDNDevice* m_Device;
-		Scope<HDNPipeline> m_Pipeline;
+		VulkanDevice* m_Device;
+		Scope<VulkanPipeline> m_Pipeline;
 		VkPipelineLayout m_PipelineLayout;
 	};
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hdn_device.h"
+#include "r_vk_device.h"
 
 #include "core/stl/vector.h"
 
@@ -9,19 +9,19 @@
 
 namespace hdn {
 
-	class HDNSwapChain {
+	class VulkanSwapChain {
 	public:
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
 		// TODO: Convert deviceRef to ptr
-		HDNSwapChain(HDNDevice& deviceRef, VkExtent2D windowExtent);
-		HDNSwapChain(HDNDevice& deviceRef, VkExtent2D windowExtent, std::shared_ptr<HDNSwapChain> previous);
-		~HDNSwapChain();
+		VulkanSwapChain(VulkanDevice& deviceRef, VkExtent2D windowExtent);
+		VulkanSwapChain(VulkanDevice& deviceRef, VkExtent2D windowExtent, std::shared_ptr<VulkanSwapChain> previous);
+		~VulkanSwapChain();
 
-		HDNSwapChain(const HDNSwapChain&) = delete;
-		HDNSwapChain& operator=(const HDNSwapChain&) = delete;
-		HDNSwapChain(HDNSwapChain&&) = delete;
-		HDNSwapChain& operator=(HDNSwapChain&&) = delete;
+		VulkanSwapChain(const VulkanSwapChain&) = delete;
+		VulkanSwapChain& operator=(const VulkanSwapChain&) = delete;
+		VulkanSwapChain(VulkanSwapChain&&) = delete;
+		VulkanSwapChain& operator=(VulkanSwapChain&&) = delete;
 
 		VkFramebuffer GetFrameBuffer(int index) { return m_SwapChainFramebuffers[index]; }
 		VkRenderPass GetRenderPass() { return m_RenderPass; }
@@ -40,7 +40,7 @@ namespace hdn {
 		VkResult AcquireNextImage(uint32_t* imageIndex);
 		VkResult SubmitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
-		bool CompareSwapFormat(const HDNSwapChain& swapChain) const
+		bool CompareSwapFormat(const VulkanSwapChain& swapChain) const
 		{
 			return swapChain.m_SwapChainDepthFormat == m_SwapChainDepthFormat && 
 				   swapChain.m_SwapChainImageFormat == m_SwapChainImageFormat;
@@ -74,11 +74,11 @@ namespace hdn {
 		vector<VkImage> m_SwapChainImages;
 		vector<VkImageView> m_SwapChainImageViews;
 
-		HDNDevice& m_Device;
+		VulkanDevice& m_Device;
 		VkExtent2D m_WindowExtent;
 
 		VkSwapchainKHR m_SwapChain;
-		std::shared_ptr<HDNSwapChain> m_OldSwapChain;
+		std::shared_ptr<VulkanSwapChain> m_OldSwapChain;
 
 		vector<VkSemaphore> m_ImageAvailableSemaphores;
 		vector<VkSemaphore> m_RenderFinishedSemaphores;

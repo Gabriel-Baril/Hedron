@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/core.h"
-#include "hdn_frame_info.h"
+#include "frame_info.h"
 
 namespace hdn
 {

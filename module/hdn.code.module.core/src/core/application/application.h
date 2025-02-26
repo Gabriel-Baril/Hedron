@@ -51,7 +51,7 @@ namespace hdn
 			// dispatcher.Dispatch<KeyTypedEvent>( HDR_BIND_EVENT_FN( Application::OnKeyTyped ) );
 			// dispatcher.Dispatch<KeyReleasedEvent>( HDR_BIND_EVENT_FN( Application::OnKeyReleased ) );
 
-			for ( const auto& it = m_ApplicationLayerStack.end(); it != m_ApplicationLayerStack.begin(); )
+			for ( auto it = m_ApplicationLayerStack.end(); it != m_ApplicationLayerStack.begin(); )
 			{
 				if ( event.Handled )
 					break;

@@ -7,15 +7,15 @@
 
 namespace hdn
 {
-	class HDNWindow
+	class VulkanWindow
 	{
 	public:
-		HDNWindow(u32 width, u32 height, const string& name);
-		virtual ~HDNWindow();
-		HDNWindow(const HDNWindow&) = delete;
-		HDNWindow& operator=(const HDNWindow&) = delete;
-		HDNWindow(HDNWindow&&) = delete;
-		HDNWindow& operator=(HDNWindow&&) = delete;
+		VulkanWindow(u32 width, u32 height, const string& name);
+		virtual ~VulkanWindow();
+		VulkanWindow(const VulkanWindow&) = delete;
+		VulkanWindow& operator=(const VulkanWindow&) = delete;
+		VulkanWindow(VulkanWindow&&) = delete;
+		VulkanWindow& operator=(VulkanWindow&&) = delete;
 
 		bool ShouldClose();
 		VkExtent2D GetExtent() { return { m_Width, m_Height }; }

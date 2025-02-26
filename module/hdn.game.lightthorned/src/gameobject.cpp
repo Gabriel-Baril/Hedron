@@ -1,4 +1,4 @@
-#include "hdn_game_object.h"
+#include "gameobject.h"
 #include "ecs/components/transform_component.h"
 #include "ecs/components/color_component.h"
 #include "ecs/components/point_light_component.h"

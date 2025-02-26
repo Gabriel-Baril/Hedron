@@ -1,72 +1,72 @@
 #pragma once
 
-#include "hdn_device.h"
+#include "r_vk_device.h"
 
 #include "core/stl/vector.h"
 #include "core/stl/unordered_map.h"
 
 namespace hdn {
 
-	class HDNDescriptorSetLayout {
+	class VulkanDescriptorSetLayout {
 	public:
 		class Builder {
 		public:
-			Builder(HDNDevice& device) : m_Device{ device } {}
+			Builder(VulkanDevice& device) : m_Device{ device } {}
 
 			Builder& AddBinding(
 				uint32_t binding,
 				VkDescriptorType descriptorType,
 				VkShaderStageFlags stageFlags,
 				uint32_t count = 1);
-			Scope<HDNDescriptorSetLayout> Build() const;
+			Scope<VulkanDescriptorSetLayout> Build() const;
 
 		private:
-			HDNDevice& m_Device;
+			VulkanDevice& m_Device;
 			unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_Bindings{};
 		};
 
-		HDNDescriptorSetLayout(
-			HDNDevice& device, unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
-		~HDNDescriptorSetLayout();
-		HDNDescriptorSetLayout(const HDNDescriptorSetLayout&) = delete;
-		HDNDescriptorSetLayout& operator=(const HDNDescriptorSetLayout&) = delete;
+		VulkanDescriptorSetLayout(
+			VulkanDevice& device, unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
+		~VulkanDescriptorSetLayout();
+		VulkanDescriptorSetLayout(const VulkanDescriptorSetLayout&) = delete;
+		VulkanDescriptorSetLayout& operator=(const VulkanDescriptorSetLayout&) = delete;
 
 		VkDescriptorSetLayout GetDescriptorSetLayout() const { return m_DescriptorSetLayout; }
 
 	private:
-		HDNDevice& m_Device;
+		VulkanDevice& m_Device;
 		VkDescriptorSetLayout m_DescriptorSetLayout;
 		unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_Bindings;
 
-		friend class HDNDescriptorWriter;
+		friend class VulkanDescriptorWriter;
 	};
 
-	class HDNDescriptorPool {
+	class VulkanDescriptorPool {
 	public:
 		class Builder {
 		public:
-			Builder(HDNDevice& device) : m_Device{ device } {}
+			Builder(VulkanDevice& device) : m_Device{ device } {}
 
 			Builder& AddPoolSize(VkDescriptorType descriptorType, uint32_t count);
 			Builder& SetPoolFlags(VkDescriptorPoolCreateFlags flags);
 			Builder& SetMaxSets(uint32_t count);
-			Scope<HDNDescriptorPool> Build() const;
+			Scope<VulkanDescriptorPool> Build() const;
 
 		private:
-			HDNDevice& m_Device;
+			VulkanDevice& m_Device;
 			vector<VkDescriptorPoolSize> m_PoolSizes{};
 			uint32_t m_MaxSets = 1000;
 			VkDescriptorPoolCreateFlags m_PoolFlags = 0;
 		};
 
-		HDNDescriptorPool(
-			HDNDevice& device,
+		VulkanDescriptorPool(
+			VulkanDevice& device,
 			uint32_t maxSets,
 			VkDescriptorPoolCreateFlags poolFlags,
 			const vector<VkDescriptorPoolSize>& poolSizes);
-		~HDNDescriptorPool();
-		HDNDescriptorPool(const HDNDescriptorPool&) = delete;
-		HDNDescriptorPool& operator=(const HDNDescriptorPool&) = delete;
+		~VulkanDescriptorPool();
+		VulkanDescriptorPool(const VulkanDescriptorPool&) = delete;
+		VulkanDescriptorPool& operator=(const VulkanDescriptorPool&) = delete;
 
 		bool AllocateDescriptor(
 			const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const;
@@ -78,25 +78,25 @@ namespace hdn {
 		VkDescriptorPool GetDescriptor() const { return m_DescriptorPool; }
 
 	private:
-		HDNDevice& m_Device;
+		VulkanDevice& m_Device;
 		VkDescriptorPool m_DescriptorPool;
 
-		friend class HDNDescriptorWriter;
+		friend class VulkanDescriptorWriter;
 	};
 
-	class HDNDescriptorWriter {
+	class VulkanDescriptorWriter {
 	public:
-		HDNDescriptorWriter(HDNDescriptorSetLayout& setLayout, HDNDescriptorPool& pool);
+		VulkanDescriptorWriter(VulkanDescriptorSetLayout& setLayout, VulkanDescriptorPool& pool);
 
-		HDNDescriptorWriter& WriteBuffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
-		HDNDescriptorWriter& WriteImage(uint32_t binding, VkDescriptorImageInfo* imageInfo);
+		VulkanDescriptorWriter& WriteBuffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
+		VulkanDescriptorWriter& WriteImage(uint32_t binding, VkDescriptorImageInfo* imageInfo);
 
 		bool Build(VkDescriptorSet& set);
 		void Overwrite(VkDescriptorSet& set);
 
 	private:
-		HDNDescriptorSetLayout& m_SetLayout;
-		HDNDescriptorPool& m_Pool;
+		VulkanDescriptorSetLayout& m_SetLayout;
+		VulkanDescriptorPool& m_Pool;
 		vector<VkWriteDescriptorSet> m_Writes;
 	};
 }

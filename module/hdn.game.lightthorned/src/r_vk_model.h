@@ -1,14 +1,14 @@
 #pragma once
 
-#include "hdn_device.h"
-#include "hdn_buffer.h"
+#include "r_vk_device.h"
+#include "r_vk_buffer.h"
 
 #include "core/core.h"
 #include "core/stl/vector.h"
 
 namespace hdn
 {
-	class HDNModel
+	class VulkanModel
 	{
 	public:
 		struct Vertex
@@ -40,13 +40,13 @@ namespace hdn
 			void LoadFbxModel(const string& filepath);
 		};
 
-		HDNModel(HDNDevice* device, const HDNModel::Builder& builder);
-		virtual ~HDNModel();
-		HDNModel(const HDNModel&) = delete;
-		HDNModel& operator=(const HDNModel&) = delete;
+		VulkanModel(VulkanDevice* device, const VulkanModel::Builder& builder);
+		virtual ~VulkanModel();
+		VulkanModel(const VulkanModel&) = delete;
+		VulkanModel& operator=(const VulkanModel&) = delete;
 
-		static Scope<HDNModel> CreateModelFromObjFile(HDNDevice* device, const string& filepath);
-		static Scope<HDNModel> CreateModelFromFbxFile(HDNDevice* device, const string& filepath);
+		static Scope<VulkanModel> CreateModelFromObjFile(VulkanDevice* device, const string& filepath);
+		static Scope<VulkanModel> CreateModelFromFbxFile(VulkanDevice* device, const string& filepath);
 
 		void Bind(VkCommandBuffer commandBuffer);
 		void Draw(VkCommandBuffer commandBuffer);
@@ -54,14 +54,14 @@ namespace hdn
 		void CreateVertexBuffers(const vector<Vertex>& vertices);
 		void CreateIndexBuffers(const vector<u32>& indices);
 	private:
-		HDNDevice* m_Device;
+		VulkanDevice* m_Device;
 		
 		// The buffer and it's assigned memory are 2 different objects
-		Scope<HDNBuffer> m_VertexBuffer;
+		Scope<VulkanBuffer> m_VertexBuffer;
 		u32 m_VertexCount;
 
 		bool m_HasIndexBuffer = false;
-		Scope<HDNBuffer> m_IndexBuffer;
+		Scope<VulkanBuffer> m_IndexBuffer;
 		u32 m_IndexCount;
 	};
 }

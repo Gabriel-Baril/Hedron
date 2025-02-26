@@ -1,11 +1,11 @@
-#include "first_app.h"
+#include "lightthorned_application.h"
 
 int main()
 {
 	using namespace hdn;
 	Log_Init();
 
-	hdn::FirstApp app{};
+	hdn::LightthornedApplication app{};
 
 	try
 	{

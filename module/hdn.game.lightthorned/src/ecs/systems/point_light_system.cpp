@@ -18,7 +18,7 @@ namespace hdn
 		f32 radius;
 	};
 
-	PointLightSystem::PointLightSystem(HDNDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+	PointLightSystem::PointLightSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
 		: m_Device{ device }
 	{
 		CreatePipelineLayout(globalSetLayout);
@@ -56,15 +56,15 @@ namespace hdn
 		assert(m_PipelineLayout);
 
 		PipelineConfigInfo pipelineConfig{};
-		HDNPipeline::DefaultPipelineConfigInfo(pipelineConfig);
-		HDNPipeline::EnableAlphaBlending(pipelineConfig);
+		VulkanPipeline::DefaultPipelineConfigInfo(pipelineConfig);
+		VulkanPipeline::EnableAlphaBlending(pipelineConfig);
 
 		pipelineConfig.bindingDescriptions.clear();
 		pipelineConfig.attributeDescriptions.clear();
 
 		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
 		pipelineConfig.pipelineLayout = m_PipelineLayout;
-		m_Pipeline = CreateScope<HDNPipeline>(m_Device, "Shaders/point_light.vert.spv", "Shaders/point_light.frag.spv", pipelineConfig);
+		m_Pipeline = CreateScope<VulkanPipeline>(m_Device, "Shaders/point_light.vert.spv", "Shaders/point_light.frag.spv", pipelineConfig);
 	}
 
 	void PointLightSystem::Update(FrameInfo& frameInfo, GlobalUbo& ubo)

@@ -1,8 +1,7 @@
-#include "first_app.h"
+#include "lightthorned_application.h"
 
 #include "keyboard_movement_controller.h"
-#include "hdn_buffer.h"
-#include "hdn_camera.h"
+#include "camera.h"
 
 #include "ecs/components/transform_component.h"
 #include "ecs/components/color_component.h"
@@ -23,7 +22,8 @@
 #include "plugins/hmm/hmm_imgui.h"
 #include "plugins/idaes/idaes_imgui.h"
 
-#include "hdn_imgui.h"
+#include "r_vk_imgui.h"
+#include "r_vk_buffer.h"
 
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
@@ -32,11 +32,11 @@ namespace hdn
 {
 	static constexpr f32 MAX_FRAME_TIME = 0.5f;
 
-	FirstApp::FirstApp()
+	LightthornedApplication::LightthornedApplication()
 	{
-		globalPool = HDNDescriptorPool::Builder(m_Device)
-			.SetMaxSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
-			.AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, HDNSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
+		m_GlobalPool = VulkanDescriptorPool::Builder(m_Device)
+			.SetMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
+			.AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
 			.Build();
 
 		m_PhysicsWorld.Init();
@@ -45,17 +45,17 @@ namespace hdn
 		m_EcsWorld.set_threads(std::thread::hardware_concurrency());
 	}
 
-	FirstApp::~FirstApp()
+	LightthornedApplication::~LightthornedApplication()
 	{
 		m_PhysicsWorld.Shutdown();
 	}
 
-	void FirstApp::Run()
+	void LightthornedApplication::Run()
 	{
-		vector<Scope<HDNBuffer>> uboBuffers(HDNSwapChain::MAX_FRAMES_IN_FLIGHT);
+		vector<Scope<VulkanBuffer>> uboBuffers(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0;i < uboBuffers.size(); i++)
 		{
-			uboBuffers[i] = CreateScope<HDNBuffer>(
+			uboBuffers[i] = CreateScope<VulkanBuffer>(
 				&m_Device,
 				sizeof(GlobalUbo),
 				1,
@@ -65,15 +65,15 @@ namespace hdn
 			uboBuffers[i]->Map();
 		}
 
-		auto globalSetLayout = HDNDescriptorSetLayout::Builder(m_Device)
+		auto globalSetLayout = VulkanDescriptorSetLayout::Builder(m_Device)
 			.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
 			.Build();
 
-		vector<VkDescriptorSet> globalDescriptorSets(HDNSwapChain::MAX_FRAMES_IN_FLIGHT); // One descriptor set per frame
+		vector<VkDescriptorSet> globalDescriptorSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT); // One descriptor set per frame
 		for (int i = 0;i < globalDescriptorSets.size(); i++)
 		{
 			auto bufferInfo = uboBuffers[i]->DescriptorInfo();
-			HDNDescriptorWriter(*globalSetLayout, *globalPool)
+			VulkanDescriptorWriter(*globalSetLayout, *m_GlobalPool)
 				.WriteBuffer(0, &bufferInfo)
 				.Build(globalDescriptorSets[i]);
 		}
@@ -97,7 +97,7 @@ namespace hdn
 #if USING(HDN_DEBUG)
 		ImguiSystem imguiSystem;
 		
-		Scope<HDNDescriptorPool> imguiDescriptorPool = HDNDescriptorPool::Builder(m_Device)
+		Scope<VulkanDescriptorPool> imguiDescriptorPool = VulkanDescriptorPool::Builder(m_Device)
 			.SetPoolFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
 			.SetMaxSets(1)
 			.AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
@@ -196,9 +196,9 @@ namespace hdn
 		vkDeviceWaitIdle(m_Device.GetDevice());
 	}
 
-	void FirstApp::LoadGameObjects()
+	void LightthornedApplication::LoadGameObjects()
 	{
-		Ref<HDNModel> hdnModel = HDNModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
+		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
 
 		auto flatVaseGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "Flat Vase Group");
 		TransformComponent transformC;
@@ -229,7 +229,7 @@ namespace hdn
 		}
 
 		{
-			hdnModel = HDNModel::CreateModelFromObjFile(&m_Device, "models/quad.obj");
+			hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/quad.obj");
 			auto floor = HDNGameObject::CreateGameObject(m_EcsWorld, "floor");
 
 			TransformComponent transformC;
@@ -252,7 +252,7 @@ namespace hdn
 		}
 
 		{
-			hdnModel = HDNModel::CreateModelFromFbxFile(&m_Device, "models/cube.fbx"); // models/cube.fbx
+			hdnModel = VulkanModel::CreateModelFromFbxFile(&m_Device, "models/cube.fbx"); // models/cube.fbx
 			auto pot = HDNGameObject::CreateGameObject(m_EcsWorld, "pot");
 
 			TransformComponent transformC;

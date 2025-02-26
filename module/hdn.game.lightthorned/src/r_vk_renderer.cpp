@@ -1,23 +1,23 @@
-#include "hdn_renderer.h"
+#include "r_vk_renderer.h"
 
 #include "core/core.h"
 #include "core/stl/array.h"
 
 namespace hdn
 {
-	HDNRenderer::HDNRenderer(HDNWindow* window, HDNDevice* device)
+	VulkanRenderer::VulkanRenderer(VulkanWindow* window, VulkanDevice* device)
 		: m_Window{window}, m_Device{device}
 	{
 		RecreateSwapchain();
 		CreateCommandBuffers();
 	}
 
-	HDNRenderer::~HDNRenderer()
+	VulkanRenderer::~VulkanRenderer()
 	{
 		FreeCommandBuffers();
 	}
 
-	VkCommandBuffer HDNRenderer::BeginFrame()
+	VkCommandBuffer VulkanRenderer::BeginFrame()
 	{
 		assert(!IsFrameInProgress());
 		auto result = m_Swapchain->AcquireNextImage(&m_CurrentImageIndex); // Fetch the index of the next image to be used for rendering
@@ -42,7 +42,7 @@ namespace hdn
 		return commandBuffer;
 	}
 
-	void HDNRenderer::EndFrame()
+	void VulkanRenderer::EndFrame()
 	{
 		assert(IsFrameInProgress());
 		auto commandBuffer = GetCurrentCommandBuffer();
@@ -62,10 +62,10 @@ namespace hdn
 		}
 
 		m_IsFrameStarted = false;
-		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % HDNSwapChain::MAX_FRAMES_IN_FLIGHT;
+		m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
 	}
 
-	void HDNRenderer::BeginSwapChainRenderPass(VkCommandBuffer commandBuffer)
+	void VulkanRenderer::BeginSwapChainRenderPass(VkCommandBuffer commandBuffer)
 	{
 		assert(IsFrameInProgress());
 		assert(commandBuffer == GetCurrentCommandBuffer() && "Can't begin render pass on command buffer from a different frame");
@@ -98,7 +98,7 @@ namespace hdn
 
 	}
 
-	void HDNRenderer::EndSwapChainRenderPass(VkCommandBuffer commandBuffer)
+	void VulkanRenderer::EndSwapChainRenderPass(VkCommandBuffer commandBuffer)
 	{
 		assert(IsFrameInProgress());
 		assert(commandBuffer == GetCurrentCommandBuffer() && "Can't end render pass on command buffer from a different frame");
@@ -106,9 +106,9 @@ namespace hdn
 		vkCmdEndRenderPass(commandBuffer);
 	}
 
-	void HDNRenderer::CreateCommandBuffers()
+	void VulkanRenderer::CreateCommandBuffers()
 	{
-		m_CommandBuffers.resize(HDNSwapChain::MAX_FRAMES_IN_FLIGHT); // Likely 2 (double buffering) or 3 (triple buffering)
+		m_CommandBuffers.resize(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT); // Likely 2 (double buffering) or 3 (triple buffering)
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; // Primary = Can be submitted to a queue for execution, but cannot be called by other command buffer
@@ -121,13 +121,13 @@ namespace hdn
 
 	}
 
-	void HDNRenderer::FreeCommandBuffers()
+	void VulkanRenderer::FreeCommandBuffers()
 	{
 		vkFreeCommandBuffers(m_Device->GetDevice(), m_Device->GetCommandPool(), static_cast<u32>(m_CommandBuffers.size()), m_CommandBuffers.data());
 		m_CommandBuffers.clear();
 	}
 
-	void HDNRenderer::RecreateSwapchain()
+	void VulkanRenderer::RecreateSwapchain()
 	{
 		auto extent = m_Window->GetExtent(); // Get the current window size
 		while (extent.width == 0 || extent.height == 0)
@@ -140,12 +140,12 @@ namespace hdn
 
 		if (m_Swapchain == nullptr)
 		{
-			m_Swapchain = CreateScope<HDNSwapChain>(*m_Device, extent);
+			m_Swapchain = CreateScope<VulkanSwapChain>(*m_Device, extent);
 		}
 		else
 		{
-			Ref<HDNSwapChain> oldSwapChain = std::move(m_Swapchain);
-			m_Swapchain = CreateScope<HDNSwapChain>(*m_Device, extent, oldSwapChain);
+			Ref<VulkanSwapChain> oldSwapChain = std::move(m_Swapchain);
+			m_Swapchain = CreateScope<VulkanSwapChain>(*m_Device, extent, oldSwapChain);
 
 			if (!oldSwapChain->CompareSwapFormat(*m_Swapchain.get()))
 			{

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "hdn_window.h"
-#include "hdn_device.h"
-#include "hdn_swap_chain.h"
+#include "r_vk_window.h"
+#include "r_vk_device.h"
+#include "r_vk_swapchain.h"
 
 #include "imgui.h"
 #include "imgui/imgui_impl_glfw.h"

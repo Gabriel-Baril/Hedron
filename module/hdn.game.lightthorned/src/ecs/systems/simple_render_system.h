@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "hdn_device.h"
-#include "hdn_game_object.h"
-#include "hdn_pipeline.h"
-#include "hdn_camera.h"
-#include "hdn_frame_info.h"
+#include "r_vk_device.h"
+#include "r_vk_pipeline.h"
+#include "gameobject.h"
+#include "camera.h"
+#include "frame_info.h"
 
 #include "core/stl/vector.h"
 
@@ -15,7 +15,7 @@ namespace hdn
 	class SimpleRenderSystem
 	{
 	public:
-		SimpleRenderSystem(HDNDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+		SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		virtual ~SimpleRenderSystem();
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
@@ -25,8 +25,8 @@ namespace hdn
 		void CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void CreatePipeline(VkRenderPass renderPass);
 	private:
-		HDNDevice* m_Device;
-		Scope<HDNPipeline> m_Pipeline; // TODO: Change to Scope<>
+		VulkanDevice* m_Device;
+		Scope<VulkanPipeline> m_Pipeline; // TODO: Change to Scope<>
 		VkPipelineLayout m_PipelineLayout;
 	};
 }

@@ -1,8 +1,8 @@
-#include "hdn_model.h"
+#include "r_vk_model.h"
 
 #include "core/stl/unordered_map.h"
 
-#include "hdn_utils.h"
+#include "utils.h"
 
 #include <tinyobjloader/tiny_obj_loader.h>
 
@@ -14,9 +14,9 @@
 namespace std
 {
 	template<>
-	struct hash<hdn::HDNModel::Vertex>
+	struct hash<hdn::VulkanModel::Vertex>
 	{
-		size_t operator()(const hdn::HDNModel::Vertex& vertex) const
+		size_t operator()(const hdn::VulkanModel::Vertex& vertex) const
 		{
 			size_t seed = 0;
 			hdn::HashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
@@ -27,16 +27,16 @@ namespace std
 
 namespace eastl {
 	template <>
-	struct hash<hdn::HDNModel::Vertex> {
-		size_t operator()(const hdn::HDNModel::Vertex& vertex) const noexcept {
-			return std::hash<hdn::HDNModel::Vertex>()(vertex);
+	struct hash<hdn::VulkanModel::Vertex> {
+		size_t operator()(const hdn::VulkanModel::Vertex& vertex) const noexcept {
+			return std::hash<hdn::VulkanModel::Vertex>()(vertex);
 		}
 	};
 }
 
 namespace hdn
 {
-	HDNModel::HDNModel(HDNDevice* device, const HDNModel::Builder& builder)
+	VulkanModel::VulkanModel(VulkanDevice* device, const VulkanModel::Builder& builder)
 		: m_Device{device}
 	{
 		CreateVertexBuffers(builder.vertices);
@@ -44,25 +44,25 @@ namespace hdn
 	}
 
 
-	HDNModel::~HDNModel()
+	VulkanModel::~VulkanModel()
 	{
 	}
 
-	Scope<HDNModel> HDNModel::CreateModelFromObjFile(HDNDevice* device, const string& filepath)
+	Scope<VulkanModel> VulkanModel::CreateModelFromObjFile(VulkanDevice* device, const string& filepath)
 	{
 		Builder builder{};
 		builder.LoadObjModel(filepath);
-		return CreateScope<HDNModel>(device, builder);
+		return CreateScope<VulkanModel>(device, builder);
 	}
 
-	Scope<HDNModel> HDNModel::CreateModelFromFbxFile(HDNDevice* device, const string& filepath)
+	Scope<VulkanModel> VulkanModel::CreateModelFromFbxFile(VulkanDevice* device, const string& filepath)
 	{
 		Builder builder{};
 		builder.LoadFbxModel(filepath);
-		return CreateScope<HDNModel>(device, builder);
+		return CreateScope<VulkanModel>(device, builder);
 	}
 
-	void HDNModel::Bind(VkCommandBuffer commandBuffer)
+	void VulkanModel::Bind(VkCommandBuffer commandBuffer)
 	{
 		VkBuffer buffers[] = { m_VertexBuffer->GetBuffer()};
 		VkDeviceSize offsets[] = { 0 };
@@ -73,7 +73,7 @@ namespace hdn
 		}
 	}
 
-	void HDNModel::Draw(VkCommandBuffer commandBuffer)
+	void VulkanModel::Draw(VkCommandBuffer commandBuffer)
 	{
 		if (m_HasIndexBuffer)
 		{
@@ -85,14 +85,14 @@ namespace hdn
 		}
 	}
 
-	void HDNModel::CreateVertexBuffers(const vector<Vertex>& vertices)
+	void VulkanModel::CreateVertexBuffers(const vector<Vertex>& vertices)
 	{
 		m_VertexCount = static_cast<u32>(vertices.size());
 		assert(m_VertexCount >= 3 && "Vertex count must be at least 3");
 		VkDeviceSize bufferSize = sizeof(vertices[0]) * m_VertexCount;
 
 		const u32 vertexSize = sizeof(vertices[0]);
-		HDNBuffer stagingBuffer{
+		VulkanBuffer stagingBuffer{
 			m_Device,
 			vertexSize,
 			m_VertexCount,
@@ -103,7 +103,7 @@ namespace hdn
 		stagingBuffer.Map();
 		stagingBuffer.WriteToBuffer((void*)vertices.data());
 
-		m_VertexBuffer = CreateScope<HDNBuffer>(
+		m_VertexBuffer = CreateScope<VulkanBuffer>(
 			m_Device,
 			vertexSize,
 			m_VertexCount,
@@ -114,7 +114,7 @@ namespace hdn
 		m_Device->CopyBuffer(stagingBuffer.GetBuffer(), m_VertexBuffer->GetBuffer(), bufferSize);
 	}
 
-	void HDNModel::CreateIndexBuffers(const vector<u32>& indices)
+	void VulkanModel::CreateIndexBuffers(const vector<u32>& indices)
 	{
 		m_IndexCount = static_cast<u32>(indices.size());
 		m_HasIndexBuffer = m_IndexCount > 0;
@@ -126,7 +126,7 @@ namespace hdn
 		VkDeviceSize bufferSize = sizeof(indices[0]) * m_IndexCount;
 		u32 indexSize = sizeof(indices[0]);
 
-		HDNBuffer stagingBuffer{
+		VulkanBuffer stagingBuffer{
 			m_Device,
 			indexSize,
 			m_IndexCount,
@@ -137,7 +137,7 @@ namespace hdn
 		stagingBuffer.Map();
 		stagingBuffer.WriteToBuffer((void*)indices.data());
 
-		m_IndexBuffer = CreateScope<HDNBuffer>(
+		m_IndexBuffer = CreateScope<VulkanBuffer>(
 			m_Device,
 			indexSize,
 			m_IndexCount,
@@ -148,7 +148,7 @@ namespace hdn
 		m_Device->CopyBuffer(stagingBuffer.GetBuffer(), m_IndexBuffer->GetBuffer(), bufferSize);
 	}
 
-	vector<VkVertexInputBindingDescription> HDNModel::Vertex::GetBindingDescriptions()
+	vector<VkVertexInputBindingDescription> VulkanModel::Vertex::GetBindingDescriptions()
 	{
 		vector<VkVertexInputBindingDescription> bindingDescriptions(1);
 		bindingDescriptions[0].binding = 0;
@@ -157,7 +157,7 @@ namespace hdn
 		return bindingDescriptions;
 	}
 
-	vector<VkVertexInputAttributeDescription> HDNModel::Vertex::GetAttributeDescriptions()
+	vector<VkVertexInputAttributeDescription> VulkanModel::Vertex::GetAttributeDescriptions()
 	{
 		vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 		attributeDescriptions.reserve(4);
@@ -170,7 +170,7 @@ namespace hdn
 		return attributeDescriptions;
 	}
 
-	void HDNModel::Builder::LoadObjModel(const string& filepath)
+	void VulkanModel::Builder::LoadObjModel(const string& filepath)
 	{
 		tinyobj::attrib_t attrib; // Store positions, colors, uvs
 		std::vector<tinyobj::shape_t> shapes; // Index values for each elements
@@ -234,7 +234,7 @@ namespace hdn
 		}
 	}
 
-	void HDNModel::Builder::LoadFbxModel(const string& filepath)
+	void VulkanModel::Builder::LoadFbxModel(const string& filepath)
 	{
 		std::ifstream file(filepath.c_str(), std::ios::binary | std::ios::ate);
 		if (!file)

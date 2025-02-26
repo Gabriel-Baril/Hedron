@@ -1,23 +1,23 @@
 
 #pragma once
 
-#include "hdn_device.h"
-#include "hdn_window.h"
-#include "hdn_swap_chain.h"
-#include "hdn_model.h"
+#include "r_vk_device.h"
+#include "r_vk_window.h"
+#include "r_vk_swapchain.h"
+#include "r_vk_model.h"
 
 #include "core/stl/vector.h"
 
 namespace hdn
 {
 
-	class HDNRenderer
+	class VulkanRenderer
 	{
 	public:
-		HDNRenderer(HDNWindow* window, HDNDevice* device);
-		virtual ~HDNRenderer();
-		HDNRenderer(const HDNRenderer&) = delete;
-		HDNRenderer& operator=(const HDNRenderer&) = delete;
+		VulkanRenderer(VulkanWindow* window, VulkanDevice* device);
+		virtual ~VulkanRenderer();
+		VulkanRenderer(const VulkanRenderer&) = delete;
+		VulkanRenderer& operator=(const VulkanRenderer&) = delete;
 
 		VkRenderPass GetSwapChainRenderPass() const { return m_Swapchain->GetRenderPass(); }
 		f32 GetAspectRatio() const { return m_Swapchain->ExtentAspectRatio(); }
@@ -44,9 +44,9 @@ namespace hdn
 		void FreeCommandBuffers();
 		void RecreateSwapchain();
 	private:
-		HDNWindow* m_Window;
-		HDNDevice* m_Device;
-		Scope<HDNSwapChain> m_Swapchain;
+		VulkanWindow* m_Window;
+		VulkanDevice* m_Device;
+		Scope<VulkanSwapChain> m_Swapchain;
 		vector<VkCommandBuffer> m_CommandBuffers;
 
 		u32 m_CurrentImageIndex = 0;

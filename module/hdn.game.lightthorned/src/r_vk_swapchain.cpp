@@ -1,16 +1,16 @@
-#include "hdn_swap_chain.h"
+#include "r_vk_swapchain.h"
 
 #include "core/stl/array.h"
 
 namespace hdn {
 
-	HDNSwapChain::HDNSwapChain(HDNDevice& deviceRef, VkExtent2D extent)
+	VulkanSwapChain::VulkanSwapChain(VulkanDevice& deviceRef, VkExtent2D extent)
 		: m_Device{ deviceRef }, m_WindowExtent{ extent }
 	{
 		Init();
 	}
 
-	HDNSwapChain::HDNSwapChain(HDNDevice& deviceRef, VkExtent2D extent, std::shared_ptr<HDNSwapChain> previous)
+	VulkanSwapChain::VulkanSwapChain(VulkanDevice& deviceRef, VkExtent2D extent, std::shared_ptr<VulkanSwapChain> previous)
 		: m_Device{ deviceRef }, m_WindowExtent{ extent }, m_OldSwapChain{ previous }
 	{
 		Init();
@@ -19,7 +19,7 @@ namespace hdn {
 	}
 
 
-	void HDNSwapChain::Init()
+	void VulkanSwapChain::Init()
 	{
 		CreateSwapChain();
 		CreateImageViews();
@@ -29,7 +29,7 @@ namespace hdn {
 		CreateSyncObjects();
 	}
 
-	HDNSwapChain::~HDNSwapChain() {
+	VulkanSwapChain::~VulkanSwapChain() {
 		for (auto imageView : m_SwapChainImageViews) {
 			vkDestroyImageView(m_Device.GetDevice(), imageView, nullptr);
 		}
@@ -60,7 +60,7 @@ namespace hdn {
 		}
 	}
 
-	VkResult HDNSwapChain::AcquireNextImage(uint32_t* imageIndex) {
+	VkResult VulkanSwapChain::AcquireNextImage(uint32_t* imageIndex) {
 		vkWaitForFences(
 			m_Device.GetDevice(),
 			1,
@@ -79,7 +79,7 @@ namespace hdn {
 		return result;
 	}
 
-	VkResult HDNSwapChain::SubmitCommandBuffers(
+	VkResult VulkanSwapChain::SubmitCommandBuffers(
 		const VkCommandBuffer* buffers, uint32_t* imageIndex) {
 		if (m_ImagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
 			vkWaitForFences(m_Device.GetDevice(), 1, &m_ImagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
@@ -127,7 +127,7 @@ namespace hdn {
 		return result;
 	}
 
-	void HDNSwapChain::CreateSwapChain() {
+	void VulkanSwapChain::CreateSwapChain() {
 		SwapChainSupportDetails swapChainSupport = m_Device.GetSwapChainSupport();
 
 		VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
@@ -189,7 +189,7 @@ namespace hdn {
 		m_SwapChainExtent = extent;
 	}
 
-	void HDNSwapChain::CreateImageViews() {
+	void VulkanSwapChain::CreateImageViews() {
 		m_SwapChainImageViews.resize(m_SwapChainImages.size());
 		for (size_t i = 0; i < m_SwapChainImages.size(); i++) {
 			VkImageViewCreateInfo viewInfo{};
@@ -210,7 +210,7 @@ namespace hdn {
 		}
 	}
 
-	void HDNSwapChain::CreateRenderPass() {
+	void VulkanSwapChain::CreateRenderPass() {
 		VkAttachmentDescription depthAttachment{};
 		depthAttachment.format = FindDepthFormat();
 		depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -271,7 +271,7 @@ namespace hdn {
 		}
 	}
 
-	void HDNSwapChain::CreateFramebuffers() {
+	void VulkanSwapChain::CreateFramebuffers() {
 		m_SwapChainFramebuffers.resize(GetImageCount());
 		for (size_t i = 0; i < GetImageCount(); i++) {
 			std::array<VkImageView, 2> attachments = { m_SwapChainImageViews[i], m_DepthImageViews[i] };
@@ -296,7 +296,7 @@ namespace hdn {
 		}
 	}
 
-	void HDNSwapChain::CreateDepthResources() {
+	void VulkanSwapChain::CreateDepthResources() {
 		VkFormat depthFormat = FindDepthFormat();
 		m_SwapChainDepthFormat = depthFormat;
 		VkExtent2D swapChainExtent = GetSwapChainExtent();
@@ -345,7 +345,7 @@ namespace hdn {
 		}
 	}
 
-	void HDNSwapChain::CreateSyncObjects() {
+	void VulkanSwapChain::CreateSyncObjects() {
 		m_ImageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 		m_RenderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 		m_InFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
@@ -369,7 +369,7 @@ namespace hdn {
 		}
 	}
 
-	VkSurfaceFormatKHR HDNSwapChain::ChooseSwapSurfaceFormat(
+	VkSurfaceFormatKHR VulkanSwapChain::ChooseSwapSurfaceFormat(
 		const vector<VkSurfaceFormatKHR>& availableFormats) {
 		for (const auto& availableFormat : availableFormats) {
 			if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
@@ -381,7 +381,7 @@ namespace hdn {
 		return availableFormats[0];
 	}
 
-	VkPresentModeKHR HDNSwapChain::ChooseSwapPresentMode(
+	VkPresentModeKHR VulkanSwapChain::ChooseSwapPresentMode(
 		// The present mode configuration control how our swapchain handle synchronization with our display
 		const vector<VkPresentModeKHR>& availablePresentModes) {
 		for (const auto& availablePresentMode : availablePresentModes) {
@@ -402,7 +402,7 @@ namespace hdn {
 		return VK_PRESENT_MODE_FIFO_KHR; // Vsync
 	}
 
-	VkExtent2D HDNSwapChain::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
+	VkExtent2D VulkanSwapChain::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
 		if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
 			return capabilities.currentExtent;
 		}
@@ -419,7 +419,7 @@ namespace hdn {
 		}
 	}
 
-	VkFormat HDNSwapChain::FindDepthFormat() {
+	VkFormat VulkanSwapChain::FindDepthFormat() {
 		return m_Device.FindSupportedFormat(
 			{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
 			VK_IMAGE_TILING_OPTIMAL,

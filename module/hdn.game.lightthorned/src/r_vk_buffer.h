@@ -1,22 +1,22 @@
 #pragma once
 
-#include "hdn_device.h"
+#include "r_vk_device.h"
 
 namespace hdn
 {
-	class HDNBuffer {
+	class VulkanBuffer {
 	public:
-		HDNBuffer(
-			HDNDevice* device,
+		VulkanBuffer(
+			VulkanDevice* device,
 			VkDeviceSize instanceSize,
 			uint32_t instanceCount,
 			VkBufferUsageFlags usageFlags,
 			VkMemoryPropertyFlags memoryPropertyFlags,
 			VkDeviceSize minOffsetAlignment = 1);
-		~HDNBuffer();
+		~VulkanBuffer();
 
-		HDNBuffer(const HDNBuffer&) = delete;
-		HDNBuffer& operator=(const HDNBuffer&) = delete;
+		VulkanBuffer(const VulkanBuffer&) = delete;
+		VulkanBuffer& operator=(const VulkanBuffer&) = delete;
 
 		VkResult Map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
 		void Unmap();
@@ -43,7 +43,7 @@ namespace hdn
 	private:
 		static VkDeviceSize GetAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment);
 
-		HDNDevice* m_Device;
+		VulkanDevice* m_Device;
 		void* m_Mapped = nullptr;
 		VkBuffer m_Buffer = VK_NULL_HANDLE;
 		VkDeviceMemory m_Memory = VK_NULL_HANDLE;

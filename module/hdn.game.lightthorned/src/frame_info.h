@@ -1,7 +1,7 @@
 #pragma once
 
-#include "hdn_camera.h"
-#include "hdn_game_object.h"
+#include "camera.h"
+#include "gameobject.h"
 
 #include "vulkan/vulkan.h"
 
