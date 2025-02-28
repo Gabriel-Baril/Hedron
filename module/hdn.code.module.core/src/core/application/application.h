@@ -43,7 +43,7 @@ namespace hdn
 			}
 		}
 
-		void OnEvent(Event& event)
+		virtual void OnEvent(Event& event)
 		{
 			EventDispatcher dispatcher( event );
 			// dispatcher.Dispatch<WindowClosedEvent>( HDR_BIND_EVENT_FN( Application::OnWindowClosed ) );

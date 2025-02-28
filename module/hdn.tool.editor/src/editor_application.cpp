@@ -32,10 +32,32 @@ namespace hdn
 		return s_Instance;
 	}
 
+	void EditorApplication::OnEvent(Event& event)
+	{
+		IApplication::OnEvent(event);
+		m_EditorCamera.OnEvent(event);
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<KeyPressedEvent>(HDN_BIND_EVENT_FN(EditorApplication::OnKeyPressed));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(HDN_BIND_EVENT_FN(EditorApplication::OnMouseButtonPressed));
+	}
+
+	bool EditorApplication::OnKeyPressed(KeyPressedEvent& event)
+	{
+		// HINFO("EditorApplication::OnKeyPressed - Pressed!");
+		return false;
+	}
+
+	bool EditorApplication::OnMouseButtonPressed(MouseButtonPressedEvent& event)
+	{
+		return false;
+	}
+
 	EditorApplication::EditorApplication()
 	{
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 		m_EditorCamera.SetViewportSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+
+		m_Window.SetEventCallback(HDN_BIND_EVENT_FN(EditorApplication::OnEvent));
 
 		m_GlobalPool = VulkanDescriptorPool::Builder(m_Device)
 			.SetMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools

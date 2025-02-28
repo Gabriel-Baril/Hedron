@@ -25,6 +25,7 @@
 // ---
 
 #include "editor_camera.h"
+#include "core/event/events.h"
 
 namespace hdn
 {
@@ -36,6 +37,10 @@ namespace hdn
 	public:
 		static EditorApplication& Get();
 		VulkanWindow& GetWindow() { return m_Window; }
+
+		void OnEvent(Event& event) override;
+		bool OnKeyPressed(KeyPressedEvent& event);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
 
 		EditorApplication();
 		virtual ~EditorApplication();
