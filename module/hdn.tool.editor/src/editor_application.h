@@ -39,6 +39,7 @@ namespace hdn
 		VulkanWindow& GetWindow() { return m_Window; }
 
 		void OnEvent(Event& event) override;
+		bool OnWindowResized(WindowResizedEvent& event);
 		bool OnKeyPressed(KeyPressedEvent& event);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
 

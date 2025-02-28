@@ -37,8 +37,15 @@ namespace hdn
 		IApplication::OnEvent(event);
 		m_EditorCamera.OnEvent(event);
 		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<WindowResizedEvent>(HDN_BIND_EVENT_FN(EditorApplication::OnWindowResized));
 		dispatcher.Dispatch<KeyPressedEvent>(HDN_BIND_EVENT_FN(EditorApplication::OnKeyPressed));
 		dispatcher.Dispatch<MouseButtonPressedEvent>(HDN_BIND_EVENT_FN(EditorApplication::OnMouseButtonPressed));
+	}
+
+	bool EditorApplication::OnWindowResized(WindowResizedEvent& event)
+	{
+		m_EditorCamera.SetViewportSize(event.GetWidth(), event.GetHeight());
+		return false;
 	}
 
 	bool EditorApplication::OnKeyPressed(KeyPressedEvent& event)
