@@ -13,6 +13,7 @@
 #include "panel/editor_panel_module_manager.h"
 #include "panel/editor_panel_ideation_manager.h"
 #include "panel/editor_panel_performance.h"
+#include "panel/editor_panel_inspector.h"
 
 #include "r_vk_buffer.h"
 
@@ -36,6 +37,7 @@ namespace hdn
 		m_EcsWorld.set_threads(std::thread::hardware_concurrency());
 
 		Register<OutlinerPanel>(&m_EcsWorld);
+		Register<InspectorPanel>(&m_EcsWorld);
 		Register<ModuleManagerPanel>();
 		Register<IdeationManagerPanel>();
 		Register<PerformancePanel>();
@@ -181,32 +183,34 @@ namespace hdn
 	{
 		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
 
-		auto flatVaseGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "Flat Vase Group");
-		TransformComponent transformC;
-		flatVaseGroup.Set(transformC);
-
-		for(int i = 0;i < 100; i++)
 		{
-			std::string eName = fmt::format("Vase {}", i);
-
-			auto flatVase = HDNGameObject::CreateGameObject(m_EcsWorld, eName.c_str()); // TODO: Fix game object lifetime
-
+			auto flatVaseGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "Flat Vase Group");
 			TransformComponent transformC;
-			transformC.translation = { cos(i), -1 - (float)sin(i), sin(i) };
-			transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
-			flatVase.Set(transformC);
+			flatVaseGroup.Set(transformC);
 
-			ModelComponent modelC;
-			modelC.model = hdnModel;
-			flatVase.Set(modelC);
+			for (int i = 0; i < 0; i++)
+			{
+				std::string eName = fmt::format("Vase {}", i);
 
-			PhysicsComponent physicsC;
-			physx::PxVec3 position = physx::PxVec3(transformC.translation.x, transformC.translation.y, -transformC.translation.z);
-			physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
-			physicsC.physicsActor = m_PhysicsWorld.CreateDynamicActor(position, dimension);
-			flatVase.Set(physicsC);
+				auto flatVase = HDNGameObject::CreateGameObject(m_EcsWorld, eName.c_str()); // TODO: Fix game object lifetime
 
-			flatVase.GetEntity().child_of(flatVaseGroup.GetEntity());
+				TransformComponent transformC;
+				transformC.translation = { cos(i), -1 - (float)sin(i), sin(i) };
+				transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
+				flatVase.Set(transformC);
+
+				ModelComponent modelC;
+				modelC.model = hdnModel;
+				flatVase.Set(modelC);
+
+				PhysicsComponent physicsC;
+				physx::PxVec3 position = physx::PxVec3(transformC.translation.x, transformC.translation.y, -transformC.translation.z);
+				physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
+				physicsC.physicsActor = m_PhysicsWorld.CreateDynamicActor(position, dimension);
+				flatVase.Set(physicsC);
+
+				flatVase.GetEntity().child_of(flatVaseGroup.GetEntity());
+			}
 		}
 
 		{
@@ -234,37 +238,45 @@ namespace hdn
 
 		{
 			hdnModel = VulkanModel::CreateModelFromFbxFile(&m_Device, "models/cube.fbx"); // models/cube.fbx
-			auto pot = HDNGameObject::CreateGameObject(m_EcsWorld, "pot");
+			auto cube = HDNGameObject::CreateGameObject(m_EcsWorld, "cube");
 
 			TransformComponent transformC;
 			transformC.translation = { 0.0f, 0.0f, 0.0f };
 			transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
-			pot.Set(transformC);
+			cube.Set(transformC);
 
 			ModelComponent modelC;
 			modelC.model = hdnModel;
-			pot.Set(modelC);
+			cube.Set(modelC);
 		}
 
-		vector<vec3f32> lightColors{
-			{1.f, .1f, .1f},
-			{.1f, .1f, 1.f},
-			{.1f, 1.f, .1f},
-			{1.f, 1.f, .1f},
-			{.1f, 1.f, 1.f},
-			{1.f, 1.f, 1.f} 
-		};
-
-		for (int i = 0;i < lightColors.size(); i++)
 		{
-			auto pointLight = HDNGameObject::MakePointLight(m_EcsWorld, 0.2f);
+			vector<vec3f32> lightColors{
+				{1.f, .1f, .1f},
+				{.1f, .1f, 1.f},
+				{.1f, 1.f, .1f},
+				{1.f, 1.f, .1f},
+				{.1f, 1.f, 1.f},
+				{1.f, 1.f, 1.f}
+			};
 
-			ColorComponent* colorC = pointLight.GetMut<ColorComponent>();
-			colorC->color = lightColors[i];
+			auto pointLightGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "pointLightGroup");
+			TransformComponent transformC;
+			pointLightGroup.Set(transformC);
 
-			auto rotateLight = glm::rotate(mat4f32(1.0f), (i * glm::two_pi<f32>()) / lightColors.size(), {0.0f, -1.0f, 0.0f});
-			TransformComponent* transformC = pointLight.GetMut<TransformComponent>();
-			transformC->translation = vec3f32(rotateLight * vec4f32(-1.0f, -1.0f, -1.0f, 1.0f));
+			for (int i = 0; i < lightColors.size(); i++)
+			{
+				auto pointLight = HDNGameObject::MakePointLight(m_EcsWorld, 0.2f);
+
+				ColorComponent* colorC = pointLight.GetMut<ColorComponent>();
+				colorC->color = lightColors[i];
+
+				auto rotateLight = glm::rotate(mat4f32(1.0f), (i * glm::two_pi<f32>()) / lightColors.size(), { 0.0f, -1.0f, 0.0f });
+				TransformComponent* transformC = pointLight.GetMut<TransformComponent>();
+				transformC->translation = vec3f32(rotateLight * vec4f32(-1.0f, -1.0f, -1.0f, 1.0f));
+
+				pointLight.GetEntity().child_of(pointLightGroup.GetEntity());
+			}
 		}
 	}
 }

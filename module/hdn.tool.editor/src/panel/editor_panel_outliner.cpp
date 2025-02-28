@@ -5,6 +5,7 @@
 #include "imgui.h"
 
 #include <iostream>
+#include "editor.h"
 
 namespace hdn
 {
@@ -42,6 +43,15 @@ namespace hdn
 		{
 			open = ImGui::TreeNodeEx("<untitled>", flags);
 		}
+
+		if (open)
+		{
+			if (ImGui::IsItemClicked())
+			{
+				Editor::Get().SetEntitySelected(entity);
+			}
+		}
+
 		ImGui::PopID();
 
 		ImGui::TableNextColumn();

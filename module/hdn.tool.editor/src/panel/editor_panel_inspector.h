@@ -6,17 +6,15 @@
 
 namespace hdn
 {
-	class OutlinerPanel : public IEditorPanel
+	class InspectorPanel : public IEditorPanel
 	{
 	public:
-		OutlinerPanel(flecs::world* ecs)
-			: m_Ecs{ ecs }, IEditorPanel{ "outliner" }
+		InspectorPanel(flecs::world* ecs)
+			: m_Ecs{ ecs }, IEditorPanel{ "inspector" }
 		{
 		}
 
 		void OnUpdate(f32 dt);
-	private:
-		void DrawEntityTree(flecs::entity entity, flecs::world& ecs);
 	private:
 		flecs::world* m_Ecs = nullptr;
 	};

@@ -13,7 +13,7 @@ namespace hdn
 
 		virtual void OnUpdate(float dt) override
 		{
-			HWARN("SimpleLogScript");
+			// HWARN("SimpleLogScript");
 		}
 	};
 }

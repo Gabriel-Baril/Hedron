@@ -7,6 +7,8 @@
 
 #include <thread>
 
+#include "core/core_define.h"
+
 #if USING( PERF_PROFILE )
 namespace hdn
 {

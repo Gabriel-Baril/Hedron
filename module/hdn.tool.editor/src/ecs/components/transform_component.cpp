@@ -2,7 +2,7 @@
 
 namespace hdn
 {
-	mat4f32 TransformComponent::Mat4()
+	mat4f32 TransformComponent::Mat4() const
 	{
 		const f32 c3 = glm::cos(rotation.z);
 		const f32 s3 = glm::sin(rotation.z);
@@ -33,7 +33,7 @@ namespace hdn
 		};
 	}
 
-	mat3f32 TransformComponent::NormalMatrix()
+	mat3f32 TransformComponent::NormalMatrix() const
 	{
 		const f32 c3 = glm::cos(rotation.z);
 		const f32 s3 = glm::sin(rotation.z);
@@ -60,5 +60,16 @@ namespace hdn
 				invScale.z * (c1 * c2),
 			}
 		};
+	}
+	bool TransformComponent::Changed() const
+	{
+		return HasTranslationChanged || HasRotationChanged || HasScaleChanged;
+	}
+
+	void TransformComponent::ClearChange()
+	{
+		HasTranslationChanged = false;
+		HasRotationChanged = false;
+		HasScaleChanged = false;
 	}
 }

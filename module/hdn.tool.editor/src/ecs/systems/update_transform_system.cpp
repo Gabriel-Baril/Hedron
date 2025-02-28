@@ -8,14 +8,21 @@ namespace hdn
 	{
 		auto query = frameInfo.ecsWorld->query<TransformComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC) {
+			// if (!transformC.Changed())
+			// {
+			// 	return;
+			// }
+
 			transformC.worldMatrix = transformC.Mat4();
 			if (e.parent())
 			{
 				auto parent = e.parent();
 				if (parent.has<TransformComponent>()) {
-					transformC.worldMatrix = parent.get<TransformComponent>()->worldMatrix * transformC.worldMatrix;
+					transformC.worldMatrix = parent.get<TransformComponent>()->Mat4() * transformC.worldMatrix;
 				}
 			}
+
+			transformC.ClearChange();
 		});
 	}
 }
