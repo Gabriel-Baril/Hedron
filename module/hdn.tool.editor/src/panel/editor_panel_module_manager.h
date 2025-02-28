@@ -1,12 +1,12 @@
 #pragma once
 
-#include "imgui.h"
-
 #include "core/core.h"
 #include "core/core_filesystem.h"
 #include "core/stl/vector.h"
 
 #include "pugixml/pugixml.hpp"
+
+#include "editor_panel.h"
 
 namespace hdn
 {
@@ -84,7 +84,7 @@ namespace hdn
 		OverallResults overallResultsCases{};
 	};
 
-	class HMMImgui
+	class ModuleManagerPanel : public IEditorPanel
 	{
 	public:
 		static constexpr const char* ROOT_NODE_NAME = "Catch2TestRun";
@@ -97,6 +97,11 @@ namespace hdn
 		static constexpr const char* OVERALL_RESULTS_NODE_NAME = "OverallResults";
 		static constexpr const char* OVERALL_RESULTS_CASES_NODE_NAME = "OverallResultsCases";
 		static constexpr const char* OVERALL_RESULT_NODE_NAME = "OverallResult";
+
+		ModuleManagerPanel()
+			: IEditorPanel{"module manager"}
+		{
+		}
 
 		void ParseOverallResultNode(const pugi::xml_node& resultNode, OverallResult& overallResult);
 		void ParseOverallResultsNode(const pugi::xml_node& resultNode, OverallResults& overallResults);
@@ -112,7 +117,8 @@ namespace hdn
 		void DisplayTestNode(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags);
 		void ColoredTextIfValid(bool condition, ImVec4 color, int value);
 		void SetRowColor(bool condition);
-		void Draw();
+
+		void OnUpdate(f32 dt);
 
 	private:
 		std::thread m_WaitThread;

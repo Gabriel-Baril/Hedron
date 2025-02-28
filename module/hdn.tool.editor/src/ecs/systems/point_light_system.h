@@ -15,10 +15,16 @@ namespace hdn
 	class PointLightSystem
 	{
 	public:
+		PointLightSystem() = default;
 		PointLightSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		virtual ~PointLightSystem();
-		PointLightSystem(const PointLightSystem&) = delete;
-		PointLightSystem& operator=(const PointLightSystem&) = delete;
+
+		void Init(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+		{
+			m_Device = device;
+			CreatePipelineLayout(globalSetLayout);
+			CreatePipeline(renderPass);
+		}
 
 		void Update(FrameInfo& frameInfo, GlobalUbo& ubo);
 		void Render(FrameInfo& frameInfo);

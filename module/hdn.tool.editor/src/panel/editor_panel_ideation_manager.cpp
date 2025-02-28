@@ -1,11 +1,11 @@
-#include "idaes_imgui.h"
+#include "editor_panel_ideation_manager.h"
 
 #include "core/stl/vector.h"
 #include "core/core_filesystem.h"
 
 namespace hdn
 {
-	void IdaesImgui::Init()
+	void IdeationManagerPanel::Init()
 	{
 		vector<fspath> ideationFiles = FileSystem::Walk("ideations");
 
@@ -18,13 +18,18 @@ namespace hdn
 		}
 	}
 
-	void IdaesImgui::Draw()
+	void IdeationManagerPanel::OnUpdate(f32 dt)
 	{
+		if (!m_Initialized)
+		{
+			Init();
+			m_Initialized = true;
+		}
+
 		const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
 
 		const ImGuiTableFlags flags = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
 
-		ImGui::Begin("IdaesUI");
 		if (ImGui::BeginTable("idaes", 3, flags))
 		{
 			ImGui::TableSetupColumn("ID", ImGuiTableColumnFlags_NoHide);
@@ -33,12 +38,8 @@ namespace hdn
 			ImGui::TableHeadersRow();
 
 			int i = 0;
-			for (const auto& ideation : m_Ideations) // TODO: Plug ideation vector
+			for (const auto& ideation : m_Ideations)
 			{
-				// if (i == 100)
-				// {
-				// 	break;
-				// }
 				i++;
 				ImGui::TableNextRow();
 
@@ -52,7 +53,5 @@ namespace hdn
 			// HDEBUG("eLEMENT cOUNT: {0}", i);
 			ImGui::EndTable();
 		}
-		ImGui::End();
 	}
-
 }

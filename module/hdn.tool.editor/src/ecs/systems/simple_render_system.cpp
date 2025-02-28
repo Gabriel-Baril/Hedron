@@ -14,11 +14,13 @@ namespace hdn
 		mat4f32 normalMatrix{ 1.0f };
 	};
 
-	SimpleRenderSystem::SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
-		: m_Device{ device }
+	SimpleRenderSystem::SimpleRenderSystem()
 	{
-		CreatePipelineLayout(globalSetLayout);
-		CreatePipeline(renderPass);
+	}
+
+	SimpleRenderSystem::SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+	{
+		Init(device, renderPass, globalSetLayout);
 	}
 
 	SimpleRenderSystem::~SimpleRenderSystem()

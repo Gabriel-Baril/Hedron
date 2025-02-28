@@ -64,6 +64,7 @@ namespace hdn
 		{
 			return m_Entity.name();
 		}
+		HDNGameObject() : m_Entity{ flecs::entity::null() } {}
 	private:
 		HDNGameObject(flecs::entity e) : m_Entity{ e } {}
 		flecs::entity m_Entity;

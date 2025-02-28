@@ -1,4 +1,4 @@
-#include "hmm_imgui.h"
+#include "editor_panel_module_manager.h"
 
 #include "core/core_filesystem.h"
 #include "core/stl/vector.h"
@@ -12,7 +12,7 @@
 
 namespace hdn
 {
-	void HMMImgui::ParseOverallResultNode(const pugi::xml_node& resultNode, OverallResult& overallResult)
+	void ModuleManagerPanel::ParseOverallResultNode(const pugi::xml_node& resultNode, OverallResult& overallResult)
 	{
 		for (const auto& attribute : resultNode.attributes())
 		{
@@ -26,7 +26,7 @@ namespace hdn
 			}
 		}
 	}
-	void HMMImgui::ParseOverallResultsNode(const pugi::xml_node& resultNode, OverallResults& overallResults)
+	void ModuleManagerPanel::ParseOverallResultsNode(const pugi::xml_node& resultNode, OverallResults& overallResults)
 	{
 		for (const auto& attribute : resultNode.attributes())
 		{
@@ -45,7 +45,7 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::ParseSectionNode(const pugi::xml_node& sectionNode, SectionResult& sectionResult)
+	void ModuleManagerPanel::ParseSectionNode(const pugi::xml_node& sectionNode, SectionResult& sectionResult)
 	{
 		for (const auto& attribute : sectionNode.attributes())
 		{
@@ -76,7 +76,7 @@ namespace hdn
 			}
 		}
 	}
-	void HMMImgui::ParseExpressionNode(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult)
+	void ModuleManagerPanel::ParseExpressionNode(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult)
 	{
 		for (const auto& attribute : expressionNode.attributes())
 		{
@@ -120,7 +120,7 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::ParseTestCaseNode(const pugi::xml_node& testCase, TestCaseResult& testCaseResult)
+	void ModuleManagerPanel::ParseTestCaseNode(const pugi::xml_node& testCase, TestCaseResult& testCaseResult)
 	{
 		HASSERT(Str_Equals(testCase.name(), TEST_CASE_NODE_NAME), "Invalid Test Case Node");
 
@@ -167,7 +167,7 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::ParseRootNode(const pugi::xml_node& root, TestResult& out)
+	void ModuleManagerPanel::ParseRootNode(const pugi::xml_node& root, TestResult& out)
 	{
 		HASSERT(Str_Equals(root.name(), ROOT_NODE_NAME), "Invalid Root Node");
 
@@ -192,7 +192,7 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::LoadTestResultFromMemory(const string& buffer, TestResult& testResult)
+	void ModuleManagerPanel::LoadTestResultFromMemory(const string& buffer, TestResult& testResult)
 	{
 		pugi::xml_document doc; // Already contains the root node (Catch2TestRun)
 		pugi::xml_parse_result result = doc.load_buffer(buffer.c_str(), buffer.size());
@@ -203,7 +203,7 @@ namespace hdn
 		ParseRootNode(doc.first_child(), testResult);
 	}
 
-	void HMMImgui::DisplayTestNode(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::DisplayTestNode(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		SetRowColor(expression.success);
@@ -222,7 +222,7 @@ namespace hdn
 		ImGui::Text("%i", expression.line);
 	}
 
-	void HMMImgui::DisplayTestNode(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::DisplayTestNode(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		SetRowColor(section.overallResults.failures <= 0);
@@ -250,7 +250,7 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::DisplayTestNode(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::DisplayTestNode(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		SetRowColor(testCase.overallResult.success);
@@ -282,7 +282,7 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::DisplayTestNode(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::DisplayTestNode(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		SetRowColor(result.overallResultsCases.failures <= 0);
@@ -310,7 +310,7 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::DisplayTestNode(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::DisplayTestNode(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		for (const TestResult& result : results)
 		{
@@ -318,7 +318,7 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::ColoredTextIfValid(bool condition, ImVec4 color, int value)
+	void ModuleManagerPanel::ColoredTextIfValid(bool condition, ImVec4 color, int value)
 	{
 		if (condition)
 		{
@@ -332,7 +332,7 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::SetRowColor(bool condition)
+	void ModuleManagerPanel::SetRowColor(bool condition)
 	{
 		if (condition)
 		{
@@ -344,9 +344,8 @@ namespace hdn
 		}
 	}
 
-	void HMMImgui::Draw()
+	void ModuleManagerPanel::OnUpdate(f32 dt)
 	{
-		ImGui::Begin("hmm");
 		if (ImGui::Button("Run All Tests"))
 		{
 			// 1. Run build_test_projects.py
@@ -539,7 +538,5 @@ namespace hdn
 
 			ImGui::EndTable();
 		}
-
-		ImGui::End();
 	}
 }

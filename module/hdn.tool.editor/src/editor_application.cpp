@@ -1,28 +1,19 @@
 #include "editor_application.h"
 
-#include "keyboard_movement_controller.h"
-#include "camera.h"
-
 #include "ecs/components/transform_component.h"
 #include "ecs/components/color_component.h"
 #include "ecs/components/point_light_component.h"
 #include "ecs/components/physics_component.h"
 #include "ecs/components/model_component.h"
 
-#include "ecs/systems/simple_render_system.h"
-#include "ecs/systems/point_light_system.h"
-#include "ecs/systems/physics_gameobject_system.h"
-#include "ecs/systems/update_transform_system.h"
-#include "ecs/systems/update_script_system.h"
-
 #include "ecs/scripts/simple_log_script.h"
 #include "ecs/scripts/rotate_z_script.h"
 
-#include "plugins/editor/editor.h"
-#include "plugins/hmm/hmm_imgui.h"
-#include "plugins/idaes/idaes_imgui.h"
+#include "panel/editor_panel_outliner.h"
+#include "panel/editor_panel_module_manager.h"
+#include "panel/editor_panel_ideation_manager.h"
+#include "panel/editor_panel_performance.h"
 
-#include "r_vk_imgui.h"
 #include "r_vk_buffer.h"
 
 #include "core/core.h"
@@ -43,6 +34,11 @@ namespace hdn
 		LoadGameObjects();
 
 		m_EcsWorld.set_threads(std::thread::hardware_concurrency());
+
+		Register<OutlinerPanel>(&m_EcsWorld);
+		Register<ModuleManagerPanel>();
+		Register<IdeationManagerPanel>();
+		Register<PerformancePanel>();
 	}
 
 	EditorApplication::~EditorApplication()
@@ -52,73 +48,57 @@ namespace hdn
 
 	void EditorApplication::Run()
 	{
-		vector<Scope<VulkanBuffer>> uboBuffers(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
-		for (int i = 0;i < uboBuffers.size(); i++)
+		for (int i = 0;i < m_UboBuffers.size(); i++)
 		{
-			uboBuffers[i] = CreateScope<VulkanBuffer>(
+			m_UboBuffers[i] = CreateScope<VulkanBuffer>(
 				&m_Device,
 				sizeof(GlobalUbo),
 				1,
 				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
 			);
-			uboBuffers[i]->Map();
+			m_UboBuffers[i]->Map();
 		}
 
-		auto globalSetLayout = VulkanDescriptorSetLayout::Builder(m_Device)
+		m_GlobalSetLayout = VulkanDescriptorSetLayout::Builder(m_Device)
 			.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
 			.Build();
 
-		vector<VkDescriptorSet> globalDescriptorSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT); // One descriptor set per frame
-		for (int i = 0;i < globalDescriptorSets.size(); i++)
+		for (int i = 0;i < m_GlobalDescriptorSets.size(); i++)
 		{
-			auto bufferInfo = uboBuffers[i]->DescriptorInfo();
-			VulkanDescriptorWriter(*globalSetLayout, *m_GlobalPool)
+			auto bufferInfo = m_UboBuffers[i]->DescriptorInfo();
+			VulkanDescriptorWriter(*m_GlobalSetLayout, *m_GlobalPool)
 				.WriteBuffer(0, &bufferInfo)
-				.Build(globalDescriptorSets[i]);
+				.Build(m_GlobalDescriptorSets[i]);
 		}
 
-		UpdateTransformSystem updateTransformSystem;
-		UpdateScriptSystem updateScriptSystem;
-		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
-		PointLightSystem pointLightSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
-		PhysicsGameObjectSystem physicsGameObjectSystem;
-		HDNCamera camera{};
+		m_SimpleRenderSystem.Init(&m_Device, m_Renderer.GetSwapChainRenderPass(), m_GlobalSetLayout->GetDescriptorSetLayout());
+		m_PointLightSystem.Init(&m_Device, m_Renderer.GetSwapChainRenderPass(), m_GlobalSetLayout->GetDescriptorSetLayout());
 
-		auto viewerObject = HDNGameObject::CreateGameObject(m_EcsWorld);
+		m_ViewerObject = HDNGameObject::CreateGameObject(m_EcsWorld);
 		TransformComponent transformC;
 		transformC.translation.z = -2.5f;
-		viewerObject.GetEntity().set(transformC);
-
-		KeyboardMovementController cameraController{};
+		m_ViewerObject.GetEntity().set(transformC);
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
-#if USING(HDN_DEBUG)
-		ImguiSystem imguiSystem;
-		
-		Scope<VulkanDescriptorPool> imguiDescriptorPool = VulkanDescriptorPool::Builder(m_Device)
+		m_ImguiDescriptorPool = VulkanDescriptorPool::Builder(m_Device)
 			.SetPoolFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
 			.SetMaxSets(1)
 			.AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
 			.Build();
 		
-		QueueFamilyIndices queueFamilyIndices = m_Device.FindPhysicalQueueFamilies();
-		imguiSystem.Init(
+		m_QueueFamilyIndices = m_Device.FindPhysicalQueueFamilies();
+		m_ImguiSystem.Init(
 			m_Window.GetGLFWWindow(),
 			m_Device.GetSurface(),
 			m_Device.GetInstance(),
 			m_Device.GetPhysicalDevice(),
 			m_Device.GetDevice(),
-			queueFamilyIndices.graphicsFamily,
+			m_QueueFamilyIndices.graphicsFamily,
 			m_Device.GetGraphicsQueue(),
-			imguiDescriptorPool->GetDescriptor()
+			m_ImguiDescriptorPool->GetDescriptor()
 		);
-
-		// IdaesImgui idaesUI;
-		HMMImgui hmmUI;
-		Editor editor;
-#endif
 
 		while (!m_Window.ShouldClose())
 		{
@@ -130,13 +110,13 @@ namespace hdn
 
 			frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 
-			cameraController.MoveInPlaneXZ(m_Window.GetGLFWWindow(), frameTime, viewerObject);
+			m_CameraController.MoveInPlaneXZ(m_Window.GetGLFWWindow(), frameTime, m_ViewerObject);
 
-			TransformComponent* viewerObjectTransformC = viewerObject.GetMut<TransformComponent>();
-			camera.SetViewYXZ(viewerObjectTransformC->translation, viewerObjectTransformC->rotation);
+			TransformComponent* viewerObjectTransformC = m_ViewerObject.GetMut<TransformComponent>();
+			m_Camera.SetViewYXZ(viewerObjectTransformC->translation, viewerObjectTransformC->rotation);
 
 			f32 aspect = m_Renderer.GetAspectRatio();
-			camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
+			m_Camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
 
 			if (auto commandBuffer = m_Renderer.BeginFrame())
 			{
@@ -145,48 +125,49 @@ namespace hdn
 				frameInfo.frameIndex = frameIndex;
 				frameInfo.frameTime = frameTime;
 				frameInfo.commandBuffer = commandBuffer;
-				frameInfo.camera = &camera;
-				frameInfo.globalDescriptorSet = globalDescriptorSets[frameIndex];
+				frameInfo.camera = &m_Camera;
+				frameInfo.globalDescriptorSet = m_GlobalDescriptorSets[frameIndex];
 				frameInfo.ecsWorld = &m_EcsWorld;
 
 				// update
 				GlobalUbo ubo{};
-				ubo.projection = camera.GetProjection();
-				ubo.view = camera.GetView();
-				ubo.inverseView = camera.GetInverseView();
+				ubo.projection = m_Camera.GetProjection();
+				ubo.view = m_Camera.GetView();
+				ubo.inverseView = m_Camera.GetInverseView();
 
-				updateTransformSystem.Update(frameInfo);
-				updateScriptSystem.Update(frameInfo);
-				pointLightSystem.Update(frameInfo, ubo);
+				m_UpdateTransformSystem.Update(frameInfo);
+				m_UpdateScriptSystem.Update(frameInfo);
+				m_PointLightSystem.Update(frameInfo, ubo);
 				m_PhysicsWorld.Update(frameTime);
-				physicsGameObjectSystem.Update(frameInfo);
+				m_PhysicsGameObjectSystem.Update(frameInfo);
 
-				uboBuffers[frameIndex]->WriteToBuffer((void*)&ubo);
-				uboBuffers[frameIndex]->Flush();
+				m_UboBuffers[frameIndex]->WriteToBuffer((void*)&ubo);
+				m_UboBuffers[frameIndex]->Flush();
 
 				// render
 				m_Renderer.BeginSwapChainRenderPass(commandBuffer);
 
 				// Order Here Matters
-				simpleRenderSystem.RenderGameObjects(frameInfo);
-				pointLightSystem.Render(frameInfo);
+				m_SimpleRenderSystem.RenderGameObjects(frameInfo);
+				m_PointLightSystem.Render(frameInfo);
 
-#if USING(HDN_DEBUG)
-				imguiSystem.BeginFrame();
-
-				ImGui::Begin("Hello, world!");
-				ImGui::Text("This is some useful text.");
-				ImGui::Text("dt: %.4f", frameTime * 1000);
-				ImGui::End();
+				m_ImguiSystem.BeginFrame();
 
 				// ImGui::ShowDemoWindow();
-				// idaesUI.Draw();
-				hmmUI.Draw();
-				editor.RenderEntityTable(m_EcsWorld);
 
+				for (const auto& panel : m_Panels)
+				{
+					if (!panel->Enabled())
+					{
+						continue;
+					}
+					panel->Begin();
+					panel->OnUpdate(frameInfo.frameTime);
+					panel->End();
+				}
 
-				imguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
-#endif
+				m_ImguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
+
 				m_Renderer.EndSwapChainRenderPass(commandBuffer);
 
 				m_Renderer.EndFrame();

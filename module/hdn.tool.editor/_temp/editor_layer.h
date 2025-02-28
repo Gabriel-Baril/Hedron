@@ -42,5 +42,5 @@ namespace hdn
 
 	private:
 		vector<Ref<IPanel>> m_Panels;
-	}
+	};
 }

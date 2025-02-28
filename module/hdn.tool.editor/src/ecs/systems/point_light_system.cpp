@@ -19,10 +19,8 @@ namespace hdn
 	};
 
 	PointLightSystem::PointLightSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
-		: m_Device{ device }
 	{
-		CreatePipelineLayout(globalSetLayout);
-		CreatePipeline(renderPass);
+		Init(device, renderPass, globalSetLayout);
 	}
 
 	PointLightSystem::~PointLightSystem()

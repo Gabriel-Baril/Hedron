@@ -1,4 +1,4 @@
-﻿#include "editor.h"
+﻿#include "editor_panel_outliner.h"
 #include "core/stl/unordered_map.h"
 
 #include "ecs/components/transform_component.h"
@@ -21,12 +21,7 @@ namespace hdn
 		return componentIcons.contains(componentName) ? componentIcons[componentName] : "❓";
 	}
 
-
-	void Editor::Init()
-	{
-	}
-
-	void Editor::DrawEntityTree(flecs::entity entity, flecs::world& ecs)
+	void OutlinerPanel::DrawEntityTree(flecs::entity entity, flecs::world& ecs)
 	{
 		if (!entity.is_valid()) return;
 		ImGui::TableNextRow();
@@ -69,17 +64,17 @@ namespace hdn
 		}
 	}
 
-	void Editor::RenderEntityTable(flecs::world& ecs)
+	void OutlinerPanel::OnUpdate(f32 dt)
 	{
 		if (ImGui::BeginTable("EntityTable", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
 			ImGui::TableSetupColumn("Entity", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("Components", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableHeadersRow();
 
-			auto query = ecs.query<TransformComponent>();
+			auto query = m_Ecs->query<TransformComponent>();
 			query.each([&](flecs::entity e, TransformComponent& transformC) {
 				if (!e.parent().is_valid()) {  // Only render root entities
-					DrawEntityTree(e, ecs);
+					DrawEntityTree(e, *m_Ecs);
 				}
 			});
 			ImGui::EndTable();

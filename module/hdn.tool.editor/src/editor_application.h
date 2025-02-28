@@ -12,6 +12,19 @@
 
 #include "core/application/application.h"
 
+#include "panel/editor_panel.h"
+
+// ---
+#include "keyboard_movement_controller.h"
+#include "camera.h"
+#include "ecs/systems/simple_render_system.h"
+#include "ecs/systems/point_light_system.h"
+#include "ecs/systems/physics_gameobject_system.h"
+#include "ecs/systems/update_transform_system.h"
+#include "ecs/systems/update_script_system.h"
+#include "r_vk_imgui.h"
+// ---
+
 namespace hdn
 {
 	class EditorApplication : public IApplication
@@ -25,6 +38,23 @@ namespace hdn
 		EditorApplication(const EditorApplication&) = delete;
 		EditorApplication& operator=(const EditorApplication&) = delete;
 
+		template<typename T, typename... Args>
+		T* Register(Args&&... args)
+		{
+			m_Panels.push_back(CreateRef<T>(std::forward<Args>(args)...));
+			return static_cast<T*>(m_Panels.back().get());
+		}
+
+		template<typename T>
+		void Unregister()
+		{
+			// TODO: Unregister layer of the same type (The layer type is defined by the class type)
+		}
+
+		void Unregister(int id)
+		{
+			// TODO: Unregister layer by it's id
+		}
 		void Run();
 	private:
 		void LoadGameObjects();
@@ -39,5 +69,27 @@ namespace hdn
 		PhysicsWorld m_PhysicsWorld;
 
 		flecs::world m_EcsWorld;
+
+		vector<Ref<IEditorPanel>> m_Panels;
+
+		// ------------
+		vector<Scope<VulkanBuffer>> m_UboBuffers{ VulkanSwapChain::MAX_FRAMES_IN_FLIGHT };
+		Scope<VulkanDescriptorSetLayout> m_GlobalSetLayout;
+		vector<VkDescriptorSet> m_GlobalDescriptorSets{ VulkanSwapChain::MAX_FRAMES_IN_FLIGHT }; // One descriptor set per frame
+
+		UpdateTransformSystem m_UpdateTransformSystem{};
+		UpdateScriptSystem m_UpdateScriptSystem{};
+		SimpleRenderSystem m_SimpleRenderSystem{};
+		PointLightSystem m_PointLightSystem{};
+		PhysicsGameObjectSystem m_PhysicsGameObjectSystem{};
+
+		HDNCamera m_Camera{};
+
+		HDNGameObject m_ViewerObject;
+		KeyboardMovementController m_CameraController{};
+
+		ImguiSystem m_ImguiSystem;
+		Scope<VulkanDescriptorPool> m_ImguiDescriptorPool;
+		QueueFamilyIndices m_QueueFamilyIndices;
 	};
 }
