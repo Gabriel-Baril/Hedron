@@ -107,7 +107,7 @@ namespace hdn
 
 		if (changed)
 		{
-
+			component.worldMatrix = component.Mat4();
 		}
 	}
 

@@ -5,11 +5,9 @@ int main()
 	using namespace hdn;
 	Log_Init();
 
-	hdn::EditorApplication app{};
-
 	try
 	{
-		app.Run();
+		hdn::EditorApplication::Get().Run();
 	}
 	catch (const std::exception& e)
 	{

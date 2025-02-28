@@ -107,5 +107,4 @@ namespace hdn {
 		const vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 		const vector<const char*> m_DeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	};
-
 }

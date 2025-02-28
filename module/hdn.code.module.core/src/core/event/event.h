@@ -5,7 +5,7 @@
 #define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return type; }\
 								virtual EventType GetEventType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
-#define EVENT_CLASS_CATEGORY(category) virtual utype<EventCategory> GetCategoryFlags() const override { return underlying(category); }
+#define EVENT_CLASS_CATEGORY(category) virtual utype<EventCategory> GetCategoryFlags() const override { return Underlying(category); }
 
 namespace hdn
 {

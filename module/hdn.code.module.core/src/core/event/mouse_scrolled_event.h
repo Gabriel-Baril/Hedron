@@ -2,7 +2,7 @@
 
 #include "event.h"
 
-namespace hedron
+namespace hdn
 {
 	class MouseScrolledEvent : public Event
 	{

@@ -8,8 +8,6 @@ namespace hdn
 	{
 	public:
 		static Editor& Get();
-
-
 		bool HasEntitySelected();
 		void SetEntitySelected(flecs::entity entity);
 		flecs::entity GetEntitySelected();

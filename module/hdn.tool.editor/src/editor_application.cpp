@@ -20,12 +20,23 @@
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
 
+#include "input/input.h"
+
 namespace hdn
 {
 	static constexpr f32 MAX_FRAME_TIME = 0.5f;
 
+	EditorApplication& EditorApplication::Get()
+	{
+		static EditorApplication s_Instance{};
+		return s_Instance;
+	}
+
 	EditorApplication::EditorApplication()
 	{
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+		m_EditorCamera.SetViewportSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+
 		m_GlobalPool = VulkanDescriptorPool::Builder(m_Device)
 			.SetMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
 			.AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
@@ -77,11 +88,6 @@ namespace hdn
 		m_SimpleRenderSystem.Init(&m_Device, m_Renderer.GetSwapChainRenderPass(), m_GlobalSetLayout->GetDescriptorSetLayout());
 		m_PointLightSystem.Init(&m_Device, m_Renderer.GetSwapChainRenderPass(), m_GlobalSetLayout->GetDescriptorSetLayout());
 
-		m_ViewerObject = HDNGameObject::CreateGameObject(m_EcsWorld);
-		TransformComponent transformC;
-		transformC.translation.z = -2.5f;
-		m_ViewerObject.GetEntity().set(transformC);
-
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
 		m_ImguiDescriptorPool = VulkanDescriptorPool::Builder(m_Device)
@@ -107,18 +113,18 @@ namespace hdn
 			glfwPollEvents();
 
 			auto newTime = std::chrono::high_resolution_clock::now();
-			float frameTime = std::chrono::duration<f32, std::chrono::seconds::period>(newTime - currentTime).count();
+			Timestep frameTime = std::chrono::duration<f32, std::chrono::seconds::period>(newTime - currentTime).count();
 			currentTime = newTime;
 
-			frameTime = glm::min(frameTime, MAX_FRAME_TIME);
+			frameTime = glm::min(frameTime.Seconds(), MAX_FRAME_TIME);
 
-			m_CameraController.MoveInPlaneXZ(m_Window.GetGLFWWindow(), frameTime, m_ViewerObject);
-
-			TransformComponent* viewerObjectTransformC = m_ViewerObject.GetMut<TransformComponent>();
-			m_Camera.SetViewYXZ(viewerObjectTransformC->translation, viewerObjectTransformC->rotation);
-
-			f32 aspect = m_Renderer.GetAspectRatio();
-			m_Camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
+			EditorCamera::UpdateState state;
+			state.LeftAltPressed = Input::GetKey(KeyCode::LeftAlt);
+			state.MouseButtonLeftPressed = Input::GetMouseButton(MouseButton::MouseButtonLeft);
+			state.MouseButtonMiddlePressed = Input::GetMouseButton(MouseButton::MouseButtonMiddle);
+			state.MouseButtonRightPressed = Input::GetMouseButton(MouseButton::MouseButtonRight);
+			state.MousePosition = Input::GetMousePosition();
+			m_EditorCamera.OnUpdate(frameTime, state);
 
 			if (auto commandBuffer = m_Renderer.BeginFrame())
 			{
@@ -127,15 +133,15 @@ namespace hdn
 				frameInfo.frameIndex = frameIndex;
 				frameInfo.frameTime = frameTime;
 				frameInfo.commandBuffer = commandBuffer;
-				frameInfo.camera = &m_Camera;
+				frameInfo.camera = &m_EditorCamera;
 				frameInfo.globalDescriptorSet = m_GlobalDescriptorSets[frameIndex];
 				frameInfo.ecsWorld = &m_EcsWorld;
 
 				// update
 				GlobalUbo ubo{};
-				ubo.projection = m_Camera.GetProjection();
-				ubo.view = m_Camera.GetView();
-				ubo.inverseView = m_Camera.GetInverseView();
+				ubo.projection = m_EditorCamera.GetProjectionMatrix();
+				ubo.view = m_EditorCamera.GetViewMatrix();
+				ubo.inverseView = m_EditorCamera.GetInverseViewMatrix();
 
 				m_UpdateTransformSystem.Update(frameInfo);
 				m_UpdateScriptSystem.Update(frameInfo);

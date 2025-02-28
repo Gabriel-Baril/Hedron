@@ -16,7 +16,6 @@
 
 // ---
 #include "keyboard_movement_controller.h"
-#include "camera.h"
 #include "ecs/systems/simple_render_system.h"
 #include "ecs/systems/point_light_system.h"
 #include "ecs/systems/physics_gameobject_system.h"
@@ -25,14 +24,19 @@
 #include "r_vk_imgui.h"
 // ---
 
+#include "editor_camera.h"
+
 namespace hdn
 {
 	class EditorApplication : public IApplication
 	{
 	public:
-		static constexpr u32 WIDTH = 800;
-		static constexpr u32 HEIGHT = 600;
+		static constexpr u32 DEFAULT_WINDOW_WIDTH = 1280;
+		static constexpr u32 DEFAULT_WINDOW_HEIGHT = 720;
 	public:
+		static EditorApplication& Get();
+		VulkanWindow& GetWindow() { return m_Window; }
+
 		EditorApplication();
 		virtual ~EditorApplication();
 		EditorApplication(const EditorApplication&) = delete;
@@ -59,7 +63,7 @@ namespace hdn
 	private:
 		void LoadGameObjects();
 	private:
-		VulkanWindow m_Window{ WIDTH, HEIGHT, "First App" };
+		VulkanWindow m_Window{ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, "First App" };
 		VulkanDevice m_Device{ m_Window };
 		VulkanRenderer m_Renderer{ &m_Window, &m_Device };
 
@@ -83,10 +87,7 @@ namespace hdn
 		PointLightSystem m_PointLightSystem{};
 		PhysicsGameObjectSystem m_PhysicsGameObjectSystem{};
 
-		HDNCamera m_Camera{};
-
-		HDNGameObject m_ViewerObject;
-		KeyboardMovementController m_CameraController{};
+		EditorCamera m_EditorCamera{};
 
 		ImguiSystem m_ImguiSystem;
 		Scope<VulkanDescriptorPool> m_ImguiDescriptorPool;
