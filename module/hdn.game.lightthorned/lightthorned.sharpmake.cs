@@ -11,35 +11,6 @@ public class LightthornedProject : BaseCppProject
         AddTargets(TargetUtil.DefaultTarget);
     }
 
-    public void AddLib(Project.Configuration conf, string sourceLibraryPath, string destinationLibraryPath, string libName, bool includeDebugArtefacts, bool includeDll)
-    {
-        string libFile = $"{libName}.lib";
-        string sourceLibPath = Path.Combine(sourceLibraryPath, libFile);
-        conf.LibraryFiles.Add(sourceLibPath);
-
-        if (includeDll)
-        {
-            string dllFile = $"{libName}.dll";
-            string sourceDllPath = Path.Combine(sourceLibraryPath, dllFile);
-            conf.EventPostBuild.Add($"xcopy /Y /Q \"{sourceDllPath}\" \"{destinationLibraryPath}\"");
-
-            if (includeDebugArtefacts)
-            {
-                string expFile = $"{libName}.exp";
-                string sourceExpPath = Path.Combine(sourceLibraryPath, expFile);
-                conf.EventPostBuild.Add($"xcopy /Y /Q \"{sourceExpPath}\" \"{destinationLibraryPath}\"");
-
-                string mapFile = $"{libName}.map";
-                string sourceMapPath = Path.Combine(sourceLibraryPath, mapFile);
-                conf.EventPostBuild.Add($"xcopy /Y /Q \"{sourceMapPath}\" \"{destinationLibraryPath}\"");
-
-                string pdbFile = $"{libName}.pdb";
-                string sourcePdbPath = Path.Combine(sourceLibraryPath, pdbFile);
-                conf.EventPostBuild.Add($"xcopy /Y /Q \"{sourcePdbPath}\" \"{destinationLibraryPath}\"");
-            }
-        }
-    }
-
     [Configure]
     public new void ConfigureAll(Project.Configuration conf, Target target)
     {
@@ -96,17 +67,5 @@ public class LightthornedProject : BaseCppProject
         conf.AddPublicDependency<GLFWProject>(target);
         conf.AddPublicDependency<ImguiProject>(target);
         conf.AddPublicDependency<FlecsProject>(target);
-
-        // TODO: Ideon specific dependencies, remove once we have a proper way to have an independent ui setup for tools
-        conf.AddPublicDependency<ConfigProject>(target);
-        conf.AddPublicDependency<PugiXMLProject>(target);
-        conf.AddPublicDependency<TinyProcessLibraryProject>(target);
-        conf.AddPublicDependency<INIHProject>(target);
-        conf.AddPublicDependency<CLI11Project>(target);
-        conf.AddPublicDependency<FmtProject>(target);
-
-        // TODO: Idaes specific dependencies, don't forget to remove those once Idaes has it's own proper setup
-        // TODO: Don't forget to also move the ideations folder during the migration
-        conf.AddPublicDependency<NlohmannJsonProject>(target);
     }
 }

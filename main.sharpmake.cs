@@ -12,14 +12,14 @@ public static class Constants
     public const string MAIN_SHARPMAKE_FILE = "main.sharpmake.cs";
 
     public const string EXTERNAL_VS_CATEGORY = "_external";
-    public const string MODULE_VS_CATEGORY = "module";
+    public const string MODULE_VS_CATEGORY = "_module";
     public const string TEST_VS_CATEGORY = "test";
     public const string DATA_VS_CATEGORY = "data";
     public const string GAME_VS_CATEGORY = "game";
     public const string TOOL_VS_CATEGORY = "tool";
     public const string PLUGIN_VS_CATEGORY = "plugin";
     public const string EXPERIMENTAL_VS_CATEGORY = "experimental";
-    
+
     public const string VULKAN_SDK_ENV = "VULKAN_SDK";
     public const string PHYSX_SDK_ENV = "PHYSX_SDK";
 
@@ -81,6 +81,35 @@ public abstract class BaseCppProject : Project
                 break;
         }
     }
+
+    public void AddLib(Project.Configuration conf, string sourceLibraryPath, string destinationLibraryPath, string libName, bool includeDebugArtefacts, bool includeDll)
+    {
+        string libFile = $"{libName}.lib";
+        string sourceLibPath = Path.Combine(sourceLibraryPath, libFile);
+        conf.LibraryFiles.Add(sourceLibPath);
+
+        if (includeDll)
+        {
+            string dllFile = $"{libName}.dll";
+            string sourceDllPath = Path.Combine(sourceLibraryPath, dllFile);
+            conf.EventPostBuild.Add($"xcopy /Y /Q \"{sourceDllPath}\" \"{destinationLibraryPath}\"");
+
+            if (includeDebugArtefacts)
+            {
+                string expFile = $"{libName}.exp";
+                string sourceExpPath = Path.Combine(sourceLibraryPath, expFile);
+                conf.EventPostBuild.Add($"xcopy /Y /Q \"{sourceExpPath}\" \"{destinationLibraryPath}\"");
+
+                string mapFile = $"{libName}.map";
+                string sourceMapPath = Path.Combine(sourceLibraryPath, mapFile);
+                conf.EventPostBuild.Add($"xcopy /Y /Q \"{sourceMapPath}\" \"{destinationLibraryPath}\"");
+
+                string pdbFile = $"{libName}.pdb";
+                string sourcePdbPath = Path.Combine(sourceLibraryPath, pdbFile);
+                conf.EventPostBuild.Add($"xcopy /Y /Q \"{sourcePdbPath}\" \"{destinationLibraryPath}\"");
+            }
+        }
+    }
 }
 
 public abstract class BaseCppTestProject : BaseCppProject
@@ -99,10 +128,9 @@ public static class Main
     public static void SharpmakeMain(Sharpmake.Arguments args)
     {
         // C++ Solution
-        args.Generate<ToolsSolution>();
         args.Generate<PlaygroundSolution>();
         args.Generate<TestsSolution>();
-        args.Generate<LightthornedSolution>();
+        args.Generate<DevSolution>();
         args.Generate<AllSolution>();
 
         // C# Solutions

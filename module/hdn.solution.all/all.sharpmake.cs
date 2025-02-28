@@ -61,7 +61,5 @@ public class AllSolution : Solution
         conf.AddProject<LightthornedProject>(target);
         conf.AddProject<ArchiveProject>(target);
         conf.AddProject<EditorProject>(target);
-        conf.AddProject<HMMProject>(target);
-        conf.AddProject<IdaesProject>(target);
     }
 }

@@ -1,4 +1,4 @@
-#include "lightthorned_application.h"
+#include "editor_application.h"
 
 #include "keyboard_movement_controller.h"
 #include "camera.h"
@@ -18,6 +18,10 @@
 #include "ecs/scripts/simple_log_script.h"
 #include "ecs/scripts/rotate_z_script.h"
 
+#include "plugins/editor/editor.h"
+#include "plugins/hmm/hmm_imgui.h"
+#include "plugins/idaes/idaes_imgui.h"
+
 #include "r_vk_imgui.h"
 #include "r_vk_buffer.h"
 
@@ -28,7 +32,7 @@ namespace hdn
 {
 	static constexpr f32 MAX_FRAME_TIME = 0.5f;
 
-	LightthornedApplication::LightthornedApplication()
+	EditorApplication::EditorApplication()
 	{
 		m_GlobalPool = VulkanDescriptorPool::Builder(m_Device)
 			.SetMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
@@ -41,12 +45,12 @@ namespace hdn
 		m_EcsWorld.set_threads(std::thread::hardware_concurrency());
 	}
 
-	LightthornedApplication::~LightthornedApplication()
+	EditorApplication::~EditorApplication()
 	{
 		m_PhysicsWorld.Shutdown();
 	}
 
-	void LightthornedApplication::Run()
+	void EditorApplication::Run()
 	{
 		vector<Scope<VulkanBuffer>> uboBuffers(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0;i < uboBuffers.size(); i++)
@@ -110,6 +114,10 @@ namespace hdn
 			m_Device.GetGraphicsQueue(),
 			imguiDescriptorPool->GetDescriptor()
 		);
+
+		// IdaesImgui idaesUI;
+		HMMImgui hmmUI;
+		Editor editor;
 #endif
 
 		while (!m_Window.ShouldClose())
@@ -171,6 +179,12 @@ namespace hdn
 				ImGui::Text("dt: %.4f", frameTime * 1000);
 				ImGui::End();
 
+				// ImGui::ShowDemoWindow();
+				// idaesUI.Draw();
+				hmmUI.Draw();
+				editor.RenderEntityTable(m_EcsWorld);
+
+
 				imguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 #endif
 				m_Renderer.EndSwapChainRenderPass(commandBuffer);
@@ -182,7 +196,7 @@ namespace hdn
 		vkDeviceWaitIdle(m_Device.GetDevice());
 	}
 
-	void LightthornedApplication::LoadGameObjects()
+	void EditorApplication::LoadGameObjects()
 	{
 		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
 

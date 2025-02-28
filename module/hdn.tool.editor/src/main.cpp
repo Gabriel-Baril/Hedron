@@ -1,10 +1,21 @@
-#include "core/core.h"
+#include "editor_application.h"
 
 int main()
 {
 	using namespace hdn;
 	Log_Init();
 
-	HINFO("Hello Poly");
-	return 0;
+	hdn::EditorApplication app{};
+
+	try
+	{
+		app.Run();
+	}
+	catch (const std::exception& e)
+	{
+		HERR("{0}", e.what());
+		return EXIT_FAILURE;
+	}
+
+	return EXIT_SUCCESS;
 }
