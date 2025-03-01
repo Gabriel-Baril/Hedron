@@ -27,6 +27,8 @@
 #include "editor_camera.h"
 #include "core/event/events.h"
 
+#include "panel/editor_panel_viewport.h"
+
 namespace hdn
 {
 	class EditorApplication : public IApplication
@@ -81,6 +83,7 @@ namespace hdn
 		flecs::world m_EcsWorld;
 
 		vector<Ref<IEditorPanel>> m_Panels;
+		ViewportPanel* m_ViewportPanel = nullptr;
 
 		// ------------
 		vector<Scope<VulkanBuffer>> m_UboBuffers{ VulkanSwapChain::MAX_FRAMES_IN_FLIGHT };

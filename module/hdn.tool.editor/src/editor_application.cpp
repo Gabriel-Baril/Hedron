@@ -81,6 +81,9 @@ namespace hdn
 		Register<ModuleManagerPanel>();
 		Register<IdeationManagerPanel>();
 		Register<PerformancePanel>();
+		m_ViewportPanel = Register<ViewportPanel>();
+		m_ViewportPanel->CreateOffscreenRenderTarget(m_Device.GetDevice(), m_Device.GetPhysicalDevice(), m_Window.GetExtent(), m_Renderer.GetSwapChainRenderPass());
+		m_ViewportPanel->CreateDescriptorSet(m_Device.GetDevice());
 	}
 
 	EditorApplication::~EditorApplication()
@@ -185,8 +188,15 @@ namespace hdn
 				m_Renderer.BeginSwapChainRenderPass(commandBuffer);
 
 				// Order Here Matters
+				m_ViewportPanel->TransitionImage(commandBuffer, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+				
 				m_SimpleRenderSystem.RenderGameObjects(frameInfo);
 				m_PointLightSystem.Render(frameInfo);
+
+				m_ViewportPanel->TransitionImage(commandBuffer, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+				// Render Scene to texture
+				m_ViewportPanel->UpdateDescriptorSet(m_Device.GetDevice(), frameIndex);
 
 				m_ImguiSystem.BeginFrame();
 
