@@ -7,19 +7,12 @@
 
 namespace hdn
 {
-	class HDNGameObject
+	// Abstraction layer over a flecs::entity
+	class Entity
 	{
 	public:
 		using id_t = flecs::entity_t;
 
-		static HDNGameObject CreateGameObject(flecs::world& ecs, const char* name = nullptr)
-		{
-			flecs::entity e = ecs.entity(name);
-			return HDNGameObject{ e };
-		}
-
-		static HDNGameObject MakePointLight(flecs::world& ecs, f32 intensity = 10.0f, f32 radius = 0.1f, vec3f32 color = vec3f32{1.0f});
-		
 		template<typename T>
 		const T* Get()
 		{
@@ -64,9 +57,9 @@ namespace hdn
 		{
 			return m_Entity.name();
 		}
-		HDNGameObject() : m_Entity{ flecs::entity::null() } {}
+		Entity() : m_Entity{ flecs::entity::null() } {}
+		Entity(flecs::entity e) : m_Entity{ e } {}
 	private:
-		HDNGameObject(flecs::entity e) : m_Entity{ e } {}
 		flecs::entity m_Entity;
 	};
 }

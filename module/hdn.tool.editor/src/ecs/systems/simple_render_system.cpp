@@ -74,7 +74,7 @@ namespace hdn
 			0, nullptr
 		); // Low frequency descriptor sets needs to occupy the lowest index
 
-		auto query = frameInfo.ecsWorld->query<TransformComponent, ModelComponent>();
+		auto query = frameInfo.scene->World()->query<TransformComponent, ModelComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, ModelComponent& modelC) {
 
 			SimplePushConstantData push{};

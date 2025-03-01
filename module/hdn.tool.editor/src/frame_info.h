@@ -1,7 +1,8 @@
 #pragma once
 
 #include "editor_camera.h"
-#include "gameobject.h"
+#include "entity.h"
+#include "scene.h"
 
 #include "vulkan/vulkan.h"
 
@@ -33,6 +34,6 @@ namespace hdn
 		VkCommandBuffer commandBuffer;
 		EditorCamera* camera;
 		VkDescriptorSet globalDescriptorSet;
-		flecs::world* ecsWorld;
+		Scene* scene;
 	};
 }

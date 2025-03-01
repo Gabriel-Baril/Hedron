@@ -9,13 +9,12 @@ namespace hdn
 	class InspectorPanel : public IEditorPanel
 	{
 	public:
-		InspectorPanel(flecs::world* ecs)
-			: m_Ecs{ ecs }, IEditorPanel{ "inspector" }
+		InspectorPanel()
+			: IEditorPanel{ "inspector" }
 		{
 		}
 
 		void OnUpdate(f32 dt);
 	private:
-		flecs::world* m_Ecs = nullptr;
 	};
 }

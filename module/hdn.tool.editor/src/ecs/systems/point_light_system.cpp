@@ -70,7 +70,7 @@ namespace hdn
 		auto rotateLight = glm::rotate(mat4f32(1.0f), frameInfo.frameTime, { 0.0f, -1.0f, 0.0f });
 
 		int lightIndex = 0;
-		auto query = frameInfo.ecsWorld->query<TransformComponent, ColorComponent, PointLightComponent>();
+		auto query = frameInfo.scene->World()->query<TransformComponent, ColorComponent, PointLightComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, ColorComponent& colorC, PointLightComponent& pointLightC) {
 			assert(lightIndex < MAX_LIGHTS && "Point Light exceed maximum specified");
 			transformC.translation = vec3f32(rotateLight * vec4f32(transformC.translation, 1.0f));
@@ -87,7 +87,7 @@ namespace hdn
 	{
 		// Sort Lights
 		map<float, flecs::entity> sorted;
-		auto query = frameInfo.ecsWorld->query<TransformComponent, PointLightComponent>();
+		auto query = frameInfo.scene->World()->query<TransformComponent, PointLightComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, PointLightComponent& pointLightC) {
 			// Calculate Distance
 			auto offset = frameInfo.camera->GetPosition() - transformC.translation;

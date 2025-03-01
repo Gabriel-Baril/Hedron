@@ -3,7 +3,6 @@
 
 #include "r_vk_device.h"
 #include "r_vk_pipeline.h"
-#include "gameobject.h"
 #include "frame_info.h"
 
 #include "core/stl/vector.h"

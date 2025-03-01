@@ -3,7 +3,6 @@
 
 #include "r_vk_device.h"
 #include "r_vk_window.h"
-#include "gameobject.h"
 #include "r_vk_renderer.h"
 #include "r_vk_descriptors.h"
 
@@ -15,7 +14,6 @@
 #include "panel/editor_panel.h"
 
 // ---
-#include "keyboard_movement_controller.h"
 #include "ecs/systems/simple_render_system.h"
 #include "ecs/systems/point_light_system.h"
 #include "ecs/systems/physics_gameobject_system.h"
@@ -28,6 +26,8 @@
 #include "core/event/events.h"
 
 #include "panel/editor_panel_viewport.h"
+
+#include "scene.h"
 
 namespace hdn
 {
@@ -80,7 +80,8 @@ namespace hdn
 
 		PhysicsWorld m_PhysicsWorld;
 
-		flecs::world m_EcsWorld;
+		// flecs::world m_EcsWorld; // TODO: Replace
+		Ref<Scene> m_ActiveScene;
 
 		vector<Ref<IEditorPanel>> m_Panels;
 		ViewportPanel* m_ViewportPanel = nullptr;

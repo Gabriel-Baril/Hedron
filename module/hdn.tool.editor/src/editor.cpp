@@ -8,6 +8,16 @@ namespace hdn
 		return s_Instance;
 	}
 
+	void Editor::SetActiveScene(const Ref<Scene>& scene)
+	{
+		m_ActiveScene = scene;
+	}
+
+	Ref<Scene> Editor::GetActiveScene()
+	{
+		return m_ActiveScene;
+	}
+
 	bool Editor::HasEntitySelected()
 	{
 		return m_SelectedEntity != flecs::entity::null();

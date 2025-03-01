@@ -81,10 +81,12 @@ namespace hdn
 			ImGui::TableSetupColumn("Components", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableHeadersRow();
 
-			auto query = m_Ecs->query<TransformComponent>();
+			Ref<Scene> scene = Editor::Get().GetActiveScene();
+
+			auto query = scene->World()->query<TransformComponent>();
 			query.each([&](flecs::entity e, TransformComponent& transformC) {
 				if (!e.parent().is_valid()) {  // Only render root entities
-					DrawEntityTree(e, *m_Ecs);
+					DrawEntityTree(e, *scene->World());
 				}
 			});
 			ImGui::EndTable();

@@ -21,6 +21,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "input/input.h"
+#include "editor.h"
 
 namespace hdn
 {
@@ -61,6 +62,9 @@ namespace hdn
 
 	EditorApplication::EditorApplication()
 	{
+		m_ActiveScene = CreateScope<Scene>();
+		Editor::Get().SetActiveScene(m_ActiveScene);
+
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 		m_EditorCamera.SetViewportSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
@@ -72,12 +76,11 @@ namespace hdn
 			.Build();
 
 		m_PhysicsWorld.Init();
+
 		LoadGameObjects();
 
-		m_EcsWorld.set_threads(std::thread::hardware_concurrency());
-
-		Register<OutlinerPanel>(&m_EcsWorld);
-		Register<InspectorPanel>(&m_EcsWorld);
+		Register<OutlinerPanel>();
+		Register<InspectorPanel>();
 		Register<ModuleManagerPanel>();
 		Register<IdeationManagerPanel>();
 		Register<PerformancePanel>();
@@ -167,7 +170,7 @@ namespace hdn
 				frameInfo.commandBuffer = commandBuffer;
 				frameInfo.camera = &m_EditorCamera;
 				frameInfo.globalDescriptorSet = m_GlobalDescriptorSets[frameIndex];
-				frameInfo.ecsWorld = &m_EcsWorld;
+				frameInfo.scene = m_ActiveScene.get();
 
 				// update
 				GlobalUbo ubo{};
@@ -229,7 +232,7 @@ namespace hdn
 		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
 
 		{
-			auto flatVaseGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "Flat Vase Group");
+			auto flatVaseGroup = m_ActiveScene->Create("Flat Vase Group");
 			TransformComponent transformC;
 			flatVaseGroup.Set(transformC);
 
@@ -237,7 +240,7 @@ namespace hdn
 			{
 				std::string eName = fmt::format("Vase {}", i);
 
-				auto flatVase = HDNGameObject::CreateGameObject(m_EcsWorld, eName.c_str()); // TODO: Fix game object lifetime
+				auto flatVase = m_ActiveScene->Create(eName.c_str()); // TODO: Fix game object lifetime
 
 				TransformComponent transformC;
 				transformC.translation = { cos(i), -1 - (float)sin(i), sin(i) };
@@ -260,7 +263,7 @@ namespace hdn
 
 		{
 			hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/quad.obj");
-			auto floor = HDNGameObject::CreateGameObject(m_EcsWorld, "floor");
+			auto floor = m_ActiveScene->Create("floor");
 
 			TransformComponent transformC;
 			transformC.translation = { 0.0f, 2.0f, 0.0f };
@@ -283,7 +286,7 @@ namespace hdn
 
 		{
 			hdnModel = VulkanModel::CreateModelFromFbxFile(&m_Device, "models/cube.fbx"); // models/cube.fbx
-			auto cube = HDNGameObject::CreateGameObject(m_EcsWorld, "cube");
+			auto cube = m_ActiveScene->Create("cube");
 
 			TransformComponent transformC;
 			transformC.translation = { 0.0f, 0.0f, 0.0f };
@@ -305,13 +308,13 @@ namespace hdn
 				{1.f, 1.f, 1.f}
 			};
 
-			auto pointLightGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "pointLightGroup");
+			auto pointLightGroup = m_ActiveScene->Create("pointLightGroup");
 			TransformComponent transformC;
 			pointLightGroup.Set(transformC);
 
 			for (int i = 0; i < lightColors.size(); i++)
 			{
-				auto pointLight = HDNGameObject::MakePointLight(m_EcsWorld, 0.2f);
+				auto pointLight = m_ActiveScene->MakePointLight(0.2f);
 
 				ColorComponent* colorC = pointLight.GetMut<ColorComponent>();
 				colorC->color = lightColors[i];

@@ -6,7 +6,7 @@ namespace hdn
 {
 	void UpdateTransformSystem::Update(FrameInfo& frameInfo)
 	{
-		auto query = frameInfo.ecsWorld->query<TransformComponent>();
+		auto query = frameInfo.scene->World()->query<TransformComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC) {
 			// if (!transformC.Changed())
 			// {

@@ -33,7 +33,7 @@ namespace hdn
 	void PhysicsGameObjectSystem::Update(FrameInfo& frameInfo)
 	{
 
-		auto query = frameInfo.ecsWorld->query<TransformComponent, PhysicsComponent>();
+		auto query = frameInfo.scene->World()->query<TransformComponent, PhysicsComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, PhysicsComponent& physicsC) {
 			if (physicsC.physicsActor == nullptr)
 			{

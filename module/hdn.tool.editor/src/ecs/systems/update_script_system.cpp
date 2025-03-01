@@ -5,7 +5,7 @@ namespace hdn
 {
 	void UpdateScriptSystem::Update(FrameInfo& frameInfo)
 	{
-		auto query = frameInfo.ecsWorld->query<NativeScriptComponent>();
+		auto query = frameInfo.scene->World()->query<NativeScriptComponent>();
 		query.each([&](flecs::entity e, NativeScriptComponent& nativeScriptC) {
 			nativeScriptC.Update(frameInfo.frameTime);
 		});

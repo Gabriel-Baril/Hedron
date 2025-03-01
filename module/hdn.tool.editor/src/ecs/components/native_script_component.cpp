@@ -1,7 +1,5 @@
 #include "native_script_component.h"
 
-#include "gameobject.h"
-
 namespace hdn
 {
 
