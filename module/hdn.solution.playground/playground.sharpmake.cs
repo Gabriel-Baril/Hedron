@@ -26,6 +26,7 @@ public class PlaygroundSolution : Solution
         conf.AddProject<FileLoadingProject>(target);
         conf.AddProject<ListenDirectoryProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
+        conf.AddProject<StreamManipulationProject>(target);
 
         conf.SetStartupProject<HdefPlaygroundProject>();
     }

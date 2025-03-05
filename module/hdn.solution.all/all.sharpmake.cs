@@ -58,6 +58,7 @@ public class AllSolution : Solution
         conf.AddProject<HsonPlaygroundProject>(target);
         conf.AddProject<ListenDirectoryProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
+        conf.AddProject<StreamManipulationProject>(target);
         conf.AddProject<LightthornedProject>(target);
         conf.AddProject<ArchiveProject>(target);
         conf.AddProject<EditorProject>(target);

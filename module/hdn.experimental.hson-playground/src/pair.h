@@ -13,7 +13,7 @@ namespace hdn
 	template<>
 	struct hson_field_traits_t<Pair>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_payload;
+		static constexpr typename hson_field_t type = hson_field_t::hson_struct;
 		static void serialize( const Pair *data, u64 count, vector<byte> &out )
 		{
 			const byte *bytes = reinterpret_cast<const byte *>(data);

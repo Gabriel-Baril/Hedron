@@ -4,10 +4,27 @@
 
 namespace hdn
 {
+	enum class hson_field_flag_t : u32
+	{
+		hson_ref = BIT(0),
+		hson_lref = BIT(1),
+		hson_value = BIT(2),
+
+		hson_array = BIT(3),
+
+		hson_index_key = BIT(4),
+		hson_string_key = BIT(5),
+
+		hson_public = BIT(6),
+		hson_private = BIT(7)
+	};
+
 	enum class hson_field_t : u8
 	{
 		hson_undefined,
 		hson_object,
+		hson_struct,
+		hson_payload,
 		hson_i8,
 		hson_i16,
 		hson_i32,
@@ -18,8 +35,7 @@ namespace hdn
 		hson_u64,
 		hson_f32,
 		hson_f64,
-		hson_string,
-		hson_payload
+		hson_string
 	};
 
 	template<typename T>

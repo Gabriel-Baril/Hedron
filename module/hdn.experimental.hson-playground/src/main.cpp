@@ -30,6 +30,19 @@ int main()
 		def["model_ref"]				= hson::pack<u64>( modelRef );
 		def["packed_pair"]				= hson::pack( Pair{ 12, 56 } );
 
+		def["__type"] = hson::pack<hson_struct_hdef_type>( HDEF_MAP );
+		def["__version"] = hson::pack<hson_struct_u64>(12);
+		def["__tags"] = hson::array<hson_struct_string>(3);
+		def["__tags"][0] = hson::pack<hson_struct_string>("wip");
+		def["__tags"][1] = hson::pack<hson_struct_string>("dark");
+		def["__tags"][2] = hson::pack<hson_struct_string>("swamp");
+		def["__sources"] = hson::array<hson_object_asset_source>(1);
+		def["__sources"][0] = hson::pack<hson_object_asset_source>();
+		def["__sources"][0]["field"] = hson::pack<hson_struct_string>("data/pixels");
+		def["__sources"][0]["path"] = hson::pack<hson_struct_string>("path/to/raw_image_2.png");
+		def["__sources"][0]["source_hash"] = hson::pack<hson_struct_u64>(9837929990112112233);
+
+
 		def.write( out );
 	}
 	
