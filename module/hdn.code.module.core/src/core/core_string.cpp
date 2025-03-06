@@ -155,4 +155,12 @@ namespace hdn
 
 		return string(start, end + 1);
 	}
+	constexpr HDN_MODULE_CORE_API std::size_t strlen_ct(const char* str)
+	{
+		std::size_t length = 0;
+		while (str[length] != '\0') {
+			++length;
+		}
+		return length;
+	}
 }

@@ -22,7 +22,7 @@ public class HsonPlaygroundProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<CoreProject>(target);
-        conf.AddPublicDependency<HsonProject>(target);
+        conf.AddPublicDependency<HobjProject>(target);
         conf.AddPublicDependency<XXHashProject>(target);
     }
 }

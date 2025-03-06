@@ -27,4 +27,5 @@ namespace hdn
 	HDN_MODULE_CORE_API void Str_CopySubstring(char* dest, const char* begin, const char* end = nullptr);
 
 	HDN_MODULE_CORE_API string trim(const string& str);
+	HDN_MODULE_CORE_API constexpr std::size_t strlen_ct(const char* str);
 }

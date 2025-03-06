@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class DataFlowProject : BaseCppProject
+public class HobjProject : BaseCppProject
 {
-    public DataFlowProject()
+    public HobjProject()
     {
-        Name = "dataflow";
+        Name = "hobj";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -15,18 +15,13 @@ public class DataFlowProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
-        conf.SolutionFolder = Constants.EXPERIMENTAL_VS_CATEGORY;
-        
-        conf.Output = Project.Configuration.OutputType.Exe;
+        conf.SolutionFolder = Constants.MODULE_VS_CATEGORY;
+
+        conf.Output = Project.Configuration.OutputType.Lib;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
+        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
         conf.AddPublicDependency<CoreProject>(target);
-        conf.AddPublicDependency<HobjProject>(target);
-        conf.AddPublicDependency<StbImageProject>(target);
-        conf.AddPublicDependency<XXHashProject>(target);
-        conf.AddPublicDependency<ConfigProject>(target);
-        conf.AddPublicDependency<CLI11Project>(target);
-        conf.AddPublicDependency<FmtProject>(target);
     }
 }

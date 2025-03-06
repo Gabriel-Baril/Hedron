@@ -43,8 +43,7 @@ public class AllSolution : Solution
         conf.AddProject<ConfigProject>(target);
         conf.AddProject<CoreProject>(target);
         conf.AddProject<CoreProjectTest>(target);
-        conf.AddProject<HDefProject>(target);
-        conf.AddProject<HZoneProject>(target);
+        conf.AddProject<HobjProject>(target);
         conf.AddProject<TreeBuilderCPPProject>(target);
         conf.AddProject<ArchivePlaygroundProject>(target);
         conf.AddProject<AsyncPlaygroundProject>(target);
@@ -53,11 +52,9 @@ public class AllSolution : Solution
         conf.AddProject<DataFlowProject>(target);
         conf.AddProject<EcsPlaygroundProject>(target);
         conf.AddProject<FileLoadingProject>(target);
-        conf.AddProject<HdefPlaygroundProject>(target);
         conf.AddProject<HsonPlaygroundProject>(target);
         conf.AddProject<ListenDirectoryProject>(target);
         conf.AddProject<SelfModifyingCodeProject>(target);
-        conf.AddProject<StreamManipulationProject>(target);
         conf.AddProject<LightthornedProject>(target);
         conf.AddProject<ArchiveProject>(target);
         conf.AddProject<EditorProject>(target);
