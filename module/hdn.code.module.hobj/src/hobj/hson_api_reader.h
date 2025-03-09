@@ -1,8 +1,7 @@
 #pragma once
 
-#include "hson_util.h"
 #include "hson_field.h"
-#include "core/io/buffer_reader.h"
+#include "core/io/histream.h"
 
 namespace hdn
 {
@@ -40,19 +39,22 @@ namespace hdn
 			}
 		};
 
-		hson_t( vector<byte> &_payload )
+		hson_t( histream& stream )
 		{
-			FBufferReader reader( _payload.data() );
-			fieldCount = reader.Read<u64>();
-			payloadByteSize = reader.Read<u64>();
-			fieldNamePayloadByteSize = reader.Read<u64>();
-			fieldNamePayloadByteOffsets = reader.Read<u64>(fieldCount);
-			fieldNamePayload = reader.Read<byte>(fieldNamePayloadByteSize);
-			sortedFieldHashes = reader.Read<field_hash_t>(fieldCount);
-			sortedFieldElementCount = reader.Read<u64>(fieldCount);
-			sortedFieldType = reader.Read<hson_field_t>(fieldCount);
-			payloadByteOffsets = reader.Read<u64>( fieldCount );
-			payload = reader.Read<byte>( payloadByteSize );
+			// TODO: Properly allocate memory for hson in a smart way
+			fieldNamePayloadByteOffsets = new u64[fieldCount];
+
+			//
+			stream >> fieldCount;
+			stream >> payloadByteSize;
+			stream >> fieldNamePayloadByteSize;
+			stream.read_pod<u64>(fieldNamePayloadByteOffsets, fieldCount);
+			stream.read_pod<byte>(fieldNamePayload, fieldNamePayloadByteSize);
+			stream.read_pod<field_hash_t>(sortedFieldHashes, fieldCount);
+			stream.read_pod<u64>(sortedFieldElementCount, fieldCount);
+			stream.read_pod<hson_field_t>(sortedFieldType, fieldCount);
+			stream.read_pod<u64>(payloadByteOffsets, fieldCount);
+			stream.read_pod<byte>(payload, payloadByteSize);
 		}
 
 		hson_path_t operator[]( const char *key )
@@ -113,12 +115,12 @@ namespace hdn
 		u64 fieldCount = 0;
 		u64 payloadByteSize = 0;
 		u64 fieldNamePayloadByteSize = 0;
-		const u64* fieldNamePayloadByteOffsets = nullptr;
-		const byte* fieldNamePayload = nullptr; // The first 8 bits encode the type of key (integer or string)
-		const field_hash_t *sortedFieldHashes = nullptr;
-		const u64* sortedFieldElementCount = nullptr;
-		const hson_field_t* sortedFieldType = nullptr;
-		const u64 *payloadByteOffsets = nullptr;
-		const byte *payload = nullptr;
+		u64* fieldNamePayloadByteOffsets = nullptr;
+		byte* fieldNamePayload = nullptr; // The first 8 bits encode the type of key (integer or string)
+		field_hash_t* sortedFieldHashes = nullptr;
+		u64* sortedFieldElementCount = nullptr;
+		hson_field_t* sortedFieldType = nullptr;
+		u64* payloadByteOffsets = nullptr;
+		byte* payload = nullptr;
 	};
 }

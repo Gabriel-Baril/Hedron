@@ -1,14 +1,14 @@
-#include "hdef.h"
+#include "hobj_hdef.h"
 
 namespace hdn
 {
-	void HDefinition::Deserialize(FBufferReader& archive, HObjectDeserializationFlags flags)
+	void HDefinition::Serialize(hostream& stream, HObjectSerializationFlags flags)
 	{
-		HObject::Deserialize(archive, flags);
+		HObject::Serialize(stream, flags);
 	}
 
-	void HDefinition::Serialize(FBufferWriter& archive, HObjectSerializationFlags flags)
+	void HDefinition::Deserialize(histream& stream, HObjectDeserializationFlags flags)
 	{
-		HObject::Serialize(archive, flags);
+		HObject::Deserialize(stream, flags);
 	}
 }

@@ -2,7 +2,6 @@
 
 #include "core/core.h"
 #include "core/hash.h"
-#include "core/io/common.h"
 #include "core/io/histream.h"
 #include "core/io/hostream.h"
 
@@ -60,5 +59,5 @@ namespace hdn
 	private:
 		hobj m_Object;
 		HObjectLoadState m_LoadState = HObjectLoadState::Unloaded;
-	}
+	};
 }

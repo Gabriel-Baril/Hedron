@@ -2,6 +2,8 @@
 
 #include "core/core.h"
 #include "core/stl/vector.h"
+#include "core/io/hostream.h"
+#include "core/io/histream.h"
 #include "hobjsub_map_entity.h"
 
 namespace hdn

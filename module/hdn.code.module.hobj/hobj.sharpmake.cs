@@ -23,5 +23,6 @@ public class HobjProject : BaseCppProject
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
         conf.AddPublicDependency<CoreProject>(target);
+        conf.AddPublicDependency<FlecsProject>(target);
     }
 }

@@ -3,14 +3,26 @@
 #include "hson_field.h"
 #include "hson_pack.h"
 
+#include "core/stl/vector.h"
+#include "core/io/hostream.h"
+
 namespace hdn
 {
+	using field_hash_t = u64;
+	field_hash_t get_field_hash(u64 index, u64 seed);
+	field_hash_t get_field_hash(const char* key, u64 seed);
+
 	struct hson_field_definition_t
 	{
 		hson_field_definition_t()
 		{
 			fields.reserve( 100 ); // TODO: Fix
 		}
+		hson_field_definition_t(const hson_field_definition_t&) = delete;  // Copy constructor is deleted
+		hson_field_definition_t& operator=(const hson_field_definition_t&) = delete;
+
+		hson_field_definition_t(hson_field_definition_t&&) noexcept = default;
+		hson_field_definition_t& operator=(hson_field_definition_t&&) noexcept = default;
 
 		hson_field_definition_t &operator[]( const char *key )
 		{
@@ -30,7 +42,7 @@ namespace hdn
 				child.key.name = key;
 				child.parentHash = hash;
 				child.hash = get_field_hash( child.key.name, child.parentHash );
-				fields.emplace_back( child );
+				fields.emplace_back( std::move(child) );
 				return fields.back();
 			}
 			return *it;
@@ -102,6 +114,6 @@ namespace hdn
 		hson_field_t fieldType;
 		u64 count; // If non-payload, the number of element, If payload the byte size
 		vector<hson_field_definition_t> fields;
-		vector<byte> payload;
+		hostream payload;
 	};
 }

@@ -1,19 +1,17 @@
-#include "hobj_zone_api.h"
-#include "hobj_zone_serializer.h"
-#include "hobj_zone_deserializer.h"
+#include "hobj_zone.h"
 
 namespace hdn
 {
-    void HZone::Deserialize(FBufferReader& archive, HObjectDeserializationFlags flags)
-    {
-        ZoneDeserializer deserializer;
-        deserializer.Deserialize(archive, m_Zone);
-    }
-
-    void HZone::Serialize(FBufferWriter& archive, HObjectSerializationFlags flags)
+	void HZone::Serialize(hostream& stream, HObjectSerializationFlags flags)
 	{
-		// ZoneSerializer serializer;
-		// serializer.Serialize(archive);
+		HObject::Serialize(stream);
+        hobj_zone_serialize(stream, m_Zone);
+	}
+
+    void HZone::Deserialize(histream& stream, HObjectDeserializationFlags flags)
+    {
+		HObject::Deserialize(stream);
+		hobj_zone_deserialize(stream, m_Zone);
     }
 
     HZone::~HZone()

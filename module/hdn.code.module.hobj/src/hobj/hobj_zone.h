@@ -3,7 +3,7 @@
 
 #include "core/core.h"
 #include "hobj.h"
-#include "hobj_zone.h"
+#include "hobj_zone_api.h"
 
 namespace hdn
 {
@@ -12,11 +12,11 @@ namespace hdn
 	public:
         HZone() = default;
 
-		virtual void Serialize(FBufferWriter& archive, HObjectSerializationFlags flags = HObjectSerializationFlags::Default) override;
-        virtual void Deserialize(FBufferReader& archive, HObjectDeserializationFlags flags = HObjectDeserializationFlags::Default) override;
+		virtual void Serialize(hostream& stream, HObjectSerializationFlags flags = HObjectSerializationFlags::Default) override;
+        virtual void Deserialize(histream& stream, HObjectDeserializationFlags flags = HObjectDeserializationFlags::Default) override;
 
         virtual ~HZone();
     private:
-		Zone m_Zone;
+        hobj_zone m_Zone;
     };
 }

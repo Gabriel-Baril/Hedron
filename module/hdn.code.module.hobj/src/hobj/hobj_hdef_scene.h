@@ -22,8 +22,8 @@ namespace hdn
 			hobj_hdef_scene_deserialize(stream, m_MapDefinition);
 		}
 
-		hobj_hdef_scene& GetMapDefinition() { return m_MapDefinition; };
-		const hobj_hdef_scene& GetMapDefinition() const { return m_MapDefinition; };
+		hobj_hdef_scene& GetSceneDefinition() { return m_MapDefinition; };
+		const hobj_hdef_scene& GetSceneDefinition() const { return m_MapDefinition; };
 		inline virtual hash64_t GetTypeHash() const { return GenerateTypeHash<HSceneDefinition>(); }
 	private:
 		hobj_hdef_scene m_MapDefinition;

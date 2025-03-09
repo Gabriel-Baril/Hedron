@@ -43,7 +43,7 @@ namespace hdn
 			}
 		}
 
-		void write( vector<byte> &out )
+		void write( hostream& stream )
 		{
 			vector<const hson_field_definition_t *> allLeafFields;
 			for ( const auto &field : fields )
@@ -57,7 +57,7 @@ namespace hdn
 				}
 			);
 
-			write_pod<u64>( out, allLeafFields.size() );
+			stream.write_pod<u64>( allLeafFields.size() );
 
 			{
 				u64 totalSize = 0;
@@ -66,59 +66,59 @@ namespace hdn
 					totalSize += field->payload.size();
 				}
 				HINFO("Value: {0}", totalSize);
-				write_pod<u64>( out, totalSize );
+				stream.write_pod<u64>(totalSize);
 			}
 
 			{
-				vector<byte> tempFieldNameBuffer;
-				vector<byte> tempFieldNameBufferByteOffsets;
+				hostream tempFieldNameStream;
+				hostream tempFieldNameByteOffsetsStream;
 				u64 localOffset = 0;
 				for (const auto& field : allLeafFields)
 				{
-					localOffset += write_pod<hson_field_definition_t::key_kind_t>(tempFieldNameBuffer, field->keyKind);
+					localOffset += tempFieldNameStream.write_pod<hson_field_definition_t::key_kind_t>(field->keyKind);
 					switch (field->keyKind)
 					{
 					case hson_field_definition_t::key_kind_t::integer:
-						localOffset += write_bytes(tempFieldNameBuffer, &field->key.index, sizeof(field->key.index));
+						localOffset += tempFieldNameStream.write(&field->key.index, sizeof(field->key.index));
 						break;
 					case hson_field_definition_t::key_kind_t::string:
-						localOffset += write_bytes(tempFieldNameBuffer, field->key.name, strlen(field->key.name) + 1);
+						localOffset += tempFieldNameStream.write(field->key.name, strlen(field->key.name) + 1);
 						break;
 					}
-					write_pod<u64>(tempFieldNameBufferByteOffsets, localOffset);
+					tempFieldNameByteOffsetsStream.write_pod<u64>(localOffset);
 				}
 
-				write_pod<u64>(out, tempFieldNameBuffer.size());
-				write_bytes(out, tempFieldNameBufferByteOffsets.data(), tempFieldNameBufferByteOffsets.size());
-				write_bytes(out, tempFieldNameBuffer.data(), tempFieldNameBuffer.size());
+				stream.write_pod<u64>(tempFieldNameStream.size());
+				stream.write(tempFieldNameByteOffsetsStream.data(), tempFieldNameByteOffsetsStream.size());
+				stream.write(tempFieldNameStream.data(), tempFieldNameStream.size());
 			}
 
 			for ( const auto &field : allLeafFields )
 			{
-				write_pod<field_hash_t>( out, field->hash );
+				stream.write_pod<field_hash_t>( field->hash );
 			}
 
 			for (const auto& field : allLeafFields)
 			{
-				write_pod<u64>(out, field->count);
+				stream.write_pod<u64>(field->count);
 			}
 
 			for (const auto& field : allLeafFields)
 			{
-				write_pod<hson_field_t>(out, field->fieldType);
+				stream.write_pod<hson_field_t>(field->fieldType);
 			}
 			
 
 			u64 absoluteOffset = 0;
 			for ( const auto &field : allLeafFields )
 			{
-				write_pod<u64>( out, absoluteOffset );
+				stream.write_pod<u64>( absoluteOffset );
 				absoluteOffset += field->payload.size();
 			}
 
 			for ( const auto &field : allLeafFields )
 			{
-				write_bytes( out, field->payload.data(), field->payload.size() );
+				stream.write( field->payload.data(), field->payload.size() );
 			}
 		}
 

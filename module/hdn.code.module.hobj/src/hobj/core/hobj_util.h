@@ -104,7 +104,7 @@ namespace hdn
 			}
 			inFile.close();
 			FBufferReader reader{ reinterpret_cast<byte*>(buffer.data()) };
-			HObjPtr<T> object = HObjectUtil::Create<T>(HObjectCreateFlags::InitForLoad); // TODO: Allocate to HObject pool instead
+			HObjPtr<T> object = HObjectUtil::Create<T>(); // TODO: Allocate to HObject pool instead
 
 			u64 magicNumber = reader.Read<u64>();
 			if (magicNumber != HOBJ_FILE_MAGIC_NUMBER)
@@ -125,7 +125,6 @@ namespace hdn
 			}
 			object->Deserialize(reader, flags);
 			object->SetPath(absoluteSavePath);
-			object->SetLoadState(HObjectLoadState::Realized);
 
 			HObjectRegistry::Get().Register(object->GetKey(), object);
 
