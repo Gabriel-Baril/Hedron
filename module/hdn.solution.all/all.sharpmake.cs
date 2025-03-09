@@ -47,14 +47,10 @@ public class AllSolution : Solution
         conf.AddProject<TreeBuilderCPPProject>(target);
         conf.AddProject<ArchivePlaygroundProject>(target);
         conf.AddProject<AsyncPlaygroundProject>(target);
-        conf.AddProject<BuildPackagingProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<DataFlowProject>(target);
         conf.AddProject<EcsPlaygroundProject>(target);
-        conf.AddProject<FileLoadingProject>(target);
         conf.AddProject<HsonPlaygroundProject>(target);
-        conf.AddProject<ListenDirectoryProject>(target);
-        conf.AddProject<SelfModifyingCodeProject>(target);
         conf.AddProject<LightthornedProject>(target);
         conf.AddProject<ArchiveProject>(target);
         conf.AddProject<EditorProject>(target);
