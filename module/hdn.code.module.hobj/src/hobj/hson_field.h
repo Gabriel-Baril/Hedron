@@ -5,6 +5,10 @@
 
 namespace hdn
 {
+	using field_hash_t = u64;
+	field_hash_t get_field_hash(u64 index, u64 seed);
+	field_hash_t get_field_hash(const char* key, u64 seed);
+
 	enum class hson_field_flag_t : u32
 	{
 		hson_ref = BIT(0),

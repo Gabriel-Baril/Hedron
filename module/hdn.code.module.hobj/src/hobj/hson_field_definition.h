@@ -8,10 +8,6 @@
 
 namespace hdn
 {
-	using field_hash_t = u64;
-	field_hash_t get_field_hash(u64 index, u64 seed);
-	field_hash_t get_field_hash(const char* key, u64 seed);
-
 	struct hson_field_definition_t
 	{
 		hson_field_definition_t()
@@ -77,6 +73,8 @@ namespace hdn
 		{
 			fieldType = result.type;
 			count = result.count;
+
+			hostream payload;
 			switch ( result.kind )
 			{
 			case pack_result_kind_t::value:
@@ -114,6 +112,5 @@ namespace hdn
 		hson_field_t fieldType;
 		u64 count; // If non-payload, the number of element, If payload the byte size
 		vector<hson_field_definition_t> fields;
-		hostream payload;
 	};
 }

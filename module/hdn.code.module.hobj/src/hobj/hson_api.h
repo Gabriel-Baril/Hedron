@@ -112,15 +112,36 @@ namespace hdn
 			return nullptr; // Key not found
 		}
 
+		enum HsonSection : u32
+		{
+			FIELD_HASH = BIT(0),
+			FIELD_TYPE_HASH = BIT(1),
+			FIELD_FLAGS = BIT(2),
+			FIELD_PAYLOAD_BYTE_SIZES = BIT(3),
+			FIELD_PAYLOAD_BYTE_OFFSETS = BIT(4),
+			FIELD_NAME_PAYLOAD_BYTE_OFFSETS = BIT(5),
+			PACKED_FIELD_HIERARCHY = BIT(6),
+			FIELD_NAME_PAYLOAD = BIT(7),
+			FIELD_PAYLOAD = BIT(8),
+
+			OPTIMIZED = FIELD_HASH | FIELD_TYPE_HASH | FIELD_FLAGS | FIELD_PAYLOAD_BYTE_SIZES | FIELD_PAYLOAD_BYTE_OFFSETS | FIELD_NAME_PAYLOAD_BYTE_OFFSETS | FIELD_PAYLOAD,
+			ALL = FIELD_HASH | FIELD_TYPE_HASH | FIELD_FLAGS | FIELD_PAYLOAD_BYTE_SIZES | FIELD_PAYLOAD_BYTE_OFFSETS | FIELD_NAME_PAYLOAD_BYTE_OFFSETS | PACKED_FIELD_HIERARCHY | FIELD_NAME_PAYLOAD | FIELD_PAYLOAD
+		};
+
+		u32 version = 0;
+		HsonSection sectionExistenceBitmap = HsonSection::ALL;
 		u64 fieldCount = 0;
 		u64 payloadByteSize = 0;
-		u64 fieldNamePayloadByteSize = 0;
-		u64* fieldNamePayloadByteOffsets = nullptr;
-		byte* fieldNamePayload = nullptr; // The first 8 bits encode the type of key (integer or string)
+		u64 namePayloadByteSize = 0;
+
 		field_hash_t* sortedFieldHashes = nullptr;
-		u64* sortedFieldElementCount = nullptr;
-		hson_field_t* sortedFieldType = nullptr;
-		u64* payloadByteOffsets = nullptr;
-		byte* payload = nullptr;
+		hson_field_t* sortedFieldTypeHash = nullptr;
+		u32* sortedFieldFlags = nullptr;
+		u32* sortedFieldPayloadByteSizes = nullptr; // The payload size per field
+		u32* sortedFieldPayloadByteOffsets = nullptr; // The payload offset per field
+		u32* sortedFieldNamePayloadByteOffsets = nullptr;
+		u64* packedFieldHierarchy = nullptr;
+		byte* sortedFieldNamePayload = nullptr;
+		byte* sortedFieldPayload = nullptr;
 	};
 }
