@@ -62,6 +62,32 @@ namespace hdn
 		return NULL_HUID;
 	}
 
+	void HObjectRegistry::Iterate()
+	{
+		vector<fspath> files = FileSystem::Walk("object/", IsHObjectFile);
+		for (const auto& file : files)
+		{
+			std::ifstream inFile(file, std::ios::binary);
+			if (!inFile) {
+				HERR("Error: Could not open file '{0}' for reading", file.string().c_str());
+				continue;
+			}
+
+			const size_t bufferSize = sizeof(hobj);
+			char fileData[bufferSize];
+			inFile.read(fileData, bufferSize);
+			if (!inFile) {
+				HERR("Error: Failed to read from the file");
+				continue;
+			}
+
+			inFile.close();
+
+			hobj* header = reinterpret_cast<hobj*>(fileData);
+			HObjectRegistry::Get().RegisterObjectPath(header->id, file);
+		}
+	}
+
 	HObjectRegistry::~HObjectRegistry()
 	{
 	}

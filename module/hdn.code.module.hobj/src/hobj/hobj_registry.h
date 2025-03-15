@@ -9,6 +9,12 @@
 
 namespace hdn
 {
+
+	bool IsHObjectFile(const fspath& path)
+	{
+		return FileSystem::Extension(path) == HOBJ_FILE_EXT;
+	}
+
 	class HObjectRegistry
 	{
 	public:
@@ -20,6 +26,7 @@ namespace hdn
 		void RegisterObjectPath(huid_t key, const fspath& path);
 		optional<fspath> GetObjectPath(huid_t key);
 		huid_t GetObjectKey(const fspath& path);
+		void Iterate();
 
 		virtual ~HObjectRegistry();
 	private:

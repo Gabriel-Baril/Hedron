@@ -3,7 +3,7 @@
 #include <ostream>
 
 #include "core/core.h"
-#include "dynamic_memory_buffer.h"
+#include "stream_memory.h"
 
 namespace hdn
 {

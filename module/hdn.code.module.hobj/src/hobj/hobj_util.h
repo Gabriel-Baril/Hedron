@@ -3,7 +3,7 @@
 #include "hobj/huid.h"
 #include "core/random.h"
 #include "hobj_registry.h"
-#include "core/io/save_stream.h"
+#include "core/io/stream_save.h"
 
 #include "core/core_filesystem.h"
 

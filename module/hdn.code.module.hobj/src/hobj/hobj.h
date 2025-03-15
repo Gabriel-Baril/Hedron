@@ -2,8 +2,8 @@
 
 #include "core/core.h"
 #include "core/hash.h"
-#include "core/io/histream.h"
-#include "core/io/hostream.h"
+#include "core/io/stream_read.h"
+#include "core/io/stream_write.h"
 
 #include "huid.h"
 #include "hobj_api.h"

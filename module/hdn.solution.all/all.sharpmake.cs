@@ -48,7 +48,6 @@ public class AllSolution : Solution
         conf.AddProject<ArchivePlaygroundProject>(target);
         conf.AddProject<AsyncPlaygroundProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
-        conf.AddProject<DataFlowProject>(target);
         conf.AddProject<EcsPlaygroundProject>(target);
         conf.AddProject<HsonPlaygroundProject>(target);
         conf.AddProject<LightthornedProject>(target);

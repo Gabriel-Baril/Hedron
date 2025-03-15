@@ -2,8 +2,8 @@
 
 #include "core/core.h"
 #include "core/stl/vector.h"
-#include "core/io/hostream.h"
-#include "core/io/histream.h"
+#include "core/io/stream_write.h"
+#include "core/io/stream_read.h"
 
 #include "scene_entity.h"
 

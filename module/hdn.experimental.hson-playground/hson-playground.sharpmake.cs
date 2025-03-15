@@ -23,6 +23,7 @@ public class HsonPlaygroundProject : BaseCppProject
 
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<HobjProject>(target);
+        conf.AddPublicDependency<StbImageProject>(target);
         conf.AddPublicDependency<XXHashProject>(target);
     }
 }

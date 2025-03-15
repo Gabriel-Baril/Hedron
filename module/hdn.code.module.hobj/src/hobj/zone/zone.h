@@ -5,8 +5,8 @@
 #include "core/stl/vector.h"
 #include "core/stl/optional.h"
 
-#include "core/io/hostream.h"
-#include "core/io/histream.h"
+#include "core/io/stream_write.h"
+#include "core/io/stream_read.h"
 
 namespace hdn
 {

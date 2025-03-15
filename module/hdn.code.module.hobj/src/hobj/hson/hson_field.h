@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/core.h"
-#include "core/io/hostream.h"
+#include "core/io/stream_write.h"
 
 namespace hdn
 {
