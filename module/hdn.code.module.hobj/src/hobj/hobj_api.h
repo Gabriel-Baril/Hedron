@@ -6,7 +6,7 @@
 #include "core/io/hostream.h"
 
 #include "huid.h"
-#include "core/hobj_defines.h"
+#include "hobj_defines.h"
 
 namespace hdn
 {

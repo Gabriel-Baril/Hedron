@@ -3,6 +3,7 @@
 #include "hobj/huid.h"
 #include "core/random.h"
 #include "hobj_registry.h"
+#include "core/io/save_stream.h"
 
 #include "core/core_filesystem.h"
 
@@ -25,22 +26,7 @@ namespace hdn
 			DynamicMemoryBuffer memBuffer;
 			hostream stream{ &memBuffer };
 			object->Serialize(stream, flags);
-			std::ofstream outFile(absoluteSavePath, std::ios::binary);
-			if (!outFile)
-			{
-				HERR("Could not open file '{0}' for writing", absoluteSavePath.string().c_str());
-				return false;
-			}
-
-			memBuffer.ResetHead(); // TODO: Double check
-			outFile.write(memBuffer.getBuffer().data(), memBuffer.getBuffer().size());
-			outFile.close();
-			if (outFile.fail())
-			{
-				HERR("Failed to write to file '{0}'", absoluteSavePath.string().c_str());
-				return false;
-			}
-			return true;
+			return save_binary_to_file(absoluteSavePath.string().c_str(), memBuffer.getBuffer().data(), memBuffer.getBuffer().size());
 		}
 
 		template<typename T>

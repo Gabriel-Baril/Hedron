@@ -15,6 +15,16 @@ namespace hdn
 		{
 		}
 
+		DynamicMemoryBuffer* get_stream_buffer()
+		{
+			return &m_Buffer;
+		}
+
+		void reset()
+		{
+			m_Buffer.getBuffer().clear();
+		}
+
 		u64 size() const
 		{
 			return m_Buffer.getBuffer().size();
@@ -23,6 +33,16 @@ namespace hdn
 		const void* data() const
 		{
 			return m_Buffer.getBuffer().data();
+		}
+
+		auto begin()
+		{
+			return m_Buffer.getBuffer().begin();
+		}
+
+		auto end()
+		{
+			return m_Buffer.getBuffer().end();
 		}
 
 		template<typename T>

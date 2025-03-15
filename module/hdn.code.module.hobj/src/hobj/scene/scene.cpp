@@ -1,23 +1,23 @@
-#include "hobj_hdef_scene_api.h"
+#include "scene.h"
 
 namespace hdn
 {
-	void hobj_hdef_scene_set_max_light(hobj_hdef_scene& object, int max_light)
+	void SceneDef_SetMaxLight(SceneDef& object, int maxLight)
 	{
-		object.max_light = max_light;
+		object.maxLight = maxLight;
 	}
 
-	void hobj_hdef_scene_set_max_primary_light(hobj_hdef_scene& object, int max_primary_light)
+	void SceneDef_SetMaxPrimaryLight(SceneDef& object, int maxPrimaryLight)
 	{
-		object.max_primary_light = max_primary_light;
+		object.maxPrimaryLight = maxPrimaryLight;
 	}
 
-	void hobj_hdef_scene_emplace_entity(hobj_hdef_scene& object, const hobjsub_map_entity& entity)
+	void SceneDef_EmplaceEntity(SceneDef& object, const SceneEntityDef& entity)
 	{
 		object.entities.emplace_back(entity);
 	}
 
-	void hobj_hdef_scene_serialize(hostream& stream, const hobj_hdef_scene& object)
+	void SceneDef_Serialize(hostream& stream, const SceneDef& object)
 	{
 		// hson builder;
 		// builder["max_light"] = object->max_light;
@@ -30,7 +30,7 @@ namespace hdn
 		// stream << builder;
 	}
 
-	void hobj_hdef_scene_deserialize(histream& stream, hobj_hdef_scene& object)
+	void SceneDef_Deserialize(histream& stream, SceneDef& object)
 	{
 		// hson h;
 		// stream >> h;

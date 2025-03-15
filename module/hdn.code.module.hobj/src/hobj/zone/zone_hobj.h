@@ -2,8 +2,8 @@
 #pragma once
 
 #include "core/core.h"
-#include "hobj.h"
-#include "hobj_zone_api.h"
+#include "hobj/hobj.h"
+#include "zone.h"
 
 namespace hdn
 {
@@ -17,6 +17,6 @@ namespace hdn
 
         virtual ~HZone();
     private:
-        hobj_zone m_Zone;
+        Zone m_Zone;
     };
 }

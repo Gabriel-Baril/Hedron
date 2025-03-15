@@ -49,15 +49,6 @@ namespace hdn
 			return result;
 		}
 
-		template<>
-		hson_pack_result_t<char> pack<char>( const char *data, int count )
-		{
-			hson_pack_result_t<char> result;
-			result.type = hson_field_traits_t<char>::type;
-			result.count = strlen( data ) + 1;
-			result.kind = pack_result_kind_t::ptr;
-			result.dataPtr = data;
-			return result;
-		}
+		hson_pack_result_t<char> pack(const char* data);
 	}
 }

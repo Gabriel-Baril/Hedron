@@ -4,7 +4,7 @@
 
 namespace hdn
 {
-	struct hobjsub_map_entity
+	struct SceneEntityDef
 	{
 		flecs::entity entity;
 	};

@@ -40,8 +40,12 @@ namespace hdn
 		hson_u64,
 		hson_f32,
 		hson_f64,
-		hson_string
+		hson_string,
+
+		count
 	};
+
+	const char* hson_field_to_string(hson_field_t fieldType);
 
 	template<typename T>
 	struct hson_field_traits_t

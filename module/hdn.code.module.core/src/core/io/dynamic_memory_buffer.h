@@ -8,11 +8,12 @@ namespace hdn
 	class DynamicMemoryBuffer : public std::basic_streambuf<char> {
 	public:
 		DynamicMemoryBuffer() {
-			resizeBuffer( 64 ); // Start with an initial buffer size
+			// resizeBuffer( 8 ); // Start with an initial buffer size
 		}
 
 		// Get the internal buffer as a std::vector<char>
-		const std::vector<char> &getBuffer() const { return buffer; }
+		const std::vector<char>& getBuffer() const { return buffer; }
+		std::vector<char>& getBuffer() { return buffer; }
 		void ResetHead()
 		{
 			setg( buffer.data(), buffer.data(), buffer.data() + buffer.size() ); // **Fixed here**

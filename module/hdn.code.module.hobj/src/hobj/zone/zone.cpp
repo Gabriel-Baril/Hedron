@@ -1,8 +1,8 @@
-#include "hobj_zone_api.h"
+#include "zone.h"
 
 namespace hdn
 {
-	optional<u64> hdn::hobj_zone_get_key_index(hobj_zone& zone, hkey key)
+	optional<u64> Zone_GetKeyIndex(Zone& zone, hkey key)
 	{
 		if (key == NULL_HKEY)
 		{
@@ -17,9 +17,9 @@ namespace hdn
 		return static_cast<u64>(keyPtr - zone.sortedKeys);
 	}
 
-	const byte* hobj_zone_get_key_data(hobj_zone& zone, hkey key)
+	const byte* Zone_GetKeyData(Zone& zone, hkey key)
 	{
-		optional<u64> keyIndex = hobj_zone_get_key_index(zone, key);
+		optional<u64> keyIndex = Zone_GetKeyIndex(zone, key);
 		if (keyIndex == eastl::nullopt)
 		{
 			return nullptr;
@@ -27,7 +27,7 @@ namespace hdn
 		return &zone.dataPayload[zone.dataOffsets[keyIndex.value()]];
 	}
 
-	void hobj_zone_alloc(const hobj_zone& zone)
+	void Zone_Alloc(const Zone& zone)
 	{
 		// TODO: Allocate zone memory in a smarter way than just heap allocation (for example, stack allocator)
 	}

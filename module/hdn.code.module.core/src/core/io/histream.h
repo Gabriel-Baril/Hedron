@@ -2,6 +2,7 @@
 
 #include <istream>
 
+#include "core/core.h"
 #include "dynamic_memory_buffer.h"
 
 namespace hdn

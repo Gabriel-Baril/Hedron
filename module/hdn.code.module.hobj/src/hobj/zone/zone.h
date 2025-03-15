@@ -13,7 +13,7 @@ namespace hdn
 	using hkey = u64;
 	static constexpr hkey NULL_HKEY = 0;
 
-	struct hobj_zone
+	struct Zone
 	{
 		u64 keyCount;
 		u64 typeCount;
@@ -26,10 +26,10 @@ namespace hdn
 		byte* dataPayload;
 	};
 
-	void hobj_zone_alloc(const hobj_zone& zone);
-	optional<u64> hobj_zone_get_key_index(hobj_zone& object, hkey key);
-	const byte* hobj_zone_get_key_data(hobj_zone& object, hkey key);
+	void Zone_Alloc(const Zone& zone);
+	optional<u64> Zone_GetKeyIndex(Zone& object, hkey key);
+	const byte* Zone_GetKeyData(Zone& object, hkey key);
 
-	void hobj_zone_serialize(hostream& stream, const hobj_zone& zone);
-	void hobj_zone_deserialize(histream& stream, hobj_zone& zone);
+	void Zone_Serialize(hostream& stream, const Zone& zone);
+	void Zone_Deserialize(histream& stream, Zone& zone);
 }

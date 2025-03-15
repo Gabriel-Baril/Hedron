@@ -7,7 +7,7 @@
 
 #include "huid.h"
 #include "hobj_api.h"
-#include "core/hobj_defines.h"
+#include "hobj_defines.h"
 
 #define HOBJ_FILE_EXT ".hobj"
 
