@@ -16,6 +16,6 @@ namespace hdn
 		virtual bool Save(HObject* object, const void* userData, u64 userDataByteSize) = 0;
 		virtual bool Delete(huid_t id) = 0;
 		virtual bool Loaded(huid_t id) = 0;
-		virtual void Walk(HObjectRegistry* registry) = 0; // Explore all the hobj from the source based on the configuration
+		virtual void Populate(HObjectRegistry* registry) = 0; // Explore all the hobj from the source based on the configuration
 	};
 }

@@ -378,13 +378,12 @@ namespace hdn
 
 	bool FileSystem::Touch(const fspath& path)
 	{
-		if (FileSystem::Exists(path))
+		std::ofstream file(path, std::ios::app); // Open in append mode to avoid truncation
+		if (!file)
 		{
-			return false;
+			return false; // File creation failed
 		}
-		std::ofstream file(path);
-		file.close();
-		return true;
+		return true; // File successfully created or already existed
 	}
 
 	bool FileSystem::CreateDirectory(const fspath& path)

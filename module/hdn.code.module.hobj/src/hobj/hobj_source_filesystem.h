@@ -21,11 +21,13 @@ namespace hdn
 		void Load(const char* path, HObject* outObject);
 		virtual void Load(huid_t id, HObject* outObject) override;
 
+		void Unload(huid_t id);
+
 		virtual bool Save(HObject* object, const void* userData, u64 userDataByteSize) override;
 		virtual bool Delete(huid_t id) override;
 		virtual bool Loaded(huid_t id) override;
-		virtual void Walk(HObjectRegistry* registry) override;
-		void AddToManifest(huid_t id, const fspath& path);
+		virtual void Populate(HObjectRegistry* registry) override;
+		void ManifestCreateEntry(huid_t id, const fspath& path);
 	private:
 		string m_SourcePath;
 		unordered_map<huid_t, HObject*> m_LoadedObjects{};
