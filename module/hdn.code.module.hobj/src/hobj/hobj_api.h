@@ -5,11 +5,17 @@
 #include "core/io/stream_read.h"
 #include "core/io/stream_write.h"
 
-#include "huid.h"
 #include "hobj_defines.h"
 
 namespace hdn
 {
+	using huid_t = u64;
+
+	template<typename T>
+	using huid = u64;
+
+	static constexpr huid_t NULL_HUID = 0;
+
 	static constexpr u64 HOBJ_FILE_MAGIC_NUMBER = 0x4A424F48;
 	
 	struct hobj
