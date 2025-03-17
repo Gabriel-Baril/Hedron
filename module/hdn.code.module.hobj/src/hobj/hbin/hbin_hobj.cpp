@@ -2,13 +2,13 @@
 
 namespace hdn
 {
-	void HBinaryArtefact::Serialize(hostream& stream, HObjectSerializationFlags flags)
+	void HBinaryArtefact::Serialize(hostream& stream)
 	{
-		HObject::Serialize(stream, flags);
+		HObject::Serialize(stream);
 	}
 
-	void HBinaryArtefact::Deserialize(histream& stream, HObjectDeserializationFlags flags)
+	void HBinaryArtefact::Deserialize(histream& stream)
 	{
-		HObject::Deserialize(stream, flags);
+		HObject::Deserialize(stream);
 	}
 }

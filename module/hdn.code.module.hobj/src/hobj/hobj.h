@@ -13,8 +13,6 @@
 
 namespace hdn
 {
-	static constexpr u64 HOBJ_FILE_MAGIC_NUMBER = 0x4A424F48;
-
 	enum class HObjectLoadState
 	{
 		Unloaded = 0,
@@ -23,34 +21,43 @@ namespace hdn
 	};
 	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectLoadState)
 
-	enum class HObjectDeserializationFlags
-	{
-		Default = 0,
-		Realize = (1 << 0)
-	};
-	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectDeserializationFlags)
-
-	enum class HObjectSerializationFlags
-	{
-		Default = 0
-	};
-	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectSerializationFlags)
-
-	template<typename T> using HObjPtr = Ref<T>;
+	template<typename T> using HRef = Ref<T>;
 
 	class HObject
 	{
 	public:
 		virtual ~HObject() = default;
 
-		virtual void Serialize(hostream& stream, HObjectSerializationFlags flags = HObjectSerializationFlags::Default)
+		virtual void Serialize(hostream& stream)
 		{
 			hobj_serialize(stream, m_Object);
 		}
 
-		virtual void Deserialize(histream& stream, HObjectDeserializationFlags flags = HObjectDeserializationFlags::Default)
+		virtual void Deserialize(histream& stream)
 		{
 			hobj_deserialize(stream, m_Object);
+
+			if (m_Object.magic_number != HOBJ_FILE_MAGIC_NUMBER)
+			{
+				HFATAL("Invalid deserialization instruction: Trying to deserialize a non hobj stream!");
+			}
+
+			const hash64_t serializedTypeHash = m_Object.type_hash;
+			const hash64_t typeHash = GetTypeHash();
+			if (typeHash != m_Object.type_hash)
+			{
+				HFATAL("Invalid deserialization instruction: trying to interpret and object of type '{0}' with an object of type '{1}'!", serializedTypeHash, typeHash);
+			}
+		}
+
+		virtual void Realize()
+		{
+
+		}
+
+		huid_t ID()
+		{
+			return m_Object.id;
 		}
 
 		hobj& GetObject() { return m_Object; };
@@ -59,5 +66,6 @@ namespace hdn
 	private:
 		hobj m_Object;
 		HObjectLoadState m_LoadState = HObjectLoadState::Unloaded;
+		// bool m_Dirty;
 	};
 }

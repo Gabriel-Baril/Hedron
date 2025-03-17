@@ -8,84 +8,57 @@ namespace hdn
 		return s_Instance;
 	}
 
-	bool HObjectRegistry::Contains(huid_t key)
+	void HObjectRegistry::Build()
 	{
-		return m_HObjectRegistry.contains(key);
+		for (auto& [_, source] : m_Sources)
+		{
+			source->Walk(this);
+		}
 	}
 
-	void HObjectRegistry::Register(huid_t key, HObjPtr<HObject> object)
+	void HObjectRegistry::AddToManifest(huid_t id, IHObjectSource* source)
 	{
-		if (m_HObjectRegistry.contains(key))
-		{
-			return;
-		}
-		m_HObjectRegistry[key] = object;
+		m_ObjectManifest[id] = source;
 	}
 
-	HObjPtr<HObject> HObjectRegistry::Get(huid_t key)
+	void HObjectRegistry::RemoveFromManifest(huid_t id)
 	{
-		if (m_HObjectRegistry.contains(key))
-		{
-			return m_HObjectRegistry.at(key);
-		}
-		return nullptr;
+		m_ObjectManifest.erase(id);
 	}
 
-	void HObjectRegistry::RegisterObjectPath(huid_t key, const fspath& path)
+	bool HObjectRegistry::Save(HObject* object, const string& name, const void* userData, u64 userDataByteSize)
 	{
-		fspath absolutePath = FileSystem::ToAbsolute(path);
+		HASSERT(m_Sources.contains(name), "The source {0} was not found!", name.c_str());
 
-		if (m_HObjectPaths.contains(key))
+		const huid_t objectID = object->ID();
+		bool saved = m_Sources[name]->Save(object, userData, userDataByteSize);
+		if (m_ObjectManifest.contains(objectID) && m_ObjectManifest[objectID] != m_Sources[name].get())
 		{
-			return;
+			RemoveFromManifest(objectID);
 		}
-		m_HObjectPaths[key] = absolutePath;
-		m_HObjectKeys[absolutePath] = key;
+		return saved;
 	}
 
-	optional<fspath> HObjectRegistry::GetObjectPath(huid_t key)
+	bool HObjectRegistry::Save(HObject* object, const void* userData, u64 userDataByteSize)
 	{
-		if (m_HObjectPaths.contains(key))
+		const huid_t objectID = object->ID();
+		// Check if the object already exists within a source
+		if (m_ObjectManifest.contains(objectID))
 		{
-			return m_HObjectPaths.at(key);
+			return m_ObjectManifest[objectID]->Save(object, userData, userDataByteSize);
 		}
-		return optional<fspath>{};
+		HWARN("The object was not found in any sources! Do you meant to save to a specific source instead?");
+		return false;
 	}
 
-	huid_t HObjectRegistry::GetObjectKey(const fspath& path)
+	bool HObjectRegistry::Delete(huid_t id)
 	{
-		fspath absolutePath = FileSystem::ToAbsolute(path);
-		if (m_HObjectKeys.contains(absolutePath))
-		{
-			return m_HObjectKeys.at(absolutePath);
-		}
-		return NULL_HUID;
+		return m_ObjectManifest[id]->Delete(id);
 	}
 
-	void HObjectRegistry::Iterate()
+	bool HObjectRegistry::Delete(HObject* object)
 	{
-		vector<fspath> files = FileSystem::Walk("object/", IsHObjectFile);
-		for (const auto& file : files)
-		{
-			std::ifstream inFile(file, std::ios::binary);
-			if (!inFile) {
-				HERR("Error: Could not open file '{0}' for reading", file.string().c_str());
-				continue;
-			}
-
-			const size_t bufferSize = sizeof(hobj);
-			char fileData[bufferSize];
-			inFile.read(fileData, bufferSize);
-			if (!inFile) {
-				HERR("Error: Failed to read from the file");
-				continue;
-			}
-
-			inFile.close();
-
-			hobj* header = reinterpret_cast<hobj*>(fileData);
-			HObjectRegistry::Get().RegisterObjectPath(header->id, file);
-		}
+		return Delete(object->ID());
 	}
 
 	HObjectRegistry::~HObjectRegistry()

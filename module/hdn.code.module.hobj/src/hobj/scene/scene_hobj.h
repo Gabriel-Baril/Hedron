@@ -10,13 +10,13 @@ namespace hdn
 	public:
 		virtual ~HSceneDef() = default;
 
-		virtual void Serialize(hostream& stream, HObjectSerializationFlags flags = HObjectSerializationFlags::Default) override
+		virtual void Serialize(hostream& stream) override
 		{
 			HDefinition::Serialize(stream);
 			SceneDef_Serialize(stream, m_MapDefinition);
 		}
 
-		virtual void Deserialize(histream& stream, HObjectDeserializationFlags flags = HObjectDeserializationFlags::Default) override
+		virtual void Deserialize(histream& stream) override
 		{
 			HDefinition::Deserialize(stream);
 			SceneDef_Deserialize(stream, m_MapDefinition);

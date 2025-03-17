@@ -12,8 +12,8 @@ namespace hdn
 	public:
         HZone() = default;
 
-		virtual void Serialize(hostream& stream, HObjectSerializationFlags flags = HObjectSerializationFlags::Default) override;
-        virtual void Deserialize(histream& stream, HObjectDeserializationFlags flags = HObjectDeserializationFlags::Default) override;
+		virtual void Serialize(hostream& stream) override;
+        virtual void Deserialize(histream& stream) override;
 
         virtual ~HZone();
     private:

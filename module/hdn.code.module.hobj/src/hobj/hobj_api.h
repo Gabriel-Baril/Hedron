@@ -10,6 +10,8 @@
 
 namespace hdn
 {
+	static constexpr u64 HOBJ_FILE_MAGIC_NUMBER = 0x4A424F48;
+	
 	struct hobj
 	{
 		u64 magic_number;

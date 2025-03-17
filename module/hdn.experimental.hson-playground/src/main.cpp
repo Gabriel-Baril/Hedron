@@ -4,6 +4,8 @@
 
 #include "hobj/hson/hson.h"
 #include "hobj/hson/hson_build.h"
+#include "hobj/hobj_registry.h"
+#include "hobj/hobj_source_filesystem.h"
 #include "pair.h"
 
 #include "core/io/stream_save.h"
@@ -12,6 +14,18 @@ int main()
 {
 	using namespace hdn;
 	Log_Init();
+
+	{
+		HObjectRegistry& registry = HObjectRegistry::Get();
+		registry.AddSource<FilesystemObjectSource>("local", "/objects");
+		registry.Build();
+
+		Ref<HObject> obj = registry.Create<HObject>();
+
+		HObjectFilesystemData data;
+		data.path = "/path/to/obj.hobj";
+		registry.Save(obj.get(), "local", &data, sizeof(data));
+	}
 
 	hostream stream;
 	{

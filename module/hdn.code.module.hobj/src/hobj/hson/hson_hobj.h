@@ -11,8 +11,8 @@ namespace hdn
 	{
 	public:
 		HHson() = default;
-		virtual void Serialize(hostream& stream, HObjectSerializationFlags flags = HObjectSerializationFlags::Default) override;
-		virtual void Deserialize(histream& stream, HObjectDeserializationFlags flags = HObjectDeserializationFlags::Default) override;
+		virtual void Serialize(hostream& stream) override;
+		virtual void Deserialize(histream& stream) override;
 		inline virtual hash64_t GetTypeHash() const override { return GenerateTypeHash<HHson>(); }
 		virtual ~HHson() = default;
 

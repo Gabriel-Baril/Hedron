@@ -11,6 +11,11 @@ namespace hdn
 			// resizeBuffer( 8 ); // Start with an initial buffer size
 		}
 
+		DynamicMemoryBuffer(const std::vector<char>& initialBuffer)
+			: buffer{ initialBuffer }
+		{
+		}
+
 		// Get the internal buffer as a std::vector<char>
 		const std::vector<char>& getBuffer() const { return buffer; }
 		std::vector<char>& getBuffer() { return buffer; }
