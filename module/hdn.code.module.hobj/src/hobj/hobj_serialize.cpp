@@ -4,17 +4,32 @@ namespace hdn
 {
 	void hobj_serialize(hostream& stream, const hobj& object)
 	{
-		stream << object.magic_number;
+		stream << object.magicNumber;
 		stream << object.version;
-		stream << object.type_hash;
+		stream << object.typeHash;
 		stream << object.id;
+
+		u64 nameLength = object.name.length();
+		stream << object.name.length();
+		if (nameLength > 0)
+		{
+			stream.write_pod(object.name.data(), nameLength);
+		}
 	}
 
 	void hobj_deserialize(histream& stream, hobj& object)
 	{
-		stream >> object.magic_number;
+		stream >> object.magicNumber;
 		stream >> object.version;
-		stream >> object.type_hash;
+		stream >> object.typeHash;
 		stream >> object.id;
+
+		u64 nameLength = 0;
+		stream >> nameLength;
+		if (nameLength > 0)
+		{
+			object.name.reserve(nameLength);
+			stream.read_pod(object.name.data(), nameLength);
+		}
 	}
 }

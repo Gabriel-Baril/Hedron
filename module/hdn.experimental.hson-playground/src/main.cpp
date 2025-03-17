@@ -23,7 +23,7 @@ int main()
 		Ref<HObject> obj = registry.Create<HObject>();
 
 		HObjectFilesystemData data;
-		data.path = "/path/to/obj.hobj";
+		data.path = "path/to/obj.hobj";
 		registry.Save(obj.get(), "local", &data, sizeof(data));
 	}
 

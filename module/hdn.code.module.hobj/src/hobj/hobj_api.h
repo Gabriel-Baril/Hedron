@@ -14,16 +14,18 @@ namespace hdn
 	
 	struct hobj
 	{
-		u64 magic_number;
+		u64 magicNumber;
 		u64 version;
-		hash64_t type_hash;
+		hash64_t typeHash;
 		huid_t id;
+		string name; // If applicable
 	};
 
-	void hobj_set_magic_number(hobj& object, u64 magic_number);
+	void hobj_set_magic_number(hobj& object, u64 magicNumber);
 	void hobj_set_version(hobj& object, u64 version);
-	void hobj_set_type_hash(hobj& object, hash64_t type_hash);
+	void hobj_set_type_hash(hobj& object, hash64_t typeHash);
 	void hobj_set_id(hobj& object, huid_t id);
+	void hobj_set_name(hobj& object, const char* name);
 	void hobj_free(hobj& object);
 
 	void hobj_serialize(hostream& stream, const hobj& object);

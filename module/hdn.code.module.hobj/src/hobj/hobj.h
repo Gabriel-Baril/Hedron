@@ -37,17 +37,19 @@ namespace hdn
 		{
 			hobj_deserialize(stream, m_Object);
 
-			if (m_Object.magic_number != HOBJ_FILE_MAGIC_NUMBER)
+			if (m_Object.magicNumber != HOBJ_FILE_MAGIC_NUMBER)
 			{
 				HFATAL("Invalid deserialization instruction: Trying to deserialize a non hobj stream!");
 			}
 
-			const hash64_t serializedTypeHash = m_Object.type_hash;
-			const hash64_t typeHash = GetTypeHash();
-			if (typeHash != m_Object.type_hash)
-			{
-				HFATAL("Invalid deserialization instruction: trying to interpret and object of type '{0}' with an object of type '{1}'!", serializedTypeHash, typeHash);
-			}
+			// TODO: We should instead check if the serializedTypeHash is a descendant of typeHash
+			// 
+			// const hash64_t serializedTypeHash = m_Object.typeHash;
+			// const hash64_t typeHash = GetTypeHash();
+			// if (typeHash != m_Object.typeHash)
+			// {
+			// 	HFATAL("Invalid deserialization instruction: trying to interpret and object of type '{0}' with an object of type '{1}'!", serializedTypeHash, typeHash);
+			// }
 		}
 
 		virtual void Realize()
@@ -58,6 +60,15 @@ namespace hdn
 		huid_t ID()
 		{
 			return m_Object.id;
+		}
+
+		const char* Name()
+		{
+			if (m_Object.name.empty())
+			{
+				return nullptr;
+			}
+			return m_Object.name.c_str();
 		}
 
 		hobj& GetObject() { return m_Object; };

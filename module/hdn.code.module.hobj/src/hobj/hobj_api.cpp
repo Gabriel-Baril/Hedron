@@ -2,9 +2,9 @@
 
 namespace hdn
 {
-	void hobj_set_magic_number(hobj& object, u64 magic_number)
+	void hobj_set_magic_number(hobj& object, u64 magicNumber)
 	{
-		object.magic_number = magic_number;
+		object.magicNumber = magicNumber;
 	}
 
 	void hobj_set_version(hobj& object, u64 version)
@@ -12,14 +12,19 @@ namespace hdn
 		object.version = version;
 	}
 
-	void hobj_set_type_hash(hobj& object, hash64_t type_hash)
+	void hobj_set_type_hash(hobj& object, hash64_t typeHash)
 	{
-		object.type_hash = type_hash;
+		object.typeHash = typeHash;
 	}
 
 	void hobj_set_id(hobj& object, huid_t id)
 	{
 		object.id = id;
+	}
+
+	void hobj_set_name(hobj& object, const char* name)
+	{
+		object.name = name;
 	}
 
 	void hobj_free(hobj& object)

@@ -16,9 +16,13 @@ namespace hdn
 		}
 	}
 
-	void HObjectRegistry::AddToManifest(huid_t id, IHObjectSource* source)
+	void HObjectRegistry::AddToManifest(huid_t objectID, const char* objectName, IHObjectSource* source)
 	{
-		m_ObjectManifest[id] = source;
+		m_ObjectManifest[objectID] = source;
+		if (objectName)
+		{
+			m_ObjectName[GenerateHash(objectName)] = objectID;
+		}
 	}
 
 	void HObjectRegistry::RemoveFromManifest(huid_t id)

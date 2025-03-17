@@ -4,6 +4,11 @@
 
 namespace hdn
 {
+	bool IsObjectFile(const fspath& path)
+	{
+		return FileSystem::Extension(path) == HOBJ_FILE_EXT;
+	}
+
 	FilesystemObjectSource::FilesystemObjectSource(const string& sourcePath)
 		: m_SourcePath{ sourcePath }
 	{
@@ -15,15 +20,13 @@ namespace hdn
 		return m_LoadedObjects.at(id);
 	}
 
-	void FilesystemObjectSource::Load(huid_t id, HObject* outObject)
+	void FilesystemObjectSource::Load(const char* path, HObject* outObject)
 	{
 		HASSERT(outObject != nullptr, "outObject cannot be null when loading");
-
-		string absoluteSavePath = FileSystem::ToAbsolute(m_ObjectPaths[id]).string();
-		std::ifstream inFile(absoluteSavePath, std::ios::binary | std::ios::ate);
+		std::ifstream inFile(path, std::ios::binary | std::ios::ate);
 
 		if (!inFile) {
-			HERR("Could not open file '{0}' for reading", absoluteSavePath.c_str());
+			HERR("Could not open file '{0}' for reading", path);
 			return;
 		}
 
@@ -36,7 +39,7 @@ namespace hdn
 
 		// Read the file into the buffer
 		if (!inFile.read(buffer.data(), fileSize)) {
-			HERR("Failed to read the file", absoluteSavePath.c_str());
+			HERR("Failed to read the file", path);
 			return;
 		}
 		inFile.close();
@@ -44,7 +47,12 @@ namespace hdn
 		DynamicMemoryBuffer dynamicBuffer{ buffer };
 		histream reader{ &dynamicBuffer };
 		outObject->Deserialize(reader);
+	}
 
+	void FilesystemObjectSource::Load(huid_t id, HObject* outObject)
+	{
+		string absoluteSavePath = FileSystem::ToAbsolute(m_ObjectPaths[id]).string();
+		Load(absoluteSavePath.c_str(), outObject);
 		HASSERT(!m_LoadedObjects.contains(id), "Cannot register an object more than once!");
 		m_LoadedObjects[id] = outObject;
 	}
@@ -122,25 +130,12 @@ namespace hdn
 		vector<fspath> files = FileSystem::Walk(m_SourcePath, IsObjectFile);
 		for (const auto& file : files)
 		{
-			std::ifstream inFile(file, std::ios::binary);
-			if (!inFile) {
-				HERR("Error: Could not open file '{0}' for reading", file.string().c_str());
-				continue;
-			}
-
-			const size_t bufferSize = sizeof(hobj);
-			char fileData[bufferSize];
-			inFile.read(fileData, bufferSize);
-			if (!inFile) {
-				HERR("Error: Failed to read from the file");
-				continue;
-			}
-
-			inFile.close();
-
-			hobj* header = reinterpret_cast<hobj*>(fileData);
-			AddToManifest(header->id, file);
-			registry->AddToManifest(header->id, this);
+			HObject object;
+			Load(file.string().c_str(), &object);
+			const huid_t objectID = object.ID();
+			const char* objectName = object.Name();
+			AddToManifest(objectID, file);
+			registry->AddToManifest(objectID, objectName, this);
 		}
 	}
 
