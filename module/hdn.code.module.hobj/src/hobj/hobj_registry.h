@@ -3,6 +3,7 @@
 #include "core/core_filesystem.h"
 #include "core/stl/unordered_map.h"
 #include "core/stl/optional.h"
+#include "core/random.h"
 
 #include "hobj/hobj.h"
 #include "hobj/hobj_source.h"
@@ -45,7 +46,26 @@ namespace hdn
 		}
 
 		template<typename T>
-		HRef<T> Create()
+		HRef<T> New(const char* name = nullptr)
+		{
+			HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_CREATE, 0);
+			HRef<T> object = CreateRef<T>(); // TODO: Allocate to HObject pool instead
+			
+			hobj& o = object->GetObject();
+			hobj_set_magic_number(o, HOBJ_FILE_MAGIC_NUMBER);
+			hobj_set_version(o, HOBJ_FILE_VERSION);
+			hobj_set_type_hash(o, object->GetTypeHash());
+			hobj_set_id(o, GenerateUUID64());
+			if (name)
+			{
+				hobj_set_name(o, name);
+			}
+			HOBJ_METRIC_END();
+			return object;
+		}
+
+		template<typename T>
+		HRef<T> CreateEmpty()
 		{
 			HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_CREATE, 0);
 			HRef<T> object = CreateRef<T>(); // TODO: Allocate to HObject pool instead
@@ -54,7 +74,7 @@ namespace hdn
 		}
 
 		template<typename T>
-		HRef<T> Get(huid_t id)
+		T* Get(huid_t id)
 		{
 			HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_GET, id);
 			if (!ManifestLookupEntry(id))
@@ -66,15 +86,15 @@ namespace hdn
 			IHObjectSource* source = ManifestGetEntry(id);
 			if (!source->Loaded(id))
 			{
-				source->Load(id, Create<T>());
+				source->Load(id, CreateEmpty<T>().get());
 			}
-			HObject* object = source->Get(id);
+			T* object = static_cast<T*>(source->Get(id));
 			HOBJ_METRIC_END();
 			return object;
 		}
 
 		template<typename T>
-		HRef<T> Get(const char* name)
+		T* Get(const char* name)
 		{
 			hash64_t nameHash = GenerateHash(name);
 			if (!m_ObjectName.contains(nameHash))

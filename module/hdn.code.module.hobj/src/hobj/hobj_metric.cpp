@@ -66,7 +66,10 @@ namespace hdn
 		for (int i = 0; i < m_StoredMetrics.size(); i++)
 		{
 			const auto& current = m_StoredMetrics[i];
-			HINFO("Operation({0}), Time({1})", ObjectOperationType_ToString(current.opType), current.transactionTimeNano);
+
+			float timeMS = (current.transactionTimeNano / 1000.0f) / 1000.0f;
+
+			HINFO("Operation({0}), ObjectID({1}), Time({2}ms)", ObjectOperationType_ToString(current.opType), current.objectID, timeMS);
 		}
 	}
 }

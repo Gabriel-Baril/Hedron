@@ -59,6 +59,7 @@ namespace hdn
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_DESERIALIZE);
 		DynamicMemoryBuffer dynamicBuffer{ buffer };
 		histream reader{ &dynamicBuffer };
+		dynamicBuffer.ResetHead();
 		outObject->Deserialize(reader);
 		HOBJ_METRIC_END();
 
@@ -92,7 +93,7 @@ namespace hdn
 		if (userData)
 		{
 			const HObjectFilesystemData* data = static_cast<const HObjectFilesystemData*>(userData);
-			absoluteSavePath = FileSystem::ToAbsolute(data->path);
+			absoluteSavePath = FileSystem::ToAbsolute(m_SourcePath) / data->path;
 			if (m_ObjectPaths.contains(objectID) && absoluteSavePath != m_ObjectPaths.at(objectID))
 			{
 				shouldDeleteOldPath = true;

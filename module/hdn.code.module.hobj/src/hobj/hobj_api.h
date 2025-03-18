@@ -17,6 +17,7 @@ namespace hdn
 	static constexpr huid_t NULL_HUID = 0;
 
 	static constexpr u64 HOBJ_FILE_MAGIC_NUMBER = 0x4A424F48;
+	static constexpr u64 HOBJ_FILE_VERSION = 1;
 	
 	struct hobj
 	{
