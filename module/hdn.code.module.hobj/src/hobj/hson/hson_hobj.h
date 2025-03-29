@@ -13,7 +13,7 @@ namespace hdn
 		HHson() = default;
 		virtual void Serialize(hostream& stream) override;
 		virtual void Deserialize(histream& stream) override;
-		inline virtual hash64_t GetTypeHash() const override { return GenerateTypeHash<HHson>(); }
+		inline virtual h64 GetTypeHash() const override { return hash_generate_from_type<HHson>(); }
 		virtual ~HHson() = default;
 
 		hson_t& GetHson() { return m_Hson; };

@@ -20,7 +20,7 @@ namespace hdn
 		u64 payloadSize;
 
 		hkey* sortedKeys; // keyCount
-		hash64_t* sortedTypeHash; // typeCount
+		h64* sortedTypeHash; // typeCount
 		u64* keyMaxPerType; // typeCount
 		u64* dataOffsets; // keyCount
 		byte* dataPayload;

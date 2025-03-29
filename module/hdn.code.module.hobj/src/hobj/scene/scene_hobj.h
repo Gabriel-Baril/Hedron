@@ -24,7 +24,7 @@ namespace hdn
 
 		SceneDef& GetSceneDefinition() { return m_MapDefinition; };
 		const SceneDef& GetSceneDefinition() const { return m_MapDefinition; };
-		inline virtual hash64_t GetTypeHash() const { return GenerateTypeHash<HSceneDef>(); }
+		inline virtual h64 GetTypeHash() const { return GenerateTypeHash<HSceneDef>(); }
 	private:
 		SceneDef m_MapDefinition;
 	};

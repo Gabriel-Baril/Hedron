@@ -96,7 +96,7 @@ namespace hdn
 		template<typename T>
 		T* Get(const char* name)
 		{
-			hash64_t nameHash = GenerateHash(name);
+			h64 nameHash = hash_generate(name);
 			if (!m_ObjectName.contains(nameHash))
 			{
 				HWARN("Object with name '{0}' was not found in the manifest!", name);
@@ -127,7 +127,7 @@ namespace hdn
 		HObjectRegistry() = default;
 	private:
 		unordered_map<huid_t, IHObjectSource*> m_ObjectManifest{}; // Is it really necessary?
-		unordered_map<hash64_t, huid_t> m_ObjectName{};
+		unordered_map<h64, huid_t> m_ObjectName{};
 		unordered_map<string, Ref<IHObjectSource>> m_Sources; // We should always have a "local" source
 	};
 }

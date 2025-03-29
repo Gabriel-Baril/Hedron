@@ -18,7 +18,7 @@ namespace hdn
 		builder.minKeyValue = minKeyValue;
 	}
 
-	void ZoneBuilder_AddEntry(ZoneBuilder& builder, hash64_t typeHash, const void* data, u64 dataSize)
+	void ZoneBuilder_AddEntry(ZoneBuilder& builder, h64 typeHash, const void* data, u64 dataSize)
 	{
 		auto it = eastl::find(builder.types.begin(), builder.types.end(), typeHash);
 		if (it == builder.types.end())

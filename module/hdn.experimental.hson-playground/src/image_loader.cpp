@@ -39,14 +39,14 @@ namespace hdn
 	bool ImageRegistry::Contains(const char* name)
 	{
 		size_t length = strlen(name);
-		u64 hash = GenerateHash(name);
+		u64 hash = hash_generate(name);
 		return m_ImageRegistry.contains(hash);
 	}
 
 	void ImageRegistry::Register(const char* name, Ref<Image> image)
 	{
 		size_t length = strlen(name);
-		u64 hash = GenerateHash(name);
+		u64 hash = hash_generate(name);
 		if (m_ImageRegistry.contains(hash))
 		{
 			return;
@@ -57,7 +57,7 @@ namespace hdn
 	Ref<Image> ImageRegistry::Get(const char* name)
 	{
 		size_t length = strlen(name);
-		u64 hash = GenerateHash(name);
+		u64 hash = hash_generate(name);
 		if (m_ImageRegistry.contains(hash))
 		{
 			return m_ImageRegistry.at(hash);

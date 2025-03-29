@@ -24,7 +24,7 @@ namespace hdn
 		m_ObjectManifest[objectID] = source;
 		if (objectName)
 		{
-			m_ObjectName[GenerateHash(objectName)] = objectID;
+			m_ObjectName[hash_generate(objectName)] = objectID;
 		}
 		HOBJ_METRIC_END();
 	}

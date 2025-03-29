@@ -12,7 +12,7 @@ namespace hdn
 		object.version = version;
 	}
 
-	void hobj_set_type_hash(hobj& object, hash64_t typeHash)
+	void hobj_set_type_hash(hobj& object, h64 typeHash)
 	{
 		object.typeHash = typeHash;
 	}

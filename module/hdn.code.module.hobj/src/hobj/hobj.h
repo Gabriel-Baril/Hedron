@@ -72,7 +72,7 @@ namespace hdn
 
 		hobj& GetObject() { return m_Object; };
 		const hobj& GetObject() const { return m_Object; };
-		inline virtual hash64_t GetTypeHash() const { return GenerateTypeHash<HObject>(); }
+		inline virtual h64 GetTypeHash() const { return hash_generate_from_type<HObject>(); }
 	private:
 		hobj m_Object;
 		HObjectLoadState m_LoadState = HObjectLoadState::Unloaded;

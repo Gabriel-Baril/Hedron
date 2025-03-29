@@ -11,7 +11,7 @@ namespace hdn
 		HBinaryArtefact() = default;
 		virtual void Serialize(hostream& stream) override;
 		virtual void Deserialize(histream& stream) override;
-		inline virtual hash64_t GetTypeHash() const override { return GenerateTypeHash<HBinaryArtefact>(); }
+		inline virtual h64 GetTypeHash() const override { return hash_generate_from_type<HBinaryArtefact>(); }
 		virtual ~HBinaryArtefact() = default;
 	};
 }
