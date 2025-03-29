@@ -55,7 +55,7 @@ namespace hdn
 			hobj_set_magic_number(o, HOBJ_FILE_MAGIC_NUMBER);
 			hobj_set_version(o, HOBJ_FILE_VERSION);
 			hobj_set_type_hash(o, object->GetTypeHash());
-			hobj_set_id(o, GenerateUUID64());
+			hobj_set_id(o, uuid64_generate());
 			if (name)
 			{
 				hobj_set_name(o, name);

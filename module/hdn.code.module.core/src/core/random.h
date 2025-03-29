@@ -4,7 +4,7 @@
 
 namespace hdn
 {
-	using uuid64_t = u64;
+	using uuid64 = u64;
 
-	uuid64_t GenerateUUID64();
+	uuid64 uuid64_generate();
 }
