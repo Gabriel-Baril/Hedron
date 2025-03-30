@@ -20,6 +20,4 @@ namespace hdn
 		h64 hashValue = hash_generate(typeName, seed);
 		return hashValue;
 	}
-
-
 }

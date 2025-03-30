@@ -8,17 +8,17 @@
 
 namespace hdn
 {
-	struct hson_field_definition_t
+	struct HsonFieldDefinition
 	{
-		hson_field_definition_t()
+		HsonFieldDefinition()
 		{
 		}
 
-		hson_field_definition_t& operator[](const char* key)
+		HsonFieldDefinition& operator[](const char* key)
 		{
-			auto it = std::find_if(fields.begin(), fields.end(), [&key](const hson_field_definition_t& field)
+			auto it = std::find_if(fields.begin(), fields.end(), [&key](const HsonFieldDefinition& field)
 				{
-					if (field.keyKind != key_kind_t::string)
+					if (field.keyKind != KeyKind::STRING)
 					{
 						return false;
 					}
@@ -27,23 +27,23 @@ namespace hdn
 
 			if (it == fields.end())
 			{
-				hson_field_definition_t child;
-				child.keyKind = key_kind_t::string;
+				HsonFieldDefinition child;
+				child.keyKind = KeyKind::STRING;
 				child.key.name = key;
 				child.parentHash = hash;
 				child.hash = get_field_hash(child.key.name, child.parentHash);
-				child.fieldType = hson_field_t::hson_object;
+				child.fieldType = HsonField::HSON_OBJECT;
 				fields.emplace_back(child);
 				return fields.back();
 			}
 			return *it;
 		}
 
-		hson_field_definition_t& operator[](int index)
+		HsonFieldDefinition& operator[](int index)
 		{
-			auto it = std::find_if(fields.begin(), fields.end(), [&index](const hson_field_definition_t& field)
+			auto it = std::find_if(fields.begin(), fields.end(), [&index](const HsonFieldDefinition& field)
 				{
-					if (field.keyKind != key_kind_t::integer)
+					if (field.keyKind != KeyKind::INTEGER)
 					{
 						return false;
 					}
@@ -52,12 +52,12 @@ namespace hdn
 
 			if (it == fields.end())
 			{
-				hson_field_definition_t child;
-				child.keyKind = key_kind_t::integer;
+				HsonFieldDefinition child;
+				child.keyKind = KeyKind::INTEGER;
 				child.key.index = index;
 				child.parentHash = hash;
 				child.hash = get_field_hash(child.key.index, child.parentHash);
-				child.fieldType = hson_field_t::hson_object;
+				child.fieldType = HsonField::HSON_OBJECT;
 				fields.emplace_back(child);
 				return fields.back();
 			}
@@ -65,7 +65,7 @@ namespace hdn
 		}
 
 		template<typename T>
-		hson_field_definition_t& operator=(const hson_pack_result_t<T>& result)
+		HsonFieldDefinition& operator=(const HsonPackResult<T>& result)
 		{
 			fieldType = result.type;
 			count = result.count;
@@ -73,11 +73,11 @@ namespace hdn
 			hostream stream;
 			switch (result.kind)
 			{
-			case pack_result_kind_t::value:
-				hson_field_traits_t<T>::serialize(&result.dataValue, count, stream);
+			case HsonPackResultKind::VALUE:
+				HsonFieldTraits<T>::serialize(&result.dataValue, count, stream);
 				break;
-			case pack_result_kind_t::ptr:
-				hson_field_traits_t<T>::serialize(result.dataPtr, count, stream);
+			case HsonPackResultKind::PTR:
+				HsonFieldTraits<T>::serialize(result.dataPtr, count, stream);
 				break;
 			}
 			payload.clear();
@@ -90,15 +90,15 @@ namespace hdn
 			return fields.empty();
 		}
 
-		field_hash_t hash = 0;
-		field_hash_t parentHash = 0;
+		h64 hash = 0;
+		h64 parentHash = 0;
 
-		enum class key_kind_t : u8
+		enum class KeyKind : u8
 		{
-			string,
-			integer
+			STRING,
+			INTEGER
 		};
-		key_kind_t keyKind = key_kind_t::string;
+		KeyKind keyKind = KeyKind::STRING;
 
 		union key_t
 		{
@@ -107,9 +107,9 @@ namespace hdn
 		};
 		key_t key{"root"};
 
-		hson_field_t fieldType = hson_field_t::hson_object;
+		HsonField fieldType = HsonField::HSON_OBJECT;
 		u64 count = 0; // If non-payload, the number of element, If payload the byte size
-		vector<hson_field_definition_t> fields;
+		vector<HsonFieldDefinition> fields;
 		std::vector<char> payload;
 	};
 }

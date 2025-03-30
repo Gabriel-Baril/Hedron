@@ -1,176 +1,176 @@
 #pragma once
 
 #include "core/core.h"
+#include "core/hash.h"
 #include "core/io/stream_write.h"
 
 namespace hdn
 {
-	using field_hash_t = u64;
-	field_hash_t get_field_hash(u64 index, u64 seed);
-	field_hash_t get_field_hash(const char* key, u64 seed);
+	h64 get_field_hash(u64 index, u64 seed);
+	h64 get_field_hash(const char* key, u64 seed);
 
-	enum class hson_field_flag_t : u32
+	enum class HsonFieldFlag : u32
 	{
-		hson_ref = BIT(0),
-		hson_lref = BIT(1),
-		hson_value = BIT(2),
+		HSON_REF = BIT(0),
+		HSON_LREF = BIT(1),
+		HSON_VALUE = BIT(2),
 
-		hson_array = BIT(3),
+		HSON_ARRAY = BIT(3),
 
-		hson_index_key = BIT(4),
-		hson_string_key = BIT(5),
+		HSON_INDEX_KEY = BIT(4),
+		HSON_STRING_KEY = BIT(5),
 
-		hson_public = BIT(6),
-		hson_private = BIT(7)
+		HSON_PUBLIC = BIT(6),
+		HSON_PRIVATE = BIT(7)
 	};
 
-	enum class hson_field_t : u8
+	enum class HsonField : u8
 	{
-		hson_undefined,
-		hson_object,
-		hson_struct,
-		hson_payload,
-		hson_i8,
-		hson_i16,
-		hson_i32,
-		hson_i64,
-		hson_u8,
-		hson_u16,
-		hson_u32,
-		hson_u64,
-		hson_f32,
-		hson_f64,
-		hson_string,
+		HSON_UNDEFINED,
+		HSON_OBJECT,
+		HSON_STRUCT,
+		HSON_PAYLOAD,
+		HSON_I8,
+		HSON_I16,
+		HSON_I32,
+		HSON_I64,
+		HSON_U8,
+		HSON_U16,
+		HSON_U32,
+		HSON_U64,
+		HSON_F32,
+		HSON_F64,
+		HSON_STRING,
 
-		count
+		COUNT
 	};
 
-	const char* hson_field_to_string(hson_field_t fieldType);
+	const char* hson_field_to_string(HsonField fieldType);
 
 	template<typename T>
-	struct hson_field_traits_t
+	struct HsonFieldTraits
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_payload;
+		static constexpr typename HsonField type = HsonField::HSON_PAYLOAD;
 	};
 
 	template<>
-	struct hson_field_traits_t<i8>
+	struct HsonFieldTraits<i8>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_i8;
+		static constexpr typename HsonField type = HsonField::HSON_I8;
 		static void serialize( const i8 *data, u64 count, hostream& stream )
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(i8) * count);
 		}
 	};
 
 	template<>
-	struct hson_field_traits_t<i16>
+	struct HsonFieldTraits<i16>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_i16;
+		static constexpr typename HsonField type = HsonField::HSON_I16;
 		static void serialize( const i16 *data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(i16) * count);
 		}
 	};
 
 	template<>
-	struct hson_field_traits_t<i32>
+	struct HsonFieldTraits<i32>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_i32;
+		static constexpr typename HsonField type = HsonField::HSON_I32;
 		static void serialize( const i32 *data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(i32) * count);
 		}
 	};
 
 	template<>
-	struct hson_field_traits_t<i64>
+	struct HsonFieldTraits<i64>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_i64;
+		static constexpr typename HsonField type = HsonField::HSON_I64;
 		static void serialize( const i64 *data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(i64) * count);
 		}
 	};
 
 
 	template<>
-	struct hson_field_traits_t<u8>
+	struct HsonFieldTraits<u8>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_u8;
+		static constexpr typename HsonField type = HsonField::HSON_U8;
 		static void serialize( const u8 *data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(u8) * count);
 		}
 	};
 
 	template<>
-	struct hson_field_traits_t<u16>
+	struct HsonFieldTraits<u16>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_u16;
+		static constexpr typename HsonField type = HsonField::HSON_U16;
 		static void serialize( const u16 *data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(u16) * count);
 		}
 	};
 
 	template<>
-	struct hson_field_traits_t<u32>
+	struct HsonFieldTraits<u32>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_u32;
+		static constexpr typename HsonField type = HsonField::HSON_U32;
 		static void serialize( const u32 *data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(u32) * count);
 		}
 	};
 
 	template<>
-	struct hson_field_traits_t<u64>
+	struct HsonFieldTraits<u64>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_u64;
+		static constexpr typename HsonField type = HsonField::HSON_U64;
 		static void serialize( const u64 *data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(u64) * count);
 		}
 	};
 
 	template<>
-	struct hson_field_traits_t<f32>
+	struct HsonFieldTraits<f32>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_f32;
+		static constexpr typename HsonField type = HsonField::HSON_F32;
 		static void serialize( const f32 *data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(f32) * count);
 		}
 	};
 
 	template<>
-	struct hson_field_traits_t<f64>
+	struct HsonFieldTraits<f64>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_f64;
+		static constexpr typename HsonField type = HsonField::HSON_F64;
 		static void serialize(const f64* data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(f64) * count);
 		}
 	};
 
 	template<>
-	struct hson_field_traits_t<char>
+	struct HsonFieldTraits<char>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_string;
+		static constexpr typename HsonField type = HsonField::HSON_STRING;
 		static void serialize( const char *data, u64 count, hostream& stream)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			stream.write(bytes, sizeof(char) * count);
 		}
 	};

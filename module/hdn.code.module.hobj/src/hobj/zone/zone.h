@@ -23,13 +23,13 @@ namespace hdn
 		h64* sortedTypeHash; // typeCount
 		u64* keyMaxPerType; // typeCount
 		u64* dataOffsets; // keyCount
-		byte* dataPayload;
+		u8* dataPayload;
 	};
 
-	void Zone_Alloc(const Zone& zone);
-	optional<u64> Zone_GetKeyIndex(Zone& object, hkey key);
-	const byte* Zone_GetKeyData(Zone& object, hkey key);
+	void zone_alloc(const Zone& zone);
+	optional<u64> zone_get_key_index(Zone& object, hkey key);
+	const u8* zone_get_key_data(Zone& object, hkey key);
 
-	void Zone_Serialize(hostream& stream, const Zone& zone);
-	void Zone_Deserialize(histream& stream, Zone& zone);
+	void zone_serialize(hostream& stream, const Zone& zone);
+	void zone_deserialize(histream& stream, Zone& zone);
 }

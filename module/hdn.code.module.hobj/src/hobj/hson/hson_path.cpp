@@ -2,50 +2,50 @@
 
 namespace hdn
 {
-	hson_t::hson_path_t hson_t::hson_path_t::operator[](int index)
+	Hson::Path Hson::Path::operator[](int index)
 	{
-		hson_path_t partial;
+		Path partial;
 		partial.root = root;
 		partial.seed = hash;
 		partial.hash = get_field_hash(index, partial.seed);
 		return partial;
 	}
 
-	hson_t::hson_path_t hson_t::hson_path_t::operator[](const char* key)
+	Hson::Path Hson::Path::operator[](const char* key)
 	{
-		hson_path_t partial;
+		Path partial;
 		partial.root = root;
 		partial.seed = hash;
 		partial.hash = get_field_hash(key, partial.seed);
 		return partial;
 	}
 
-	i64 hson_t::hson_path_t::get_field_index() const
+	i64 Hson::Path::get_field_index() const
 	{
 		return root->get_field_index(hash);
 	}
 
-	const char* hson_t::hson_path_t::get_field_name() const
+	const char* Hson::Path::get_field_name() const
 	{
 		return root->get_field_name(hash);
 	}
 
-	const hson_field_t* hson_t::hson_path_t::get_field_type() const
+	const HsonField* Hson::Path::get_field_type() const
 	{
 		return root->get_field_type(hash);
 	}
 
-	const u32* hson_t::hson_path_t::get_field_payload_size() const
+	const u32* Hson::Path::get_field_payload_size() const
 	{
 		return root->get_field_payload_size(hash);
 	}
 
-	const u32* hson_t::hson_path_t::get_field_payload_offset() const
+	const u32* Hson::Path::get_field_payload_offset() const
 	{
 		return root->get_field_payload_offset(hash);
 	}
 
-	const byte* hson_t::hson_path_t::get_field_payload() const
+	const u8* Hson::Path::get_field_payload() const
 	{
 		return root->get_field_payload(hash);
 	}

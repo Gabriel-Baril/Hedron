@@ -14,7 +14,7 @@ namespace hdn
 	{
 	}
 
-	HObject* FilesystemObjectSource::Get(huid_t id)
+	HObject* FilesystemObjectSource::get(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_GET, id);
 		HASSERT(m_LoadedObjects.at(id) != nullptr, "The requested object is not loaded yet");
@@ -23,7 +23,7 @@ namespace hdn
 		return object;
 	}
 
-	void FilesystemObjectSource::Load(const char* path, HObject* outObject)
+	void FilesystemObjectSource::load(const char* path, HObject* outObject)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_LOAD);
 		HASSERT(outObject != nullptr, "outObject cannot be null when loading");
@@ -60,31 +60,31 @@ namespace hdn
 		DynamicMemoryBuffer dynamicBuffer{ buffer };
 		histream reader{ &dynamicBuffer };
 		dynamicBuffer.ResetHead();
-		outObject->Deserialize(reader);
+		outObject->deserialize(reader);
 		HOBJ_METRIC_END();
 
 		HOBJ_METRIC_END();
 	}
 
-	void FilesystemObjectSource::Load(huid_t id, HObject* outObject)
+	void FilesystemObjectSource::load(uuid64 id, HObject* outObject)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_LOAD, id);
 		string absoluteSavePath = FileSystem::ToAbsolute(m_ObjectPaths[id]).string();
-		Load(absoluteSavePath.c_str(), outObject);
+		load(absoluteSavePath.c_str(), outObject);
 		HASSERT(!m_LoadedObjects.contains(id), "Cannot register an object more than once!");
 		m_LoadedObjects[id] = outObject;
 		HOBJ_METRIC_END();
 	}
 
-	void FilesystemObjectSource::Unload(huid_t id)
+	void FilesystemObjectSource::unload(uuid64 id)
 	{
 		m_LoadedObjects.erase(id);
 		m_ObjectPaths.erase(id);
 	}
 
-	bool FilesystemObjectSource::Save(HObject* object, const void* userData, u64 userDataByteSize)
+	bool FilesystemObjectSource::save(HObject* object, const void* userData, u64 userDataByteSize)
 	{
-		const huid_t objectID = object->ID();
+		const uuid64 objectID = object->id();
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_SAVE, objectID);
 
 		HASSERT(object, "object cannot be null");
@@ -110,7 +110,7 @@ namespace hdn
 
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_SERIALIZE);
 		hostream stream;
-		object->Serialize(stream);
+		object->serialize(stream);
 		HOBJ_METRIC_END();
 
 		bool saveSucceed = save_binary_to_file(absoluteSavePath.string().c_str(), stream.data(), stream.size());
@@ -128,7 +128,7 @@ namespace hdn
 		return saveSucceed;
 	}
 
-	bool FilesystemObjectSource::Delete(huid_t id)
+	bool FilesystemObjectSource::del(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_DELETE, id);
 		if (!m_ObjectPaths.contains(id))
@@ -145,14 +145,14 @@ namespace hdn
 		}
 
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_UNLOAD);
-		Unload(id);
+		unload(id);
 		HOBJ_METRIC_END();
 
 		HOBJ_METRIC_END();
 		return deleted;
 	}
 
-	bool FilesystemObjectSource::Loaded(huid_t id)
+	bool FilesystemObjectSource::loaded(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_MANIFEST_LOOKUP_ENTRY);
 		bool contain = m_LoadedObjects.contains(id);
@@ -160,23 +160,23 @@ namespace hdn
 		return contain;
 	}
 
-	void FilesystemObjectSource::Populate(HObjectRegistry* registry)
+	void FilesystemObjectSource::populate(HObjectRegistry* registry)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_MANIFEST_POPULATE);
 		vector<fspath> files = FileSystem::Walk(m_SourcePath, IsObjectFile);
 		for (const auto& file : files)
 		{
 			HObject object;
-			Load(file.string().c_str(), &object);
-			const huid_t objectID = object.ID();
-			const char* objectName = object.Name();
-			ManifestCreateEntry(objectID, file);
-			registry->ManifestCreateEntry(objectID, objectName, this);
+			load(file.string().c_str(), &object);
+			const uuid64 objectID = object.id();
+			const char* objectName = object.name();
+			manifest_create_entry(objectID, file);
+			registry->manifest_create_entry(objectID, objectName, this);
 		}
 		HOBJ_METRIC_END();
 	}
 
-	void FilesystemObjectSource::ManifestCreateEntry(huid_t id, const fspath& path)
+	void FilesystemObjectSource::manifest_create_entry(uuid64 id, const fspath& path)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_MANIFEST_CREATE_ENTRY);
 		HASSERT(!m_ObjectPaths.contains(id), "");

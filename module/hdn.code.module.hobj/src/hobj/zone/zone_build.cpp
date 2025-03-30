@@ -3,7 +3,7 @@
 
 namespace hdn
 {
-	u64 ZoneBuilder_GetTotalEntryCount(const ZoneBuilder& builder)
+	u64 zone_builder_get_total_entry_count(const ZoneBuilder& builder)
 	{
 		u64 total = 0;
 		for (const auto& [typeHash, entryOffsetsPerType] : builder.dataOffsets)
@@ -13,12 +13,12 @@ namespace hdn
 		return total;
 	}
 
-	void ZoneBuilder_SetMinKeyValue(ZoneBuilder& builder, hkey minKeyValue)
+	void zone_builder_set_min_key_value(ZoneBuilder& builder, hkey minKeyValue)
 	{
 		builder.minKeyValue = minKeyValue;
 	}
 
-	void ZoneBuilder_AddEntry(ZoneBuilder& builder, h64 typeHash, const void* data, u64 dataSize)
+	void zone_builder_add_entry(ZoneBuilder& builder, h64 typeHash, const void* data, u64 dataSize)
 	{
 		auto it = eastl::find(builder.types.begin(), builder.types.end(), typeHash);
 		if (it == builder.types.end())
@@ -33,17 +33,17 @@ namespace hdn
 		// TODO: Insert struct data in dataVector
 	}
 
-	static void ZoneBuilder_Build_KeyCount(ZoneBuilder& builder, Zone& zone)
+	static void zone_builder_build_key_count(ZoneBuilder& builder, Zone& zone)
 	{
-		zone.keyCount = ZoneBuilder_GetTotalEntryCount(builder);
+		zone.keyCount = zone_builder_get_total_entry_count(builder);
 	}
 
-	static void ZoneBuilder_Build_TypeCount(ZoneBuilder& builder, Zone& zone)
+	static void zone_builder_build_type_count(ZoneBuilder& builder, Zone& zone)
 	{
 		zone.typeCount = builder.dataOffsets.size();
 	}
 
-	static void ZoneBuilder_Build_PayloadSize(ZoneBuilder& builder, Zone& zone)
+	static void zone_builder_build_payload_size(ZoneBuilder& builder, Zone& zone)
 	{
 		u64 totalDataPayloadSize = 0;
 		for (int i = 0; i < builder.types.size(); i++)
@@ -53,7 +53,7 @@ namespace hdn
 		zone.payloadSize = totalDataPayloadSize;
 	}
 
-	static void ZoneBuilder_Build_SortedKey(ZoneBuilder& builder, Zone& zone)
+	static void zone_builder_build_sorted_key(ZoneBuilder& builder, Zone& zone)
 	{
 		hkey currentKey = builder.minKeyValue;
 		builder.keyMaxPerType.reserve(builder.dataOffsets.size());
@@ -71,7 +71,7 @@ namespace hdn
 		}
 	}
 
-	static void ZoneBuilder_Build_SortedTypes(ZoneBuilder& builder, Zone& zone)
+	static void zone_builder_build_sorted_types(ZoneBuilder& builder, Zone& zone)
 	{
 		for (int i = 0; i < builder.types.size(); i++)
 		{
@@ -79,7 +79,7 @@ namespace hdn
 		}
 	}
 
-	static void ZoneBuilder_Build_KeyMaxPerType(ZoneBuilder& builder, Zone& zone)
+	static void zone_builder_build_key_max_per_type(ZoneBuilder& builder, Zone& zone)
 	{
 		for (int i = 0; i < builder.keyMaxPerType.size(); i++)
 		{
@@ -87,7 +87,7 @@ namespace hdn
 		}
 	}
 
-	static void ZoneBuilder_Build_DataOffsets(ZoneBuilder& builder, Zone& zone)
+	static void zone_builder_build_data_offsets(ZoneBuilder& builder, Zone& zone)
 	{
 		u64 globalOffset = 0;
 		int index = 0;
@@ -104,7 +104,7 @@ namespace hdn
 		}
 	}
 
-	static void ZoneBuilder_Build_DataPayload(ZoneBuilder& builder, Zone& zone)
+	static void zone_builder_build_data_payload(ZoneBuilder& builder, Zone& zone)
 	{
 		u64 currentDataOffset = 0;
 		for (int i = 0; i < builder.types.size(); i++)
@@ -115,16 +115,16 @@ namespace hdn
 		}
 	}
 
-	void ZoneBuilder_build(ZoneBuilder& builder, Zone& zone)
+	void zone_builder_build(ZoneBuilder& builder, Zone& zone)
 	{
-		ZoneBuilder_Build_KeyCount(builder, zone);
-		ZoneBuilder_Build_TypeCount(builder, zone);
-		ZoneBuilder_Build_PayloadSize(builder, zone);
-		Zone_Alloc(zone);
-		ZoneBuilder_Build_SortedKey(builder, zone);
-		ZoneBuilder_Build_SortedTypes(builder, zone);
-		ZoneBuilder_Build_KeyMaxPerType(builder, zone);
-		ZoneBuilder_Build_DataOffsets(builder, zone);
-		ZoneBuilder_Build_DataPayload(builder, zone);
+		zone_builder_build_key_count(builder, zone);
+		zone_builder_build_type_count(builder, zone);
+		zone_builder_build_payload_size(builder, zone);
+		zone_alloc(zone);
+		zone_builder_build_sorted_key(builder, zone);
+		zone_builder_build_sorted_types(builder, zone);
+		zone_builder_build_key_max_per_type(builder, zone);
+		zone_builder_build_data_offsets(builder, zone);
+		zone_builder_build_data_payload(builder, zone);
 	}
 }

@@ -2,13 +2,13 @@
 
 namespace hdn
 {
-	void HDefinition::Serialize(hostream& stream)
+	void HDefinition::serialize(hostream& stream)
 	{
-		HObject::Serialize(stream);
+		HObject::serialize(stream);
 	}
 
-	void HDefinition::Deserialize(histream& stream)
+	void HDefinition::deserialize(histream& stream)
 	{
-		HObject::Deserialize(stream);
+		HObject::deserialize(stream);
 	}
 }

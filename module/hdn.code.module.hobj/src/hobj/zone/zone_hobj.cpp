@@ -2,16 +2,16 @@
 
 namespace hdn
 {
-	void HZone::Serialize(hostream& stream)
+	void HZone::serialize(hostream& stream)
 	{
-		HObject::Serialize(stream);
-        Zone_Serialize(stream, m_Zone);
+		HObject::serialize(stream);
+        zone_serialize(stream, m_Zone);
 	}
 
-    void HZone::Deserialize(histream& stream)
+    void HZone::deserialize(histream& stream)
     {
-		HObject::Deserialize(stream);
-		Zone_Deserialize(stream, m_Zone);
+		HObject::deserialize(stream);
+		zone_deserialize(stream, m_Zone);
     }
 
     HZone::~HZone()

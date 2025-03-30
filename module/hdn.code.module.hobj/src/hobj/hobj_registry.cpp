@@ -2,23 +2,23 @@
 
 namespace hdn
 {
-	HObjectRegistry& HObjectRegistry::Get()
+	HObjectRegistry& HObjectRegistry::get()
 	{
 		static HObjectRegistry s_Instance;
 		return s_Instance;
 	}
 
-	void HObjectRegistry::Populate()
+	void HObjectRegistry::populate()
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::REGISTRY_MANIFEST_POPULATE);
 		for (auto& [_, source] : m_Sources)
 		{
-			source->Populate(this);
+			source->populate(this);
 		}
 		HOBJ_METRIC_END();
 	}
 
-	void HObjectRegistry::ManifestCreateEntry(huid_t objectID, const char* objectName, IHObjectSource* source)
+	void HObjectRegistry::manifest_create_entry(uuid64 objectID, const char* objectName, IHObjectSource* source)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_MANIFEST_CREATE_ENTRY, objectID);
 		m_ObjectManifest[objectID] = source;
@@ -29,14 +29,14 @@ namespace hdn
 		HOBJ_METRIC_END();
 	}
 
-	void HObjectRegistry::ManifestDeleteEntry(huid_t id)
+	void HObjectRegistry::manifest_delete_entry(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_MANIFEST_DELETE_ENTRY, id);
 		m_ObjectManifest.erase(id);
 		HOBJ_METRIC_END();
 	}
 
-	bool HObjectRegistry::ManifestLookupEntry(huid_t id)
+	bool HObjectRegistry::manifest_lookup_entry(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_MANIFEST_LOOKUP_ENTRY, id);
 		const bool contained = m_ObjectManifest.contains(id);
@@ -44,7 +44,7 @@ namespace hdn
 		return false;
 	}
 
-	IHObjectSource* HObjectRegistry::ManifestGetEntry(huid_t id)
+	IHObjectSource* HObjectRegistry::manifest_get_entry(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_MANIFEST_GET_ENTRY, id);
 		IHObjectSource* source = m_ObjectManifest[id];
@@ -52,46 +52,46 @@ namespace hdn
 		return source;
 	}
 
-	bool HObjectRegistry::Save(HObject* object, const string& name, const void* userData, u64 userDataByteSize)
+	bool HObjectRegistry::object_save(HObject* object, const string& name, const void* userData, u64 userDataByteSize)
 	{
-		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_SAVE, object->ID());
+		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_SAVE, object->id());
 		HASSERT(m_Sources.contains(name), "The source {0} was not found!", name.c_str());
-		const huid_t objectID = object->ID();
-		bool saved = m_Sources[name]->Save(object, userData, userDataByteSize);
-		if (ManifestLookupEntry(objectID) && ManifestGetEntry(objectID) != m_Sources[name].get())
+		const uuid64 objectID = object->id();
+		bool saved = m_Sources[name]->save(object, userData, userDataByteSize);
+		if (manifest_lookup_entry(objectID) && manifest_get_entry(objectID) != m_Sources[name].get())
 		{
-			ManifestDeleteEntry(objectID);
+			manifest_delete_entry(objectID);
 		}
 		HOBJ_METRIC_END();
 		return saved;
 	}
 
-	bool HObjectRegistry::Save(HObject* object, const void* userData, u64 userDataByteSize)
+	bool HObjectRegistry::object_save(HObject* object, const void* userData, u64 userDataByteSize)
 	{
-		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_SAVE, object->ID());
-		const huid_t objectID = object->ID();
+		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_SAVE, object->id());
+		const uuid64 objectID = object->id();
 		// Check if the object already exists within a source
-		if (ManifestLookupEntry(objectID))
+		if (manifest_lookup_entry(objectID))
 		{
-			return ManifestGetEntry(objectID)->Save(object, userData, userDataByteSize);
+			return manifest_get_entry(objectID)->save(object, userData, userDataByteSize);
 		}
 		HWARN("The object was not found in any sources! Do you meant to save to a specific source instead?");
 		HOBJ_METRIC_END();
 		return false;
 	}
 
-	bool HObjectRegistry::Delete(huid_t id)
+	bool HObjectRegistry::object_delete(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_DELETE, id);
-		bool deleted = ManifestGetEntry(id)->Delete(id);
+		bool deleted = manifest_get_entry(id)->del(id);
 		HOBJ_METRIC_END();
 
 		return deleted;
 	}
 
-	bool HObjectRegistry::Delete(HObject* object)
+	bool HObjectRegistry::object_delete(HObject* object)
 	{
-		return Delete(object->ID());
+		return object_delete(object->id());
 	}
 
 	HObjectRegistry::~HObjectRegistry()

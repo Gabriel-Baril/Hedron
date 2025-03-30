@@ -11,12 +11,12 @@ struct Pair
 namespace hdn
 {
 	template<>
-	struct hson_field_traits_t<Pair>
+	struct HsonFieldTraits<Pair>
 	{
-		static constexpr typename hson_field_t type = hson_field_t::hson_struct;
+		static constexpr typename HsonField type = HsonField::HSON_STRUCT;
 		static void serialize(const Pair* data, u64 count, hostream& stream)
 		{
-			const byte *bytes = reinterpret_cast<const byte *>(data);
+			const u8 *bytes = reinterpret_cast<const u8 *>(data);
 			stream.write(bytes, sizeof(Pair) * count);
 		}
 	};

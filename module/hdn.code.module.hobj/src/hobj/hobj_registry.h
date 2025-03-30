@@ -12,12 +12,12 @@
 #define HOBJ_METRIC IN_USE
 
 #if USING( HOBJ_METRIC )
-#define HOBJ_METRIC_BEGIN_ID(opType, objectID) ObjectMetricTracker::Get().Begin(opType, objectID);
-#define HOBJ_METRIC_BEGIN(opType) ObjectMetricTracker::Get().Begin(opType);
-#define HOBJ_METRIC_FILE_PATH(path) ObjectMetricTracker::Get().FilePath(path);
-#define HOBJ_METRIC_FILE_BYTE_READ(byteCount) ObjectMetricTracker::Get().FileByteRead(byteCount);
-#define HOBJ_METRIC_FILE_BYTE_WRITE(byteCount) ObjectMetricTracker::Get().FileByteWrite(byteCount);
-#define HOBJ_METRIC_END() ObjectMetricTracker::Get().End();
+#define HOBJ_METRIC_BEGIN_ID(opType, objectID) ObjectMetricTracker::get().begin(opType, objectID);
+#define HOBJ_METRIC_BEGIN(opType) ObjectMetricTracker::get().begin(opType);
+#define HOBJ_METRIC_FILE_PATH(path) ObjectMetricTracker::get().file_path(path);
+#define HOBJ_METRIC_FILE_BYTE_READ(byteCount) ObjectMetricTracker::get().file_byte_read(byteCount);
+#define HOBJ_METRIC_FILE_BYTE_WRITE(byteCount) ObjectMetricTracker::get().file_byte_write(byteCount);
+#define HOBJ_METRIC_END() ObjectMetricTracker::get().end();
 #else
 #define HOBJ_METRIC_BEGIN_ID(opType, objectID)
 #define HOBJ_METRIC_BEGIN(opType)
@@ -34,10 +34,10 @@ namespace hdn
 	class HObjectRegistry
 	{
 	public:
-		static HObjectRegistry& Get();
+		static HObjectRegistry& get();
 
 		template<typename T, typename... Args>
-		Ref<T> AddSource(const string& sourceName, Args&&... args)
+		Ref<T> add_source(const string& sourceName, Args&&... args)
 		{
 			HASSERT(!m_Sources.contains(sourceName), "Cannot add 2 sources with the same name!");
 			Ref<T> source = CreateRef<T>(std::forward<Args>(args)...);
@@ -46,15 +46,15 @@ namespace hdn
 		}
 
 		template<typename T>
-		HRef<T> New(const char* name = nullptr)
+		HRef<T> new_object(const char* name = nullptr)
 		{
 			HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_CREATE, 0);
 			HRef<T> object = CreateRef<T>(); // TODO: Allocate to HObject pool instead
 			
-			hobj& o = object->GetObject();
+			hobj& o = object->get_object();
 			hobj_set_magic_number(o, HOBJ_FILE_MAGIC_NUMBER);
 			hobj_set_version(o, HOBJ_FILE_VERSION);
-			hobj_set_type_hash(o, object->GetTypeHash());
+			hobj_set_type_hash(o, object->get_type_hash());
 			hobj_set_id(o, uuid64_generate());
 			if (name)
 			{
@@ -65,7 +65,7 @@ namespace hdn
 		}
 
 		template<typename T>
-		HRef<T> CreateEmpty()
+		HRef<T> create_empty_object()
 		{
 			HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_CREATE, 0);
 			HRef<T> object = CreateRef<T>(); // TODO: Allocate to HObject pool instead
@@ -74,27 +74,27 @@ namespace hdn
 		}
 
 		template<typename T>
-		T* Get(huid_t id)
+		T* get(uuid64 id)
 		{
 			HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_GET, id);
-			if (!ManifestLookupEntry(id))
+			if (!manifest_lookup_entry(id))
 			{
 				HWARN("Object with id '{0}' was not found in the manifest!", id);
 				return nullptr;
 			}
 
-			IHObjectSource* source = ManifestGetEntry(id);
-			if (!source->Loaded(id))
+			IHObjectSource* source = manifest_get_entry(id);
+			if (!source->loaded(id))
 			{
-				source->Load(id, CreateEmpty<T>().get());
+				source->load(id, create_empty_object<T>().get());
 			}
-			T* object = static_cast<T*>(source->Get(id));
+			T* object = static_cast<T*>(source->get(id));
 			HOBJ_METRIC_END();
 			return object;
 		}
 
 		template<typename T>
-		T* Get(const char* name)
+		T* get(const char* name)
 		{
 			h64 nameHash = hash_generate(name);
 			if (!m_ObjectName.contains(nameHash))
@@ -102,32 +102,32 @@ namespace hdn
 				HWARN("Object with name '{0}' was not found in the manifest!", name);
 				return nullptr;
 			}
-			const huid_t objectID = m_ObjectName[nameHash];
-			return Get<T>(objectID);
+			const uuid64 objectID = m_ObjectName[nameHash];
+			return get<T>(objectID);
 		}
 
-		void Stats()
+		void stats()
 		{
-			ObjectMetricTracker::Get().PrintStats();
+			ObjectMetricTracker::get().print_stats();
 		}
 
-		void Populate();
+		void populate();
 
-		void ManifestCreateEntry(huid_t objectID, const char* objectName, IHObjectSource* source);
-		void ManifestDeleteEntry(huid_t id);
-		bool ManifestLookupEntry(huid_t id);
-		IHObjectSource* ManifestGetEntry(huid_t id);
+		void manifest_create_entry(uuid64 objectID, const char* objectName, IHObjectSource* source);
+		void manifest_delete_entry(uuid64 id);
+		bool manifest_lookup_entry(uuid64 id);
+		IHObjectSource* manifest_get_entry(uuid64 id);
 
-		bool Save(HObject* object, const string& name, const void* userData = nullptr, u64 userDataByteSize = 0);
-		bool Save(HObject* object, const void* userData = nullptr, u64 userDataByteSize = 0);
-		bool Delete(huid_t id);
-		bool Delete(HObject* object);
+		bool object_save(HObject* object, const string& name, const void* userData = nullptr, u64 userDataByteSize = 0);
+		bool object_save(HObject* object, const void* userData = nullptr, u64 userDataByteSize = 0);
+		bool object_delete(uuid64 id);
+		bool object_delete(HObject* object);
 		virtual ~HObjectRegistry();
 	private:
 		HObjectRegistry() = default;
 	private:
-		unordered_map<huid_t, IHObjectSource*> m_ObjectManifest{}; // Is it really necessary?
-		unordered_map<h64, huid_t> m_ObjectName{};
+		unordered_map<uuid64, IHObjectSource*> m_ObjectManifest{}; // Is it really necessary?
+		unordered_map<h64, uuid64> m_ObjectName{};
 		unordered_map<string, Ref<IHObjectSource>> m_Sources; // We should always have a "local" source
 	};
 }

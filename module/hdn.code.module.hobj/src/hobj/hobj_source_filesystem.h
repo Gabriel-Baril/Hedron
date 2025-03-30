@@ -16,21 +16,21 @@ namespace hdn
 	{
 	public:
 		FilesystemObjectSource(const string& sourcePath);
-		virtual HObject* Get(huid_t id) override;
+		virtual HObject* get(uuid64 id) override;
 
-		void Load(const char* path, HObject* outObject);
-		virtual void Load(huid_t id, HObject* outObject) override;
+		void load(const char* path, HObject* outObject);
+		virtual void load(uuid64 id, HObject* outObject) override;
 
-		void Unload(huid_t id);
+		void unload(uuid64 id);
 
-		virtual bool Save(HObject* object, const void* userData, u64 userDataByteSize) override;
-		virtual bool Delete(huid_t id) override;
-		virtual bool Loaded(huid_t id) override;
-		virtual void Populate(HObjectRegistry* registry) override;
-		void ManifestCreateEntry(huid_t id, const fspath& path);
+		virtual bool save(HObject* object, const void* userData, u64 userDataByteSize) override;
+		virtual bool del(uuid64 id) override;
+		virtual bool loaded(uuid64 id) override;
+		virtual void populate(HObjectRegistry* registry) override;
+		void manifest_create_entry(uuid64 id, const fspath& path);
 	private:
 		string m_SourcePath;
-		unordered_map<huid_t, HObject*> m_LoadedObjects{};
-		unordered_map<huid_t, fspath> m_ObjectPaths{};
+		unordered_map<uuid64, HObject*> m_LoadedObjects{};
+		unordered_map<uuid64, fspath> m_ObjectPaths{};
 	};
 }

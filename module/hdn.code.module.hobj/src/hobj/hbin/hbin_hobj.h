@@ -9,9 +9,9 @@ namespace hdn
 	{
 	public:
 		HBinaryArtefact() = default;
-		virtual void Serialize(hostream& stream) override;
-		virtual void Deserialize(histream& stream) override;
-		inline virtual h64 GetTypeHash() const override { return hash_generate_from_type<HBinaryArtefact>(); }
+		virtual void serialize(hostream& stream) override;
+		virtual void deserialize(histream& stream) override;
+		inline virtual h64 get_type_hash() const override { return hash_generate_from_type<HBinaryArtefact>(); }
 		virtual ~HBinaryArtefact() = default;
 	};
 }

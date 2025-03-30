@@ -2,15 +2,15 @@
 
 namespace hdn
 {
-	void HHson::Serialize(hostream& stream)
+	void HHson::serialize(hostream& stream)
 	{
-		HObject::Serialize(stream);
+		HObject::serialize(stream);
 		hson_serialize(stream, m_Hson);
 	}
 
-	void HHson::Deserialize(histream& stream)
+	void HHson::deserialize(histream& stream)
 	{
-		HObject::Deserialize(stream);
+		HObject::deserialize(stream);
 		hson_deserialize(stream, m_Hson);
 	}
 }

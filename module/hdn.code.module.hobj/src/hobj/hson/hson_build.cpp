@@ -2,19 +2,19 @@
 
 namespace hdn
 {
-	static void print_field(const hson_field_definition_t& field)
+	static void print_field(const HsonFieldDefinition& field)
 	{
-		if (field.keyKind == hson_field_definition_t::key_kind_t::string)
+		if (field.keyKind == HsonFieldDefinition::KeyKind::STRING)
 		{
 			HINFO(field.key.name);
 		}
-		else if (field.keyKind == hson_field_definition_t::key_kind_t::integer)
+		else if (field.keyKind == HsonFieldDefinition::KeyKind::INTEGER)
 		{
 			HINFO(field.key.index);
 		}
 	}
 
-	static void get_all_leaf_fields(const hson_field_definition_t& field, vector<const hson_field_definition_t*>& hsonFields)
+	static void get_all_leaf_fields(const HsonFieldDefinition& field, vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		if (field.is_leaf())
 		{
@@ -28,7 +28,7 @@ namespace hdn
 		}
 	}
 
-	static void get_all_fields(const hson_field_definition_t& field, vector<const hson_field_definition_t*>& hsonFields)
+	static void get_all_fields(const HsonFieldDefinition& field, vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		hsonFields.push_back(&field);
 		for (const auto& _field : field.fields)
@@ -37,7 +37,7 @@ namespace hdn
 		}
 	}
 
-	static i64 get_field_index_from_hash(field_hash_t hash, const vector<const hson_field_definition_t*>& hsonFields)
+	static i64 get_field_index_from_hash(h64 hash, const vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		for (int i = 0; i < hsonFields.size(); i++)
 		{
@@ -49,12 +49,12 @@ namespace hdn
 		return -1;
 	}
 
-	static void build_field_hierarchy(hson_field_definition_t& field, const vector<const hson_field_definition_t*>& hsonFields, hostream& hierarchyStream)
+	static void build_field_hierarchy(HsonFieldDefinition& field, const vector<const HsonFieldDefinition*>& hsonFields, hostream& hierarchyStream)
 	{
 		const i64 fieldIndex = get_field_index_from_hash(field.hash, hsonFields);
 		HASSERT(fieldIndex >= 0, "The field was not found");
 
-		field_hierarchy_entry_t entry;
+		FieldHierarchyEntry entry;
 		entry.fieldChildCount = static_cast<u32>(field.fields.size());
 		entry.fieldIndex = fieldIndex;
 		hierarchyStream << entry;
@@ -65,22 +65,22 @@ namespace hdn
 		}
 	}
 
-	static void hson_builder_build_version(hson_builder_t& builder, hson_t& h)
+	static void hson_builder_build_version(HsonBuilder& builder, Hson& h)
 	{
-		h.version = hson_version::INITIAL_VERSION;
+		h.version = HsonVersion::INITIAL_VERSION;
 	}
 
-	static void hson_builder_build_section_bitmap(hson_builder_t& builder, hson_t& h)
+	static void hson_builder_build_section_bitmap(HsonBuilder& builder, Hson& h)
 	{
-		h.flags = hson_flags::ALL;
+		h.flags = HsonFlags::ALL;
 	}
 
-	static void hson_builder_build_field_count(hson_builder_t& builder, hson_t& h, u64 fieldCount)
+	static void hson_builder_build_field_count(HsonBuilder& builder, Hson& h, u64 fieldCount)
 	{
 		h.fieldCount = fieldCount;
 	}
 
-	static void hson_builder_build_payload_byte_size(hson_builder_t& builder, hson_t& h, const vector<const hson_field_definition_t*>& hsonFields)
+	static void hson_builder_build_payload_byte_size(HsonBuilder& builder, Hson& h, const vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		u64 totalSize = 0;
 		for (const auto& field : hsonFields)
@@ -91,9 +91,9 @@ namespace hdn
 	}
 
 	static void hson_builder_build_name_payload_byte_offsets(
-		hson_builder_t& builder, 
-		hson_t& h, 
-		const vector<const hson_field_definition_t*>& hsonFields,
+		HsonBuilder& builder, 
+		Hson& h, 
+		const vector<const HsonFieldDefinition*>& hsonFields,
 		hostream& outFieldNameStream,
 		hostream& outFieldNameByteOffsetsStream
 	)
@@ -104,13 +104,13 @@ namespace hdn
 			outFieldNameByteOffsetsStream.write_pod(localOffset);
 			switch (field->keyKind)
 			{
-			case hson_field_definition_t::key_kind_t::integer:
+			case HsonFieldDefinition::KeyKind::INTEGER:
 			{
 				std::string str = std::to_string(field->key.index);
 				localOffset += outFieldNameStream.write(str.c_str(), strlen(str.c_str()) + 1);
 				break;
 			}
-			case hson_field_definition_t::key_kind_t::string:
+			case HsonFieldDefinition::KeyKind::STRING:
 			{
 				localOffset += outFieldNameStream.write(field->key.name, strlen(field->key.name) + 1);
 				break;
@@ -120,7 +120,7 @@ namespace hdn
 		h.namePayloadByteSize = outFieldNameStream.size();
 	}
 
-	static void hson_builder_build_sorted_field_hashes(hson_builder_t& builder, hson_t& h, const vector<const hson_field_definition_t*>& hsonFields)
+	static void hson_builder_build_sorted_field_hashes(HsonBuilder& builder, Hson& h, const vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		for (int i = 0; i < hsonFields.size(); i++)
 		{
@@ -128,7 +128,7 @@ namespace hdn
 		}
 	}
 
-	static void hson_builder_build_sorted_field_type_hashes(hson_builder_t& builder, hson_t& h, const vector<const hson_field_definition_t*>& hsonFields)
+	static void hson_builder_build_sorted_field_type_hashes(HsonBuilder& builder, Hson& h, const vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		for (int i = 0; i < hsonFields.size(); i++)
 		{
@@ -136,7 +136,7 @@ namespace hdn
 		}
 	}
 
-	static void hson_builder_build_sorted_field_flags(hson_builder_t& builder, hson_t& h, const vector<const hson_field_definition_t*>& hsonFields)
+	static void hson_builder_build_sorted_field_flags(HsonBuilder& builder, Hson& h, const vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		for (int i = 0; i < hsonFields.size(); i++)
 		{
@@ -144,7 +144,7 @@ namespace hdn
 		}
 	}
 
-	static void hson_builder_build_sorted_field_payload_byte_sizes(hson_builder_t& builder, hson_t& h, const vector<const hson_field_definition_t*>& hsonFields)
+	static void hson_builder_build_sorted_field_payload_byte_sizes(HsonBuilder& builder, Hson& h, const vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		for (int i = 0; i < hsonFields.size(); i++)
 		{
@@ -152,7 +152,7 @@ namespace hdn
 		}
 	}
 
-	static void hson_builder_build_sorted_field_payload_byte_offsets(hson_builder_t& builder, hson_t& h, const vector<const hson_field_definition_t*>& hsonFields)
+	static void hson_builder_build_sorted_field_payload_byte_offsets(HsonBuilder& builder, Hson& h, const vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		u64 absoluteOffset = 0;
 		for (int i = 0; i < hsonFields.size(); i++)
@@ -163,8 +163,8 @@ namespace hdn
 	}
 
 	static void hson_builder_build_sorted_field_name_payload_byte_offsets(
-		hson_builder_t& builder, 
-		hson_t& h, 
+		HsonBuilder& builder, 
+		Hson& h, 
 		hostream& outFieldNameByteOffsetsStream
 	)
 	{
@@ -172,7 +172,7 @@ namespace hdn
 		memcpy(h.sortedFieldNamePayloadByteOffsets, outFieldNameByteOffsetsStream.data(), offsetCount);
 	}
 
-	static void hson_builder_build_packed_field_hierarchy(hson_builder_t& builder, hson_t& h, const vector<const hson_field_definition_t*>& hsonFields, hostream& hierarchyStream)
+	static void hson_builder_build_packed_field_hierarchy(HsonBuilder& builder, Hson& h, const vector<const HsonFieldDefinition*>& hsonFields, hostream& hierarchyStream)
 	{
 		for (auto& rootField : builder.fields)
 		{
@@ -182,14 +182,14 @@ namespace hdn
 	}
 
 	static void hson_builder_build_sorted_field_name_payload(
-		hson_builder_t& builder, 
-		hson_t& h, 
+		HsonBuilder& builder, 
+		Hson& h, 
 		hostream& outFieldNameStream)
 	{
 		memcpy(h.sortedFieldNamePayload, outFieldNameStream.data(), outFieldNameStream.size());
 	}
 
-	static void hson_builder_build_sorted_field_payload(hson_builder_t& builder, hson_t& h, const vector<const hson_field_definition_t*>& hsonFields)
+	static void hson_builder_build_sorted_field_payload(HsonBuilder& builder, Hson& h, const vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		for (int i = 0; i < hsonFields.size(); i++)
 		{
@@ -199,11 +199,11 @@ namespace hdn
 		}
 	}
 
-	static void get_hson_fields(const hson_builder_t& builder, const hson_t& h, vector<const hson_field_definition_t*>& hsonFields)
+	static void get_hson_fields(const HsonBuilder& builder, const Hson& h, vector<const HsonFieldDefinition*>& hsonFields)
 	{
 		for (const auto& field : builder.fields)
 		{
-			if (BitOn(h.flags, hson_flags::SERIALIZE_INTERMEDIATE_FIELD))
+			if (BitOn(h.flags, HsonFlags::SERIALIZE_INTERMEDIATE_FIELD))
 			{
 				get_all_fields(field, hsonFields);
 			}
@@ -214,19 +214,19 @@ namespace hdn
 		}
 
 		std::sort(hsonFields.begin(), hsonFields.end(),
-			[](const hson_field_definition_t* a, const hson_field_definition_t* b)
+			[](const HsonFieldDefinition* a, const HsonFieldDefinition* b)
 			{
 				return a->hash < b->hash;
 			}
 		);
 	}
 
-	void hson_builder_build(hson_builder_t& builder, hson_t& h)
+	void hson_builder_build(HsonBuilder& builder, Hson& h)
 	{
 		hson_builder_build_version(builder, h);
 		hson_builder_build_section_bitmap(builder, h);
 
-		vector<const hson_field_definition_t*> hsonFields;
+		vector<const HsonFieldDefinition*> hsonFields;
 		get_hson_fields(builder, h, hsonFields);
 
 		hson_builder_build_field_count(builder, h, hsonFields.size());
@@ -238,37 +238,37 @@ namespace hdn
 		
 		hson_alloc(h);
 
-		const hson_flags sectionFlag = h.flags;
+		const HsonFlags sectionFlag = h.flags;
 		hson_builder_build_sorted_field_hashes(builder, h, hsonFields);
 
-		if (BitOn(sectionFlag, hson_flags::SERIALIZE_FIELD_TYPE))
+		if (BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_TYPE))
 		{
 			hson_builder_build_sorted_field_type_hashes(builder, h, hsonFields); // hson_object for intermediate fields
 		}
 		
 		hson_builder_build_sorted_field_flags(builder, h, hsonFields);
 
-		if (BitOn(sectionFlag, hson_flags::SERIALIZE_FIELD_PAYLOAD_SIZE))
+		if (BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_PAYLOAD_SIZE))
 		{
 			hson_builder_build_sorted_field_payload_byte_sizes(builder, h, hsonFields); // 0 for intermediate fields
 		}
 
 		hson_builder_build_sorted_field_payload_byte_offsets(builder, h, hsonFields);
 
-		if (BitOn(sectionFlag, hson_flags::SERIALIZE_FIELD_NAME))
+		if (BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_NAME))
 		{
 			hson_builder_build_sorted_field_name_payload_byte_offsets(builder, h, outFieldNameByteOffsetsStream);
 		}
 
 		if (
-			BitOn(sectionFlag, hson_flags::SERIALIZE_FIELD_HIERARCHY) && 
-			BitOn(sectionFlag, hson_flags::SERIALIZE_INTERMEDIATE_FIELD))
+			BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_HIERARCHY) && 
+			BitOn(sectionFlag, HsonFlags::SERIALIZE_INTERMEDIATE_FIELD))
 		{
 			hostream hierarchyStream;
 			hson_builder_build_packed_field_hierarchy(builder, h, hsonFields, hierarchyStream);
 		}
 
-		if (BitOn(sectionFlag, hson_flags::SERIALIZE_FIELD_NAME))
+		if (BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_NAME))
 		{
 			hson_builder_build_sorted_field_name_payload(builder, h, outFieldNameStream);
 		}
@@ -276,7 +276,7 @@ namespace hdn
 		hson_builder_build_sorted_field_payload(builder, h, hsonFields);
 	}
 
-	void hson_builder_init_from_hson(hson_builder_t& builder, const hson_t& h)
+	void hson_builder_init_from_hson(HsonBuilder& builder, const Hson& h)
 	{
 
 	}

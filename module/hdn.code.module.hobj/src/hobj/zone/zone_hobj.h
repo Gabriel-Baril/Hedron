@@ -12,8 +12,10 @@ namespace hdn
 	public:
         HZone() = default;
 
-		virtual void Serialize(hostream& stream) override;
-        virtual void Deserialize(histream& stream) override;
+		virtual void serialize(hostream& stream) override;
+        virtual void deserialize(histream& stream) override;
+
+		inline virtual h64 get_type_hash() const override { return hash_generate_from_type<HZone>(); }
 
         virtual ~HZone();
     private:

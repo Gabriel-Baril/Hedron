@@ -12,9 +12,7 @@
 namespace hdn
 {
 	using i8 = signed char;
-	using byte = i8;
 	using u8 = unsigned char;
-	using ubyte = u8;
 	using i16 = signed short;
 	using u16 = unsigned short;
 	using i32 = signed int;

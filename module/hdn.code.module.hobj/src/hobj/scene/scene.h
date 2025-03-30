@@ -16,10 +16,10 @@ namespace hdn
 		vector<SceneEntityDef> entities;
 	};
 
-	void SceneDef_SetMaxLight(SceneDef& object, int maxLight);
-	void SceneDef_SetMaxPrimaryLight(SceneDef& object, int maxPrimaryLight);
-	void SceneDef_EmplaceEntity(SceneDef& object, const SceneEntityDef& entity);
+	void scene_def_set_max_light(SceneDef& object, int maxLight);
+	void scene_def_set_max_primary_light(SceneDef& object, int maxPrimaryLight);
+	void scene_def_emplace_entity(SceneDef& object, const SceneEntityDef& entity);
 
-	void SceneDef_Serialize(hostream& stream, const SceneDef& object);
-	void SceneDef_Deserialize(histream& stream, SceneDef& object);
+	void scene_def_serialize(hostream& stream, const SceneDef& object);
+	void scene_def_deserialize(histream& stream, SceneDef& object);
 }

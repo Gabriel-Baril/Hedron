@@ -6,7 +6,7 @@ namespace hdn
 	{
 		void* slab = std::malloc(allocator.blockSize * allocator.blocksPerSlab); // TODO: Fix, should not heap allocate
 		allocator.slabs.push_back(slab);
-		byte* current = static_cast<byte*>(slab);
+		u8* current = static_cast<u8*>(slab);
 		for (size_t i = 0; i < allocator.blocksPerSlab; i++)
 		{
 			void* next = (i < allocator.blocksPerSlab - 1) ? (current + allocator.blockSize) : nullptr;

@@ -4,19 +4,19 @@
 
 namespace hdn
 {
-	enum class pack_result_kind_t
+	enum class HsonPackResultKind
 	{
-		ptr,
-		value
+		PTR,
+		VALUE
 	};
 
 	template<typename T>
-	struct hson_pack_result_t
+	struct HsonPackResult
 	{
-		hson_field_t type;
+		HsonField type;
 		int count;
 
-		pack_result_kind_t kind;
+		HsonPackResultKind kind;
 		union
 		{
 			T dataValue;
@@ -28,27 +28,27 @@ namespace hdn
 	{
 		// Convenience API
 		template<typename T>
-		hson_pack_result_t<T> pack( const T &data )
+		HsonPackResult<T> pack( const T &data )
 		{
-			hson_pack_result_t<T> result;
-			result.type = hson_field_traits_t<T>::type;
+			HsonPackResult<T> result;
+			result.type = HsonFieldTraits<T>::type;
 			result.count = 1;
-			result.kind = pack_result_kind_t::value;
+			result.kind = HsonPackResultKind::VALUE;
 			result.dataValue = data;
 			return result;
 		}
 
 		template<typename T>
-		hson_pack_result_t<T> pack( const T *data, int count = 1 )
+		HsonPackResult<T> pack( const T *data, int count = 1 )
 		{
-			hson_pack_result_t<T> result;
-			result.type = hson_field_traits_t<T>::type;
+			HsonPackResult<T> result;
+			result.type = HsonFieldTraits<T>::type;
 			result.count = count;
-			result.kind = pack_result_kind_t::ptr;
+			result.kind = HsonPackResultKind::PTR;
 			result.dataPtr = data;
 			return result;
 		}
 
-		hson_pack_result_t<char> pack(const char* data);
+		HsonPackResult<char> pack(const char* data);
 	}
 }

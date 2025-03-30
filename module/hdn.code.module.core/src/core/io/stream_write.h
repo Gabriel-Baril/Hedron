@@ -65,7 +65,7 @@ namespace hdn
 
 		u64 write(const void* data, u64 byteSize)
 		{
-			const byte* bytes = reinterpret_cast<const byte*>(data);
+			const u8* bytes = reinterpret_cast<const u8*>(data);
 			m_stream.write(reinterpret_cast<const char*>(data), byteSize);
 			return byteSize;
 		}

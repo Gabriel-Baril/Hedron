@@ -14,9 +14,9 @@ namespace hdn
 {
 	enum class HObjectLoadState
 	{
-		Unloaded = 0,
-		Virtualized = 1,
-		Realized = 2
+		UNLOADED = 0,
+		VIRTUALIZED = 1,
+		REALIZED = 2
 	};
 	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectLoadState)
 
@@ -27,12 +27,12 @@ namespace hdn
 	public:
 		virtual ~HObject() = default;
 
-		virtual void Serialize(hostream& stream)
+		virtual void serialize(hostream& stream)
 		{
 			hobj_serialize(stream, m_Object);
 		}
 
-		virtual void Deserialize(histream& stream)
+		virtual void deserialize(histream& stream)
 		{
 			hobj_deserialize(stream, m_Object);
 
@@ -51,17 +51,17 @@ namespace hdn
 			// }
 		}
 
-		virtual void Realize()
+		virtual void realize()
 		{
 
 		}
 
-		huid_t ID()
+		uuid64 id()
 		{
 			return m_Object.id;
 		}
 
-		const char* Name()
+		const char* name()
 		{
 			if (m_Object.name.empty())
 			{
@@ -70,12 +70,12 @@ namespace hdn
 			return m_Object.name.c_str();
 		}
 
-		hobj& GetObject() { return m_Object; };
-		const hobj& GetObject() const { return m_Object; };
-		inline virtual h64 GetTypeHash() const { return hash_generate_from_type<HObject>(); }
+		hobj& get_object() { return m_Object; };
+		const hobj& get_object() const { return m_Object; };
+		inline virtual h64 get_type_hash() const { return hash_generate_from_type<HObject>(); }
 	private:
 		hobj m_Object;
-		HObjectLoadState m_LoadState = HObjectLoadState::Unloaded;
+		HObjectLoadState m_LoadState = HObjectLoadState::UNLOADED;
 		// bool m_Dirty;
 	};
 }

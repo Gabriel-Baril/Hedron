@@ -40,5 +40,5 @@ namespace hdn
 		COUNT
 	};
 
-	const char* ObjectOperationType_ToString(ObjectOperationType type);
+	const char* object_operation_type_to_string(ObjectOperationType type);
 }

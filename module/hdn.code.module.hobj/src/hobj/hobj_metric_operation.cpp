@@ -35,7 +35,7 @@ namespace hdn
 		"REGISTRY_OBJECT_CREATE"
 	};
 
-	const char* ObjectOperationType_ToString(ObjectOperationType type)
+	const char* object_operation_type_to_string(ObjectOperationType type)
 	{
 		return s_ObjectOperationTypeStr[Underlying(type)];
 	}

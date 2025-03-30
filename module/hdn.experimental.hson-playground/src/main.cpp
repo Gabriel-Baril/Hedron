@@ -14,13 +14,13 @@
 void create_hson()
 {
 	using namespace hdn;
-	hson_builder_t def;
+	HsonBuilder def;
 	{
-		byte pixels[5] = { 23, 65, 89, 39, 10 };
+		u8 pixels[5] = { 23, 65, 89, 39, 10 };
 		f32 arr[4] = { 12.4f, 7.6f, -8.9f, 14.32f };
 		u64 modelRef = 0; //GetAsset( "model_0" );
 
-		def["pixels"] = hson::pack<byte>(pixels, 5);
+		def["pixels"] = hson::pack<u8>(pixels, 5);
 		def["name"] = hson::pack("gbaril");
 		def["age"] = hson::pack<i8>(22);
 		def["arr"] = hson::pack<f32>(arr, 4);
@@ -42,13 +42,13 @@ void create_hson()
 		def["__sources"][0]["source_hash"] = hson::pack<u64>(9837929990112112233);
 	}
 
-	HRef<HHson> hson = HObjectRegistry::Get().New<HHson>("player_profile");
-	hson_builder_build(def, hson->GetHson());
+	HRef<HHson> hson = HObjectRegistry::get().new_object<HHson>("player_profile");
+	hson_builder_build(def, hson->get_hson());
 	
 	HObjectFilesystemData data;
 	data.path = "player_profile.hobj";
 
-	HObjectRegistry::Get().Save(hson.get(), "local", &data, sizeof(data));
+	HObjectRegistry::get().object_save(hson.get(), "local", &data, sizeof(data));
 }
 
 int main()
@@ -56,17 +56,17 @@ int main()
 	using namespace hdn;
 	Log_Init();
 
-	HObjectRegistry& registry = HObjectRegistry::Get();
-	registry.AddSource<FilesystemObjectSource>("local", "objects");
-	registry.Populate();
+	HObjectRegistry& registry = HObjectRegistry::get();
+	registry.add_source<FilesystemObjectSource>("local", "objects");
+	registry.populate();
 
 	// CreateHson();
 
-	HHson* hson = registry.Get<HHson>("player_profile");
-	hson_t& h = hson->GetHson();
+	HHson* hson = registry.get<HHson>("player_profile");
+	Hson& h = hson->get_hson();
 	HINFO("Name: {0}", h["name"].as<char>());
 
-	registry.Stats();
+	registry.stats();
 
 	return 0;
 }

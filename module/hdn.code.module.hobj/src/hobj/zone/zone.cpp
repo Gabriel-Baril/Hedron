@@ -2,7 +2,7 @@
 
 namespace hdn
 {
-	optional<u64> Zone_GetKeyIndex(Zone& zone, hkey key)
+	optional<u64> zone_get_key_index(Zone& zone, hkey key)
 	{
 		if (key == NULL_HKEY)
 		{
@@ -17,9 +17,9 @@ namespace hdn
 		return static_cast<u64>(keyPtr - zone.sortedKeys);
 	}
 
-	const byte* Zone_GetKeyData(Zone& zone, hkey key)
+	const u8* zone_get_key_data(Zone& zone, hkey key)
 	{
-		optional<u64> keyIndex = Zone_GetKeyIndex(zone, key);
+		optional<u64> keyIndex = zone_get_key_index(zone, key);
 		if (keyIndex == eastl::nullopt)
 		{
 			return nullptr;
@@ -27,7 +27,7 @@ namespace hdn
 		return &zone.dataPayload[zone.dataOffsets[keyIndex.value()]];
 	}
 
-	void Zone_Alloc(const Zone& zone)
+	void zone_alloc(const Zone& zone)
 	{
 		// TODO: Allocate zone memory in a smarter way than just heap allocation (for example, stack allocator)
 	}

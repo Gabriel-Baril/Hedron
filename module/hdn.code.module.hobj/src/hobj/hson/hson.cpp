@@ -2,47 +2,47 @@
 
 namespace hdn
 {
-	void hson_alloc(hson_t& h)
+	void hson_alloc(Hson& h)
 	{
-		const hson_flags hsonFlags = h.flags;
+		const HsonFlags hsonFlags = h.flags;
 
-		h.sortedFieldHashes = new field_hash_t[h.fieldCount];
+		h.sortedFieldHashes = new h64[h.fieldCount];
 
-		if (BitOn(hsonFlags, hson_flags::SERIALIZE_FIELD_TYPE))
+		if (BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_TYPE))
 		{
-			h.sortedFieldTypeHashes = new hson_field_t[h.fieldCount];
+			h.sortedFieldTypeHashes = new HsonField[h.fieldCount];
 		}
 
 		h.sortedFieldFlags = new u32[h.fieldCount];
 
-		if (BitOn(hsonFlags, hson_flags::SERIALIZE_FIELD_PAYLOAD_SIZE))
+		if (BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_PAYLOAD_SIZE))
 		{
 			h.sortedFieldPayloadByteSizes = new u32[h.fieldCount];
 		}
 
 		h.sortedFieldPayloadByteOffsets = new u32[h.fieldCount];
 
-		if (BitOn(hsonFlags, hson_flags::SERIALIZE_FIELD_NAME))
+		if (BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_NAME))
 		{
 			h.sortedFieldNamePayloadByteOffsets = new u32[h.fieldCount];
 		}
 
 		if (
-			BitOn(hsonFlags, hson_flags::SERIALIZE_FIELD_HIERARCHY) &&
-			BitOn(hsonFlags, hson_flags::SERIALIZE_INTERMEDIATE_FIELD))
+			BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_HIERARCHY) &&
+			BitOn(hsonFlags, HsonFlags::SERIALIZE_INTERMEDIATE_FIELD))
 		{
-			h.packedFieldHierarchy = new field_hierarchy_entry_t[h.fieldCount];
+			h.packedFieldHierarchy = new FieldHierarchyEntry[h.fieldCount];
 		}
 
-		if (BitOn(hsonFlags, hson_flags::SERIALIZE_FIELD_NAME))
+		if (BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_NAME))
 		{
-			h.sortedFieldNamePayload = new byte[h.namePayloadByteSize];
+			h.sortedFieldNamePayload = new u8[h.namePayloadByteSize];
 		}
 
-		h.sortedFieldPayload = new byte[h.payloadByteSize];
+		h.sortedFieldPayload = new u8[h.payloadByteSize];
 	}
 
-	void hson_free(hson_t& h)
+	void hson_free(Hson& h)
 	{
 		delete[] h.sortedFieldHashes;
 		delete[] h.sortedFieldTypeHashes;
@@ -65,20 +65,20 @@ namespace hdn
 		h.sortedFieldPayload = nullptr;
 	}
 
-	hson_t::hson_path_t hson_t::operator[](const char* key)
+	Hson::Path Hson::operator[](const char* key)
 	{
-		hson_path_t f;
+		Path f;
 		f.root = this;
 		return f[key];
 	}
 
-	void hson_t::print_hierarchy()
+	void Hson::print_hierarchy()
 	{
 		stack<int> s;
 		for (int i = 0; i < fieldCount; i++)
 		{
-			field_hierarchy_entry_t* entry = &packedFieldHierarchy[i];
-			field_hash_t fieldHash = sortedFieldHashes[entry->fieldIndex];
+			FieldHierarchyEntry* entry = &packedFieldHierarchy[i];
+			h64 fieldHash = sortedFieldHashes[entry->fieldIndex];
 
 			int spaceCount = s.size();
 			std::string space(spaceCount, '\t');  // Use tabs for indentation
@@ -101,7 +101,7 @@ namespace hdn
 		}
 	}
 
-	i64 hson_t::get_field_index(field_hash_t hash) const
+	i64 Hson::get_field_index(h64 hash) const
 	{
 		if (!hash) {
 			return -1;
@@ -116,7 +116,7 @@ namespace hdn
 		return -1;
 	}
 
-	const char* hson_t::get_field_name(field_hash_t hash) const
+	const char* Hson::get_field_name(h64 hash) const
 	{
 		if (!hash || !sortedFieldPayloadByteOffsets || !sortedFieldPayload) {
 			return nullptr; // Safeguard against invalid memory access
@@ -130,7 +130,7 @@ namespace hdn
 		return nullptr;
 	}
 
-	const hson_field_t* hson_t::get_field_type(field_hash_t hash) const
+	const HsonField* Hson::get_field_type(h64 hash) const
 	{
 		if (!hash || !sortedFieldPayloadByteOffsets || !sortedFieldPayload) {
 			return nullptr; // Safeguard against invalid memory access
@@ -144,7 +144,7 @@ namespace hdn
 		return nullptr;
 	}
 
-	const u32* hson_t::get_field_payload_size(field_hash_t hash) const
+	const u32* Hson::get_field_payload_size(h64 hash) const
 	{
 		if (!hash || !sortedFieldPayloadByteOffsets || !sortedFieldPayload) {
 			return nullptr; // Safeguard against invalid memory access
@@ -158,7 +158,7 @@ namespace hdn
 		return nullptr;
 	}
 
-	const u32* hson_t::get_field_payload_offset(field_hash_t hash) const
+	const u32* Hson::get_field_payload_offset(h64 hash) const
 	{
 		if (!hash || !sortedFieldPayloadByteOffsets || !sortedFieldPayload) {
 			return nullptr; // Safeguard against invalid memory access
@@ -172,7 +172,7 @@ namespace hdn
 		return nullptr;
 	}
 
-	const byte* hson_t::get_field_payload(field_hash_t hash) const
+	const u8* Hson::get_field_payload(h64 hash) const
 	{
 		if (!hash || !sortedFieldPayloadByteOffsets || !sortedFieldPayload) {
 			return nullptr; // Safeguard against invalid memory access

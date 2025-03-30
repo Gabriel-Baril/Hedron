@@ -17,7 +17,7 @@ namespace hdn
 		object.typeHash = typeHash;
 	}
 
-	void hobj_set_id(hobj& object, huid_t id)
+	void hobj_set_id(hobj& object, uuid64 id)
 	{
 		object.id = id;
 	}

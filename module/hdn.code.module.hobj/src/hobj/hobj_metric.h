@@ -26,14 +26,14 @@ namespace hdn
 	class ObjectMetricTracker
 	{
 	public:
-		static ObjectMetricTracker& Get();
-		void Begin(ObjectOperationType type, u64 objectID = 0);
-		void FilePath(const char* path);
-		void FileByteRead(u64 byteCount);
-		void FileByteWrite(u64 byteCount);
-		void End();
-		ObjectMetricEntry& GetLatestMetric();
-		void PrintStats();
+		static ObjectMetricTracker& get();
+		void begin(ObjectOperationType type, u64 objectID = 0);
+		void file_path(const char* path);
+		void file_byte_read(u64 byteCount);
+		void file_byte_write(u64 byteCount);
+		void end();
+		ObjectMetricEntry& get_latest_metric();
+		void print_stats();
 	private:
 		stack<u64> m_MetricStack;
 		vector<ObjectMetricEntry> m_StoredMetrics;
