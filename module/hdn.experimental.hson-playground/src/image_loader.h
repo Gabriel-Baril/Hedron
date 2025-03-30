@@ -8,13 +8,13 @@ namespace hdn
 	class Image
 	{
 	public:
-		void Load(const char* path);
-		void Unload();
+		void load(const char* path);
+		void unload();
 		virtual ~Image();
 
-		u32 GetWidth() { return m_Width; }
-		u32 GetHeight() { return m_Height; }
-		u32 GetChannelCount() { return m_Channels; }
+		u32 get_width() { return m_Width; }
+		u32 get_height() { return m_Height; }
+		u32 get_channel_count() { return m_Channels; }
 	private:
 		void* m_Pixels = nullptr;
 		u32 m_Width;
@@ -25,11 +25,11 @@ namespace hdn
 	class ImageRegistry
 	{
 	public:
-		static ImageRegistry& Get();
+		static ImageRegistry& get();
 
-		bool Contains(const char* name);
-		void Register(const char* name, Ref<Image> image);
-		Ref<Image> Get(const char* name);
+		bool contains(const char* name);
+		void register_image(const char* name, Ref<Image> image);
+		Ref<Image> get(const char* name);
 	private:
 		ImageRegistry() = default;
 	private:

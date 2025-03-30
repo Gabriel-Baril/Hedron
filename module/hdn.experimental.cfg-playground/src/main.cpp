@@ -6,7 +6,7 @@
 
 namespace hdn
 {
-	bool Predicate(const fspath& path)
+	bool predicate(const fspath& path)
 	{
 		auto s = FileSystem::Filename(path).string();
 		HWARN(s.c_str());
@@ -32,7 +32,7 @@ int main()
 	fspath corePath = "hdn.code.module.core";
 
 	try {
-		vector<fspath> paths = FileSystem::Walk(moduleFolder, hdn::Predicate, true);
+		vector<fspath> paths = FileSystem::Walk(moduleFolder, hdn::predicate, true);
 		for (const auto& path : paths)
 		{
 			HINFO("{0}", path.filename().string().c_str());

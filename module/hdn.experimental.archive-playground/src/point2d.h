@@ -8,7 +8,7 @@ namespace hdn
 
 	};
 
-	int GetDefaultArrayCount(int length)
+	int get_default_array_count(int length)
 	{
 		return length + 4;
 	}
@@ -28,7 +28,7 @@ namespace hdn
 		int arrLength0;
 		int arrLength1;
 
-		archive(array, expr=GetDefaultArrayCount(member(arrLength0) + member(arrLength1)))
+		archive(array, expr=get_default_array_count(member(arrLength0) + member(arrLength1)))
 		int* arr;
 	};
 }

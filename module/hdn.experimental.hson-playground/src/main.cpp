@@ -11,7 +11,7 @@
 #include "core/io/stream_save.h"
 #include "hobj/hson/hson_hobj.h"
 
-void CreateHson()
+void create_hson()
 {
 	using namespace hdn;
 	hson_builder_t def;

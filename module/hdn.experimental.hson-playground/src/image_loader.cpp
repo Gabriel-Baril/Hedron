@@ -6,7 +6,7 @@
 
 namespace hdn
 {
-	void Image::Load(const char* path)
+	void Image::load(const char* path)
 	{
 		int width, height, channels;
 		m_Pixels = stbi_load(path, &width, &height, &channels, 0);
@@ -15,7 +15,7 @@ namespace hdn
 		m_Channels = channels;
 	}
 
-	void Image::Unload()
+	void Image::unload()
 	{
 		if (m_Pixels == nullptr)
 		{
@@ -26,24 +26,24 @@ namespace hdn
 
 	Image::~Image()
 	{
-		Unload();
+		unload();
 	}
 
 
-	ImageRegistry& ImageRegistry::Get()
+	ImageRegistry& ImageRegistry::get()
 	{
 		static ImageRegistry s_Instance;
 		return s_Instance;
 	}
 
-	bool ImageRegistry::Contains(const char* name)
+	bool ImageRegistry::contains(const char* name)
 	{
 		size_t length = strlen(name);
 		u64 hash = hash_generate(name);
 		return m_ImageRegistry.contains(hash);
 	}
 
-	void ImageRegistry::Register(const char* name, Ref<Image> image)
+	void ImageRegistry::register_image(const char* name, Ref<Image> image)
 	{
 		size_t length = strlen(name);
 		u64 hash = hash_generate(name);
@@ -54,7 +54,7 @@ namespace hdn
 		m_ImageRegistry[hash] = image;
 	}
 
-	Ref<Image> ImageRegistry::Get(const char* name)
+	Ref<Image> ImageRegistry::get(const char* name)
 	{
 		size_t length = strlen(name);
 		u64 hash = hash_generate(name);
