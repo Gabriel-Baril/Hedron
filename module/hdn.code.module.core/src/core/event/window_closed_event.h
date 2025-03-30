@@ -9,7 +9,7 @@ namespace hdn
 	public:
 		WindowClosedEvent() = default;
 
-		EVENT_CLASS_TYPE( EventType::WindowClose )
-		EVENT_CLASS_CATEGORY( EventCategory::Application )
+		EVENT_CLASS_TYPE( EventType::WINDOW_CLOSE )
+		EVENT_CLASS_CATEGORY( EventCategory::APPLICATION )
 	};
 }

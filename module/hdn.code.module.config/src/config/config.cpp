@@ -10,13 +10,13 @@ namespace hdn
 	{
 	}
 
-	Configuration& Configuration::Get()
+	Configuration& Configuration::get()
 	{
-		static Configuration s_Instance{ GetRootConfigPath() };
+		static Configuration s_Instance{ get_root_config_path() };
 		return s_Instance;
 	}
 
-	std::filesystem::path Configuration::GetRootConfigPath()
+	std::filesystem::path Configuration::get_root_config_path()
 	{
 		const char* root = std::getenv("HDN_ROOT");
 		const char* configName = std::getenv("HDN_ROOT_CONFIG_NAME");
@@ -24,7 +24,7 @@ namespace hdn
 		return rootPath / configName;
 	}
 
-	string Configuration::GetRootConfigVariable(const string& section, const string& name, const string& defaultValue)
+	string Configuration::get_root_config_variable(const string& section, const string& name, const string& defaultValue)
 	{
 		string result = m_Reader.Get(section, name, defaultValue);
 		HASSERT(result != defaultValue, "Configuration Variable '[{0}]{1}' not found", section.c_str(), name.c_str());
@@ -44,7 +44,7 @@ namespace hdn
 			}
 			else
 			{
-				string rep = GetRootConfigVariable(matchedSection, matchedKey, "");
+				string rep = get_root_config_variable(matchedSection, matchedKey, "");
 				HASSERT(rep != "", "Configuration Variable '[{0}]{1}' not found while parsing '{2}'", matchedSection.c_str(), matchedKey.c_str(), result.c_str());
 				replacement = rep;
 			}

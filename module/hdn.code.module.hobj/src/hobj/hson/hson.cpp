@@ -8,33 +8,33 @@ namespace hdn
 
 		h.sortedFieldHashes = new h64[h.fieldCount];
 
-		if (BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_TYPE))
+		if (flag_on(hsonFlags, HsonFlags::SERIALIZE_FIELD_TYPE))
 		{
 			h.sortedFieldTypeHashes = new HsonField[h.fieldCount];
 		}
 
 		h.sortedFieldFlags = new u32[h.fieldCount];
 
-		if (BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_PAYLOAD_SIZE))
+		if (flag_on(hsonFlags, HsonFlags::SERIALIZE_FIELD_PAYLOAD_SIZE))
 		{
 			h.sortedFieldPayloadByteSizes = new u32[h.fieldCount];
 		}
 
 		h.sortedFieldPayloadByteOffsets = new u32[h.fieldCount];
 
-		if (BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_NAME))
+		if (flag_on(hsonFlags, HsonFlags::SERIALIZE_FIELD_NAME))
 		{
 			h.sortedFieldNamePayloadByteOffsets = new u32[h.fieldCount];
 		}
 
 		if (
-			BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_HIERARCHY) &&
-			BitOn(hsonFlags, HsonFlags::SERIALIZE_INTERMEDIATE_FIELD))
+			flag_on(hsonFlags, HsonFlags::SERIALIZE_FIELD_HIERARCHY) &&
+			flag_on(hsonFlags, HsonFlags::SERIALIZE_INTERMEDIATE_FIELD))
 		{
 			h.packedFieldHierarchy = new FieldHierarchyEntry[h.fieldCount];
 		}
 
-		if (BitOn(hsonFlags, HsonFlags::SERIALIZE_FIELD_NAME))
+		if (flag_on(hsonFlags, HsonFlags::SERIALIZE_FIELD_NAME))
 		{
 			h.sortedFieldNamePayload = new u8[h.namePayloadByteSize];
 		}

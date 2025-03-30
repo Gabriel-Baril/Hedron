@@ -54,7 +54,7 @@ void create_hson()
 int main()
 {
 	using namespace hdn;
-	Log_Init();
+	log_init();
 
 	HObjectRegistry& registry = HObjectRegistry::get();
 	registry.add_source<FilesystemObjectSource>("local", "objects");

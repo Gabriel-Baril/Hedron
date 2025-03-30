@@ -17,9 +17,9 @@ namespace hdn
 		}
 
 		// Get the internal buffer as a std::vector<char>
-		const std::vector<char>& getBuffer() const { return buffer; }
-		std::vector<char>& getBuffer() { return buffer; }
-		void ResetHead()
+		const std::vector<char>& get_buffer() const { return buffer; }
+		std::vector<char>& get_buffer() { return buffer; }
+		void reset()
 		{
 			setg( buffer.data(), buffer.data(), buffer.data() + buffer.size() ); // **Fixed here**
 		}
@@ -31,7 +31,7 @@ namespace hdn
 
 			// Expand buffer dynamically if needed
 			size_t oldSize = buffer.size();
-			resizeBuffer( oldSize * 2 );
+			resize_buffer( oldSize * 2 );
 
 			// Write the character and move the put pointer
 			pbump( 1 );
@@ -44,7 +44,7 @@ namespace hdn
 			size_t available = epptr() - pptr();
 			if ( n > available ) {
 				size_t oldSize = buffer.size();
-				resizeBuffer( oldSize + n );
+				resize_buffer( oldSize + n );
 			}
 
 			std::memcpy( pptr(), s, n );
@@ -75,7 +75,7 @@ namespace hdn
 		std::vector<char> buffer;
 
 		// Resize the buffer to accommodate more data
-		void resizeBuffer( size_t newSize ) {
+		void resize_buffer( size_t newSize ) {
 			size_t oldSize = buffer.size();
 			buffer.resize( newSize );
 

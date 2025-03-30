@@ -2,31 +2,31 @@
 
 #include "core/core.h"
 
-#define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return type; }\
-								virtual EventType GetEventType() const override { return GetStaticType(); }\
-								virtual const char* GetName() const override { return #type; }
-#define EVENT_CLASS_CATEGORY(category) virtual utype<EventCategory> GetCategoryFlags() const override { return Underlying(category); }
+#define EVENT_CLASS_TYPE(type)  static EventType get_static_type() { return type; }\
+								virtual EventType get_event_type() const override { return get_static_type(); }\
+								virtual const char* get_name() const override { return #type; }
+#define EVENT_CLASS_CATEGORY(category) virtual utype<EventCategory> get_category_flags() const override { return underlying(category); }
 
 namespace hdn
 {
 	enum class EventType : u8
 	{
-		None = 0,
-		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-		AppTick, AppUpdate, AppRender,
-		KeyPressed, KeyReleased, KeyTyped,
-		MouseButtonPressed, MouseButtonReleased, MouseMove, MouseScrolled,
-		SceneInit, SceneStart, SceneUpdate, SceneEnd, ScenePause, AceneUnpause
+		NONE = 0,
+		WINDOW_CLOSE, WINDOW_RESIZE, WINDOW_FOCUS, WINDOW_LOST_FOCUS, WINDOW_MOVED,
+		APP_TICK, APP_UPDATE, APP_RENDER,
+		KEY_PRESSED, KEY_RELEASED, KEY_TYPED,
+		MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_MOVE, MOUSE_SCROLLED,
+		SCENE_INIT, SCENE_START, SCENE_UPDATE, SCENE_END, SCENE_PAUSE, SCENE_UNPAUSE
 	};
 
 	enum class EventCategory : u8
 	{
-		None = 0,
-		Application = BIT( 0 ),
-		Input = BIT( 1 ),
-		Keyboard = BIT( 2 ),
-		Mouse = BIT( 3 ),
-		MouseButton = BIT( 4 )
+		NONE = 0,
+		APPLICATION = BIT( 0 ),
+		INPUT = BIT( 1 ),
+		KEYBOARD = BIT( 2 ),
+		MOUSE = BIT( 3 ),
+		MOUSE_BUTTON = BIT( 4 )
 	};
 	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(EventCategory)
 
@@ -36,20 +36,20 @@ namespace hdn
 	public:
 		virtual ~Event() = default;
 
-		virtual EventType GetEventType() const = 0;
-		virtual const char *GetName() const = 0;
-		virtual utype<EventCategory> GetCategoryFlags() const = 0;
-		virtual std::string ToString() const { return GetName(); } // Has to be overrided if you want more specific details about the event
+		virtual EventType get_event_type() const = 0;
+		virtual const char *get_name() const = 0;
+		virtual utype<EventCategory> get_category_flags() const = 0;
+		virtual std::string to_string() const { return get_name(); } // Has to be overrided if you want more specific details about the event
 
-		inline bool IsInCategory( EventCategory category )
+		inline bool has_category( EventCategory category )
 		{
-			return GetCategoryFlags() & Underlying( category );
+			return get_category_flags() & underlying( category );
 		}
 		bool Handled = false;
 	};
 
 	inline std::ostream &operator<<( std::ostream &os, const Event &e )
 	{
-		return os << e.ToString();
+		return os << e.to_string();
 	}
 }

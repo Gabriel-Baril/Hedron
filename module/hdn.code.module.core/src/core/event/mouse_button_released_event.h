@@ -8,12 +8,12 @@ namespace hdn
 	{
 	public:
 		MouseButtonReleasedEvent( MouseButton button ) : MouseButtonEvent( button ) {}
-		std::string ToString() const override
+		std::string to_string() const override
 		{
 			std::stringstream ss;
-			ss << "MouseButtonReleasedEvent: " << Underlying(GetMouseButton());
+			ss << "MouseButtonReleasedEvent: " << underlying(get_mouse_button());
 			return ss.str();
 		}
-		EVENT_CLASS_TYPE( EventType::MouseButtonReleased )
+		EVENT_CLASS_TYPE( EventType::MOUSE_BUTTON_RELEASED )
 	};
 }

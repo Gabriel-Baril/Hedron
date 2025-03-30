@@ -27,6 +27,6 @@ namespace hdn
 
 	vector<fspath> GetAllFilesToParseFromFolder(fspath folderPath)
 	{
-		return FileSystem::Walk(folderPath, ContainsArchiveLibInclude, true);
+		return filesystem_walk(folderPath, ContainsArchiveLibInclude, true);
 	}
 }

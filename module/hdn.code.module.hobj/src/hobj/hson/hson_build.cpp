@@ -203,7 +203,7 @@ namespace hdn
 	{
 		for (const auto& field : builder.fields)
 		{
-			if (BitOn(h.flags, HsonFlags::SERIALIZE_INTERMEDIATE_FIELD))
+			if (flag_on(h.flags, HsonFlags::SERIALIZE_INTERMEDIATE_FIELD))
 			{
 				get_all_fields(field, hsonFields);
 			}
@@ -241,34 +241,34 @@ namespace hdn
 		const HsonFlags sectionFlag = h.flags;
 		hson_builder_build_sorted_field_hashes(builder, h, hsonFields);
 
-		if (BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_TYPE))
+		if (flag_on(sectionFlag, HsonFlags::SERIALIZE_FIELD_TYPE))
 		{
 			hson_builder_build_sorted_field_type_hashes(builder, h, hsonFields); // hson_object for intermediate fields
 		}
 		
 		hson_builder_build_sorted_field_flags(builder, h, hsonFields);
 
-		if (BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_PAYLOAD_SIZE))
+		if (flag_on(sectionFlag, HsonFlags::SERIALIZE_FIELD_PAYLOAD_SIZE))
 		{
 			hson_builder_build_sorted_field_payload_byte_sizes(builder, h, hsonFields); // 0 for intermediate fields
 		}
 
 		hson_builder_build_sorted_field_payload_byte_offsets(builder, h, hsonFields);
 
-		if (BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_NAME))
+		if (flag_on(sectionFlag, HsonFlags::SERIALIZE_FIELD_NAME))
 		{
 			hson_builder_build_sorted_field_name_payload_byte_offsets(builder, h, outFieldNameByteOffsetsStream);
 		}
 
 		if (
-			BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_HIERARCHY) && 
-			BitOn(sectionFlag, HsonFlags::SERIALIZE_INTERMEDIATE_FIELD))
+			flag_on(sectionFlag, HsonFlags::SERIALIZE_FIELD_HIERARCHY) && 
+			flag_on(sectionFlag, HsonFlags::SERIALIZE_INTERMEDIATE_FIELD))
 		{
 			hostream hierarchyStream;
 			hson_builder_build_packed_field_hierarchy(builder, h, hsonFields, hierarchyStream);
 		}
 
-		if (BitOn(sectionFlag, HsonFlags::SERIALIZE_FIELD_NAME))
+		if (flag_on(sectionFlag, HsonFlags::SERIALIZE_FIELD_NAME))
 		{
 			hson_builder_build_sorted_field_name_payload(builder, h, outFieldNameStream);
 		}

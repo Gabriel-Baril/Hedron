@@ -11,10 +11,10 @@ namespace hdn
 		ApplicationLayerStack();
 		~ApplicationLayerStack();
 
-		void PushLayer( IApplicationLayer *layer );
-		void PushOverlay( IApplicationLayer *overlay );
-		void PopLayer( IApplicationLayer *layer );
-		void PopOverlay( IApplicationLayer *overlay );
+		void layer_push( IApplicationLayer *layer );
+		void overlay_push( IApplicationLayer *overlay );
+		void layer_pop( IApplicationLayer *layer );
+		void overlasy_pop( IApplicationLayer *overlay );
 
 		vector<IApplicationLayer*>::iterator begin() { return m_Layers.begin(); }
 		vector<IApplicationLayer*>::iterator end() { return m_Layers.end(); }

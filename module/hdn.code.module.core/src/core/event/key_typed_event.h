@@ -9,13 +9,13 @@ namespace hdn
 	public:
 		KeyTypedEvent( KeyCode keyCode ) : KeyEvent( keyCode ) {}
 
-		std::string ToString() const override
+		std::string to_string() const override
 		{
 			std::stringstream ss;
 			ss << "KeyTypedEvent: " << m_KeyCode;
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE( EventType::KeyTyped )
+		EVENT_CLASS_TYPE( EventType::KEY_TYPED )
 	};
 }

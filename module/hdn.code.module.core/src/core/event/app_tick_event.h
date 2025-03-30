@@ -9,7 +9,7 @@ namespace hdn
 	public:
 		AppTickEvent() = default;
 
-		EVENT_CLASS_TYPE( EventType::AppUpdate )
-		EVENT_CLASS_CATEGORY( EventCategory::Application )
+		EVENT_CLASS_TYPE( EventType::APP_UPDATE )
+		EVENT_CLASS_CATEGORY( EventCategory::APPLICATION )
 	};
 }

@@ -5,40 +5,46 @@
 
 namespace hdn
 {
-	void Str_Copy(char* dest, const char* src)
+	void str_copy(char* dest, const char* src)
 	{
 		strcpy(dest, src);
 	}
 
-	bool Str_EndsWith(const char* str, const char* suffix)
+	bool str_endswith(const char* str, const char* suffix)
     {
 		const u64 strLen = strlen(str);
 		const u64 suffixLen = strlen(suffix);
 		if (strLen >= suffixLen)
+		{
 			return memcmp(str + (strLen - suffixLen), suffix, suffixLen) == 0;
+		}
         return false;
     }
 
-    bool Str_Equals(const char* s1, const char* s2)
+    bool str_equals(const char* s1, const char* s2)
     {
         return strcmp(s1, s2) == 0;
     }
 
-	bool Str_PartialEquals(const char* str1, const char* str2, size_t offset1, size_t offset2, size_t count)
+	bool str_partial_equals(const char* str1, const char* str2, size_t offset1, size_t offset2, size_t count)
 	{
 		for (int i = 0; i < count; i++)
 		{
 			char current1 = str1[offset1 + i];
 			char current2 = str2[offset2 + i];
 			if (current1 == '\0' || current2 == '\0')
+			{
 				return false;
+			}
 			if (current1 != current2)
+			{
 				return false;
+			}
 		}
 		return true;
 	}
 	
-	bool Str_OnlyContainsWhitespace(const char* str)
+	bool str_only_contains_whitespace(const char* str)
 	{
 		while (*str != '\0')
 		{
@@ -51,12 +57,12 @@ namespace hdn
 		return true;
 	}
 
-	int Str_ToLowercase(char c)
+	int str_to_lowercase(char c)
 	{
 		return tolower(c);
 	}
 
-	bool Str_HasUppercase(const char* str)
+	bool str_has_uppercase(const char* str)
 	{
 		while (*str != '\0')
 		{
@@ -69,17 +75,19 @@ namespace hdn
 		return false;
 	}
 
-	void Str_Transform(char* buffer, size_t count, char(*operation)(char))
+	void str_transform(char* buffer, size_t count, char(*operation)(char))
 	{
 		for (size_t i = 0; i < count; i++)
 		{
 			if (buffer[i] == '\0')
+			{
 				return;
+			}
 			buffer[i] = operation(buffer[i]);
 		}
 	}
 
-	const char* Str_FindFirstOf(const char* str, char c)
+	const char* str_find_first_of(const char* str, char c)
 	{
 		while (*str != '\0')
 		{
@@ -92,7 +100,7 @@ namespace hdn
 		return nullptr;
 	}
 
-	const char* Str_FindFirstNotOf(const char* str, char c)
+	const char* str_find_first_not_of(const char* str, char c)
 	{
 		while (*str != '\0')
 		{
@@ -105,7 +113,7 @@ namespace hdn
 		return nullptr;
 	}
 
-	int Str_CountOccurences(const char* str, char c)
+	int str_count_occurences(const char* str, char c)
 	{
 		int count = 0;
 		while (*str != '\0')
@@ -118,9 +126,9 @@ namespace hdn
 		return count;
 	}
 
-	i64 Str_FindFirstNotOfIndex(const char* str, char c)
+	i64 str_find_first_not_of_index(const char* str, char c)
 	{
-		const char* result = Str_FindFirstNotOf(str, c);
+		const char* result = str_find_first_not_of(str, c);
 		if (result)
 		{
 			return result - str;
@@ -129,7 +137,7 @@ namespace hdn
 		return -1;
 	}
 
-	void Str_CopySubstring(char* dest, const char* begin, const char* end)
+	void str_copy_substring(char* dest, const char* begin, const char* end)
 	{
 		if (end)
 		{
@@ -144,12 +152,14 @@ namespace hdn
 	string trim(const string& str)
 	{
 		auto start = str.begin();
-		while (start != str.end() && std::isspace(*start)) {
+		while (start != str.end() && std::isspace(*start))
+		{
 			++start;
 		}
 
 		auto end = str.end();
-		do {
+		do
+		{
 			--end;
 		} while (std::distance(start, end) > 0 && std::isspace(*end));
 
@@ -158,7 +168,8 @@ namespace hdn
 	constexpr HDN_MODULE_CORE_API std::size_t strlen_ct(const char* str)
 	{
 		std::size_t length = 0;
-		while (str[length] != '\0') {
+		while (str[length] != '\0')
+		{
 			++length;
 		}
 		return length;

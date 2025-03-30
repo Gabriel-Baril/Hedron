@@ -27,48 +27,48 @@ namespace hdn
 {
 	static constexpr f32 MAX_FRAME_TIME = 0.5f;
 
-	EditorApplication& EditorApplication::Get()
+	EditorApplication& EditorApplication::get()
 	{
 		static EditorApplication s_Instance{};
 		return s_Instance;
 	}
 
-	void EditorApplication::OnEvent(Event& event)
+	void EditorApplication::on_event(Event& event)
 	{
-		IApplication::OnEvent(event);
+		IApplication::on_event(event);
 		m_EditorCamera.OnEvent(event);
 		EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<WindowResizedEvent>(HDN_BIND_EVENT_FN(EditorApplication::OnWindowResized));
-		dispatcher.Dispatch<KeyPressedEvent>(HDN_BIND_EVENT_FN(EditorApplication::OnKeyPressed));
-		dispatcher.Dispatch<MouseButtonPressedEvent>(HDN_BIND_EVENT_FN(EditorApplication::OnMouseButtonPressed));
+		dispatcher.dispatch<WindowResizedEvent>(HDN_BIND_EVENT_FN(EditorApplication::on_window_resized));
+		dispatcher.dispatch<KeyPressedEvent>(HDN_BIND_EVENT_FN(EditorApplication::on_key_pressed));
+		dispatcher.dispatch<MouseButtonPressedEvent>(HDN_BIND_EVENT_FN(EditorApplication::on_mouse_button_pressed));
 	}
 
-	bool EditorApplication::OnWindowResized(WindowResizedEvent& event)
+	bool EditorApplication::on_window_resized(WindowResizedEvent& event)
 	{
-		m_EditorCamera.SetViewportSize(event.GetWidth(), event.GetHeight());
+		m_EditorCamera.SetViewportSize(event.get_width(), event.get_height());
 		return false;
 	}
 
-	bool EditorApplication::OnKeyPressed(KeyPressedEvent& event)
+	bool EditorApplication::on_key_pressed(KeyPressedEvent& event)
 	{
 		// HINFO("EditorApplication::OnKeyPressed - Pressed!");
 		return false;
 	}
 
-	bool EditorApplication::OnMouseButtonPressed(MouseButtonPressedEvent& event)
+	bool EditorApplication::on_mouse_button_pressed(MouseButtonPressedEvent& event)
 	{
 		return false;
 	}
 
 	EditorApplication::EditorApplication()
 	{
-		m_ActiveScene = CreateScope<Scene>();
+		m_ActiveScene = make_scope<Scene>();
 		Editor::Get().SetActiveScene(m_ActiveScene);
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 		m_EditorCamera.SetViewportSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
-		m_Window.SetEventCallback(HDN_BIND_EVENT_FN(EditorApplication::OnEvent));
+		m_Window.SetEventCallback(HDN_BIND_EVENT_FN(EditorApplication::on_event));
 
 		m_GlobalPool = VulkanDescriptorPool::Builder(m_Device)
 			.SetMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
@@ -77,14 +77,14 @@ namespace hdn
 
 		m_PhysicsWorld.Init();
 
-		LoadGameObjects();
+		load_game_objects();
 
-		Register<OutlinerPanel>();
-		Register<InspectorPanel>();
-		Register<ModuleManagerPanel>();
-		Register<IdeationManagerPanel>();
-		Register<PerformancePanel>();
-		m_ViewportPanel = Register<ViewportPanel>();
+		register_panel<OutlinerPanel>();
+		register_panel<InspectorPanel>();
+		register_panel<ModuleManagerPanel>();
+		register_panel<IdeationManagerPanel>();
+		register_panel<PerformancePanel>();
+		m_ViewportPanel = register_panel<ViewportPanel>();
 		m_ViewportPanel->CreateOffscreenRenderTarget(m_Device.GetDevice(), m_Device.GetPhysicalDevice(), m_Window.GetExtent(), m_Renderer.GetSwapChainRenderPass());
 		m_ViewportPanel->CreateDescriptorSet(m_Device.GetDevice());
 	}
@@ -94,11 +94,11 @@ namespace hdn
 		m_PhysicsWorld.Shutdown();
 	}
 
-	void EditorApplication::Run()
+	void EditorApplication::run()
 	{
 		for (int i = 0;i < m_UboBuffers.size(); i++)
 		{
-			m_UboBuffers[i] = CreateScope<VulkanBuffer>(
+			m_UboBuffers[i] = make_scope<VulkanBuffer>(
 				&m_Device,
 				sizeof(GlobalUbo),
 				1,
@@ -151,7 +151,7 @@ namespace hdn
 			Timestep frameTime = std::chrono::duration<f32, std::chrono::seconds::period>(newTime - currentTime).count();
 			currentTime = newTime;
 
-			frameTime = glm::min(frameTime.Seconds(), MAX_FRAME_TIME);
+			frameTime = glm::min(frameTime.seconds(), MAX_FRAME_TIME);
 
 			EditorCamera::UpdateState state;
 			state.LeftAltPressed = Input::GetKey(KeyCode::LeftAlt);
@@ -227,7 +227,7 @@ namespace hdn
 		vkDeviceWaitIdle(m_Device.GetDevice());
 	}
 
-	void EditorApplication::LoadGameObjects()
+	void EditorApplication::load_game_objects()
 	{
 		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
 

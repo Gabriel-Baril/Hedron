@@ -51,7 +51,7 @@ namespace hdn
 		vector<Scope<VulkanBuffer>> uboBuffers(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0;i < uboBuffers.size(); i++)
 		{
-			uboBuffers[i] = CreateScope<VulkanBuffer>(
+			uboBuffers[i] = make_scope<VulkanBuffer>(
 				&m_Device,
 				sizeof(GlobalUbo),
 				1,

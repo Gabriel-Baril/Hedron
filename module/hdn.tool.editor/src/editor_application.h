@@ -37,13 +37,13 @@ namespace hdn
 		static constexpr u32 DEFAULT_WINDOW_WIDTH = 1280;
 		static constexpr u32 DEFAULT_WINDOW_HEIGHT = 720;
 	public:
-		static EditorApplication& Get();
-		VulkanWindow& GetWindow() { return m_Window; }
+		static EditorApplication& get();
+		VulkanWindow& get_window() { return m_Window; }
 
-		void OnEvent(Event& event) override;
-		bool OnWindowResized(WindowResizedEvent& event);
-		bool OnKeyPressed(KeyPressedEvent& event);
-		bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
+		void on_event(Event& event) override;
+		bool on_window_resized(WindowResizedEvent& event);
+		bool on_key_pressed(KeyPressedEvent& event);
+		bool on_mouse_button_pressed(MouseButtonPressedEvent& event);
 
 		EditorApplication();
 		virtual ~EditorApplication();
@@ -51,25 +51,25 @@ namespace hdn
 		EditorApplication& operator=(const EditorApplication&) = delete;
 
 		template<typename T, typename... Args>
-		T* Register(Args&&... args)
+		T* register_panel(Args&&... args)
 		{
-			m_Panels.push_back(CreateRef<T>(std::forward<Args>(args)...));
+			m_Panels.push_back(make_ref<T>(std::forward<Args>(args)...));
 			return static_cast<T*>(m_Panels.back().get());
 		}
 
 		template<typename T>
-		void Unregister()
+		void unregister()
 		{
 			// TODO: Unregister layer of the same type (The layer type is defined by the class type)
 		}
 
-		void Unregister(int id)
+		void unregister(int id)
 		{
 			// TODO: Unregister layer by it's id
 		}
-		void Run();
+		void run();
 	private:
-		void LoadGameObjects();
+		void load_game_objects();
 	private:
 		VulkanWindow m_Window{ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, "First App" };
 		VulkanDevice m_Device{ m_Window };

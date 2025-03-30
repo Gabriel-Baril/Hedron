@@ -11,9 +11,9 @@
 
 namespace hdn
 {
-	HDN_MODULE_CORE_API void Log_Init();
+	HDN_MODULE_CORE_API void log_init();
 #if USING(LOG_ENABLE)
-	HDN_MODULE_CORE_API Ref<spdlog::logger>& Log_GetCoreLogger();
+	HDN_MODULE_CORE_API Ref<spdlog::logger>& log_get_core_logger();
 #endif
 }
 
@@ -26,12 +26,12 @@ namespace hdn
 
 
 #if USING(LOG_ENABLE)
-#define HTRACE(...) { SPDLOG_LOGGER_TRACE(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
-#define HDEBUG(...)  { SPDLOG_LOGGER_DEBUG(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
-#define HINFO(...)  { SPDLOG_LOGGER_INFO(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
-#define HWARN(...)  { SPDLOG_LOGGER_WARN(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
-#define HERR(...)	{ SPDLOG_LOGGER_ERROR(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
-#define HCRIT(...)	{ SPDLOG_LOGGER_CRITICAL(::hdn::Log_GetCoreLogger(), __VA_ARGS__); }
+#define HTRACE(...) { SPDLOG_LOGGER_TRACE(::hdn::log_get_core_logger(), __VA_ARGS__); }
+#define HDEBUG(...)  { SPDLOG_LOGGER_DEBUG(::hdn::log_get_core_logger(), __VA_ARGS__); }
+#define HINFO(...)  { SPDLOG_LOGGER_INFO(::hdn::log_get_core_logger(), __VA_ARGS__); }
+#define HWARN(...)  { SPDLOG_LOGGER_WARN(::hdn::log_get_core_logger(), __VA_ARGS__); }
+#define HERR(...)	{ SPDLOG_LOGGER_ERROR(::hdn::log_get_core_logger(), __VA_ARGS__); }
+#define HCRIT(...)	{ SPDLOG_LOGGER_CRITICAL(::hdn::log_get_core_logger(), __VA_ARGS__); }
 #define HFATAL(...) { HCRIT(__VA_ARGS__); HBREAK(); }
 #else
 #define HTRACE(...)

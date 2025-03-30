@@ -56,7 +56,7 @@ namespace hdn
 
 		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
 		pipelineConfig.pipelineLayout = m_PipelineLayout;
-		m_Pipeline = CreateScope<VulkanPipeline>(m_Device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
+		m_Pipeline = make_scope<VulkanPipeline>(m_Device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
 	}
 
 	void SimpleRenderSystem::RenderGameObjects(FrameInfo& frameInfo)

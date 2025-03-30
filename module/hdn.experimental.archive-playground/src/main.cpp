@@ -4,7 +4,7 @@
 int main()
 {
 	using namespace hdn;
-	Log_Init();
+	log_init();
 
 	HINFO("Archive Playground");
 }

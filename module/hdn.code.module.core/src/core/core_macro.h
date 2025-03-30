@@ -9,27 +9,27 @@ namespace hdn
 	using utype = typename std::underlying_type<T>::type;
 
 	template<typename T>
-	inline constexpr auto Underlying(T value)
+	inline constexpr auto underlying(T value)
 	{
 		static_assert(std::is_enum<T>::value);
 		return static_cast<utype<T>>(value);
 	}
 
 	template<typename ReturnType, typename EnumType>
-	inline constexpr ReturnType BitOn(EnumType value, EnumType flag)
+	inline constexpr ReturnType flag_on(EnumType value, EnumType flag)
 	{
-		const auto rFlag = Underlying(flag);
-		return static_cast<ReturnType>(((Underlying(value) & rFlag) == rFlag));
+		const auto rFlag = underlying(flag);
+		return static_cast<ReturnType>(((underlying(value) & rFlag) == rFlag));
 	}
 
 	template<typename EnumType>
-	inline constexpr bool BitOn(EnumType value, EnumType flag)
+	inline constexpr bool flag_on(EnumType value, EnumType flag)
 	{
-		return BitOn<bool, EnumType>(value, flag);
+		return flag_on<bool, EnumType>(value, flag);
 	}
 
 	template<typename EnumType, typename ValueType>
-	inline constexpr auto ToEnum(ValueType value)
+	inline constexpr auto to_enum(ValueType value)
 	{
 		static_assert(std::is_enum<EnumType>::value);
 		static_assert(std::is_same<utype<EnumType>, ValueType>::value);
@@ -40,7 +40,7 @@ namespace hdn
 	using Scope = std::unique_ptr<T>;
 
 	template<typename T, typename... Args>
-	constexpr Scope<T> CreateScope(Args&&... args)
+	constexpr Scope<T> make_scope(Args&&... args)
 	{
 		return std::make_unique<T>(std::forward<Args>(args)...);
 	}
@@ -52,7 +52,7 @@ namespace hdn
 	using WeakRef = std::weak_ptr<T>;
 
 	template<typename T, typename... Args>
-	constexpr Ref<T> CreateRef(Args&&... args)
+	constexpr Ref<T> make_ref(Args&&... args)
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}

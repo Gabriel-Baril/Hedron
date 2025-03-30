@@ -4,7 +4,7 @@ namespace hdn
 {
 	bool save_binary_to_file(const char* savePath, const void* data, u64 size)
 	{
-		FileSystem::Touch(savePath);
+		filesystem_touch(savePath);
 
 		std::ofstream outFile(savePath, std::ios::binary);
 		if (!outFile)

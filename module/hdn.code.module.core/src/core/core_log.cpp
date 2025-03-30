@@ -36,14 +36,14 @@ namespace hdn
 		}
 	};
 
-	void SignalHandlerCallback(int signal) {
+	void signal_handler_callback(int signal) {
 		HWARN("Received signal: {}", signal);
 		spdlog::shutdown();  // Flush and clean up
 		std::exit(signal);   // Exit gracefully
 	}
 
 #if USING(HDN_PLATFORM_WINDOWS)
-	BOOL WINAPI ConsoleHandlerCallback(DWORD signal) {
+	BOOL WINAPI console_handler_callback(DWORD signal) {
 		if (signal == CTRL_CLOSE_EVENT || signal == CTRL_C_EVENT) {
 			HWARN("Console is closing or interrupted!");
 			spdlog::shutdown();  // Flush logs before termination
@@ -52,29 +52,29 @@ namespace hdn
 	}
 #endif
 
-	Ref<spdlog::logger>& Log_GetCoreLogger()
+	Ref<spdlog::logger>& log_get_core_logger()
 	{
 		return s_CoreLogger;
 	}
 #endif
 
 
-	void Log_Init()
+	void log_init()
 	{
 #if USING(LOG_ENABLE)
 		try
 		{
-			std::signal(SIGINT, SignalHandlerCallback);
-			std::signal(SIGTERM, SignalHandlerCallback);
-			std::signal(SIGABRT, SignalHandlerCallback);
+			std::signal(SIGINT, signal_handler_callback);
+			std::signal(SIGTERM, signal_handler_callback);
+			std::signal(SIGABRT, signal_handler_callback);
 #if USING(HDN_PLATFORM_WINDOWS)
-			SetConsoleCtrlHandler(ConsoleHandlerCallback, TRUE);
+			SetConsoleCtrlHandler(console_handler_callback, TRUE);
 #endif
 
 			vector<spdlog::sink_ptr> sinks;
 
 #if USING(LOG_CONSOLE_ENABLE)
-			auto consoleSink = CreateRef<spdlog::sinks::stdout_color_sink_mt>();
+			auto consoleSink = make_ref<spdlog::sinks::stdout_color_sink_mt>();
 			consoleSink->set_level(spdlog::level::trace);
 			auto formatter = std::make_unique<spdlog::pattern_formatter>();
 			formatter->add_flag<CustomLevelFormatter>('L')  // Custom level formatter
@@ -85,7 +85,7 @@ namespace hdn
 
 #if USING(LOG_FILE_ENABLE)
 
-			auto fileSink = CreateRef<spdlog::sinks::basic_file_sink_mt>("console.log", true); // The true make sure we append to the file instead of overwriting it
+			auto fileSink = make_ref<spdlog::sinks::basic_file_sink_mt>("console.log", true); // The true make sure we append to the file instead of overwriting it
 			fileSink->set_level(spdlog::level::trace);
 			auto file_formatter = std::make_unique<spdlog::pattern_formatter>();
 			file_formatter->add_flag<CustomLevelFormatter>('L')  // Custom level formatter
@@ -94,7 +94,7 @@ namespace hdn
 			sinks.push_back(fileSink);
 #endif
 
-			s_CoreLogger = CreateRef<spdlog::logger>("HDN", sinks.begin(), sinks.end());
+			s_CoreLogger = make_ref<spdlog::logger>("HDN", sinks.begin(), sinks.end());
 			s_CoreLogger->set_level(spdlog::level::trace);
 
 			spdlog::set_default_logger(s_CoreLogger);

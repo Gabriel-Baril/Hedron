@@ -42,7 +42,7 @@ namespace hdn
 		HDR_PROFILE_FUNCTION();
 
 		EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<MouseScrolledEvent>(HDN_BIND_EVENT_FN(EditorCamera::OnMouseScroll));
+		dispatcher.dispatch<MouseScrolledEvent>(HDN_BIND_EVENT_FN(EditorCamera::OnMouseScroll));
 	}
 
 	vec3f32 EditorCamera::GetUpDirection() const
@@ -89,7 +89,7 @@ namespace hdn
 	{
 		HDR_PROFILE_FUNCTION();
 
-		f32 delta = e.GetOffsetY() * 0.1f;
+		f32 delta = e.get_offset_y() * 0.1f;
 		Zoom(delta);
 		UpdateViewMatrix();
 		return false;

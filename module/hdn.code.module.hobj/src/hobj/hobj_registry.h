@@ -40,7 +40,7 @@ namespace hdn
 		Ref<T> add_source(const string& sourceName, Args&&... args)
 		{
 			HASSERT(!m_Sources.contains(sourceName), "Cannot add 2 sources with the same name!");
-			Ref<T> source = CreateRef<T>(std::forward<Args>(args)...);
+			Ref<T> source = make_ref<T>(std::forward<Args>(args)...);
 			m_Sources[sourceName] = source;
 			return source;
 		}
@@ -49,7 +49,7 @@ namespace hdn
 		HRef<T> new_object(const char* name = nullptr)
 		{
 			HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_CREATE, 0);
-			HRef<T> object = CreateRef<T>(); // TODO: Allocate to HObject pool instead
+			HRef<T> object = make_ref<T>(); // TODO: Allocate to HObject pool instead
 			
 			hobj& o = object->get_object();
 			hobj_set_magic_number(o, HOBJ_FILE_MAGIC_NUMBER);
@@ -68,7 +68,7 @@ namespace hdn
 		HRef<T> create_empty_object()
 		{
 			HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_CREATE, 0);
-			HRef<T> object = CreateRef<T>(); // TODO: Allocate to HObject pool instead
+			HRef<T> object = make_ref<T>(); // TODO: Allocate to HObject pool instead
 			HOBJ_METRIC_END();
 			return object;
 		}

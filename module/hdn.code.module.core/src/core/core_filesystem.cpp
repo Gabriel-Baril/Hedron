@@ -22,29 +22,29 @@
 
 namespace hdn
 {
-	bool FileSystem::IsFile(const fspath& path)
+	bool filesystem_is_file(const fspath& path)
 	{
 		return std::filesystem::is_regular_file(path);
 	}
 
-	bool FileSystem::IsDirectory(const fspath& path)
+	bool filesystem_is_directory(const fspath& path)
 	{
 		return std::filesystem::is_directory(path);
 	}
 
-	bool FileSystem::IsSymlink(const fspath& path)
+	bool filesystem_is_symlink(const fspath& path)
 	{
 		return std::filesystem::is_symlink(path);
 	}
 
-	bool FileSystem::IsJunction(const fspath& path)
+	bool filesystem_is_junction(const fspath& path)
 	{
-		return IsSymlink(path);
+		return filesystem_is_symlink(path);
 	}
 
-	bool FileSystem::IsMount(const fspath& path)
+	bool filesystem_is_mount(const fspath& path)
 	{
-		if (!FileSystem::Exists(path))
+		if (!filesystem_exists(path))
 		{
 			return false;
 		}
@@ -80,7 +80,7 @@ namespace hdn
 #endif
 	}
 
-	bool FileSystem::IsSocket(const fspath& path)
+	bool filesystem_is_socket(const fspath& path)
 	{
 		MAYBE_UNUSED(path);
 #if USING(HDN_PLATFORM_WINDOWS)
@@ -92,52 +92,52 @@ namespace hdn
 #endif
 	}
 
-	bool FileSystem::IsFifo(const fspath& path)
+	bool filesystem_is_fifo(const fspath& path)
 	{
 		return std::filesystem::is_fifo(path);
 	}
 
-	bool FileSystem::Same(const fspath& p0, const fspath& p1)
+	bool filesystem_same(const fspath& p0, const fspath& p1)
 	{
 		return std::filesystem::equivalent(p0, p1);
 	}
 
-	bool FileSystem::IsAbsolute(const fspath& path)
+	bool filesystem_is_absolute(const fspath& path)
 	{
 		return path.is_absolute();
 	}
 
-	bool FileSystem::IsRelative(const fspath& path)
+	bool filesystem_is_relative(const fspath& path)
 	{
 		return path.is_relative();
 	}
 
-	bool FileSystem::IsRelativeTo(const fspath& base, const fspath& target)
+	bool filesystem_is_relative_to(const fspath& base, const fspath& target)
 	{
 		return target.string().find(base.string()) == 0;
 	}
 
-	bool FileSystem::HasRoot(const fspath& path)
+	bool filesystem_has_root(const fspath& path)
 	{
 		return path.has_root_path();
 	}
 
-	bool FileSystem::HasStem(const fspath& path)
+	bool filesystem_has_stem(const fspath& path)
 	{
 		return path.has_stem();
 	}
 
-	bool FileSystem::HasExtension(const fspath& path)
+	bool filesystem_has_extension(const fspath& path)
 	{
 		return path.has_extension();
 	}
 
-	bool FileSystem::HasParent(const fspath& path)
+	bool filesystem_has_parent(const fspath& path)
 	{
 		return path.has_parent_path();
 	}
 
-	bool FileSystem::FullMatch(const fspath& path, const string& match, bool caseSensitive)
+	bool filesystem_full_match(const fspath& path, const string& match, bool caseSensitive)
 	{
 		// Convert wildcard pattern to regex pattern
 		string regexPattern = std::regex_replace(match, std::regex("\\*"), ".*");
@@ -162,9 +162,9 @@ namespace hdn
 		return std::regex_match(path.string(), pattern);
 	}
 
-	bool FileSystem::DirectoryHasFile(const fspath& directory, const fspath& file)
+	bool filesystem_directory_has_file(const fspath& directory, const fspath& file)
 	{
-		if (FileSystem::IsDirectory(directory)) {
+		if (filesystem_is_directory(directory)) {
 			for (const auto& entry : std::filesystem::directory_iterator(directory)) {
 				if (entry.is_regular_file() && entry.path() == file) {
 					return true;
@@ -174,12 +174,12 @@ namespace hdn
 		return false;
 	}
 
-	vector<string> FileSystem::Parts(const fspath& path)
+	vector<string> filesystem_parts(const fspath& path)
 	{
 		vector<string> parts;
-		if (FileSystem::HasRoot(path))
+		if (filesystem_has_root(path))
 		{
-			parts.push_back(FileSystem::Root(path).string());
+			parts.push_back(filesystem_root(path).string());
 		}
 
 		for (const auto& part : path.relative_path())
@@ -189,21 +189,21 @@ namespace hdn
 		return parts;
 	}
 
-	string FileSystem::ForwardSlash(const string& path)
+	string filesystem_forward_slash(const string& path)
 	{
 		string forwardSlashPath = path;
 		std::replace(forwardSlashPath.begin(), forwardSlashPath.end(), '\\', '/');
 		return forwardSlashPath;
 	}
 
-	string FileSystem::BackwardSlash(const string& path)
+	string filesystem_backward_slash(const string& path)
 	{
 		string forwardSlashPath = path;
 		std::replace(forwardSlashPath.begin(), forwardSlashPath.end(), '/', '\\');
 		return forwardSlashPath;
 	}
 
-	optional<fspath> FileSystem::RelativeTo(const fspath& p0, const fspath& p1)
+	optional<fspath> filesystem_relative_to(const fspath& p0, const fspath& p1)
 	{
 		try
 		{
@@ -215,22 +215,22 @@ namespace hdn
 		}
 	}
 
-	optional<fspath> FileSystem::WithName(const fspath& path, const string& name)
+	optional<fspath> filesystem_with_name(const fspath& path, const string& name)
 	{
-		if (!FileSystem::Exists(path) || !FileSystem::IsFile(path))
+		if (!filesystem_exists(path) || !filesystem_is_file(path))
 		{
 			return optional<fspath>();
 		}
 
-		return FileSystem::Parent(path) / name;
+		return filesystem_parent(path) / name;
 	}
 
-	fspath FileSystem::ToAbsolute(const fspath& path)
+	fspath filesystem_to_absolute(const fspath& path)
 	{
 		return std::filesystem::absolute(path);
 	}
 
-	FileSystem::FileStats FileSystem::Stats(const fspath& path)
+	FileStats filesystem_stats(const fspath& path)
 	{
 		FileStats stats;
 
@@ -238,7 +238,7 @@ namespace hdn
 		const std::filesystem::perms permissions = status.permissions();
 
 		stats.type = static_cast<FileType>(status.type());
-		stats.size = FileSystem::FileSize(path);
+		stats.size = filesystem_file_size(path);
 		stats.readable = (permissions & std::filesystem::perms::owner_read) != std::filesystem::perms::none;
 		stats.writable = (permissions & std::filesystem::perms::owner_write) != std::filesystem::perms::none;
 		stats.executable = (permissions & std::filesystem::perms::owner_exec) != std::filesystem::perms::none;
@@ -246,63 +246,63 @@ namespace hdn
 		return stats;
 	}
 
-	u64 FileSystem::FileSize(const fspath& path)
+	u64 filesystem_file_size(const fspath& path)
 	{
-		if (!FileSystem::IsFile(path))
+		if (!filesystem_is_file(path))
 		{
 			return 0;
 		}
 		return std::filesystem::file_size(path);
 	}
 
-	optional<fspath> FileSystem::ReadLink(const fspath& path)
+	optional<fspath> filesystem_read_link(const fspath& path)
 	{
-		if (FileSystem::IsSymlink(path))
+		if (filesystem_is_symlink(path))
 		{
 			return std::filesystem::read_symlink(path);
 		}
 		return optional<fspath>();
 	}
 
-	void FileSystem::CreateLink(const fspath& target, const fspath& link)
+	void filesystem_create_link(const fspath& target, const fspath& link)
 	{
 		std::filesystem::create_symlink(target, link);
 	}
 
-	bool FileSystem::Unlink(const fspath& path)
+	bool filesystem_unlink(const fspath& path)
 	{
-		if (FileSystem::IsSymlink(path))
+		if (filesystem_is_symlink(path))
 		{
-			return FileSystem::Delete(path, false);
+			return filesystem_delete(path, false);
 		}
 		return false;
 	}
 
-	fspath FileSystem::CurrentPath()
+	fspath filesystem_current_path()
 	{
 		return std::filesystem::current_path();
 	}
 
-	fspath FileSystem::GetExecutableDirectory()
+	fspath filesystem_get_executable_directory()
 	{
 #if USING(HDN_PLATFORM_WINDOWS)
 		char buffer[MAX_PATH];
 		GetModuleFileName(NULL, buffer, MAX_PATH);
-		return FileSystem::Parent(buffer);
+		return filesystem_parent(buffer);
 #elif USING(HDN_PLATFORM_LINUX)
 		char buffer[PATH_MAX];
 		ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
 		if (len != -1)
 		{
 			buffer[len] = '\0';
-			return FileSystem::Parent(buffer);
+			return filesystem_parent(buffer);
 		}
 #elif USING(HDN_PLATFORM_MACOS)
 		char buffer[PATH_MAX];
 		u32 size = sizeof(buffer);
 		if (_NSGetExecutablePath(buffer, &size) == 0)
 		{
-			return FileSystem::Parent(realpath(buffer, NULL));
+			return filesystem_parent(realpath(buffer, NULL));
 		}
 #else
 		HFATAL("The current platform cannot retreive the executable path");
@@ -310,45 +310,45 @@ namespace hdn
 		return "";
 	}
 
-	fspath FileSystem::Extension(const fspath& path)
+	fspath filesystem_extension(const fspath& path)
 	{
 		return path.extension();
 	}
 
-	fspath FileSystem::Filename(const fspath& path)
+	fspath filesystem_filename(const fspath& path)
 	{
 		return path.filename();
 	}
 
-	fspath FileSystem::Stem(const fspath& path)
+	fspath filesystem_stem(const fspath& path)
 	{
 		return path.stem();
 	}
 
-	fspath FileSystem::Parent(const fspath& path)
+	fspath filesystem_parent(const fspath& path)
 	{
 		return path.parent_path();
 	}
 
-	fspath FileSystem::Root(const fspath& path)
+	fspath filesystem_root(const fspath& path)
 	{
 		return path.root_path();
 	}
 
-	fspath FileSystem::Drive(const fspath& path)
+	fspath filesystem_drive(const fspath& path)
 	{
 		return path.root_name();
 	}
 
-	fspath FileSystem::Resolve(const fspath& path)
+	fspath filesystem_resolve(const fspath& path)
 	{
 		return std::filesystem::canonical(path);
 	}
 
-	vector<fspath> FileSystem::Walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate, bool recursive)
+	vector<fspath> filesystem_walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate, bool recursive)
 	{
 		vector<fspath> directories;
-		if (!FileSystem::Exists(path) || !FileSystem::IsDirectory(path))
+		if (!filesystem_exists(path) || !filesystem_is_directory(path))
 		{
 			return directories;
 		}
@@ -376,7 +376,7 @@ namespace hdn
 		return directories;
 	}
 
-	bool FileSystem::Touch(const fspath& path)
+	bool filesystem_touch(const fspath& path)
 	{
 		std::ofstream file(path, std::ios::app); // Open in append mode to avoid truncation
 		if (!file)
@@ -386,18 +386,18 @@ namespace hdn
 		return true; // File successfully created or already existed
 	}
 
-	bool FileSystem::CreateDirectory(const fspath& path)
+	bool filesystem_create_directory(const fspath& path)
 	{
-		if (FileSystem::Exists(path))
+		if (filesystem_exists(path))
 		{
 			return false;
 		}
 		return std::filesystem::create_directory(path);
 	}
 
-	bool FileSystem::Rename(const fspath& source, const fspath& destination)
+	bool filesystem_rename(const fspath& source, const fspath& destination)
 	{
-		if (!FileSystem::Exists(source))
+		if (!filesystem_exists(source))
 		{
 			return false;
 		}
@@ -405,7 +405,7 @@ namespace hdn
 		return true;
 	}
 
-	u64 FileSystem::Delete(const fspath& path, bool force)
+	u64 filesystem_delete(const fspath& path, bool force)
 	{
 		if (force)
 		{
@@ -419,18 +419,18 @@ namespace hdn
 		}
 	}
 
-	bool FileSystem::Copy(const fspath& source, const fspath& destination, bool force)
+	bool filesystem_copy(const fspath& source, const fspath& destination, bool force)
 	{
-		if (!FileSystem::Exists(source))
+		if (!filesystem_exists(source))
 		{
 			return false;
 		}
 
-		if (FileSystem::Exists(destination))
+		if (filesystem_exists(destination))
 		{
 			if (force)
 			{
-				FileSystem::Delete(destination, true);
+				filesystem_delete(destination, true);
 			}
 			else
 			{
@@ -438,7 +438,7 @@ namespace hdn
 			}
 		}
 
-		if (FileSystem::IsDirectory(source))
+		if (filesystem_is_directory(source))
 		{
 			std::filesystem::copy(source, destination, std::filesystem::copy_options::recursive);
 		}
@@ -450,7 +450,7 @@ namespace hdn
 		return true;
 	}
 
-	bool FileSystem::Exists(const fspath& path)
+	bool filesystem_exists(const fspath& path)
 	{
 		return std::filesystem::exists(path);
 	}

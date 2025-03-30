@@ -7,85 +7,85 @@ namespace hdn
 {
 	struct Instrumentor
 	{
-		InstrumentationSession *CurrentSession = nullptr;
-		std::ofstream OutputStream;
-		int ProfileCount = 0;
+		InstrumentationSession *currentSession = nullptr;
+		std::ofstream outputStream;
+		i32 profileCount = 0;
 	};
 
 	static Instrumentor s_Instrumentor;
 
-	static void Instrumentor_BeginSession_Internal( Instrumentor &instance, const std::string &name, const std::string &filepath )
+	static void instrumentor_begin_session_internal( Instrumentor &instance, const std::string &name, const std::string &filepath )
 	{
-		instance.OutputStream.open( filepath );
-		Instrumentor_WriteHeader();
-		instance.CurrentSession = new InstrumentationSession{ name };
+		instance.outputStream.open( filepath );
+		instrumentor_write_header();
+		instance.currentSession = new InstrumentationSession{ name };
 	}
 
-	void Instrumentor_BeginSession( const std::string &name, const std::string &filepath )
+	void instrumentor_begin_session( const std::string &name, const std::string &filepath )
 	{
-		Instrumentor_BeginSession_Internal( s_Instrumentor, name, filepath );
+		instrumentor_begin_session_internal( s_Instrumentor, name, filepath );
 	}
 
-	static void Instrumentor_EndSession_Internal( Instrumentor &instance )
+	static void instrumentor_end_session_internal( Instrumentor &instance )
 	{
-		Instrumentor_WriteFooter();
-		instance.OutputStream.close();
-		delete instance.CurrentSession;
-		instance.CurrentSession = nullptr;
-		instance.ProfileCount = 0;
+		instrumentor_write_footer();
+		instance.outputStream.close();
+		delete instance.currentSession;
+		instance.currentSession = nullptr;
+		instance.profileCount = 0;
 	}
 
-	void Instrumentor_EndSession()
+	void instrumentor_end_session()
 	{
-		Instrumentor_EndSession_Internal( s_Instrumentor );
+		instrumentor_end_session_internal( s_Instrumentor );
 	}
 
-	static void Instrumentor_WriteProfile_Internal( Instrumentor &instance, const ProfileResult &result )
+	static void instrumentor_write_profile_internal( Instrumentor &instance, const ProfileResult &result )
 	{
-		if ( instance.ProfileCount++ > 0 )
-			instance.OutputStream << ",";
+		if ( instance.profileCount++ > 0 )
+			instance.outputStream << ",";
 
-		std::string name = result.Name;
+		std::string name = result.name;
 		std::replace( name.begin(), name.end(), '"', '\'' );
 
-		instance.OutputStream << "{";
-		instance.OutputStream << "\"cat\":\"function\",";
-		instance.OutputStream << "\"dur\":" << (result.End - result.Start) << ',';
-		instance.OutputStream << "\"name\":\"" << name << "\",";
-		instance.OutputStream << "\"ph\":\"X\",";
-		instance.OutputStream << "\"pid\":0,";
-		instance.OutputStream << "\"tid\":" << result.ThreadID << ",";
-		instance.OutputStream << "\"ts\":" << result.Start;
-		instance.OutputStream << "}";
+		instance.outputStream << "{";
+		instance.outputStream << "\"cat\":\"function\",";
+		instance.outputStream << "\"dur\":" << (result.end - result.start) << ',';
+		instance.outputStream << "\"name\":\"" << name << "\",";
+		instance.outputStream << "\"ph\":\"X\",";
+		instance.outputStream << "\"pid\":0,";
+		instance.outputStream << "\"tid\":" << result.threadID << ",";
+		instance.outputStream << "\"ts\":" << result.start;
+		instance.outputStream << "}";
 
-		instance.OutputStream.flush();
+		instance.outputStream.flush();
 	}
 
-	void Instrumentor_WriteProfile( const ProfileResult &result )
+	void instrumentor_write_profile( const ProfileResult &result )
 	{
-		Instrumentor_WriteProfile_Internal( s_Instrumentor, result );
+		instrumentor_write_profile_internal( s_Instrumentor, result );
 	}
 
-	static void Instrumentor_WriteHeader_Internal( Instrumentor &instance )
+	static void instrumentor_write_header_internal( Instrumentor &instance )
 	{
-		instance.OutputStream << "{\"otherData\": {},\"traceEvents\":[";
-		instance.OutputStream.flush();
+		instance.outputStream << "{\"otherData\": {},\"traceEvents\":[";
+		instance.outputStream.flush();
 	}
 
-	void Instrumentor_WriteHeader()
+	void instrumentor_write_header()
 	{
-		Instrumentor_WriteHeader_Internal( s_Instrumentor );
+		instrumentor_write_header_internal( s_Instrumentor );
 	}
 
-	static void Instrumentor_WriteFooter_Internal( Instrumentor &instance )
+	static void instrumentor_write_footer_internal( Instrumentor &instance )
 	{
-		instance.OutputStream << "]}";
-		instance.OutputStream.flush();
+		instance.outputStream << "]}";
+		instance.outputStream.flush();
 	}
 
-	void Instrumentor_WriteFooter()
+	void instrumentor_write_footer()
 	{
-		Instrumentor_WriteFooter_Internal( s_Instrumentor );
+		instrumentor_write_footer_internal( s_Instrumentor );
 	}
 
 	InstrumentationTimer::InstrumentationTimer( const char *name )
@@ -97,10 +97,10 @@ namespace hdn
 	InstrumentationTimer::~InstrumentationTimer()
 	{
 		if ( !m_Stopped )
-			this->Stop();
+			this->stop();
 	}
 
-	void InstrumentationTimer::Stop()
+	void InstrumentationTimer::stop()
 	{
 		auto endTimePoint = std::chrono::high_resolution_clock::now();
 
@@ -108,7 +108,7 @@ namespace hdn
 		long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimePoint).time_since_epoch().count();
 
 		size_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
-		Instrumentor_WriteProfile( ProfileResult{ m_Name, start, end, threadID } );
+		instrumentor_write_profile( ProfileResult{ m_Name, start, end, threadID } );
 
 		m_Stopped = true;
 	}

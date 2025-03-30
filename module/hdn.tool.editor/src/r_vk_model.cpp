@@ -52,14 +52,14 @@ namespace hdn
 	{
 		Builder builder{};
 		builder.LoadObjModel(filepath);
-		return CreateScope<VulkanModel>(device, builder);
+		return make_scope<VulkanModel>(device, builder);
 	}
 
 	Scope<VulkanModel> VulkanModel::CreateModelFromFbxFile(VulkanDevice* device, const string& filepath)
 	{
 		Builder builder{};
 		builder.LoadFbxModel(filepath);
-		return CreateScope<VulkanModel>(device, builder);
+		return make_scope<VulkanModel>(device, builder);
 	}
 
 	void VulkanModel::Bind(VkCommandBuffer commandBuffer)
@@ -103,7 +103,7 @@ namespace hdn
 		stagingBuffer.Map();
 		stagingBuffer.WriteToBuffer((void*)vertices.data());
 
-		m_VertexBuffer = CreateScope<VulkanBuffer>(
+		m_VertexBuffer = make_scope<VulkanBuffer>(
 			m_Device,
 			vertexSize,
 			m_VertexCount,
@@ -137,7 +137,7 @@ namespace hdn
 		stagingBuffer.Map();
 		stagingBuffer.WriteToBuffer((void*)indices.data());
 
-		m_IndexBuffer = CreateScope<VulkanBuffer>(
+		m_IndexBuffer = make_scope<VulkanBuffer>(
 			m_Device,
 			indexSize,
 			m_IndexCount,

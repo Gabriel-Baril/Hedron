@@ -14,8 +14,8 @@ namespace hdn
 		{
 		}
 
-		f32 Seconds() const { return m_Time; }
-		f32 Milliseconds() const { return m_Time * 1000; }
+		f32 seconds() const { return m_Time; }
+		f32 milliseconds() const { return m_Time * 1000; }
 
 		operator f32() { return m_Time; }
 	private:

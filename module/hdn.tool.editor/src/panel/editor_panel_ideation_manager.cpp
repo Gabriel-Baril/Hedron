@@ -7,7 +7,7 @@ namespace hdn
 {
 	void IdeationManagerPanel::Init()
 	{
-		vector<fspath> ideationFiles = FileSystem::Walk("ideations");
+		vector<fspath> ideationFiles = filesystem_walk("ideations");
 
 		for (const auto& ideationFile : ideationFiles)
 		{

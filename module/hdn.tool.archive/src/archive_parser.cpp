@@ -3,7 +3,7 @@
 
 namespace hdn
 {
-	static const char* s_ArchiveStatementTypeName[Underlying(ArchiveStatementType::Size)] = {
+	static const char* s_ArchiveStatementTypeName[underlying(ArchiveStatementType::Size)] = {
 		"unique_ptr",
 		"shared_ptr",
 		"array"
@@ -11,9 +11,9 @@ namespace hdn
 
 	ArchiveStatementType GetArchiveStatementTypeFromString(const char* str)
 	{
-		for (int i = 0; i < Underlying(ArchiveStatementType::Size); i++)
+		for (int i = 0; i < underlying(ArchiveStatementType::Size); i++)
 		{
-			if (Str_Equals(s_ArchiveStatementTypeName[i], str))
+			if (str_equals(s_ArchiveStatementTypeName[i], str))
 			{
 				return static_cast<ArchiveStatementType>(i);
 			}

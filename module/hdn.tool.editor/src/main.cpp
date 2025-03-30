@@ -3,11 +3,11 @@
 int main()
 {
 	using namespace hdn;
-	Log_Init();
+	log_init();
 
 	try
 	{
-		hdn::EditorApplication::Get().Run();
+		hdn::EditorApplication::get().run();
 	}
 	catch (const std::exception& e)
 	{

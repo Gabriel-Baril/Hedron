@@ -14,9 +14,9 @@ namespace hdn
 	private:
 		INIReader m_Reader;
 	public:
-		static Configuration& Get();
-		static fspath GetRootConfigPath();
+		static Configuration& get();
+		static fspath get_root_config_path();
 
-		string GetRootConfigVariable(const string& section, const string& name, const string& defaultValue);
+		string get_root_config_variable(const string& section, const string& name, const string& defaultValue);
 	};
 }

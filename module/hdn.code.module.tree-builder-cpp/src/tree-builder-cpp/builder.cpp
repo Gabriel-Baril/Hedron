@@ -2,116 +2,116 @@
 
 namespace hdn
 {
-	CPPBuilder& CPPBuilder::BeginSource(const std::string& filename)
+	CPPBuilder& CPPBuilder::begin_source(const std::string& filename)
 	{
-		currentFile = filename;
-		code << "// Generated source file: " << filename << "\n\n";
+		m_CurrentFile = filename;
+		m_Code << "// Generated source file: " << filename << "\n\n";
 		return *this;
 	}
 
-	CPPBuilder& hdn::CPPBuilder::AddHeader(const std::string& header)
+	CPPBuilder& hdn::CPPBuilder::add_header(const std::string& header)
 	{
-		code << "#include <" << header << ">\n";
+		m_Code << "#include <" << header << ">\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::BeginNamespace(const std::string& ns)
+	CPPBuilder& CPPBuilder::begin_namespace(const std::string& ns)
 	{
-		code << "\nnamespace " << ns << " {\n";
+		m_Code << "\nnamespace " << ns << " {\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::EndNamespace()
+	CPPBuilder& CPPBuilder::end_namespace()
 	{
-		code << "} // namespace\n";
+		m_Code << "} // namespace\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::BeginPreprocIf(const std::string& condition)
+	CPPBuilder& CPPBuilder::begin_preproc_if(const std::string& condition)
 	{
-		code << "#if " << condition << "\n";
+		m_Code << "#if " << condition << "\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::BeginPreprocElif(const std::string& condition)
+	CPPBuilder& CPPBuilder::begin_preproc_elif(const std::string& condition)
 	{
-		code << "#elif " << condition << "\n";
+		m_Code << "#elif " << condition << "\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::EndPreprocIf()
+	CPPBuilder& CPPBuilder::end_preproc_if()
 	{
-		code << "#endif\n";
+		m_Code << "#endif\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::BeginFunctionHeader(const std::string& returnType, const std::string& functionName)
+	CPPBuilder& CPPBuilder::begin_function_header(const std::string& returnType, const std::string& functionName)
 	{
-		code << returnType << " " << functionName << "(";
+		m_Code << returnType << " " << functionName << "(";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::EndFunctionHeader()
+	CPPBuilder& CPPBuilder::end_function_header()
 	{
-		code << ") {\n";
+		m_Code << ") {\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::AddParameter(const std::string& type, const std::string& name, bool isLast)
+	CPPBuilder& CPPBuilder::add_parameter(const std::string& type, const std::string& name, bool isLast)
 	{
-		code << type << " " << name;
+		m_Code << type << " " << name;
 		if (!isLast)
 		{
-			code << ",";
+			m_Code << ",";
 		}
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::EndFunction()
+	CPPBuilder& CPPBuilder::end_function()
 	{
-		code << "}\n";
+		m_Code << "}\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::AddLine(const std::string& line)
+	CPPBuilder& CPPBuilder::add_line(const std::string& line)
 	{
-		code << line << ";\n";
+		m_Code << line << ";\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::BeginIf(const std::string& condition)
+	CPPBuilder& CPPBuilder::begin_if(const std::string& condition)
 	{
-		code << "if (" << condition << ") {\n";
+		m_Code << "if (" << condition << ") {\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::BeginElse(const std::string& condition)
+	CPPBuilder& CPPBuilder::begin_else(const std::string& condition)
 	{
 		if (!condition.empty()) {
-			code << "} else if (" << condition << ") {\n";
+			m_Code << "} else if (" << condition << ") {\n";
 		}
 		else {
-			code << "} else {\n";
+			m_Code << "} else {\n";
 		}
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::EndIf()
+	CPPBuilder& CPPBuilder::end_if()
 	{
-		code << "}\n";
+		m_Code << "}\n";
 		return *this;
 	}
 
-	CPPBuilder& CPPBuilder::EndSource()
+	CPPBuilder& CPPBuilder::end_source()
 	{
-		std::ofstream outFile(currentFile);
+		std::ofstream outFile(m_CurrentFile);
 		if (outFile.is_open()) {
-			outFile << code.str();
+			outFile << m_Code.str();
 			outFile.close();
-			std::cout << "File written: " << currentFile << "\n";
+			std::cout << "File written: " << m_CurrentFile << "\n";
 		}
 		else {
-			std::cerr << "Unable to open file: " << currentFile << "\n";
+			std::cerr << "Unable to open file: " << m_CurrentFile << "\n";
 		}
 		return *this;
 	}

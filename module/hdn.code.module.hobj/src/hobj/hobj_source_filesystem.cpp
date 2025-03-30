@@ -6,7 +6,7 @@ namespace hdn
 {
 	bool IsObjectFile(const fspath& path)
 	{
-		return FileSystem::Extension(path) == HOBJ_FILE_EXT;
+		return filesystem_extension(path) == HOBJ_FILE_EXT;
 	}
 
 	FilesystemObjectSource::FilesystemObjectSource(const string& sourcePath)
@@ -59,7 +59,7 @@ namespace hdn
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_DESERIALIZE);
 		DynamicMemoryBuffer dynamicBuffer{ buffer };
 		histream reader{ &dynamicBuffer };
-		dynamicBuffer.ResetHead();
+		dynamicBuffer.reset();
 		outObject->deserialize(reader);
 		HOBJ_METRIC_END();
 
@@ -69,7 +69,7 @@ namespace hdn
 	void FilesystemObjectSource::load(uuid64 id, HObject* outObject)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_LOAD, id);
-		string absoluteSavePath = FileSystem::ToAbsolute(m_ObjectPaths[id]).string();
+		string absoluteSavePath = filesystem_to_absolute(m_ObjectPaths[id]).string();
 		load(absoluteSavePath.c_str(), outObject);
 		HASSERT(!m_LoadedObjects.contains(id), "Cannot register an object more than once!");
 		m_LoadedObjects[id] = outObject;
@@ -93,7 +93,7 @@ namespace hdn
 		if (userData)
 		{
 			const HObjectFilesystemData* data = static_cast<const HObjectFilesystemData*>(userData);
-			absoluteSavePath = FileSystem::ToAbsolute(m_SourcePath) / data->path;
+			absoluteSavePath = filesystem_to_absolute(m_SourcePath) / data->path;
 			if (m_ObjectPaths.contains(objectID) && absoluteSavePath != m_ObjectPaths.at(objectID))
 			{
 				shouldDeleteOldPath = true;
@@ -118,7 +118,7 @@ namespace hdn
 		{
 			if (shouldDeleteOldPath)
 			{
-				FileSystem::Delete(m_ObjectPaths.at(objectID), true);
+				filesystem_delete(m_ObjectPaths.at(objectID), true);
 			}
 			m_LoadedObjects[objectID] = object;
 			m_ObjectPaths[objectID] = absoluteSavePath;
@@ -137,7 +137,7 @@ namespace hdn
 			return false;
 		}
 
-		bool deleted = FileSystem::Delete(m_ObjectPaths.at(id), true) > 0; // Delete
+		bool deleted = filesystem_delete(m_ObjectPaths.at(id), true) > 0; // Delete
 		if (!deleted)
 		{
 			HWARN("Failed to delete object {0}", id);
@@ -163,7 +163,7 @@ namespace hdn
 	void FilesystemObjectSource::populate(HObjectRegistry* registry)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_MANIFEST_POPULATE);
-		vector<fspath> files = FileSystem::Walk(m_SourcePath, IsObjectFile);
+		vector<fspath> files = filesystem_walk(m_SourcePath, IsObjectFile);
 		for (const auto& file : files)
 		{
 			HObject object;
@@ -180,7 +180,7 @@ namespace hdn
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_MANIFEST_CREATE_ENTRY);
 		HASSERT(!m_ObjectPaths.contains(id), "");
-		fspath absolutePath = FileSystem::ToAbsolute(path);
+		fspath absolutePath = filesystem_to_absolute(path);
 		m_ObjectPaths[id] = absolutePath;
 		HOBJ_METRIC_END();
 	}

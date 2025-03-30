@@ -12,10 +12,10 @@ namespace hdn
 		EventDispatcher( Event &event ) : m_Event( event ) {}
 
 		template<typename T>
-		bool Dispatch( EventFn<T> func )
+		bool dispatch( EventFn<T> func )
 		{
 			// Check if the template parameter matchs the current event type
-			if ( m_Event.GetEventType() == T::GetStaticType() )
+			if ( m_Event.get_event_type() == T::get_static_type() )
 			{
 				m_Event.Handled = func( *(T *)&m_Event );
 				return true;

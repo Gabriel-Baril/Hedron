@@ -16,11 +16,11 @@ namespace hdn
 	{
 		for (const auto& attribute : resultNode.attributes())
 		{
-			if (Str_Equals(attribute.name(), "success"))
+			if (str_equals(attribute.name(), "success"))
 			{
 				overallResult.success = attribute.as_bool();
 			}
-			else if (Str_Equals(attribute.name(), "durationInSeconds"))
+			else if (str_equals(attribute.name(), "durationInSeconds"))
 			{
 				overallResult.durationInSeconds = attribute.as_double();
 			}
@@ -30,15 +30,15 @@ namespace hdn
 	{
 		for (const auto& attribute : resultNode.attributes())
 		{
-			if (Str_Equals(attribute.name(), "successes"))
+			if (str_equals(attribute.name(), "successes"))
 			{
 				overallResults.successes = attribute.as_uint();
 			}
-			else if (Str_Equals(attribute.name(), "failures"))
+			else if (str_equals(attribute.name(), "failures"))
 			{
 				overallResults.failures = attribute.as_uint();
 			}
-			else if (Str_Equals(attribute.name(), "expectedFailures"))
+			else if (str_equals(attribute.name(), "expectedFailures"))
 			{
 				overallResults.expectedFailures = attribute.as_uint();
 			}
@@ -49,15 +49,15 @@ namespace hdn
 	{
 		for (const auto& attribute : sectionNode.attributes())
 		{
-			if (Str_Equals(attribute.name(), "name"))
+			if (str_equals(attribute.name(), "name"))
 			{
 				sectionResult.name = attribute.as_string();
 			}
-			else if (Str_Equals(attribute.name(), "filename"))
+			else if (str_equals(attribute.name(), "filename"))
 			{
 				sectionResult.filename = attribute.as_string();
 			}
-			else if (Str_Equals(attribute.name(), "line"))
+			else if (str_equals(attribute.name(), "line"))
 			{
 				sectionResult.line = attribute.as_uint();
 			}
@@ -65,12 +65,12 @@ namespace hdn
 
 		for (pugi::xml_node node = sectionNode.first_child(); node; node = node.next_sibling())
 		{
-			if (Str_Equals(node.name(), EXPRESSION_NODE_NAME))
+			if (str_equals(node.name(), EXPRESSION_NODE_NAME))
 			{
 				sectionResult.expressionResults.emplace_back(ExpressionResult{});
 				ParseExpressionNode(node, sectionResult.expressionResults.back());
 			}
-			else if (Str_Equals(node.name(), OVERALL_RESULTS_NODE_NAME))
+			else if (str_equals(node.name(), OVERALL_RESULTS_NODE_NAME))
 			{
 				ParseOverallResultsNode(node, sectionResult.overallResults);
 			}
@@ -80,27 +80,27 @@ namespace hdn
 	{
 		for (const auto& attribute : expressionNode.attributes())
 		{
-			if (Str_Equals(attribute.name(), "success"))
+			if (str_equals(attribute.name(), "success"))
 			{
 				expressionResult.success = attribute.as_bool();
 			}
-			else if (Str_Equals(attribute.name(), "type"))
+			else if (str_equals(attribute.name(), "type"))
 			{
 				const char* typeStr = attribute.as_string();
-				if (Str_Equals(typeStr, "REQUIRE"))
+				if (str_equals(typeStr, "REQUIRE"))
 				{
 					expressionResult.type = TestExpressionType::Require;
 				}
-				else if (Str_Equals(typeStr, "CHECK"))
+				else if (str_equals(typeStr, "CHECK"))
 				{
 					expressionResult.type = TestExpressionType::Check;
 				}
 			}
-			else if (Str_Equals(attribute.name(), "filename"))
+			else if (str_equals(attribute.name(), "filename"))
 			{
 				expressionResult.filename = attribute.as_string();
 			}
-			else if (Str_Equals(attribute.name(), "line"))
+			else if (str_equals(attribute.name(), "line"))
 			{
 				expressionResult.line = attribute.as_uint();
 			}
@@ -108,11 +108,11 @@ namespace hdn
 
 		for (pugi::xml_node node = expressionNode.first_child(); node; node = node.next_sibling())
 		{
-			if (Str_Equals(node.name(), ORIGINAL_NODE_NAME))
+			if (str_equals(node.name(), ORIGINAL_NODE_NAME))
 			{
 				expressionResult.originalExpression = node.text().as_string();
 			}
-			else if (Str_Equals(node.name(), EXPANDED_NODE_NAME))
+			else if (str_equals(node.name(), EXPANDED_NODE_NAME))
 			{
 				expressionResult.expandedExpression = node.text().as_string();
 			}
@@ -122,23 +122,23 @@ namespace hdn
 
 	void ModuleManagerPanel::ParseTestCaseNode(const pugi::xml_node& testCase, TestCaseResult& testCaseResult)
 	{
-		HASSERT(Str_Equals(testCase.name(), TEST_CASE_NODE_NAME), "Invalid Test Case Node");
+		HASSERT(str_equals(testCase.name(), TEST_CASE_NODE_NAME), "Invalid Test Case Node");
 
 		for (const auto& attribute : testCase.attributes())
 		{
-			if (Str_Equals(attribute.name(), "name"))
+			if (str_equals(attribute.name(), "name"))
 			{
 				testCaseResult.name = attribute.as_string();
 			}
-			else if (Str_Equals(attribute.name(), "tags"))
+			else if (str_equals(attribute.name(), "tags"))
 			{
 				testCaseResult.tags = attribute.as_string();
 			}
-			else if (Str_Equals(attribute.name(), "filename"))
+			else if (str_equals(attribute.name(), "filename"))
 			{
 				testCaseResult.filename = attribute.as_string();
 			}
-			else if (Str_Equals(attribute.name(), "line"))
+			else if (str_equals(attribute.name(), "line"))
 			{
 				testCaseResult.line = attribute.as_uint();
 			}
@@ -146,21 +146,21 @@ namespace hdn
 
 		for (pugi::xml_node node = testCase.first_child(); node; node = node.next_sibling())
 		{
-			if (Str_Equals(node.name(), SECTION_NODE_NAME))
+			if (str_equals(node.name(), SECTION_NODE_NAME))
 			{
 				testCaseResult.sectionResults.emplace_back(SectionResult{});
 				ParseSectionNode(node, testCaseResult.sectionResults.back());
 			}
-			else if (Str_Equals(node.name(), EXPRESSION_NODE_NAME))
+			else if (str_equals(node.name(), EXPRESSION_NODE_NAME))
 			{
 				testCaseResult.expressionResults.emplace_back(ExpressionResult{});
 				ParseExpressionNode(node, testCaseResult.expressionResults.back());
 			}
-			else if (Str_Equals(node.name(), BENCHMARK_NODE_NAME))
+			else if (str_equals(node.name(), BENCHMARK_NODE_NAME))
 			{
 				// TODO: Parse Benchmark Results
 			}
-			else if (Str_Equals(node.name(), OVERALL_RESULT_NODE_NAME))
+			else if (str_equals(node.name(), OVERALL_RESULT_NODE_NAME))
 			{
 				ParseOverallResultNode(node, testCaseResult.overallResult);
 			}
@@ -169,23 +169,23 @@ namespace hdn
 
 	void ModuleManagerPanel::ParseRootNode(const pugi::xml_node& root, TestResult& out)
 	{
-		HASSERT(Str_Equals(root.name(), ROOT_NODE_NAME), "Invalid Root Node");
+		HASSERT(str_equals(root.name(), ROOT_NODE_NAME), "Invalid Root Node");
 
 		out.context.testExecutableName = root.attribute("name").as_string();
 		out.context.rngSeed = root.attribute("rng-seed").as_uint();
 
 		for (pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
 		{
-			if (Str_Equals(node.name(), TEST_CASE_NODE_NAME))
+			if (str_equals(node.name(), TEST_CASE_NODE_NAME))
 			{
 				out.testCaseResults.emplace_back(TestCaseResult{});
 				ParseTestCaseNode(node, out.testCaseResults.back());
 			}
-			else if (Str_Equals(node.name(), OVERALL_RESULTS_NODE_NAME))
+			else if (str_equals(node.name(), OVERALL_RESULTS_NODE_NAME))
 			{
 				ParseOverallResultsNode(node, out.overallResultsExpressions);
 			}
-			else if (Str_Equals(node.name(), OVERALL_RESULTS_CASES_NODE_NAME))
+			else if (str_equals(node.name(), OVERALL_RESULTS_CASES_NODE_NAME))
 			{
 				ParseOverallResultsNode(node, out.overallResultsCases);
 			}
@@ -357,8 +357,8 @@ namespace hdn
 				m_WaitThread = std::thread([this]() {
 					this->m_RunningTests = true;
 
-					const string testSolutionPath = Configuration::Get().GetRootConfigVariable("test", "TestSolution", "");
-					const string buildTestProjectScriptPath = Configuration::Get().GetRootConfigVariable("test", "BuildTestProjectScriptPath", "");
+					const string testSolutionPath = Configuration::get().get_root_config_variable("test", "TestSolution", "");
+					const string buildTestProjectScriptPath = Configuration::get().get_root_config_variable("test", "BuildTestProjectScriptPath", "");
 					const string command = fmt::format("python {0}", buildTestProjectScriptPath);
 
 					// 2. Compile the list of test projects concurently
@@ -380,7 +380,7 @@ namespace hdn
 					HWARN("----------- Finished Running build_test_projects.py -----------");
 
 					// 3. Run the test project executable with the right arguments (--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml)
-					const string executableListFilePath = Configuration::Get().GetRootConfigVariable("test", "ExecutableListFilePath", "");
+					const string executableListFilePath = Configuration::get().get_root_config_variable("test", "ExecutableListFilePath", "");
 					std::ifstream inputFile(executableListFilePath);
 					if (!inputFile.is_open())
 					{
@@ -484,21 +484,21 @@ namespace hdn
 		if (ImGui::Button("Get Module Info"))
 		{
 			m_ModuleInfo.clear();
-			const string rootModuleFolder = Configuration::Get().GetRootConfigVariable("path", "ModuleFolder", "");
-			const vector<fspath> moduleFolders = FileSystem::Walk(rootModuleFolder);
+			const string rootModuleFolder = Configuration::get().get_root_config_variable("path", "ModuleFolder", "");
+			const vector<fspath> moduleFolders = filesystem_walk(rootModuleFolder);
 			for (const auto& modulefolder : moduleFolders)
 			{
 				fspath moduleFilename = ".module";
 				fspath moduleConfigFile = modulefolder / moduleFilename;
 
-				if (!FileSystem::Exists(moduleConfigFile))
+				if (!filesystem_exists(moduleConfigFile))
 				{
 					continue;
 				}
 
 				INIReader reader(moduleConfigFile.string());
 				ModuleInfo info;
-				info.name = FileSystem::Filename(FileSystem::Parent(moduleConfigFile)).string();
+				info.name = filesystem_filename(filesystem_parent(moduleConfigFile)).string();
 				info.version = reader.GetUnsigned64("module", "Version", 0);
 				info.author = reader.GetString("module", "Author", "unknown");
 				info.source = reader.GetString("module", "Source", "unknown");

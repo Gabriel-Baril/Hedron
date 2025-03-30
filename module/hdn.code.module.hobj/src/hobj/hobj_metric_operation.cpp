@@ -2,7 +2,7 @@
 
 namespace hdn
 {
-	static constexpr const char* s_ObjectOperationTypeStr[Underlying(ObjectOperationType::COUNT)] = {
+	static constexpr const char* s_ObjectOperationTypeStr[underlying(ObjectOperationType::COUNT)] = {
 		"UNDEFINED",
 
 		"SOURCE_MANIFEST_POPULATE",
@@ -37,6 +37,6 @@ namespace hdn
 
 	const char* object_operation_type_to_string(ObjectOperationType type)
 	{
-		return s_ObjectOperationTypeStr[Underlying(type)];
+		return s_ObjectOperationTypeStr[underlying(type)];
 	}
 }

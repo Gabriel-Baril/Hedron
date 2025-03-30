@@ -140,12 +140,12 @@ namespace hdn
 
 		if (m_Swapchain == nullptr)
 		{
-			m_Swapchain = CreateScope<VulkanSwapChain>(*m_Device, extent);
+			m_Swapchain = make_scope<VulkanSwapChain>(*m_Device, extent);
 		}
 		else
 		{
 			Ref<VulkanSwapChain> oldSwapChain = std::move(m_Swapchain);
-			m_Swapchain = CreateScope<VulkanSwapChain>(*m_Device, extent, oldSwapChain);
+			m_Swapchain = make_scope<VulkanSwapChain>(*m_Device, extent, oldSwapChain);
 
 			if (!oldSwapChain->CompareSwapFormat(*m_Swapchain.get()))
 			{

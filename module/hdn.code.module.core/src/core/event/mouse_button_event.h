@@ -8,9 +8,9 @@ namespace hdn
 	class MouseButtonEvent : public Event
 	{
 	public:
-		inline MouseButton GetMouseButton() const { return m_Button; }
-		inline virtual std::string ToString() const = 0;
-		EVENT_CLASS_CATEGORY( EventCategory::Mouse | EventCategory::Input )
+		inline MouseButton get_mouse_button() const { return m_Button; }
+		inline virtual std::string to_string() const = 0;
+		EVENT_CLASS_CATEGORY( EventCategory::MOUSE | EventCategory::INPUT )
 	protected:
 		MouseButtonEvent( MouseButton button ) : m_Button( button ) {}
 	protected:

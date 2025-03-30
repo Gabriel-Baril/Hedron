@@ -35,7 +35,7 @@ namespace hdn
 		ImGuiTreeNodeFlags flags = hasChildren ? 0 : ImGuiTreeNodeFlags_Leaf;
 		ImGui::PushID(entity.id());
 		bool open = false;
-		if (!Str_Equals(entity.name().c_str(), ""))
+		if (!str_equals(entity.name().c_str(), ""))
 		{
 			open = ImGui::TreeNodeEx(entity.name().c_str(), flags);
 		}

@@ -20,7 +20,7 @@ namespace hdn {
 	}
 
 	Scope<VulkanDescriptorSetLayout> VulkanDescriptorSetLayout::Builder::Build() const {
-		return CreateScope<VulkanDescriptorSetLayout>(m_Device, m_Bindings);
+		return make_scope<VulkanDescriptorSetLayout>(m_Device, m_Bindings);
 	}
 
 	// *************** Descriptor Set Layout *********************
@@ -70,7 +70,7 @@ namespace hdn {
 	}
 
 	Scope<VulkanDescriptorPool> VulkanDescriptorPool::Builder::Build() const {
-		return CreateScope<VulkanDescriptorPool>(m_Device, m_MaxSets, m_PoolFlags, m_PoolSizes);
+		return make_scope<VulkanDescriptorPool>(m_Device, m_MaxSets, m_PoolFlags, m_PoolSizes);
 	}
 
 	// *************** Descriptor Pool *********************

@@ -64,7 +64,7 @@ namespace hdn
 
 		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
 		pipelineConfig.pipelineLayout = m_PipelineLayout;
-		m_Pipeline = CreateScope<VulkanPipeline>(m_Device, "Shaders/point_light.vert.spv", "Shaders/point_light.frag.spv", pipelineConfig);
+		m_Pipeline = make_scope<VulkanPipeline>(m_Device, "Shaders/point_light.vert.spv", "Shaders/point_light.frag.spv", pipelineConfig);
 	}
 
 	void PointLightSystem::Update(FrameInfo& frameInfo, GlobalUbo& ubo)

@@ -22,27 +22,27 @@ namespace hdn
 
 		void reset()
 		{
-			m_Buffer.getBuffer().clear();
+			m_Buffer.get_buffer().clear();
 		}
 
 		u64 size() const
 		{
-			return m_Buffer.getBuffer().size();
+			return m_Buffer.get_buffer().size();
 		}
 
 		const void* data() const
 		{
-			return m_Buffer.getBuffer().data();
+			return m_Buffer.get_buffer().data();
 		}
 
 		auto begin()
 		{
-			return m_Buffer.getBuffer().begin();
+			return m_Buffer.get_buffer().begin();
 		}
 
 		auto end()
 		{
-			return m_Buffer.getBuffer().end();
+			return m_Buffer.get_buffer().end();
 		}
 
 		template<typename T>

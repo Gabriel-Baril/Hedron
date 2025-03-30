@@ -144,7 +144,7 @@ int main()
 {
 	using namespace hdn;
 	using namespace std::chrono_literals;
-	Log_Init();
+	log_init();
 
 	{
 		ExampleTaskGraph task;

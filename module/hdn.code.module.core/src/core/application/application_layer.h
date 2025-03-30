@@ -8,25 +8,25 @@ namespace hdn
 	class IApplicationLayer
 	{
 	public:
-		virtual void Begin() = 0;
-		virtual void OnUpdate( float dt ) = 0;
-		virtual void End() = 0;
+		virtual void begin() = 0;
+		virtual void on_update( float dt ) = 0;
+		virtual void end() = 0;
 
-		virtual void OnAttach() {}
-		virtual void OnDetach() {}
-		virtual void OnEvent(Event& event) {}
+		virtual void on_attach() {}
+		virtual void on_detach() {}
+		virtual void on_event(Event& event) {}
 
-		inline void Enable()
+		inline void enable()
 		{
 			m_Enabled = true;
 		}
 
-		inline void Disable()
+		inline void disable()
 		{
 			m_Enabled = false;
 		}
 
-		inline bool Enabled()
+		inline bool enabled()
 		{
 			return m_Enabled;
 		}
@@ -34,6 +34,6 @@ namespace hdn
 		bool m_Enabled = true;
 		int m_LayerID = 0;
 		int m_LayerType = 0;
-		string name;
+		string m_Name;
 	};
 }

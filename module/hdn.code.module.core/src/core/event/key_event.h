@@ -8,10 +8,10 @@ namespace hdn
 	class KeyEvent : public Event
 	{
 	public:
-		inline KeyCode GetKeyCode() const { return m_KeyCode; }
-		inline virtual std::string ToString() const = 0;
+		inline KeyCode get_key_code() const { return m_KeyCode; }
+		inline virtual std::string to_string() const = 0;
 
-		EVENT_CLASS_CATEGORY( EventCategory::Keyboard | EventCategory::Input )
+		EVENT_CLASS_CATEGORY( EventCategory::KEYBOARD | EventCategory::INPUT )
 	protected:
 		KeyEvent( KeyCode keyCode ) : m_KeyCode( keyCode ) {}
 	protected:

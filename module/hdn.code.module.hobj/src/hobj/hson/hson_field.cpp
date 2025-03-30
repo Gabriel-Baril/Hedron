@@ -2,7 +2,7 @@
 
 namespace hdn
 {
-	static constexpr const char* s_HsonFieldTypeStr[Underlying(HsonField::COUNT)] = {
+	static constexpr const char* s_HsonFieldTypeStr[underlying(HsonField::COUNT)] = {
 		"HSON_UNDEFINED",
 		"HSON_OBJECT",
 		"HSON_STRUCT",
@@ -23,7 +23,7 @@ namespace hdn
 
 	const char* hson_field_to_string(HsonField fieldType)
 	{
-		return s_HsonFieldTypeStr[Underlying(fieldType)];
+		return s_HsonFieldTypeStr[underlying(fieldType)];
 	}
 
 }

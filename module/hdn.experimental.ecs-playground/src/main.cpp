@@ -72,7 +72,7 @@ void example_deserialize()
 int main()
 {
 	using namespace hdn;
-	Log_Init();
+	log_init();
 	
 	example_deserialize();
 
