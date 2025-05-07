@@ -25,7 +25,7 @@ int main()
 	string testSolution = Configuration::get().get_root_config_variable("test", "ExecutableListFilePath", "");
 	HINFO(testSolution.c_str());
 
-	string moduleFolder = Configuration::get().get_root_config_variable("path", "ModuleFolder", "");
+	string moduleFolder = Configuration::get().get_root_config_variable("path", "ModuleFolderPath", "");
 
 	HINFO("Module Folder -> '{0}'", moduleFolder.c_str());
 	

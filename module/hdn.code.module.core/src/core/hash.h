@@ -20,4 +20,14 @@ namespace hdn
 		h64 hashValue = hash_generate(typeName, seed);
 		return hashValue;
 	}
+
+	struct HashBuilder
+	{
+		template<typename T>
+		void add(const T& value)
+		{
+			hash = hash_combine(hash, hash_generate(&value, sizeof(T)));
+		}
+		h64 hash;
+	};
 }

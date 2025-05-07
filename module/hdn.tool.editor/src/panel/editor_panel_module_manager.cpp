@@ -484,7 +484,7 @@ namespace hdn
 		if (ImGui::Button("Get Module Info"))
 		{
 			m_ModuleInfo.clear();
-			const string rootModuleFolder = Configuration::get().get_root_config_variable("path", "ModuleFolder", "");
+			const string rootModuleFolder = Configuration::get().get_root_config_variable("path", "ModuleFolderPath", "");
 			const vector<fspath> moduleFolders = filesystem_walk(rootModuleFolder);
 			for (const auto& modulefolder : moduleFolders)
 			{

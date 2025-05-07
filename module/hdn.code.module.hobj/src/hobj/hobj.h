@@ -22,6 +22,7 @@ namespace hdn
 
 	template<typename T> using HRef = Ref<T>;
 
+	// Each hobj should override the get_hash() method
 	class HObject
 	{
 	public:
