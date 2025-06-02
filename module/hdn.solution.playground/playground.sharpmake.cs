@@ -19,6 +19,7 @@ public class PlaygroundSolution : Solution
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<EcsPlaygroundProject>(target);
         conf.AddProject<HsonPlaygroundProject>(target);
+        conf.AddProject<PipelinePlaygroundProject>(target);
 
         conf.SetStartupProject<EcsPlaygroundProject>();
     }

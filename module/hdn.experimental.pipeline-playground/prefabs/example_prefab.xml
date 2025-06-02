@@ -1,0 +1,53 @@
+<Prefab>
+	<Entity uuid="dc4c4aaa-4e20-4363-ba92-f0b0b9954dcc" name="ent_02" author="gbaril">
+		<HierarchyComponent>
+			<Child uuid="5a1fd1b9-2e58-4600-8c91-9157cd14af16" />
+			<Child uuid="fbee3970-2940-41d0-890c-d8a04db8acde" />
+		</HierarchyComponent>
+		<TransformComponent>
+			<Translation x="0" y="0" z="0" />
+			<Rotation x="0" y="0" z="0" />
+			<Scale x="1" y="1" z="1" />
+		</TransformComponent>
+		<ModelComponent>
+			<Model name="model_01" />
+		</ModelComponent>
+		<ClutterComponent>
+			<EnableClutter value="true"/>
+		</ClutterComponent>
+		<FollowComponent>
+			<Target target="383af9fe-2cca-44da-ab90-4d3a775a16b3" />
+		</FollowComponent>
+	</Entity>
+	<Entity uuid="5a1fd1b9-2e58-4600-8c91-9157cd14af16" name="ent_03" author="gbaril">
+		<HierarchyComponent>
+			<Parent uuid="dc4c4aaa-4e20-4363-ba92-f0b0b9954dcc" />
+		</HierarchyComponent>
+	</Entity>
+	<Entity uuid="fbee3970-2940-41d0-890c-d8a04db8acde" name="ent_04" author="gbaril">
+		<HierarchyComponent>
+			<Parent uuid="dc4c4aaa-4e20-4363-ba92-f0b0b9954dcc" />
+			<Child uuid="e858bc43-30fd-4e28-8561-bd1235a31d9b" />
+		</HierarchyComponent>
+	</Entity>
+	<Entity uuid="e858bc43-30fd-4e28-8561-bd1235a31d9b" name="ent_05" author="gbaril">
+		<HierarchyComponent>
+			<Parent uuid="fbee3970-2940-41d0-890c-d8a04db8acde" />
+		</HierarchyComponent>
+		<TransformComponent>
+			<Translation x="10" y="0" z="20.6" />
+			<Rotation x="0" y="72" z="0" />
+			<Scale x="1" y="1" z="1" />
+		</TransformComponent>
+		<VolumeComponent>
+			<HalfSize x="0" y="0" z="0" />
+		</VolumeComponent>
+	</Entity>
+	<Entity uuid="383af9fe-2cca-44da-ab90-4d3a775a16b3" name="ent_invisible" author="gbaril">
+		<TransformComponent>
+			<Translation x="0" y="0" z="0" />
+			<Rotation x="0" y="0" z="0" />
+			<Scale x="1" y="1" z="1" />
+		</TransformComponent>
+	</Entity>
+</Prefab>

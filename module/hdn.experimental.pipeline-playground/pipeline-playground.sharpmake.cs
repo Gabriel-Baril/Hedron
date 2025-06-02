@@ -24,5 +24,6 @@ public class PipelinePlaygroundProject : BaseCppProject
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<ConfigProject>(target);
         conf.AddPublicDependency<PugiXMLProject>(target);
+        conf.AddPublicDependency<FlecsProject>(target);
     }
 }

@@ -51,6 +51,7 @@ public class AllSolution : Solution
         conf.AddProject<EcsPlaygroundProject>(target);
         conf.AddProject<HsonPlaygroundProject>(target);
         conf.AddProject<CachePlaygroundProject>(target);
+        conf.AddProject<PipelinePlaygroundProject>(target);
         conf.AddProject<LightthornedProject>(target);
         conf.AddProject<ArchiveProject>(target);
         conf.AddProject<EditorProject>(target);
