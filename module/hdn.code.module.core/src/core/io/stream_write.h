@@ -11,38 +11,32 @@ namespace hdn
 	{
 	public:
 		hostream()
-			: m_stream{ &m_Buffer }
 		{
-		}
-
-		DynamicMemoryBuffer* get_stream_buffer()
-		{
-			return &m_Buffer;
 		}
 
 		void reset()
 		{
-			m_Buffer.get_buffer().clear();
+			m_Buffer.clear();
 		}
 
 		u64 size() const
 		{
-			return m_Buffer.get_buffer().size();
+			return m_Buffer.size();
 		}
 
 		const void* data() const
 		{
-			return m_Buffer.get_buffer().data();
+			return m_Buffer.data();
 		}
 
 		auto begin()
 		{
-			return m_Buffer.get_buffer().begin();
+			return m_Buffer.begin();
 		}
 
 		auto end()
 		{
-			return m_Buffer.get_buffer().end();
+			return m_Buffer.end();
 		}
 
 		template<typename T>
@@ -50,7 +44,7 @@ namespace hdn
 		{
 			static_assert(std::is_trivial_v<T>, "T must be a trivial type");
 			const u64 byteSize = sizeof(T);
-			m_stream.write(reinterpret_cast<const char*>(&object), byteSize);
+			write(&object, byteSize);
 			return byteSize;
 		}
 
@@ -65,30 +59,27 @@ namespace hdn
 
 		u64 write(const void* data, u64 byteSize)
 		{
-			m_stream.write(reinterpret_cast<const char*>(data), byteSize);
+			const u8* bytes = (const u8*)data;
+			m_Buffer.insert(m_Buffer.end(), bytes, bytes + byteSize);
 			return byteSize;
 		}
 
 		u64 write_at(const void* data, u64 byteSize, u64 offset)
 		{
-			m_stream.seekp(offset);
-			m_stream.write(reinterpret_cast<const char*>(data), byteSize);
-			m_stream.seekp(0, std::ios::end);
-			return byteSize;
+			if (offset + byteSize > m_Buffer.size())
+			{
+				HWARN("Failed to write {0} bytes to buffer", byteSize);
+				return 0;
+			}
+			std::memcpy(m_Buffer.data() + offset, data, byteSize);
 		}
 
-		void seekp(u64 offset)
+		u64 marker() const
 		{
-			m_stream.seekp(offset);
-		}
-
-		u64 marker()
-		{
-			return m_stream.tellp();
+			return size();
 		}
 	private:
-		DynamicMemoryBuffer m_Buffer;
-		std::ostream m_stream;
+		std::vector<u8>  m_Buffer;
 	};
 
 	template<typename T>

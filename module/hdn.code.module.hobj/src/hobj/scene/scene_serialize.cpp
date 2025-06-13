@@ -17,22 +17,18 @@ namespace hdn
 	void scene_serialize(hostream& stream, const Scene& scene)
 	{
 		u32 entityCount = 0;
-
-		u64 entityCountMarker = stream.marker();
+		const u64 entityCountMarker = stream.marker();
 		stream << entityCount;
 		scene.world.each([&entityCount, &scene, &stream](flecs::entity e, TransformComponent& transformC) {
-			HINFO("SERIALIZATION");
 			entityCount++;
 			u32 componentCount = 0;
-			u64 componentCountMarker = stream.marker();
-			HINFO("MARKER {0}", componentCountMarker);
+			const u64 componentCountMarker = stream.marker();
 			stream << componentCount;
 			e.each([&scene, &stream, &componentCount, &e](flecs::id comp_id)
 			{
 				componentCount++;
 				if (comp_id == scene.world.id<TransformComponent>()) {
 					const TransformComponent* c = e.get<TransformComponent>();
-					HINFO("TRANSFORM {0} {1} {2}", c->position.x, c->position.y, c->position.z);
 					stream << underlying(SceneComponentType::TRANSFORM_COMPONENT);
 					stream << c->position;
 					stream << c->rotation;
@@ -42,9 +38,6 @@ namespace hdn
 			stream.write_at((const void*)&componentCount, sizeof(componentCount), componentCountMarker); // Patch component count
 		});
 		stream.write_at((const void*)&entityCount, sizeof(entityCount), entityCountMarker); // Patch entity count
-		// stream << entityCount;
-
-		HINFO("Entity Count {0}", entityCount);
 	}
 
 	static void scene_deserialize_component(histream& stream, Scene& scene, flecs::entity ent, SceneComponentType type)
