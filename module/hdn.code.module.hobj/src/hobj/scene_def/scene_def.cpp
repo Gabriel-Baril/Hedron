@@ -1,4 +1,4 @@
-#include "scene.h"
+#include "scene_def.h"
 
 namespace hdn
 {

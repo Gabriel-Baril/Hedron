@@ -2,15 +2,15 @@
 
 namespace hdn
 {
-	void HSceneDef::serialize(hostream& stream)
+	void HScene::serialize(hostream& stream)
 	{
-		HDefinition::serialize(stream);
-		scene_def_serialize(stream, m_MapDefinition);
+		HObject::serialize(stream);
+		scene_serialize(stream, m_Scene);
 	}
 
-	void HSceneDef::deserialize(histream& stream)
+	void HScene::deserialize(histream& stream)
 	{
-		HDefinition::deserialize(stream);
-		scene_def_deserialize(stream, m_MapDefinition);
+		HObject::deserialize(stream);
+		scene_deserialize(stream, m_Scene);
 	}
 }

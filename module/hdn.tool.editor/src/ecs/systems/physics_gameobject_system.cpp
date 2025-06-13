@@ -41,7 +41,7 @@ namespace hdn
 			}
 
 			physx::PxTransform pxTransform = physicsC.physicsActor->getGlobalPose();
-			transformC.translation = glm::vec3(pxTransform.p.x, pxTransform.p.y, -pxTransform.p.z);
+			transformC.position = glm::vec3(pxTransform.p.x, pxTransform.p.y, -pxTransform.p.z);
 			const glm::quat rotQuat = glm::quat(pxTransform.q.w, pxTransform.q.x, pxTransform.q.y, pxTransform.q.z);
 			transformC.rotation = QuaternionToEulerAngles(rotQuat);
 		});

@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class PipelinePlaygroundProject : BaseCppProject
+public class PipelineProject : BaseCppProject
 {
-    public PipelinePlaygroundProject()
+    public PipelineProject()
     {
-        Name = "pipeline-playground";
+        Name = "pipeline";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -15,7 +15,7 @@ public class PipelinePlaygroundProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
-        conf.SolutionFolder = Constants.EXPERIMENTAL_VS_CATEGORY;
+        conf.SolutionFolder = Constants.TOOL_VS_CATEGORY;
 
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
@@ -25,5 +25,6 @@ public class PipelinePlaygroundProject : BaseCppProject
         conf.AddPublicDependency<ConfigProject>(target);
         conf.AddPublicDependency<PugiXMLProject>(target);
         conf.AddPublicDependency<FlecsProject>(target);
+        conf.AddPublicDependency<HobjProject>(target);
     }
 }

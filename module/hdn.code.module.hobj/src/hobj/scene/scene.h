@@ -5,21 +5,17 @@
 #include "core/io/stream_write.h"
 #include "core/io/stream_read.h"
 
-#include "scene_entity.h"
+#include "flecs/flecs.h"
 
 namespace hdn
 {
-	struct SceneDef
+	struct Scene
 	{
-		int maxLight;
-		int maxPrimaryLight;
-		vector<SceneEntityDef> entities;
+		flecs::world world;
 	};
 
-	void scene_def_set_max_light(SceneDef& object, int maxLight);
-	void scene_def_set_max_primary_light(SceneDef& object, int maxPrimaryLight);
-	void scene_def_emplace_entity(SceneDef& object, const SceneEntityDef& entity);
+	void scene_set_world(Scene& scene, flecs::world world);
 
-	void scene_def_serialize(hostream& stream, const SceneDef& object);
-	void scene_def_deserialize(histream& stream, SceneDef& object);
+	void scene_serialize(hostream& stream, const Scene& object);
+	void scene_deserialize(histream& stream, Scene& object);
 }

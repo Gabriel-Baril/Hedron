@@ -81,11 +81,11 @@ namespace hdn
 	{
 		// HDR_PROFILE_FUNCTION();
 		bool changed = false;
-		vec3f32 translation = component.translation;
+		vec3f32 translation = component.position;
 		Render("Translation", translation, &component.HasTranslationChanged);
 		if (component.HasTranslationChanged)
 		{
-			component.translation = translation;
+			component.position = translation;
 			changed = true;
 		}
 

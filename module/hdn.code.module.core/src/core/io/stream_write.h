@@ -65,9 +65,26 @@ namespace hdn
 
 		u64 write(const void* data, u64 byteSize)
 		{
-			const u8* bytes = reinterpret_cast<const u8*>(data);
 			m_stream.write(reinterpret_cast<const char*>(data), byteSize);
 			return byteSize;
+		}
+
+		u64 write_at(const void* data, u64 byteSize, u64 offset)
+		{
+			m_stream.seekp(offset);
+			m_stream.write(reinterpret_cast<const char*>(data), byteSize);
+			m_stream.seekp(0, std::ios::end);
+			return byteSize;
+		}
+
+		void seekp(u64 offset)
+		{
+			m_stream.seekp(offset);
+		}
+
+		u64 marker()
+		{
+			return m_stream.tellp();
 		}
 	private:
 		DynamicMemoryBuffer m_Buffer;

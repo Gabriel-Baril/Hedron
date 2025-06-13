@@ -11,7 +11,7 @@ namespace hdn
 		bool HasRotationChanged = false; // True if the rotation has changed in the current frame, false otherwise
 		bool HasScaleChanged = false; // True if the scale has changed in the current frame, false otherwise
 
-		vec3f32 translation{};
+		vec3f32 position{};
 		vec3f32 scale{ 1.0f, 1.0f, 1.0f };
 		vec3f32 rotation{}; // In radians (Euler YXZ)
 

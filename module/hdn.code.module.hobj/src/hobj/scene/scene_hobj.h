@@ -5,18 +5,17 @@
 
 namespace hdn
 {
-	class HSceneDef : public HDefinition
+	class HScene : public HObject
 	{
 	public:
-		virtual ~HSceneDef() = default;
+		virtual ~HScene() = default;
 
 		virtual void serialize(hostream& stream) override;
 		virtual void deserialize(histream& stream) override;
 
-		SceneDef& get_scene_definition() { return m_MapDefinition; };
-		const SceneDef& get_scene_definition() const { return m_MapDefinition; };
-		inline virtual h64 get_type_hash() const override { return hash_generate_from_type<HSceneDef>(); }
+		Scene& get_scene() { return m_Scene; };
+		const Scene& get_scene() const { return m_Scene; };
 	private:
-		SceneDef m_MapDefinition;
+		Scene m_Scene;
 	};
 }

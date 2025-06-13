@@ -39,7 +39,7 @@ namespace hdn
 
 		if (glm::dot(moveDirection, moveDirection) > std::numeric_limits<f32>::epsilon())
 		{
-			transformC->translation += m_MoveSpeed * dt * glm::normalize(moveDirection);
+			transformC->position += m_MoveSpeed * dt * glm::normalize(moveDirection);
 		}
 	}
 }

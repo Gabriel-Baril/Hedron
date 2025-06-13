@@ -5,7 +5,7 @@
 			<Child uuid="fbee3970-2940-41d0-890c-d8a04db8acde" />
 		</HierarchyComponent>
 		<TransformComponent>
-			<Translation x="0" y="0" z="0" />
+			<Translation x="0" y="4.2" z="0" />
 			<Rotation x="0" y="0" z="0" />
 			<Scale x="1" y="1" z="1" />
 		</TransformComponent>
@@ -35,7 +35,7 @@
 			<Parent uuid="fbee3970-2940-41d0-890c-d8a04db8acde" />
 		</HierarchyComponent>
 		<TransformComponent>
-			<Translation x="10" y="0" z="20.6" />
+			<Translation x="10" y="8.7" z="20.6" />
 			<Rotation x="0" y="72" z="0" />
 			<Scale x="1" y="1" z="1" />
 		</TransformComponent>
@@ -45,7 +45,7 @@
 	</Entity>
 	<Entity uuid="383af9fe-2cca-44da-ab90-4d3a775a16b3" name="ent_invisible" author="gbaril">
 		<TransformComponent>
-			<Translation x="0" y="0" z="0" />
+			<Translation x="0" y="11.2" z="0" />
 			<Rotation x="0" y="0" z="0" />
 			<Scale x="1" y="1" z="1" />
 		</TransformComponent>

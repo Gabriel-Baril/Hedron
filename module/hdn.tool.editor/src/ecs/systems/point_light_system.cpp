@@ -73,10 +73,10 @@ namespace hdn
 		auto query = frameInfo.scene->World()->query<TransformComponent, ColorComponent, PointLightComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, ColorComponent& colorC, PointLightComponent& pointLightC) {
 			assert(lightIndex < MAX_LIGHTS && "Point Light exceed maximum specified");
-			transformC.translation = vec3f32(rotateLight * vec4f32(transformC.translation, 1.0f));
+			transformC.position = vec3f32(rotateLight * vec4f32(transformC.position, 1.0f));
 
 			// copy light to ubo
-			ubo.pointLights[lightIndex].position = vec4f32(transformC.translation, 1.0f);
+			ubo.pointLights[lightIndex].position = vec4f32(transformC.position, 1.0f);
 			ubo.pointLights[lightIndex].color = vec4f32(colorC.color, pointLightC.lightIntensity);
 			lightIndex += 1;
 		});
@@ -90,7 +90,7 @@ namespace hdn
 		auto query = frameInfo.scene->World()->query<TransformComponent, PointLightComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, PointLightComponent& pointLightC) {
 			// Calculate Distance
-			auto offset = frameInfo.camera->GetPosition() - transformC.translation;
+			auto offset = frameInfo.camera->GetPosition() - transformC.position;
 			float distSquared = glm::dot(offset, offset);
 			sorted[distSquared] = e;
 		});
@@ -115,7 +115,7 @@ namespace hdn
 			const PointLightComponent* pointLightC = e.get<PointLightComponent>();
 
 			PointLightPushConstants push{};
-			push.position = vec4f32(transformC->translation, 1.0f);
+			push.position = vec4f32(transformC->position, 1.0f);
 			push.color = vec4f32(colorC->color, pointLightC->lightIntensity);
 			push.radius = transformC->scale.x;
 			vkCmdPushConstants(frameInfo.commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PointLightPushConstants), &push);

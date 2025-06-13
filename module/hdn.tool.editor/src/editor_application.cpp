@@ -243,7 +243,7 @@ namespace hdn
 				auto flatVase = m_ActiveScene->Create(eName.c_str()); // TODO: Fix game object lifetime
 
 				TransformComponent transformC;
-				transformC.translation = { cos(i), -1 - (float)sin(i), sin(i) };
+				transformC.position = { cos(i), -1 - (float)sin(i), sin(i) };
 				transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
 				flatVase.Set(transformC);
 
@@ -252,7 +252,7 @@ namespace hdn
 				flatVase.Set(modelC);
 
 				PhysicsComponent physicsC;
-				physx::PxVec3 position = physx::PxVec3(transformC.translation.x, transformC.translation.y, -transformC.translation.z);
+				physx::PxVec3 position = physx::PxVec3(transformC.position.x, transformC.position.y, -transformC.position.z);
 				physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
 				physicsC.physicsActor = m_PhysicsWorld.CreateDynamicActor(position, dimension);
 				flatVase.Set(physicsC);
@@ -266,7 +266,7 @@ namespace hdn
 			auto floor = m_ActiveScene->Create("floor");
 
 			TransformComponent transformC;
-			transformC.translation = { 0.0f, 2.0f, 0.0f };
+			transformC.position = { 0.0f, 2.0f, 0.0f };
 			transformC.scale = vec3f32{ 3.0f, 1.0f, 3.0f };
 			floor.Set(transformC);
 
@@ -275,7 +275,7 @@ namespace hdn
 			floor.Set(modelC);
 
 			PhysicsComponent physicsC;
-			physx::PxVec3 position = physx::PxVec3(transformC.translation.x, transformC.translation.y, -transformC.translation.z);
+			physx::PxVec3 position = physx::PxVec3(transformC.position.x, transformC.position.y, -transformC.position.z);
 			physx::PxVec3 dimension = physx::PxVec3(3.0f, 0.001f, 3.0f);
 			physicsC.physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
 			floor.Set(physicsC);
@@ -289,7 +289,7 @@ namespace hdn
 			auto cube = m_ActiveScene->Create("cube");
 
 			TransformComponent transformC;
-			transformC.translation = { 0.0f, 0.0f, 0.0f };
+			transformC.position = { 0.0f, 0.0f, 0.0f };
 			transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
 			cube.Set(transformC);
 
@@ -321,7 +321,7 @@ namespace hdn
 
 				auto rotateLight = glm::rotate(mat4f32(1.0f), (i * glm::two_pi<f32>()) / lightColors.size(), { 0.0f, -1.0f, 0.0f });
 				TransformComponent* transformC = pointLight.GetMut<TransformComponent>();
-				transformC->translation = vec3f32(rotateLight * vec4f32(-1.0f, -1.0f, -1.0f, 1.0f));
+				transformC->position = vec3f32(rotateLight * vec4f32(-1.0f, -1.0f, -1.0f, 1.0f));
 
 				pointLight.GetEntity().child_of(pointLightGroup.GetEntity());
 			}
