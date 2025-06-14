@@ -14,16 +14,16 @@
 
 namespace hdn
 {
-	class LightthornedApplication : public IApplication
+	class Application : public IApplication
 	{
 	public:
 		static constexpr u32 WIDTH = 800;
 		static constexpr u32 HEIGHT = 600;
 	public:
-		LightthornedApplication();
-		virtual ~LightthornedApplication();
-		LightthornedApplication(const LightthornedApplication&) = delete;
-		LightthornedApplication& operator=(const LightthornedApplication&) = delete;
+		Application();
+		virtual ~Application();
+		Application(const Application&) = delete;
+		Application& operator=(const Application&) = delete;
 
 		void Run();
 	private:

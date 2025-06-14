@@ -128,9 +128,7 @@ public static class Main
     public static void SharpmakeMain(Sharpmake.Arguments args)
     {
         // C++ Solution
-        args.Generate<PlaygroundSolution>();
         args.Generate<TestsSolution>();
-        args.Generate<DevSolution>();
         args.Generate<AllSolution>();
 
         // C# Solutions

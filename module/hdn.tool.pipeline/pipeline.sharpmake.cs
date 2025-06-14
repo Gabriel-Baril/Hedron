@@ -26,5 +26,6 @@ public class PipelineProject : BaseCppProject
         conf.AddPublicDependency<PugiXMLProject>(target);
         conf.AddPublicDependency<FlecsProject>(target);
         conf.AddPublicDependency<HobjProject>(target);
+        conf.AddPublicDependency<CLI11Project>(target);
     }
 }

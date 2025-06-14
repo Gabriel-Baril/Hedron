@@ -18,8 +18,8 @@ namespace hdn
 
 	std::filesystem::path Configuration::get_root_config_path()
 	{
-		const char* root = std::getenv("HDN_ROOT");
-		const char* configName = std::getenv("HDN_ROOT_CONFIG_NAME");
+		const char* root = std::getenv(HDN_ROOT_ENV);
+		const char* configName = std::getenv(HDN_ROOT_CONFIG_NAME_ENV);
 		std::filesystem::path rootPath = root;
 		return rootPath / configName;
 	}

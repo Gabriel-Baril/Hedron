@@ -357,8 +357,8 @@ namespace hdn
 				m_WaitThread = std::thread([this]() {
 					this->m_RunningTests = true;
 
-					const string testSolutionPath = Configuration::get().get_root_config_variable("test", "TestSolution", "");
-					const string buildTestProjectScriptPath = Configuration::get().get_root_config_variable("test", "BuildTestProjectScriptPath", "");
+					const string testSolutionPath = Configuration::get().get_root_config_variable(CONFIG_SECTION_TEST, CONFIG_KEY_TEST_SOLUTION_PATH, "");
+					const string buildTestProjectScriptPath = Configuration::get().get_root_config_variable(CONFIG_SECTION_TEST, CONFIG_KEY_BUILD_TEST_PROJECT_SCRIPT_PATH, "");
 					const string command = fmt::format("python {0}", buildTestProjectScriptPath);
 
 					// 2. Compile the list of test projects concurently
@@ -380,7 +380,7 @@ namespace hdn
 					HWARN("----------- Finished Running build_test_projects.py -----------");
 
 					// 3. Run the test project executable with the right arguments (--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml)
-					const string executableListFilePath = Configuration::get().get_root_config_variable("test", "ExecutableListFilePath", "");
+					const string executableListFilePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_TEST, CONFIG_KEY_EXECUTABLE_LIST_PATH, "");
 					std::ifstream inputFile(executableListFilePath);
 					if (!inputFile.is_open())
 					{
@@ -484,7 +484,7 @@ namespace hdn
 		if (ImGui::Button("Get Module Info"))
 		{
 			m_ModuleInfo.clear();
-			const string rootModuleFolder = Configuration::get().get_root_config_variable("path", "ModuleFolderPath", "");
+			const string rootModuleFolder = Configuration::get().get_root_config_variable(CONFIG_SECTION_PATH, CONFIG_KEY_MODULE_FOLDER_PATH, "");
 			const vector<fspath> moduleFolders = filesystem_walk(rootModuleFolder);
 			for (const auto& modulefolder : moduleFolders)
 			{

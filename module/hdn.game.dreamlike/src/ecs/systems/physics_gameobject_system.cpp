@@ -2,7 +2,7 @@
 
 #include "PxPhysicsAPI.h"
 
-#include "ecs/components/transform_component.h"
+#include "hobj/scene/transform_component.h"
 #include "ecs/components/physics_component.h"
 
 namespace hdn

@@ -22,10 +22,10 @@ int main()
 	fspath rootConfig = Configuration::get_root_config_path();
 	HINFO("HDN_ROOT={0}", rootConfig.string().c_str());
 
-	string testSolution = Configuration::get().get_root_config_variable("test", "ExecutableListFilePath", "");
+	string testSolution = Configuration::get().get_root_config_variable(CONFIG_SECTION_TEST, CONFIG_KEY_EXECUTABLE_LIST_PATH, "");
 	HINFO(testSolution.c_str());
 
-	string moduleFolder = Configuration::get().get_root_config_variable("path", "ModuleFolderPath", "");
+	string moduleFolder = Configuration::get().get_root_config_variable(CONFIG_SECTION_PATH, CONFIG_KEY_MODULE_FOLDER_PATH, "");
 
 	HINFO("Module Folder -> '{0}'", moduleFolder.c_str());
 	

@@ -1,6 +1,6 @@
 #include "update_transform_system.h"
 
-#include "ecs/components/transform_component.h"
+#include "hobj/scene/transform_component.h"
 
 namespace hdn
 {

@@ -50,9 +50,8 @@ public class AllSolution : Solution
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<EcsPlaygroundProject>(target);
         conf.AddProject<HsonPlaygroundProject>(target);
-        conf.AddProject<CachePlaygroundProject>(target);
         conf.AddProject<PipelineProject>(target);
-        conf.AddProject<LightthornedProject>(target);
+        conf.AddProject<DreamlikeProject>(target);
         conf.AddProject<ArchiveProject>(target);
         conf.AddProject<EditorProject>(target);
     }

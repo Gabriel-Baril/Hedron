@@ -41,7 +41,7 @@ namespace hdn
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_MANIFEST_LOOKUP_ENTRY, id);
 		const bool contained = m_ObjectManifest.contains(id);
 		HOBJ_METRIC_END();
-		return false;
+		return contained;
 	}
 
 	IHObjectSource* HObjectRegistry::manifest_get_entry(uuid64 id)

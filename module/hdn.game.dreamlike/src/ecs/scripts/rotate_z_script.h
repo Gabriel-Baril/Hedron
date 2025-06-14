@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ecs/components/native_script_component.h"
-#include "ecs/components/transform_component.h"
+#include "hobj/scene/transform_component.h"
 
 #include "../../gameobject.h"
 

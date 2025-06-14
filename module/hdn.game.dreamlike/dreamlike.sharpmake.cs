@@ -2,11 +2,11 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 using System.IO; // For Path.Combine
 
 [Generate]
-public class LightthornedProject : BaseCppProject
+public class DreamlikeProject : BaseCppProject
 {
-    public LightthornedProject()
+    public DreamlikeProject()
     {
-        Name = "lightthorned";
+        Name = "dreamlike";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -67,5 +67,6 @@ public class LightthornedProject : BaseCppProject
         conf.AddPublicDependency<GLFWProject>(target);
         conf.AddPublicDependency<ImguiProject>(target);
         conf.AddPublicDependency<FlecsProject>(target);
+        conf.AddPublicDependency<HobjProject>(target);
     }
 }

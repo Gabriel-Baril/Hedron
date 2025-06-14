@@ -1,25 +1,48 @@
 #include "core/core.h"
 #include "core/stl/unordered_map.h"
 
-#include "utils.h"
-
-#include "entity_component_parse.h"
-
 #include "hobj/scene/scene_hobj.h"
 #include "hobj/hobj_registry.h"
 #include "hobj/hobj_source_filesystem.h"
 
-int main()
+#include "config/config.h"
+
+#include "utils.h"
+#include "entity_component_parse.h"
+#include "cache.h"
+#include "args.h"
+
+namespace hdn
+{
+	void hobj_registry_init()
+	{
+		HObjectRegistry& registry = HObjectRegistry::get();
+		std::string objectPath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_OBJECTS_PATH, "");
+		registry.add_source<FilesystemObjectSource>("local", objectPath);
+		registry.populate();
+	}
+}
+
+int main(int argc, char* argv[])
 {
 	using namespace hdn;
 	log_init();
+	if (!args_init(argc, argv))
+	{
+		return 1;
+	}
+	cache_init();
+	hobj_registry_init();
 
-	HObjectRegistry& registry = HObjectRegistry::get();
-	registry.add_source<FilesystemObjectSource>("local", "objects");
-	registry.populate();
-	
+	HINFO("Pipeline started");
+
+	const PipelineCmdArgs& args = args_get();
+
+	std::string pipelineModulePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_PIPELINE_MODULE_PATH, "");
+	std::string scenePath = fmt::format("{0}\\{1}", pipelineModulePath, args.scenePath);
+
 	pugi::xml_document doc;
-	pugi::xml_parse_result result = doc.load_file("prefabs/example_prefab.xml");
+	pugi::xml_parse_result result = doc.load_file(scenePath.c_str()); // "prefabs/example_prefab.xml"
 	if (!result)
 	{
 		return -1;

@@ -1,9 +1,9 @@
-#include "lightthorned_application.h"
+#include "application.h"
 
 #include "keyboard_movement_controller.h"
 #include "camera.h"
 
-#include "ecs/components/transform_component.h"
+#include "hobj/scene/transform_component.h"
 #include "ecs/components/color_component.h"
 #include "ecs/components/point_light_component.h"
 #include "ecs/components/physics_component.h"
@@ -24,11 +24,14 @@
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
 
+#include "hobj/hobj_registry.h"
+#include "hobj/scene/scene_hobj.h"
+
 namespace hdn
 {
 	static constexpr f32 MAX_FRAME_TIME = 0.5f;
 
-	LightthornedApplication::LightthornedApplication()
+	Application::Application()
 	{
 		m_GlobalPool = VulkanDescriptorPool::Builder(m_Device)
 			.SetMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
@@ -41,12 +44,12 @@ namespace hdn
 		m_EcsWorld.set_threads(std::thread::hardware_concurrency());
 	}
 
-	LightthornedApplication::~LightthornedApplication()
+	Application::~Application()
 	{
 		m_PhysicsWorld.Shutdown();
 	}
 
-	void LightthornedApplication::Run()
+	void Application::Run()
 	{
 		vector<Scope<VulkanBuffer>> uboBuffers(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0;i < uboBuffers.size(); i++)
@@ -182,8 +185,12 @@ namespace hdn
 		vkDeviceWaitIdle(m_Device.GetDevice());
 	}
 
-	void LightthornedApplication::LoadGameObjects()
+	void Application::LoadGameObjects()
 	{
+		HScene* scene = HObjectRegistry::get().get<HScene>("scene_01");
+
+
+
 		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
 
 		auto flatVaseGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "Flat Vase Group");

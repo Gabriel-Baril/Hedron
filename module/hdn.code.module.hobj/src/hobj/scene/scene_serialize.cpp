@@ -26,8 +26,8 @@ namespace hdn
 			stream << componentCount;
 			e.each([&scene, &stream, &componentCount, &e](flecs::id comp_id)
 			{
-				componentCount++;
 				if (comp_id == scene.world.id<TransformComponent>()) {
+					componentCount++;
 					const TransformComponent* c = e.get<TransformComponent>();
 					stream << underlying(SceneComponentType::TRANSFORM_COMPONENT);
 					stream << c->position;

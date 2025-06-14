@@ -28,7 +28,7 @@ namespace hdn
 		stream >> nameLength;
 		if (nameLength > 0)
 		{
-			object.name.reserve(nameLength);
+			object.name.resize(nameLength);
 			stream.read_pod(object.name.data(), nameLength);
 		}
 	}

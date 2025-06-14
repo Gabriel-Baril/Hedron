@@ -1,0 +1,10 @@
+{
+  "FileVersion": 2,
+  "Id": "548932e4-4004-9483-e7b5-2d70d317479a",
+  "Items": [
+    {
+      "Id": "151fcd3c-faf0-4a1b-9261-8de270c14c93",
+      "Command": "--scene \"prefabs/example_prefab.xml\""
+    }
+  ]
+}
