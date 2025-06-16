@@ -20,13 +20,13 @@ namespace hdn
 	inline constexpr const char* CONFIG_KEY_EXECUTABLE_LIST_FILENAME = "ExecutableListFile";
 	inline constexpr const char* CONFIG_KEY_EXECUTABLE_LIST_PATH = "ExecutableListFilePath";
 
-	inline constexpr const char* CONFIG_SECTION_CACHE = "cache";
-	inline constexpr const char* CONFIG_KEY_CACHE_FOLDER_PATH = "CacheFolderPath";
-
 	inline constexpr const char* CONFIG_SECTION_PIPELINE = "pipeline";
 	inline constexpr const char* CONFIG_KEY_PIPELINE_MODULE_PATH = "PipelineModulePath";
-	inline constexpr const char* CONFIG_KEY_OBJECTS_FOLDER_NAME = "ObjectsFolderName";
-	inline constexpr const char* CONFIG_KEY_OBJECTS_PATH = "ObjectsPath";
+	inline constexpr const char* CONFIG_KEY_CACHE_FOLDER_NAME = "CacheFolderName";
+	inline constexpr const char* CONFIG_KEY_CACHE_PATH = "CachePath";
+
+	inline constexpr const char* CONFIG_SECTION_DATA = "data";
+	inline constexpr const char* CONFIG_KEY_DATA_MODULE_PATH = "DataModulePath";
 
 	class HDN_MODULE_CONFIG_API Configuration
 	{

@@ -1,5 +1,7 @@
 #include "scene.h"
 #include "transform_component.h"
+#include "hobj/prefab/prefab_component_transform.h"
+#include "hobj/prefab/prefab_component_uuid.h"
 
 namespace hdn
 {
@@ -19,21 +21,21 @@ namespace hdn
 		u32 entityCount = 0;
 		const u64 entityCountMarker = stream.marker();
 		stream << entityCount;
-		scene.world.each([&entityCount, &scene, &stream](flecs::entity e, TransformComponent& transformC) {
+		scene.world.each([&entityCount, &scene, &stream](flecs::entity e, PrefabUUIDComponent& uuid) {
 			entityCount++;
 			u32 componentCount = 0;
 			const u64 componentCountMarker = stream.marker();
 			stream << componentCount;
 			e.each([&scene, &stream, &componentCount, &e](flecs::id comp_id)
 			{
-				if (comp_id == scene.world.id<TransformComponent>()) {
-					componentCount++;
-					const TransformComponent* c = e.get<TransformComponent>();
-					stream << underlying(SceneComponentType::TRANSFORM_COMPONENT);
-					stream << c->position;
-					stream << c->rotation;
-					stream << c->scale;
-				}
+					if (comp_id == scene.world.id<PrefabTransformComponent>()) {
+						componentCount++;
+						const PrefabTransformComponent* c = e.get<PrefabTransformComponent>();
+						stream << underlying(SceneComponentType::TRANSFORM_COMPONENT);
+						stream << c->position;
+						stream << c->rotation;
+						stream << c->scale;
+					}
 			});
 			stream.write_at((const void*)&componentCount, sizeof(componentCount), componentCountMarker); // Patch component count
 		});
@@ -46,11 +48,11 @@ namespace hdn
 		{
 		case SceneComponentType::TRANSFORM_COMPONENT:
 		{
-			TransformComponent transform;
-			stream >> transform.position;
-			stream >> transform.rotation;
-			stream >> transform.scale;
-			ent.set(transform);
+			TransformComponent transformC;
+			stream >> transformC.position;
+			stream >> transformC.rotation;
+			stream >> transformC.scale;
+			ent.set(transformC);
 			break;
 		}
 		default:

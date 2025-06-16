@@ -1,11 +1,10 @@
-#include "entity_component_transform.h"
-#include "hobj/scene/transform_component.h"
+#include "prefab_component_transform.h"
 
 namespace hdn
 {
-	bool component_parse_transform(pugi::xml_node componentNode, EntityDef& entDef)
+	bool component_parse_transform(pugi::xml_node componentNode, flecs::entity ent)
 	{
-		TransformComponent transformC;
+		PrefabTransformComponent transformC;
 		transformC.position.x = componentNode.child("Translation").attribute("x").as_float();
 		transformC.position.y = componentNode.child("Translation").attribute("y").as_float();
 		transformC.position.z = componentNode.child("Translation").attribute("z").as_float();
@@ -17,7 +16,7 @@ namespace hdn
 		transformC.scale.x = componentNode.child("Scale").attribute("x").as_float();
 		transformC.scale.y = componentNode.child("Scale").attribute("y").as_float();
 		transformC.scale.z = componentNode.child("Scale").attribute("z").as_float();
-		entDef.add_component(transformC);
+		ent.set(transformC);
 
 		return true;
 	}

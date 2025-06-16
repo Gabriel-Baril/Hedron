@@ -27,5 +27,7 @@ public class PipelineProject : BaseCppProject
         conf.AddPublicDependency<FlecsProject>(target);
         conf.AddPublicDependency<HobjProject>(target);
         conf.AddPublicDependency<CLI11Project>(target);
+
+        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
     }
 }

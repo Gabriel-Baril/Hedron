@@ -53,6 +53,7 @@ namespace hdn
 	HDN_MODULE_CORE_API bool filesystem_has_root(const fspath& path);
 	HDN_MODULE_CORE_API bool filesystem_has_stem(const fspath& path);
 	HDN_MODULE_CORE_API bool filesystem_has_extension(const fspath& path);
+	HDN_MODULE_CORE_API bool filesystem_has_extension(const fspath& path, const string& ext);
 	HDN_MODULE_CORE_API bool filesystem_has_parent(const fspath& path);
 	HDN_MODULE_CORE_API bool filesystem_full_match(const fspath& path, const string& match, bool caseSensitive);
 	HDN_MODULE_CORE_API bool filesystem_directory_has_file(const fspath& directory, const fspath& file);
@@ -81,6 +82,7 @@ namespace hdn
 	HDN_MODULE_CORE_API fspath filesystem_to_absolute(const fspath& path);
 
 	HDN_MODULE_CORE_API vector<fspath> filesystem_walk(const fspath& path, const std::function<bool(const fspath& path)>& predicate = nullptr, bool recursive = false);
+	HDN_MODULE_CORE_API void filesystem_iterate(const fspath& path, const std::function<void(const fspath& path)>& predicate = nullptr, bool recursive = false);
 	HDN_MODULE_CORE_API bool filesystem_touch(const fspath& path);
 	HDN_MODULE_CORE_API bool filesystem_create_directory(const fspath& path);
 	HDN_MODULE_CORE_API bool filesystem_rename(const fspath& source, const fspath& destination);

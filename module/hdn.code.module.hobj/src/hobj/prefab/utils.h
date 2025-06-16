@@ -1,0 +1,9 @@
+#pragma once
+
+#include "core/core.h"
+#include "xxhash/xxhash.h"
+
+namespace hdn
+{
+	u64 str_uuid_to_u64(const char* uuid);
+}

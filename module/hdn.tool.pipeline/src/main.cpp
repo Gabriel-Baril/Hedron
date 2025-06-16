@@ -7,19 +7,104 @@
 
 #include "config/config.h"
 
-#include "utils.h"
-#include "entity_component_parse.h"
 #include "cache.h"
 #include "args.h"
 
+#include "hobj/prefab/prefab_parse.h"
+#include "hobj/prefab/prefab_hobj.h"
+
 namespace hdn
 {
+	inline static constexpr const char* SOURCE_EXTENSION_DEFINITION = ".def";
+	inline static constexpr const char* SOURCE_EXTENSION_PREFAB = ".pfb";
+	inline static constexpr const char* SOURCE_EXTENSION_SHADER_FRAG = ".frag";
+	inline static constexpr const char* SOURCE_EXTENSION_SHADER_VERT = ".vert";
+	inline static constexpr const char* SOURCE_EXTENSION_FBX = ".fbx";
+	inline static constexpr const char* SOURCE_EXTENSION_OBJ = ".obj";
+
+
 	void hobj_registry_init()
 	{
 		HObjectRegistry& registry = HObjectRegistry::get();
-		std::string objectPath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_OBJECTS_PATH, "");
-		registry.add_source<FilesystemObjectSource>("local", objectPath);
+		std::string cachePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
+		registry.add_source<FilesystemObjectSource>("local", cachePath);
 		registry.populate();
+	}
+
+	// TODO: Move into sourcedb
+	// The high level source type supported by the pipeline
+	enum class SourceType
+	{
+		UNKNOWN,
+		DEFINITION, // Most common format for engine-specific assets (xml-like)
+		PREFAB, // Format for structuring entities (xml-like)
+		SHADER, // hlsl shader sources
+		FBX, // fbx 3d model source
+		OBJ, // obj 3d model source
+		COUNT
+	};
+
+	static constexpr const char* s_SourceTypeStr[underlying(SourceType::COUNT)] = {
+		"UNKNOWN",
+		"DEFINITION",
+		"PREFAB",
+		"SHADER",
+		"FBX",
+		"OBJ"
+	};
+
+	struct Source
+	{
+		SourceType type;
+		string path;
+		// string name; // The given name to a source, depending on the source the algorithm to determine the name will differ.
+	};
+
+	const char* source_type_to_string(SourceType type)
+	{
+		return s_SourceTypeStr[underlying(type)];
+	}
+
+	SourceType get_source_type(const fspath& path)
+	{
+		if (filesystem_has_extension(path, SOURCE_EXTENSION_DEFINITION))
+		{
+			return SourceType::DEFINITION;
+		}
+		else if (filesystem_has_extension(path, SOURCE_EXTENSION_PREFAB))
+		{
+			return SourceType::PREFAB;
+		}
+		else if (filesystem_has_extension(path, SOURCE_EXTENSION_SHADER_FRAG) || filesystem_has_extension(path, SOURCE_EXTENSION_SHADER_VERT))
+		{
+			return SourceType::SHADER;
+		}
+		else if (filesystem_has_extension(path, SOURCE_EXTENSION_FBX))
+		{
+			return SourceType::FBX;
+		}
+		else if (filesystem_has_extension(path, SOURCE_EXTENSION_OBJ))
+		{
+			return SourceType::OBJ;
+		}
+		return SourceType::UNKNOWN;
+	}
+
+	void explore_source(const fspath& path)
+	{
+		if (!filesystem_is_directory(path))
+		{
+			SourceType type = get_source_type(path);
+			if (type != SourceType::UNKNOWN)
+			{
+				HINFO("Source '{0}' found: {1}", path.string().c_str(), source_type_to_string(type));
+			}
+		}
+	}
+
+	void explore_sources(const fspath& path)
+	{
+		filesystem_iterate(path, explore_source, true);
 	}
 }
 
@@ -36,57 +121,31 @@ int main(int argc, char* argv[])
 
 	HINFO("Pipeline started");
 
+	std::string dataModulePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_DATA, CONFIG_KEY_DATA_MODULE_PATH, "");
+	explore_sources(dataModulePath);
+
 	const PipelineCmdArgs& args = args_get();
 
-	std::string pipelineModulePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_PIPELINE_MODULE_PATH, "");
-	std::string scenePath = fmt::format("{0}\\{1}", pipelineModulePath, args.scenePath);
+	std::string scenePath = fmt::format("{0}\\{1}", dataModulePath, args.scenePath);
 
-	pugi::xml_document doc;
-	pugi::xml_parse_result result = doc.load_file(scenePath.c_str()); // "prefabs/example_prefab.xml"
-	if (!result)
+	Prefab prefab;
+	prefab_parse(prefab, scenePath);
+
 	{
-		return -1;
+		HRef<HScene> hScene = HObjectRegistry::get().new_object<HScene>("scene_01");
+		scene_set_world(hScene->get_scene(), prefab.world);
+		HObjectFilesystemData data;
+		data.path = "scene_01.hobj";
+		HObjectRegistry::get().object_save(hScene.get(), "local", &data, sizeof(data));
 	}
 
-	flecs::world ecsWorld;
-	unordered_map<u64, EntityDef> m_Entities;
-	for (pugi::xml_node entityNode: doc.child("Prefab").children("Entity"))
 	{
-		const pugi::char_t* uuid = entityNode.attribute("uuid").as_string();
-		HASSERT(uuid, "Entity without uuid found");
-
-		const pugi::char_t* name = entityNode.attribute("name").as_string();
-		if (name)
-		{
-			HWARN("Entity: '{0}' ({1})", name, uuid);
-		}
-		else
-		{
-			HWARN("Entity: '<unnamed>' ({0})", uuid);
-		}
-
-		u64 uuidTou64 = str_uuid_to_u64(uuid);
-		m_Entities[uuidTou64].entity = ecsWorld.entity();
-		m_Entities[uuidTou64].uuid = uuidTou64;
-
-		for (pugi::xml_node childNode : entityNode.children())
-		{
-			if (entity_parse_component(childNode, m_Entities[uuidTou64]))
-			{
-				HWARN("Parsed '{0}' component", childNode.name());
-			}
-			else
-			{
-				HWARN("Failed to parse '{0}' component", childNode.name());
-			}
-		}
+		HRef<HPrefab> hPrefab = HObjectRegistry::get().new_object<HPrefab>("scene_01_prefab");
+		prefab_set_world(hPrefab->get_prefab(), prefab.world);
+		HObjectFilesystemData data;
+		data.path = "scene_01_prefab.hobj";
+		HObjectRegistry::get().object_save(hPrefab.get(), "local", &data, sizeof(data));
 	}
-
-	HRef<HScene> scene = HObjectRegistry::get().new_object<HScene>("scene_01");
-	scene_set_world(scene->get_scene(), ecsWorld);
-	HObjectFilesystemData data;
-	data.path = "scene_01.hobj";
-	HObjectRegistry::get().object_save(scene.get(), "local", &data, sizeof(data));
 
 	return 0;
 }

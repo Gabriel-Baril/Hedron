@@ -132,6 +132,11 @@ namespace hdn
 		return path.has_extension();
 	}
 
+	bool filesystem_has_extension(const fspath& path, const string& ext)
+	{
+		return path.extension() == ext;
+	}
+
 	bool filesystem_has_parent(const fspath& path)
 	{
 		return path.has_parent_path();
@@ -374,6 +379,30 @@ namespace hdn
 			}
 		}
 		return directories;
+	}
+
+	void filesystem_iterate(const fspath& path, const std::function<void(const fspath& path)>& predicate, bool recursive)
+	{
+		HASSERT(predicate, "Predicate cannot be null");
+		if (!filesystem_exists(path) || !filesystem_is_directory(path))
+		{
+			return;
+		}
+
+		if (recursive)
+		{
+			for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path))
+			{
+				predicate(entry);
+			}
+		}
+		else
+		{
+			for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(path))
+			{
+				predicate(entry);
+			}
+		}
 	}
 
 	bool filesystem_touch(const fspath& path)

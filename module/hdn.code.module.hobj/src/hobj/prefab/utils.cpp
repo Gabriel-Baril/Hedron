@@ -1,6 +1,4 @@
-#pragma once
-#include "core/core.h"
-#include "xxhash/xxhash.h"
+#include "utils.h"
 
 namespace hdn
 {

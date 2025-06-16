@@ -4,7 +4,7 @@
   "Items": [
     {
       "Id": "151fcd3c-faf0-4a1b-9261-8de270c14c93",
-      "Command": "--scene \"prefabs/example_prefab.xml\""
+      "Command": "--scene \"example_prefab.pfb\""
     }
   ]
 }

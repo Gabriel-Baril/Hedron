@@ -24,5 +24,6 @@ public class HobjProject : BaseCppProject
 
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<FlecsProject>(target);
+        conf.AddPublicDependency<PugiXMLProject>(target);
     }
 }

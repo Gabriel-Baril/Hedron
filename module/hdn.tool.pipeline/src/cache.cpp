@@ -13,7 +13,7 @@ namespace hdn
 
 	bool cache_init()
 	{
-		s_CacheSettings.cachePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_CACHE, CONFIG_KEY_CACHE_FOLDER_PATH, "");
+		s_CacheSettings.cachePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
 		HINFO("Cache Path: {0}", s_CacheSettings.cachePath.c_str());
 
 		return true;
