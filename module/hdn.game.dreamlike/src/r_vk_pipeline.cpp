@@ -10,22 +10,22 @@ namespace hdn
 	VulkanPipeline::VulkanPipeline(VulkanDevice* device, const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
 		: m_Device{ device }
 	{
-		CreateGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
+		create_graphics_pipeline(vertFilepath, fragFilepath, configInfo);
 	}
 
 	VulkanPipeline::~VulkanPipeline()
 	{
-		vkDestroyShaderModule(m_Device->GetDevice(), m_VertShaderModule, nullptr);
-		vkDestroyShaderModule(m_Device->GetDevice(), m_FragShaderModule, nullptr);
-		vkDestroyPipeline(m_Device->GetDevice(), m_GraphicsPipeline, nullptr);
+		vkDestroyShaderModule(m_Device->get_device(), m_VertShaderModule, nullptr);
+		vkDestroyShaderModule(m_Device->get_device(), m_FragShaderModule, nullptr);
+		vkDestroyPipeline(m_Device->get_device(), m_GraphicsPipeline, nullptr);
 	}
 
-	void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)
+	void VulkanPipeline::bind(VkCommandBuffer commandBuffer)
 	{
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline); // Signal that we want to bind a graphics pipeline
 	}
 
-	void VulkanPipeline::DefaultPipelineConfigInfo(PipelineConfigInfo& configInfo)
+	void VulkanPipeline::default_pipeline_config_info(PipelineConfigInfo& configInfo)
 	{
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; // Define how our vertex are related topologically
@@ -97,11 +97,11 @@ namespace hdn
 		configInfo.dynamicStateInfo.dynamicStateCount = static_cast<u32>(configInfo.dynamicStateEnables.size());
 		configInfo.dynamicStateInfo.flags = 0;
 
-		configInfo.bindingDescriptions = VulkanModel::Vertex::GetBindingDescriptions();
-		configInfo.attributeDescriptions = VulkanModel::Vertex::GetAttributeDescriptions();
+		configInfo.bindingDescriptions = VulkanModel::Vertex::get_binding_descriptions();
+		configInfo.attributeDescriptions = VulkanModel::Vertex::get_attribute_descriptions();
 	}
 
-	void VulkanPipeline::EnableAlphaBlending(PipelineConfigInfo& configInfo)
+	void VulkanPipeline::enable_alpha_blending(PipelineConfigInfo& configInfo)
 	{
 		configInfo.colorBlendAttachment.blendEnable = VK_TRUE; // Do we want to mix the current output with the color value already in the framebuffer if any
 
@@ -115,7 +115,7 @@ namespace hdn
 		configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 	}
 
-	vector<char> VulkanPipeline::ReadFile(const string& filepath)
+	vector<char> VulkanPipeline::read_file(const string& filepath)
 	{
 		std::ifstream file(filepath, std::ios::ate | std::ios::binary); // std::ios::ate -> When the file open we seek to the end immediately
 		if (!file.is_open())
@@ -130,16 +130,16 @@ namespace hdn
 		return buffer;
 	}
 
-	void VulkanPipeline::CreateGraphicsPipeline(const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
+	void VulkanPipeline::create_graphics_pipeline(const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
 	{
 		assert(configInfo.pipelineLayout != VK_NULL_HANDLE);
 		assert(configInfo.renderPass != VK_NULL_HANDLE);
 
-		const auto vertCode = ReadFile(vertFilepath);
-		const auto fragCode = ReadFile(fragFilepath);
+		const auto vertCode = read_file(vertFilepath);
+		const auto fragCode = read_file(fragFilepath);
 
-		CreateShaderModule(vertCode, &m_VertShaderModule);
-		CreateShaderModule(fragCode, &m_FragShaderModule);
+		create_shader_module(vertCode, &m_VertShaderModule);
+		create_shader_module(fragCode, &m_FragShaderModule);
 
 		VkPipelineShaderStageCreateInfo shaderStages[2];
 		shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -189,19 +189,19 @@ namespace hdn
 		pipelineInfo.basePipelineIndex = -1;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-		if (vkCreateGraphicsPipelines(m_Device->GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline) != VK_SUCCESS)
+		if (vkCreateGraphicsPipelines(m_Device->get_device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline) != VK_SUCCESS)
 		{
 			HTHROW(std::runtime_error, "Failed to create graphics pipeline");
 		}
 	}
 
-	void VulkanPipeline::CreateShaderModule(const vector<char>& code, VkShaderModule* module)
+	void VulkanPipeline::create_shader_module(const vector<char>& code, VkShaderModule* module)
 	{
 		VkShaderModuleCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = code.size();
 		createInfo.pCode = reinterpret_cast<const u32*>(code.data()); // Since vector take into account the worst case alignment scenario, thisd reinterpret_cast is valid. It wouldn't be true for a c-style array
-		if (vkCreateShaderModule(m_Device->GetDevice(), &createInfo, nullptr, module) != VK_SUCCESS)
+		if (vkCreateShaderModule(m_Device->get_device(), &createInfo, nullptr, module) != VK_SUCCESS)
 		{
 			HTHROW(std::runtime_error, "Failed to create shader module");
 		}

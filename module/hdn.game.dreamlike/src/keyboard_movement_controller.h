@@ -21,7 +21,7 @@ namespace hdn
 			int lookDown = GLFW_KEY_DOWN;
 		};
 
-		void MoveInPlaneXZ(GLFWwindow* window, f32 dt, HDNGameObject& gameObject);
+		void move_in_plane_xyz(GLFWwindow* window, f32 dt, HDNGameObject& gameObject);
 	private:
 		KeyMappings m_Keys{};
 		f32 m_MoveSpeed{ 3.0f };

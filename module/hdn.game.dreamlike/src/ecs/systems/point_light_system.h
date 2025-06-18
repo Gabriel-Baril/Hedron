@@ -20,11 +20,11 @@ namespace hdn
 		PointLightSystem(const PointLightSystem&) = delete;
 		PointLightSystem& operator=(const PointLightSystem&) = delete;
 
-		void Update(FrameInfo& frameInfo, GlobalUbo& ubo);
-		void Render(FrameInfo& frameInfo);
+		void update(FrameInfo& frameInfo, GlobalUbo& ubo);
+		void render(FrameInfo& frameInfo);
 	private:
-		void CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout);
-		void CreatePipeline(VkRenderPass renderPass);
+		void create_pipeline_layout(VkDescriptorSetLayout globalSetLayout);
+		void create_pipeline(VkRenderPass renderPass);
 	private:
 		VulkanDevice* m_Device;
 		Scope<VulkanPipeline> m_Pipeline;

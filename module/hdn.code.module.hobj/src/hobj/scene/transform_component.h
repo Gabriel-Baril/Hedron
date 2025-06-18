@@ -12,7 +12,7 @@ namespace hdn
 
 		mat4f32 worldMatrix; // Populated at runtime
 
-		mat4f32 Mat4();
-		mat3f32 NormalMatrix();
+		mat4f32 to_mat();
+		mat3f32 normal_matrix();
 	};
 }

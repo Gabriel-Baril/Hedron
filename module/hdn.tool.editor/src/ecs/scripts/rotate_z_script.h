@@ -9,12 +9,12 @@ namespace hdn
 {
 	class RotateZScript : public INativeScript
 	{
-		virtual const char* Name()
+		virtual const char* name()
 		{
 			return "RotateZScript";
 		}
 
-		virtual void OnUpdate(float dt) override
+		virtual void on_update(float dt) override
 		{
 			TransformComponent* transformC = m_Entity.get_mut<TransformComponent>();
 			transformC->rotation.z += dt;

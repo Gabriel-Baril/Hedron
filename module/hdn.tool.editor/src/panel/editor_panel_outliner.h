@@ -14,8 +14,8 @@ namespace hdn
 		{
 		}
 
-		void OnUpdate(f32 dt);
+		void on_update(f32 dt);
 	private:
-		void DrawEntityTree(flecs::entity entity, flecs::world& ecs);
+		void draw_entity_tree(flecs::entity entity, flecs::world& ecs);
 	};
 }

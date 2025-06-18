@@ -11,9 +11,9 @@ namespace hdn
 		m_Registry.set_threads(std::thread::hardware_concurrency());
 	}
 
-	Entity Scene::MakePointLight(f32 intensity, f32 radius, vec3f32 color)
+	Entity Scene::make_point_light(f32 intensity, f32 radius, vec3f32 color)
 	{
-		Entity gameObj = Create();
+		Entity gameObj = create();
 
 		TransformComponent transformC{};
 		transformC.scale.x = radius;

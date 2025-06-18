@@ -21,27 +21,27 @@ namespace hdn
 		{
 		}
 
-		virtual void Begin()
+		virtual void begin()
 		{
 			ImGui::Begin(m_Name.c_str());
 		}
-		virtual void OnUpdate( f32 dt ) = 0;
-		virtual void End()
+		virtual void on_update( f32 dt ) = 0;
+		virtual void end()
 		{
 			ImGui::End();
 		}
 
-		void Enable()
+		void enable()
 		{
 			m_Enabled = true;
 		}
 
-		void Disable()
+		void disable()
 		{
 			m_Enabled = false;
 		}
 
-		bool Enabled()
+		bool enabled()
 		{
 			return m_Enabled;
 		}

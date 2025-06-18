@@ -18,16 +18,16 @@ namespace hdn
 	SimpleRenderSystem::SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
 		: m_Device{ device }
 	{
-		CreatePipelineLayout(globalSetLayout);
-		CreatePipeline(renderPass);
+		create_pipeline_layout(globalSetLayout);
+		create_pipeline(renderPass);
 	}
 
 	SimpleRenderSystem::~SimpleRenderSystem()
 	{
-		vkDestroyPipelineLayout(m_Device->GetDevice(), m_PipelineLayout, nullptr);
+		vkDestroyPipelineLayout(m_Device->get_device(), m_PipelineLayout, nullptr);
 	}
 
-	void SimpleRenderSystem::CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout)
+	void SimpleRenderSystem::create_pipeline_layout(VkDescriptorSetLayout globalSetLayout)
 	{
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -42,18 +42,18 @@ namespace hdn
 		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data(); // Used to pass data other than our vertex data, to our vertex and fragment shader. For example, texture and uniform buffer.
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // A way to push a very small amount of data to our shader
-		if (vkCreatePipelineLayout(m_Device->GetDevice(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
+		if (vkCreatePipelineLayout(m_Device->get_device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
 		{
 			HTHROW(std::runtime_error, "Failed to create pipeline layout");
 		}
 	}
 
-	void SimpleRenderSystem::CreatePipeline(VkRenderPass renderPass)
+	void SimpleRenderSystem::create_pipeline(VkRenderPass renderPass)
 	{
 		assert(m_PipelineLayout);
 
 		PipelineConfigInfo pipelineConfig{};
-		VulkanPipeline::DefaultPipelineConfigInfo(pipelineConfig);
+		VulkanPipeline::default_pipeline_config_info(pipelineConfig);
 
 		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
 		pipelineConfig.pipelineLayout = m_PipelineLayout;
@@ -61,9 +61,9 @@ namespace hdn
 		m_Pipeline = make_scope<VulkanPipeline>(m_Device, get_data_path("shaders/simple_shader.vert.spv"), get_data_path("shaders/simple_shader.frag.spv"), pipelineConfig);
 	}
 
-	void SimpleRenderSystem::RenderGameObjects(FrameInfo& frameInfo)
+	void SimpleRenderSystem::render_game_objects(FrameInfo& frameInfo)
 	{
-		m_Pipeline->Bind(frameInfo.commandBuffer);
+		m_Pipeline->bind(frameInfo.commandBuffer);
 
 		vkCmdBindDescriptorSets(
 			frameInfo.commandBuffer,
@@ -78,11 +78,11 @@ namespace hdn
 		query.each([&](flecs::entity e, TransformComponent& transformC, ModelComponent& modelC) {
 
 			SimplePushConstantData push{};
-			push.modelMatrix = transformC.Mat4(); // Will be done in the shader once we have uniform buffer
-			push.normalMatrix = transformC.NormalMatrix();
+			push.modelMatrix = transformC.to_mat(); // Will be done in the shader once we have uniform buffer
+			push.normalMatrix = transformC.normal_matrix();
 			vkCmdPushConstants(frameInfo.commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-			modelC.model->Bind(frameInfo.commandBuffer);
-			modelC.model->Draw(frameInfo.commandBuffer);
+			modelC.model->bind(frameInfo.commandBuffer);
+			modelC.model->draw(frameInfo.commandBuffer);
 		});
 	}
 }

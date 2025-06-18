@@ -8,11 +8,11 @@ namespace hdn
 	class PhysicsWorld
 	{
 	public:
-		void Init();
-		physx::PxRigidDynamic* CreateDynamicActor(const physx::PxVec3& position, const physx::PxVec3& dimension);
-		physx::PxRigidStatic* CreateStaticActor(const physx::PxVec3& position, const physx::PxVec3& dimension);
-		void Update(f32 deltaTime);
-		void Shutdown();
+		void init();
+		physx::PxRigidDynamic* create_dynamic_actor(const physx::PxVec3& position, const physx::PxVec3& dimension);
+		physx::PxRigidStatic* create_static_actor(const physx::PxVec3& position, const physx::PxVec3& dimension);
+		void update(f32 deltaTime);
+		void shutdown();
 	private:
 		physx::PxFoundation* m_Foundation = nullptr;
 		physx::PxPhysics* m_Physics = nullptr;

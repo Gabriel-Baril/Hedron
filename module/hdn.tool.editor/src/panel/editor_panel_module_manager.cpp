@@ -12,7 +12,18 @@
 
 namespace hdn
 {
-	void ModuleManagerPanel::ParseOverallResultNode(const pugi::xml_node& resultNode, OverallResult& overallResult)
+	inline static constexpr const char* ROOT_NODE_NAME = "Catch2TestRun";
+	inline static constexpr const char* TEST_CASE_NODE_NAME = "TestCase";
+	inline static constexpr const char* SECTION_NODE_NAME = "Section";
+	inline static constexpr const char* EXPRESSION_NODE_NAME = "Expression";
+	inline static constexpr const char* ORIGINAL_NODE_NAME = "Original";
+	inline static constexpr const char* EXPANDED_NODE_NAME = "Expanded";
+	inline static constexpr const char* BENCHMARK_NODE_NAME = "BenchmarkResults";
+	inline static constexpr const char* OVERALL_RESULTS_NODE_NAME = "OverallResults";
+	inline static constexpr const char* OVERALL_RESULTS_CASES_NODE_NAME = "OverallResultsCases";
+	inline static constexpr const char* OVERALL_RESULT_NODE_NAME = "OverallResult";
+
+	void ModuleManagerPanel::parse_overall_result_node(const pugi::xml_node& resultNode, OverallResult& overallResult)
 	{
 		for (const auto& attribute : resultNode.attributes())
 		{
@@ -26,7 +37,7 @@ namespace hdn
 			}
 		}
 	}
-	void ModuleManagerPanel::ParseOverallResultsNode(const pugi::xml_node& resultNode, OverallResults& overallResults)
+	void ModuleManagerPanel::parse_overall_results_node(const pugi::xml_node& resultNode, OverallResults& overallResults)
 	{
 		for (const auto& attribute : resultNode.attributes())
 		{
@@ -45,7 +56,7 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::ParseSectionNode(const pugi::xml_node& sectionNode, SectionResult& sectionResult)
+	void ModuleManagerPanel::parse_section_node(const pugi::xml_node& sectionNode, SectionResult& sectionResult)
 	{
 		for (const auto& attribute : sectionNode.attributes())
 		{
@@ -68,15 +79,15 @@ namespace hdn
 			if (str_equals(node.name(), EXPRESSION_NODE_NAME))
 			{
 				sectionResult.expressionResults.emplace_back(ExpressionResult{});
-				ParseExpressionNode(node, sectionResult.expressionResults.back());
+				parse_expression_node(node, sectionResult.expressionResults.back());
 			}
 			else if (str_equals(node.name(), OVERALL_RESULTS_NODE_NAME))
 			{
-				ParseOverallResultsNode(node, sectionResult.overallResults);
+				parse_overall_results_node(node, sectionResult.overallResults);
 			}
 		}
 	}
-	void ModuleManagerPanel::ParseExpressionNode(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult)
+	void ModuleManagerPanel::parse_expression_node(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult)
 	{
 		for (const auto& attribute : expressionNode.attributes())
 		{
@@ -120,7 +131,7 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::ParseTestCaseNode(const pugi::xml_node& testCase, TestCaseResult& testCaseResult)
+	void ModuleManagerPanel::parse_test_case_node(const pugi::xml_node& testCase, TestCaseResult& testCaseResult)
 	{
 		HASSERT(str_equals(testCase.name(), TEST_CASE_NODE_NAME), "Invalid Test Case Node");
 
@@ -149,12 +160,12 @@ namespace hdn
 			if (str_equals(node.name(), SECTION_NODE_NAME))
 			{
 				testCaseResult.sectionResults.emplace_back(SectionResult{});
-				ParseSectionNode(node, testCaseResult.sectionResults.back());
+				parse_section_node(node, testCaseResult.sectionResults.back());
 			}
 			else if (str_equals(node.name(), EXPRESSION_NODE_NAME))
 			{
 				testCaseResult.expressionResults.emplace_back(ExpressionResult{});
-				ParseExpressionNode(node, testCaseResult.expressionResults.back());
+				parse_expression_node(node, testCaseResult.expressionResults.back());
 			}
 			else if (str_equals(node.name(), BENCHMARK_NODE_NAME))
 			{
@@ -162,12 +173,12 @@ namespace hdn
 			}
 			else if (str_equals(node.name(), OVERALL_RESULT_NODE_NAME))
 			{
-				ParseOverallResultNode(node, testCaseResult.overallResult);
+				parse_overall_result_node(node, testCaseResult.overallResult);
 			}
 		}
 	}
 
-	void ModuleManagerPanel::ParseRootNode(const pugi::xml_node& root, TestResult& out)
+	void ModuleManagerPanel::parse_root_node(const pugi::xml_node& root, TestResult& out)
 	{
 		HASSERT(str_equals(root.name(), ROOT_NODE_NAME), "Invalid Root Node");
 
@@ -179,20 +190,20 @@ namespace hdn
 			if (str_equals(node.name(), TEST_CASE_NODE_NAME))
 			{
 				out.testCaseResults.emplace_back(TestCaseResult{});
-				ParseTestCaseNode(node, out.testCaseResults.back());
+				parse_test_case_node(node, out.testCaseResults.back());
 			}
 			else if (str_equals(node.name(), OVERALL_RESULTS_NODE_NAME))
 			{
-				ParseOverallResultsNode(node, out.overallResultsExpressions);
+				parse_overall_results_node(node, out.overallResultsExpressions);
 			}
 			else if (str_equals(node.name(), OVERALL_RESULTS_CASES_NODE_NAME))
 			{
-				ParseOverallResultsNode(node, out.overallResultsCases);
+				parse_overall_results_node(node, out.overallResultsCases);
 			}
 		}
 	}
 
-	void ModuleManagerPanel::LoadTestResultFromMemory(const string& buffer, TestResult& testResult)
+	void ModuleManagerPanel::load_test_result_from_memory(const string& buffer, TestResult& testResult)
 	{
 		pugi::xml_document doc; // Already contains the root node (Catch2TestRun)
 		pugi::xml_parse_result result = doc.load_buffer(buffer.c_str(), buffer.size());
@@ -200,41 +211,41 @@ namespace hdn
 		{
 			return;
 		}
-		ParseRootNode(doc.first_child(), testResult);
+		parse_root_node(doc.first_child(), testResult);
 	}
 
-	void ModuleManagerPanel::DisplayTestNode(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
-		SetRowColor(expression.success);
+		set_row_color(expression.success);
 		string expandedExpression = trim(expression.expandedExpression);
 		ImGui::TableNextColumn();
 		ImGui::TreeNodeEx(expandedExpression.c_str(), treeNodeFlags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen);
 		ImGui::TableNextColumn();
 		ImGui::Text("Expression");
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(expression.success, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), expression.success);
+		colored_text_if_valid(expression.success, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), expression.success);
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(!expression.success, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !expression.success);
+		colored_text_if_valid(!expression.success, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !expression.success);
 		ImGui::TableNextColumn();
 		ImGui::Text("%s", expression.filename.string().c_str());
 		ImGui::TableNextColumn();
 		ImGui::Text("%i", expression.line);
 	}
 
-	void ModuleManagerPanel::DisplayTestNode(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
-		SetRowColor(section.overallResults.failures <= 0);
+		set_row_color(section.overallResults.failures <= 0);
 
 		ImGui::TableNextColumn();
 		bool open = ImGui::TreeNodeEx(section.name.c_str(), treeNodeFlags);
 		ImGui::TableNextColumn();
 		ImGui::Text("Section");
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(section.overallResults.successes > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), section.overallResults.successes);
+		colored_text_if_valid(section.overallResults.successes > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), section.overallResults.successes);
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(section.overallResults.failures > 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), section.overallResults.failures);
+		colored_text_if_valid(section.overallResults.failures > 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), section.overallResults.failures);
 		ImGui::TableNextColumn();
 		ImGui::Text("%s", section.filename.string().c_str());
 		ImGui::TableNextColumn();
@@ -244,25 +255,25 @@ namespace hdn
 		{
 			for (const ExpressionResult& expression : section.expressionResults)
 			{
-				DisplayTestNode(expression, treeNodeFlags);
+				display_test_node(expression, treeNodeFlags);
 			}
 			ImGui::TreePop();
 		}
 	}
 
-	void ModuleManagerPanel::DisplayTestNode(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
-		SetRowColor(testCase.overallResult.success);
+		set_row_color(testCase.overallResult.success);
 
 		ImGui::TableNextColumn();
 		bool open = ImGui::TreeNodeEx(testCase.name.c_str(), treeNodeFlags);
 		ImGui::TableNextColumn();
 		ImGui::Text("Test Case");
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(testCase.overallResult.success, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), testCase.overallResult.success);
+		colored_text_if_valid(testCase.overallResult.success, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), testCase.overallResult.success);
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(!testCase.overallResult.success, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !testCase.overallResult.success);
+		colored_text_if_valid(!testCase.overallResult.success, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), !testCase.overallResult.success);
 		ImGui::TableNextColumn();
 		ImGui::Text("%s", testCase.filename.string().c_str());
 		ImGui::TableNextColumn();
@@ -272,29 +283,29 @@ namespace hdn
 		{
 			for (const SectionResult& section : testCase.sectionResults)
 			{
-				DisplayTestNode(section, treeNodeFlags);
+				display_test_node(section, treeNodeFlags);
 			}
 			for (const ExpressionResult& expression : testCase.expressionResults)
 			{
-				DisplayTestNode(expression, treeNodeFlags);
+				display_test_node(expression, treeNodeFlags);
 			}
 			ImGui::TreePop();
 		}
 	}
 
-	void ModuleManagerPanel::DisplayTestNode(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
-		SetRowColor(result.overallResultsCases.failures <= 0);
+		set_row_color(result.overallResultsCases.failures <= 0);
 
 		ImGui::TableNextColumn();
 		bool open = ImGui::TreeNodeEx(result.context.testExecutableName.c_str(), treeNodeFlags);
 		ImGui::TableNextColumn();
 		ImGui::Text("Module");
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(result.overallResultsCases.successes > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), result.overallResultsCases.successes);
+		colored_text_if_valid(result.overallResultsCases.successes > 0, ImVec4(0.0f, 1.0f, 0.0f, 1.0f), result.overallResultsCases.successes);
 		ImGui::TableNextColumn();
-		ColoredTextIfValid(result.overallResultsCases.failures > 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), result.overallResultsCases.failures);
+		colored_text_if_valid(result.overallResultsCases.failures > 0, ImVec4(1.0f, 0.0f, 0.0f, 1.0f), result.overallResultsCases.failures);
 		ImGui::TableNextColumn();
 		ImGui::TextDisabled("--");
 		ImGui::TableNextColumn();
@@ -304,21 +315,21 @@ namespace hdn
 		{
 			for (const TestCaseResult& testCase : result.testCaseResults)
 			{
-				DisplayTestNode(testCase, treeNodeFlags);
+				display_test_node(testCase, treeNodeFlags);
 			}
 			ImGui::TreePop();
 		}
 	}
 
-	void ModuleManagerPanel::DisplayTestNode(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		for (const TestResult& result : results)
 		{
-			DisplayTestNode(result, treeNodeFlags);
+			display_test_node(result, treeNodeFlags);
 		}
 	}
 
-	void ModuleManagerPanel::ColoredTextIfValid(bool condition, ImVec4 color, int value)
+	void ModuleManagerPanel::colored_text_if_valid(bool condition, ImVec4 color, int value)
 	{
 		if (condition)
 		{
@@ -332,7 +343,7 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::SetRowColor(bool condition)
+	void ModuleManagerPanel::set_row_color(bool condition)
 	{
 		if (condition)
 		{
@@ -344,7 +355,7 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::OnUpdate(f32 dt)
+	void ModuleManagerPanel::on_update(f32 dt)
 	{
 		if (ImGui::Button("Run All Tests"))
 		{
@@ -433,7 +444,7 @@ namespace hdn
 					{
 						TestResult result;
 						// 5. Parse the generated test output
-						this->LoadTestResultFromMemory(testResultsStr, result);
+						this->load_test_result_from_memory(testResultsStr, result);
 						HINFO("RESULT: {0}", result.context.testExecutableName.c_str());
 						m_TestResults.emplace_back(result);
 					}
@@ -473,7 +484,7 @@ namespace hdn
 				ImGui::TableHeadersRow();
 
 				const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_SpanAllColumns;
-				DisplayTestNode(m_TestResults, treeNodeFlags);
+				display_test_node(m_TestResults, treeNodeFlags);
 
 				ImGui::EndTable();
 			}

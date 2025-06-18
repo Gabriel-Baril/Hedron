@@ -87,38 +87,27 @@ namespace hdn
 	class ModuleManagerPanel : public IEditorPanel
 	{
 	public:
-		static constexpr const char* ROOT_NODE_NAME = "Catch2TestRun";
-		static constexpr const char* TEST_CASE_NODE_NAME = "TestCase";
-		static constexpr const char* SECTION_NODE_NAME = "Section";
-		static constexpr const char* EXPRESSION_NODE_NAME = "Expression";
-		static constexpr const char* ORIGINAL_NODE_NAME = "Original";
-		static constexpr const char* EXPANDED_NODE_NAME = "Expanded";
-		static constexpr const char* BENCHMARK_NODE_NAME = "BenchmarkResults";
-		static constexpr const char* OVERALL_RESULTS_NODE_NAME = "OverallResults";
-		static constexpr const char* OVERALL_RESULTS_CASES_NODE_NAME = "OverallResultsCases";
-		static constexpr const char* OVERALL_RESULT_NODE_NAME = "OverallResult";
-
 		ModuleManagerPanel()
 			: IEditorPanel{"module manager"}
 		{
 		}
 
-		void ParseOverallResultNode(const pugi::xml_node& resultNode, OverallResult& overallResult);
-		void ParseOverallResultsNode(const pugi::xml_node& resultNode, OverallResults& overallResults);
-		void ParseSectionNode(const pugi::xml_node& sectionNode, SectionResult& sectionResult);
-		void ParseExpressionNode(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult);
-		void ParseTestCaseNode(const pugi::xml_node& testCase, TestCaseResult& testCaseResult);
-		void ParseRootNode(const pugi::xml_node& root, TestResult& out);
-		void LoadTestResultFromMemory(const string& buffer, TestResult& testResult);
-		void DisplayTestNode(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags);
-		void DisplayTestNode(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags);
-		void DisplayTestNode(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags);
-		void DisplayTestNode(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags);
-		void DisplayTestNode(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags);
-		void ColoredTextIfValid(bool condition, ImVec4 color, int value);
-		void SetRowColor(bool condition);
+		void parse_overall_result_node(const pugi::xml_node& resultNode, OverallResult& overallResult);
+		void parse_overall_results_node(const pugi::xml_node& resultNode, OverallResults& overallResults);
+		void parse_section_node(const pugi::xml_node& sectionNode, SectionResult& sectionResult);
+		void parse_expression_node(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult);
+		void parse_test_case_node(const pugi::xml_node& testCase, TestCaseResult& testCaseResult);
+		void parse_root_node(const pugi::xml_node& root, TestResult& out);
+		void load_test_result_from_memory(const string& buffer, TestResult& testResult);
+		void display_test_node(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags);
+		void display_test_node(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags);
+		void display_test_node(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags);
+		void display_test_node(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags);
+		void display_test_node(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags);
+		void colored_text_if_valid(bool condition, ImVec4 color, int value);
+		void set_row_color(bool condition);
 
-		void OnUpdate(f32 dt);
+		void on_update(f32 dt);
 
 	private:
 		std::thread m_WaitThread;

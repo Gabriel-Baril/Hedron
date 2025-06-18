@@ -2,33 +2,33 @@
 
 namespace hdn
 {
-	Editor& Editor::Get()
+	Editor& Editor::get()
 	{
 		static Editor s_Instance{};
 		return s_Instance;
 	}
 
-	void Editor::SetActiveScene(const Ref<Scene>& scene)
+	void Editor::set_active_scene(const Ref<Scene>& scene)
 	{
 		m_ActiveScene = scene;
 	}
 
-	Ref<Scene> Editor::GetActiveScene()
+	Ref<Scene> Editor::get_active_scene()
 	{
 		return m_ActiveScene;
 	}
 
-	bool Editor::HasEntitySelected()
+	bool Editor::has_entity_selected()
 	{
 		return m_SelectedEntity != flecs::entity::null();
 	}
 
-	void Editor::SetEntitySelected(flecs::entity entity)
+	void Editor::set_entity_selected(flecs::entity entity)
 	{
 		m_SelectedEntity = entity;
 	}
 
-	flecs::entity Editor::GetEntitySelected()
+	flecs::entity Editor::get_entity_selected()
 	{
 		return m_SelectedEntity;
 	}

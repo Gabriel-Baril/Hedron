@@ -23,43 +23,43 @@ namespace hdn {
 		VulkanSwapChain(VulkanSwapChain&&) = delete;
 		VulkanSwapChain& operator=(VulkanSwapChain&&) = delete;
 
-		VkFramebuffer GetFrameBuffer(int index) { return m_SwapChainFramebuffers[index]; }
-		VkRenderPass GetRenderPass() { return m_RenderPass; }
-		VkImageView GetImageView(int index) { return m_SwapChainImageViews[index]; }
-		size_t GetImageCount() { return m_SwapChainImages.size(); }
-		VkFormat GetSwapChainImageFormat() { return m_SwapChainImageFormat; }
-		VkExtent2D GetSwapChainExtent() { return m_SwapChainExtent; }
-		uint32_t GetWidth() { return m_SwapChainExtent.width; }
-		uint32_t GetHeight() { return m_SwapChainExtent.height; }
+		VkFramebuffer get_frame_buffer(int index) { return m_SwapChainFramebuffers[index]; }
+		VkRenderPass get_render_pass() { return m_RenderPass; }
+		VkImageView get_image_view(int index) { return m_SwapChainImageViews[index]; }
+		size_t get_image_count() { return m_SwapChainImages.size(); }
+		VkFormat get_swap_chain_image_format() { return m_SwapChainImageFormat; }
+		VkExtent2D get_swap_chain_extent() { return m_SwapChainExtent; }
+		uint32_t get_width() { return m_SwapChainExtent.width; }
+		uint32_t get_height() { return m_SwapChainExtent.height; }
 
-		float ExtentAspectRatio() {
+		float extent_aspect_ratio() {
 			return static_cast<float>(m_SwapChainExtent.width) / static_cast<float>(m_SwapChainExtent.height);
 		}
-		VkFormat FindDepthFormat();
+		VkFormat find_depth_format();
 
-		VkResult AcquireNextImage(uint32_t* imageIndex);
-		VkResult SubmitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
+		VkResult acquire_next_image(uint32_t* imageIndex);
+		VkResult submit_command_buffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
-		bool CompareSwapFormat(const VulkanSwapChain& swapChain) const
+		bool compare_swap_format(const VulkanSwapChain& swapChain) const
 		{
 			return swapChain.m_SwapChainDepthFormat == m_SwapChainDepthFormat && 
 				   swapChain.m_SwapChainImageFormat == m_SwapChainImageFormat;
 		}
 
 	private:
-		void Init();
-		void CreateSwapChain();
-		void CreateImageViews();
-		void CreateDepthResources();
-		void CreateRenderPass();
-		void CreateFramebuffers();
-		void CreateSyncObjects();
+		void init();
+		void create_swap_chain();
+		void create_image_views();
+		void create_depth_resources();
+		void create_render_pass();
+		void create_framebuffers();
+		void create_sync_objects();
 		// Helper functions
-		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
+		VkSurfaceFormatKHR choose_swap_surface_format(
 			const vector<VkSurfaceFormatKHR>& availableFormats);
-		VkPresentModeKHR ChooseSwapPresentMode(
+		VkPresentModeKHR choose_swap_present_mode(
 			const vector<VkPresentModeKHR>& availablePresentModes);
-		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+		VkExtent2D choose_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities);
 	private:
 		VkFormat m_SwapChainImageFormat;
 		VkFormat m_SwapChainDepthFormat;

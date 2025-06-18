@@ -22,16 +22,16 @@ namespace hdn
 	PointLightSystem::PointLightSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
 		: m_Device{ device }
 	{
-		CreatePipelineLayout(globalSetLayout);
-		CreatePipeline(renderPass);
+		create_pipeline_layout(globalSetLayout);
+		create_pipeline(renderPass);
 	}
 
 	PointLightSystem::~PointLightSystem()
 	{
-		vkDestroyPipelineLayout(m_Device->GetDevice(), m_PipelineLayout, nullptr);
+		vkDestroyPipelineLayout(m_Device->get_device(), m_PipelineLayout, nullptr);
 	}
 
-	void PointLightSystem::CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout)
+	void PointLightSystem::create_pipeline_layout(VkDescriptorSetLayout globalSetLayout)
 	{
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -46,19 +46,19 @@ namespace hdn
 		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data(); // Used to pass data other than our vertex data, to our vertex and fragment shader. For example, texture and uniform buffer.
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // A way to push a very small amount of data to our shader
-		if (vkCreatePipelineLayout(m_Device->GetDevice(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
+		if (vkCreatePipelineLayout(m_Device->get_device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
 		{
 			HTHROW(std::runtime_error, "Failed to create pipeline layout");
 		}
 	}
 
-	void PointLightSystem::CreatePipeline(VkRenderPass renderPass)
+	void PointLightSystem::create_pipeline(VkRenderPass renderPass)
 	{
 		assert(m_PipelineLayout);
 
 		PipelineConfigInfo pipelineConfig{};
-		VulkanPipeline::DefaultPipelineConfigInfo(pipelineConfig);
-		VulkanPipeline::EnableAlphaBlending(pipelineConfig);
+		VulkanPipeline::default_pipeline_config_info(pipelineConfig);
+		VulkanPipeline::enable_alpha_blending(pipelineConfig);
 
 		pipelineConfig.bindingDescriptions.clear();
 		pipelineConfig.attributeDescriptions.clear();
@@ -69,7 +69,7 @@ namespace hdn
 		m_Pipeline = make_scope<VulkanPipeline>(m_Device, get_data_path("shaders/point_light.vert.spv"), get_data_path("shaders/point_light.frag.spv"), pipelineConfig);
 	}
 
-	void PointLightSystem::Update(FrameInfo& frameInfo, GlobalUbo& ubo)
+	void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& ubo)
 	{
 		auto rotateLight = glm::rotate(mat4f32(1.0f), frameInfo.frameTime, { 0.0f, -1.0f, 0.0f });
 
@@ -87,18 +87,18 @@ namespace hdn
 		ubo.numLights = lightIndex;
 	}
 
-	void PointLightSystem::Render(FrameInfo& frameInfo)
+	void PointLightSystem::render(FrameInfo& frameInfo)
 	{
 		// Sort Lights
 		map<float, flecs::entity> sorted;
 		auto query = frameInfo.ecsWorld->query<TransformComponent, PointLightComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, PointLightComponent& pointLightC) {
 			// Calculate Distance
-			auto offset = frameInfo.camera->GetPosition() - transformC.position;
+			auto offset = frameInfo.camera->get_position() - transformC.position;
 			float distSquared = glm::dot(offset, offset);
 			sorted[distSquared] = e;
 		});
-		m_Pipeline->Bind(frameInfo.commandBuffer);
+		m_Pipeline->bind(frameInfo.commandBuffer);
 
 		vkCmdBindDescriptorSets(
 			frameInfo.commandBuffer,

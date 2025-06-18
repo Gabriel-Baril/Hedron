@@ -4,11 +4,11 @@
 
 namespace hdn
 {
-	void UpdateTransformSystem::Update(FrameInfo& frameInfo)
+	void UpdateTransformSystem::update(FrameInfo& frameInfo)
 	{
 		auto query = frameInfo.ecsWorld->query<TransformComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC) {
-			transformC.worldMatrix = transformC.Mat4();
+			transformC.worldMatrix = transformC.to_mat();
 			if (e.parent())
 			{
 				auto parent = e.parent();

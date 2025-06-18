@@ -18,11 +18,11 @@ namespace hdn
 	};
 
 	// Function to get an icon for a component
-	const char* getComponentIcon(const std::string& componentName) {
+	const char* get_component_icon(const std::string& componentName) {
 		return componentIcons.contains(componentName) ? componentIcons[componentName] : "❓";
 	}
 
-	void OutlinerPanel::DrawEntityTree(flecs::entity entity, flecs::world& ecs)
+	void OutlinerPanel::draw_entity_tree(flecs::entity entity, flecs::world& ecs)
 	{
 		if (!entity.is_valid()) return;
 		ImGui::TableNextRow();
@@ -48,7 +48,7 @@ namespace hdn
 		{
 			if (ImGui::IsItemClicked())
 			{
-				Editor::Get().SetEntitySelected(entity);
+				Editor::get().set_entity_selected(entity);
 			}
 		}
 
@@ -68,25 +68,25 @@ namespace hdn
 		// Recursively draw child entities
 		if (open) {
 			entity.children([&](flecs::entity child) {
-				DrawEntityTree(child, ecs);
+				draw_entity_tree(child, ecs);
 			});
 			ImGui::TreePop();
 		}
 	}
 
-	void OutlinerPanel::OnUpdate(f32 dt)
+	void OutlinerPanel::on_update(f32 dt)
 	{
 		if (ImGui::BeginTable("EntityTable", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
 			ImGui::TableSetupColumn("Entity", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("Components", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableHeadersRow();
 
-			Ref<Scene> scene = Editor::Get().GetActiveScene();
+			Ref<Scene> scene = Editor::get().get_active_scene();
 
 			auto query = scene->World()->query<TransformComponent>();
 			query.each([&](flecs::entity e, TransformComponent& transformC) {
 				if (!e.parent().is_valid()) {  // Only render root entities
-					DrawEntityTree(e, *scene->World());
+					draw_entity_tree(e, *scene->World());
 				}
 			});
 			ImGui::EndTable();

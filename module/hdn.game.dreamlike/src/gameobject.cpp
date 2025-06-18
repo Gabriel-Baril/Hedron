@@ -5,21 +5,21 @@
 
 namespace hdn
 {
-	HDNGameObject HDNGameObject::MakePointLight(flecs::world& ecs, f32 intensity, f32 radius, vec3f32 color)
+	HDNGameObject HDNGameObject::make_point_light(flecs::world& ecs, f32 intensity, f32 radius, vec3f32 color)
 	{
-		HDNGameObject gameObj = HDNGameObject::CreateGameObject(ecs);
+		HDNGameObject gameObj = HDNGameObject::create_game_object(ecs);
 		
 		TransformComponent transformC{};
 		transformC.scale.x = radius;
-		gameObj.Set(transformC);
+		gameObj.set(transformC);
 
 		ColorComponent colorC{};
 		colorC.color = color;
-		gameObj.Set(colorC);
+		gameObj.set(colorC);
 
 		PointLightComponent pointLightC;
 		pointLightC.lightIntensity = intensity;
-		gameObj.Set(pointLightC);
+		gameObj.set(pointLightC);
 
 		return gameObj;
 	}

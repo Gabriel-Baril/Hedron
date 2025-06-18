@@ -16,7 +16,7 @@ namespace hdn
 	static const ImVec4 BUTTON_COLOR_Z_HOVERED = ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f };
 	static const ImVec4 BUTTON_COLOR_Z_ACTIVE = ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f };
 
-	static void RenderVecEntry(float width, const char* resetLabelName, const char* dragLabelID, float* valueToChange, bool* valueChanged, float resetValue, ImFont* boldFont, ImVec2 buttonSize, ImVec4 buttonColor, ImVec4 hoveredButtonColor, ImVec4 activeButtonColor)
+	static void render_vec_entry(float width, const char* resetLabelName, const char* dragLabelID, float* valueToChange, bool* valueChanged, float resetValue, ImFont* boldFont, ImVec2 buttonSize, ImVec4 buttonColor, ImVec4 hoveredButtonColor, ImVec4 activeButtonColor)
 	{
 		ImGui::PushItemWidth(width);
 		ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
@@ -48,7 +48,7 @@ namespace hdn
 		ImGui::PopStyleColor(3);
 	}
 
-	static void Render(const char* labelName, vec3f32& values, bool* valueChanged, float resetValue = 0.0f, float columnWidth = 100.0f)
+	static void render(const char* labelName, vec3f32& values, bool* valueChanged, float resetValue = 0.0f, float columnWidth = 100.0f)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		auto boldFont = io.Fonts->Fonts[0];
@@ -66,9 +66,9 @@ namespace hdn
 		float lineHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
-		RenderVecEntry(individual_width, "X", "##X", &values.x, valueChanged, resetValue, boldFont, buttonSize, BUTTON_COLOR_X, BUTTON_COLOR_X_HOVERED, BUTTON_COLOR_X_ACTIVE);
-		RenderVecEntry(individual_width, "Y", "##Y", &values.y, valueChanged, resetValue, boldFont, buttonSize, BUTTON_COLOR_Y, BUTTON_COLOR_Y_HOVERED, BUTTON_COLOR_Y_ACTIVE);
-		RenderVecEntry(individual_width, "Z", "##Z", &values.z, valueChanged, resetValue, boldFont, buttonSize, BUTTON_COLOR_Z, BUTTON_COLOR_Z_HOVERED, BUTTON_COLOR_Z_ACTIVE);
+		render_vec_entry(individual_width, "X", "##X", &values.x, valueChanged, resetValue, boldFont, buttonSize, BUTTON_COLOR_X, BUTTON_COLOR_X_HOVERED, BUTTON_COLOR_X_ACTIVE);
+		render_vec_entry(individual_width, "Y", "##Y", &values.y, valueChanged, resetValue, boldFont, buttonSize, BUTTON_COLOR_Y, BUTTON_COLOR_Y_HOVERED, BUTTON_COLOR_Y_ACTIVE);
+		render_vec_entry(individual_width, "Z", "##Z", &values.z, valueChanged, resetValue, boldFont, buttonSize, BUTTON_COLOR_Z, BUTTON_COLOR_Z_HOVERED, BUTTON_COLOR_Z_ACTIVE);
 
 		ImGui::PopStyleVar();
 
@@ -82,7 +82,7 @@ namespace hdn
 		// HDR_PROFILE_FUNCTION();
 		bool changed = false;
 		vec3f32 translation = component.position;
-		Render("Translation", translation, &component.HasTranslationChanged);
+		render("Translation", translation, &component.HasTranslationChanged);
 		if (component.HasTranslationChanged)
 		{
 			component.position = translation;
@@ -90,7 +90,7 @@ namespace hdn
 		}
 
 		vec3f32 rotation = component.rotation;
-		Render("Rotation", rotation, &component.HasRotationChanged);
+		render("Rotation", rotation, &component.HasRotationChanged);
 		if (component.HasRotationChanged)
 		{
 			component.rotation = rotation;
@@ -98,7 +98,7 @@ namespace hdn
 		}
 
 		vec3f32 scale = component.scale;
-		Render("Scale", scale, &component.HasScaleChanged, 1.0f);
+		render("Scale", scale, &component.HasScaleChanged, 1.0f);
 		if (component.HasScaleChanged)
 		{
 			component.scale = scale;
@@ -107,11 +107,11 @@ namespace hdn
 
 		if (changed)
 		{
-			component.worldMatrix = component.Mat4();
+			component.worldMatrix = component.to_mat();
 		}
 	}
 
-	void RenderWithHeader(flecs::entity& entity, const char* controlLabel)
+	void render_with_header(flecs::entity& entity, const char* controlLabel)
 	{
 		using Component = TransformComponent; // TODO: Should be a template paramter in the futur
 

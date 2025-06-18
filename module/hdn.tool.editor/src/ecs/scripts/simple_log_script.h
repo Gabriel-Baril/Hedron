@@ -11,7 +11,7 @@ namespace hdn
 			return "SimpleLogScript";
 		}
 
-		virtual void OnUpdate(float dt) override
+		virtual void on_update(float dt) override
 		{
 			// HWARN("SimpleLogScript");
 		}

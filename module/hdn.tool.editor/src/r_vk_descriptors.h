@@ -13,12 +13,12 @@ namespace hdn {
 		public:
 			Builder(VulkanDevice& device) : m_Device{ device } {}
 
-			Builder& AddBinding(
+			Builder& add_binding(
 				uint32_t binding,
 				VkDescriptorType descriptorType,
 				VkShaderStageFlags stageFlags,
 				uint32_t count = 1);
-			Scope<VulkanDescriptorSetLayout> Build() const;
+			Scope<VulkanDescriptorSetLayout> build() const;
 
 		private:
 			VulkanDevice& m_Device;
@@ -31,7 +31,7 @@ namespace hdn {
 		VulkanDescriptorSetLayout(const VulkanDescriptorSetLayout&) = delete;
 		VulkanDescriptorSetLayout& operator=(const VulkanDescriptorSetLayout&) = delete;
 
-		VkDescriptorSetLayout GetDescriptorSetLayout() const { return m_DescriptorSetLayout; }
+		VkDescriptorSetLayout get_descriptor_set_layout() const { return m_DescriptorSetLayout; }
 
 	private:
 		VulkanDevice& m_Device;
@@ -47,10 +47,10 @@ namespace hdn {
 		public:
 			Builder(VulkanDevice& device) : m_Device{ device } {}
 
-			Builder& AddPoolSize(VkDescriptorType descriptorType, uint32_t count);
-			Builder& SetPoolFlags(VkDescriptorPoolCreateFlags flags);
-			Builder& SetMaxSets(uint32_t count);
-			Scope<VulkanDescriptorPool> Build() const;
+			Builder& add_pool_size(VkDescriptorType descriptorType, uint32_t count);
+			Builder& set_pool_flags(VkDescriptorPoolCreateFlags flags);
+			Builder& set_max_sets(uint32_t count);
+			Scope<VulkanDescriptorPool> build() const;
 
 		private:
 			VulkanDevice& m_Device;
@@ -68,14 +68,14 @@ namespace hdn {
 		VulkanDescriptorPool(const VulkanDescriptorPool&) = delete;
 		VulkanDescriptorPool& operator=(const VulkanDescriptorPool&) = delete;
 
-		bool AllocateDescriptor(
+		bool allocate_descriptor(
 			const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const;
 
-		void FreeDescriptors(vector<VkDescriptorSet>& descriptors) const;
+		void free_descriptors(vector<VkDescriptorSet>& descriptors) const;
 
-		void ResetPool();
+		void reset_pool();
 
-		VkDescriptorPool GetDescriptor() const { return m_DescriptorPool; }
+		VkDescriptorPool get_descriptor() const { return m_DescriptorPool; }
 
 	private:
 		VulkanDevice& m_Device;
@@ -88,11 +88,11 @@ namespace hdn {
 	public:
 		VulkanDescriptorWriter(VulkanDescriptorSetLayout& setLayout, VulkanDescriptorPool& pool);
 
-		VulkanDescriptorWriter& WriteBuffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
-		VulkanDescriptorWriter& WriteImage(uint32_t binding, VkDescriptorImageInfo* imageInfo);
+		VulkanDescriptorWriter& write_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
+		VulkanDescriptorWriter& write_image(uint32_t binding, VkDescriptorImageInfo* imageInfo);
 
-		bool Build(VkDescriptorSet& set);
-		void Overwrite(VkDescriptorSet& set);
+		bool build(VkDescriptorSet& set);
+		void overwrite(VkDescriptorSet& set);
 
 	private:
 		VulkanDescriptorSetLayout& m_SetLayout;

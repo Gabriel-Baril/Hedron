@@ -6,7 +6,7 @@
 
 namespace hdn
 {
-	void KeyboardMovementController::MoveInPlaneXZ(GLFWwindow* window, f32 dt, HDNGameObject& gameObject)
+	void KeyboardMovementController::move_in_plane_xyz(GLFWwindow* window, f32 dt, HDNGameObject& gameObject)
 	{
 		vec3f32 rotate{0.0f};
 		if (glfwGetKey(window, m_Keys.lookRight) == GLFW_PRESS) rotate.y += 1.0f;
@@ -14,7 +14,7 @@ namespace hdn
 		if (glfwGetKey(window, m_Keys.lookUp) == GLFW_PRESS) rotate.x += 1.0f;
 		if (glfwGetKey(window, m_Keys.lookDown) == GLFW_PRESS) rotate.x -= 1.0f;
 
-		TransformComponent* transformC = gameObject.GetMut<TransformComponent>();
+		TransformComponent* transformC = gameObject.get_mut<TransformComponent>();
 
 		if (glm::dot(rotate, rotate) > std::numeric_limits<f32>::epsilon())
 		{

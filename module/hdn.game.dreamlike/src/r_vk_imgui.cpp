@@ -16,7 +16,7 @@ namespace hdn
 			abort();
 	}
 
-	void ImguiSystem::Init(
+	void ImguiSystem::init(
 		GLFWwindow* glfwWindow, 
 		VkSurfaceKHR surface, 
 		VkInstance instance, 
@@ -38,21 +38,21 @@ namespace hdn
 		m_Queue = graphicsQueue;
 		m_DescriptorPool = descriptorPool;
 
-		CreateFramebuffer();
-		CreateImguiContext();
-		SetStyle();
-		SetupBackend(&m_MainWindowData);
+		create_framebuffer();
+		create_imgui_context();
+		set_style();
+		setup_backend(&m_MainWindowData);
 		// Load custom font
 	}
 
-	void ImguiSystem::BeginFrame()
+	void ImguiSystem::begin_frame()
 	{
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
 
-	void ImguiSystem::EndFrame(const ImVec4& clearColor, VkCommandBuffer commandBuffer) // ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	void ImguiSystem::end_frame(const ImVec4& clearColor, VkCommandBuffer commandBuffer) // ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 	{
 		ImGui::Render();
 		ImDrawData* main_draw_data = ImGui::GetDrawData();
@@ -73,7 +73,7 @@ namespace hdn
 		}
 	}
 
-	void ImguiSystem::Shutdown()
+	void ImguiSystem::shutdown()
 	{
 		VkResult err = vkDeviceWaitIdle(m_Device);
 		check_vk_result(err);
@@ -84,14 +84,14 @@ namespace hdn
 		ImGui_ImplVulkanH_DestroyWindow(m_Instance, m_Device, &m_MainWindowData, m_Allocator);
 	}
 
-	void ImguiSystem::CreateFramebuffer()
+	void ImguiSystem::create_framebuffer()
 	{
 		int w, h;
 		glfwGetFramebufferSize(m_GLFWWindow, &w, &h);
-		SetupVulKanWindow(&m_MainWindowData, m_Surface, w, h);
+		setup_vulkan_window(&m_MainWindowData, m_Surface, w, h);
 	}
 
-	void ImguiSystem::SetupVulKanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height)
+	void ImguiSystem::setup_vulkan_window(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height)
 	{
 		wd->Surface = surface;
 
@@ -123,7 +123,7 @@ namespace hdn
 		ImGui_ImplVulkanH_CreateOrResizeWindow(m_Instance, m_PhysicalDevice, m_Device, wd, m_QueueFamily, m_Allocator, width, height, m_MinImageCount);
 	}
 
-	void ImguiSystem::CreateImguiContext()
+	void ImguiSystem::create_imgui_context()
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -134,12 +134,12 @@ namespace hdn
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	}
 
-	void ImguiSystem::SetStyle()
+	void ImguiSystem::set_style()
 	{
 		ImGui::StyleColorsDark();
 	}
 
-	void ImguiSystem::SetupBackend(ImGui_ImplVulkanH_Window* wd)
+	void ImguiSystem::setup_backend(ImGui_ImplVulkanH_Window* wd)
 	{
 		ImGui_ImplGlfw_InitForVulkan(m_GLFWWindow, true);
 		ImGui_ImplVulkan_InitInfo init_info = {};
@@ -160,14 +160,14 @@ namespace hdn
 		ImGui_ImplVulkan_Init(&init_info);
 	}
 
-	void ImguiSystem::FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
+	void ImguiSystem::frame_render(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
 	{
 		MAYBE_UNUSED(wd);
 		MAYBE_UNUSED(draw_data);
 		// Record dear imgui primitives into command buffer
 	}
 
-	void ImguiSystem::FramePresent(ImGui_ImplVulkanH_Window* wd)
+	void ImguiSystem::frame_present(ImGui_ImplVulkanH_Window* wd)
 	{
 		if (m_SwapChainRebuild)
 			return;

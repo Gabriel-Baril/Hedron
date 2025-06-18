@@ -14,6 +14,6 @@ namespace hdn
 		{
 		}
 
-		void OnUpdate(f32 dt);
+		void on_update(f32 dt);
 	};
 }

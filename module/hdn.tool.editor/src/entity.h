@@ -39,8 +39,8 @@ namespace hdn
 				m_Entity.add<NativeScriptComponent>();
 			}
 			INativeScript* script = new T;
-			script->Bind(m_Entity);
-			m_Entity.get_mut<NativeScriptComponent>()->Add(script);
+			script->bind(m_Entity);
+			m_Entity.get_mut<NativeScriptComponent>()->add(script);
 		}
 
 		flecs::entity GetEntity()

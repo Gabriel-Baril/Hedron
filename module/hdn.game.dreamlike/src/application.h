@@ -25,9 +25,9 @@ namespace hdn
 		Application(const Application&) = delete;
 		Application& operator=(const Application&) = delete;
 
-		void Run();
+		void run();
 	private:
-		void LoadGameObjects();
+		void load_game_objects();
 	private:
 		VulkanWindow m_Window{ WIDTH, HEIGHT, "First App"};
 		VulkanDevice m_Device{ m_Window };

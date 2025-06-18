@@ -9,14 +9,14 @@ namespace hdn
 	class Editor
 	{
 	public:
-		static Editor& Get();
+		static Editor& get();
 
-		void SetActiveScene(const Ref<Scene>& scene);
-		Ref<Scene> GetActiveScene();
+		void set_active_scene(const Ref<Scene>& scene);
+		Ref<Scene> get_active_scene();
 
-		bool HasEntitySelected();
-		void SetEntitySelected(flecs::entity entity);
-		flecs::entity GetEntitySelected();
+		bool has_entity_selected();
+		void set_entity_selected(flecs::entity entity);
+		flecs::entity get_entity_selected();
 	private:
 		flecs::entity m_SelectedEntity = flecs::entity::null(); // Convert to Entity
 		Ref<Scene> m_ActiveScene = nullptr;

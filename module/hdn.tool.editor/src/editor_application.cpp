@@ -37,7 +37,7 @@ namespace hdn
 	void EditorApplication::on_event(Event& event)
 	{
 		IApplication::on_event(event);
-		m_EditorCamera.OnEvent(event);
+		m_EditorCamera.on_event(event);
 		EventDispatcher dispatcher(event);
 		dispatcher.dispatch<WindowResizedEvent>(HDN_BIND_EVENT_FN(EditorApplication::on_window_resized));
 		dispatcher.dispatch<KeyPressedEvent>(HDN_BIND_EVENT_FN(EditorApplication::on_key_pressed));
@@ -46,7 +46,7 @@ namespace hdn
 
 	bool EditorApplication::on_window_resized(WindowResizedEvent& event)
 	{
-		m_EditorCamera.SetViewportSize(event.get_width(), event.get_height());
+		m_EditorCamera.set_viewport_size(event.get_width(), event.get_height());
 		return false;
 	}
 
@@ -64,19 +64,19 @@ namespace hdn
 	EditorApplication::EditorApplication()
 	{
 		m_ActiveScene = make_scope<Scene>();
-		Editor::Get().SetActiveScene(m_ActiveScene);
+		Editor::get().set_active_scene(m_ActiveScene);
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-		m_EditorCamera.SetViewportSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+		m_EditorCamera.set_viewport_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
 		m_Window.SetEventCallback(HDN_BIND_EVENT_FN(EditorApplication::on_event));
 
 		m_GlobalPool = VulkanDescriptorPool::Builder(m_Device)
-			.SetMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
-			.AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
-			.Build();
+			.set_max_sets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
+			.add_pool_size(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
+			.build();
 
-		m_PhysicsWorld.Init();
+		m_PhysicsWorld.init();
 
 		load_game_objects();
 
@@ -86,13 +86,13 @@ namespace hdn
 		register_panel<IdeationManagerPanel>();
 		register_panel<PerformancePanel>();
 		m_ViewportPanel = register_panel<ViewportPanel>();
-		m_ViewportPanel->CreateOffscreenRenderTarget(m_Device.GetDevice(), m_Device.GetPhysicalDevice(), m_Window.GetExtent(), m_Renderer.GetSwapChainRenderPass());
-		m_ViewportPanel->CreateDescriptorSet(m_Device.GetDevice());
+		m_ViewportPanel->create_offscreen_rendertarget(m_Device.get_device(), m_Device.get_physical_device(), m_Window.get_extent(), m_Renderer.get_swap_chain_render_pass());
+		m_ViewportPanel->create_descriptor_set(m_Device.get_device());
 	}
 
 	EditorApplication::~EditorApplication()
 	{
-		m_PhysicsWorld.Shutdown();
+		m_PhysicsWorld.shutdown();
 	}
 
 	void EditorApplication::run()
@@ -106,45 +106,45 @@ namespace hdn
 				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
 			);
-			m_UboBuffers[i]->Map();
+			m_UboBuffers[i]->map();
 		}
 
 		m_GlobalSetLayout = VulkanDescriptorSetLayout::Builder(m_Device)
-			.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
-			.Build();
+			.add_binding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+			.build();
 
 		for (int i = 0;i < m_GlobalDescriptorSets.size(); i++)
 		{
-			auto bufferInfo = m_UboBuffers[i]->DescriptorInfo();
+			auto bufferInfo = m_UboBuffers[i]->build_descriptor_info();
 			VulkanDescriptorWriter(*m_GlobalSetLayout, *m_GlobalPool)
-				.WriteBuffer(0, &bufferInfo)
-				.Build(m_GlobalDescriptorSets[i]);
+				.write_buffer(0, &bufferInfo)
+				.build(m_GlobalDescriptorSets[i]);
 		}
 
-		m_SimpleRenderSystem.Init(&m_Device, m_Renderer.GetSwapChainRenderPass(), m_GlobalSetLayout->GetDescriptorSetLayout());
-		m_PointLightSystem.Init(&m_Device, m_Renderer.GetSwapChainRenderPass(), m_GlobalSetLayout->GetDescriptorSetLayout());
+		m_SimpleRenderSystem.Init(&m_Device, m_Renderer.get_swap_chain_render_pass(), m_GlobalSetLayout->get_descriptor_set_layout());
+		m_PointLightSystem.Init(&m_Device, m_Renderer.get_swap_chain_render_pass(), m_GlobalSetLayout->get_descriptor_set_layout());
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
 		m_ImguiDescriptorPool = VulkanDescriptorPool::Builder(m_Device)
-			.SetPoolFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
-			.SetMaxSets(1)
-			.AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
-			.Build();
+			.set_pool_flags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
+			.set_max_sets(1)
+			.add_pool_size(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
+			.build();
 		
-		m_QueueFamilyIndices = m_Device.FindPhysicalQueueFamilies();
-		m_ImguiSystem.Init(
-			m_Window.GetGLFWWindow(),
-			m_Device.GetSurface(),
-			m_Device.GetInstance(),
-			m_Device.GetPhysicalDevice(),
-			m_Device.GetDevice(),
+		m_QueueFamilyIndices = m_Device.find_physical_queue_families();
+		m_ImguiSystem.init(
+			m_Window.get_glfw_window(),
+			m_Device.get_surface(),
+			m_Device.get_instance(),
+			m_Device.get_physical_device(),
+			m_Device.get_device(),
 			m_QueueFamilyIndices.graphicsFamily,
-			m_Device.GetGraphicsQueue(),
-			m_ImguiDescriptorPool->GetDescriptor()
+			m_Device.get_graphics_queue(),
+			m_ImguiDescriptorPool->get_descriptor()
 		);
 
-		while (!m_Window.ShouldClose())
+		while (!m_Window.should_close())
 		{
 			glfwPollEvents();
 
@@ -160,11 +160,11 @@ namespace hdn
 			state.MouseButtonMiddlePressed = Input::GetMouseButton(MouseButton::MouseButtonMiddle);
 			state.MouseButtonRightPressed = Input::GetMouseButton(MouseButton::MouseButtonRight);
 			state.MousePosition = Input::GetMousePosition();
-			m_EditorCamera.OnUpdate(frameTime, state);
+			m_EditorCamera.on_update(frameTime, state);
 
-			if (auto commandBuffer = m_Renderer.BeginFrame())
+			if (auto commandBuffer = m_Renderer.begin_frame())
 			{
-				int frameIndex = m_Renderer.GetFrameIndex();
+				int frameIndex = m_Renderer.get_frame_index();
 				FrameInfo frameInfo{};
 				frameInfo.frameIndex = frameIndex;
 				frameInfo.frameTime = frameTime;
@@ -175,65 +175,65 @@ namespace hdn
 
 				// update
 				GlobalUbo ubo{};
-				ubo.projection = m_EditorCamera.GetProjectionMatrix();
-				ubo.view = m_EditorCamera.GetViewMatrix();
-				ubo.inverseView = m_EditorCamera.GetInverseViewMatrix();
+				ubo.projection = m_EditorCamera.get_projection_matrix();
+				ubo.view = m_EditorCamera.get_view_matrix();
+				ubo.inverseView = m_EditorCamera.get_inverse_view_matrix();
 
-				m_UpdateTransformSystem.Update(frameInfo);
-				m_UpdateScriptSystem.Update(frameInfo);
-				m_PointLightSystem.Update(frameInfo, ubo);
-				m_PhysicsWorld.Update(frameTime);
-				m_PhysicsGameObjectSystem.Update(frameInfo);
+				m_UpdateTransformSystem.update(frameInfo);
+				m_UpdateScriptSystem.update(frameInfo);
+				m_PointLightSystem.update(frameInfo, ubo);
+				m_PhysicsWorld.update(frameTime);
+				m_PhysicsGameObjectSystem.update(frameInfo);
 
-				m_UboBuffers[frameIndex]->WriteToBuffer((void*)&ubo);
-				m_UboBuffers[frameIndex]->Flush();
+				m_UboBuffers[frameIndex]->write_to_buffer((void*)&ubo);
+				m_UboBuffers[frameIndex]->flush();
 
 				// render
-				m_Renderer.BeginSwapChainRenderPass(commandBuffer);
+				m_Renderer.begin_swap_chain_render_pass(commandBuffer);
 
 				// Order Here Matters
-				m_ViewportPanel->TransitionImage(commandBuffer, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+				m_ViewportPanel->transition_image(commandBuffer, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 				
-				m_SimpleRenderSystem.RenderGameObjects(frameInfo);
-				m_PointLightSystem.Render(frameInfo);
+				m_SimpleRenderSystem.render_game_objects(frameInfo);
+				m_PointLightSystem.render(frameInfo);
 
-				m_ViewportPanel->TransitionImage(commandBuffer, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+				m_ViewportPanel->transition_image(commandBuffer, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 				// Render Scene to texture
-				m_ViewportPanel->UpdateDescriptorSet(m_Device.GetDevice(), frameIndex);
+				m_ViewportPanel->update_descriptor_set(m_Device.get_device(), frameIndex);
 
-				m_ImguiSystem.BeginFrame();
+				m_ImguiSystem.begin_frame();
 
 				// ImGui::ShowDemoWindow();
 
 				for (const auto& panel : m_Panels)
 				{
-					if (!panel->Enabled())
+					if (!panel->enabled())
 					{
 						continue;
 					}
-					panel->Begin();
-					panel->OnUpdate(frameInfo.frameTime);
-					panel->End();
+					panel->begin();
+					panel->on_update(frameInfo.frameTime);
+					panel->end();
 				}
 
-				m_ImguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
+				m_ImguiSystem.end_frame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 
-				m_Renderer.EndSwapChainRenderPass(commandBuffer);
+				m_Renderer.end_swap_chain_render_pass(commandBuffer);
 
-				m_Renderer.EndFrame();
+				m_Renderer.end_frame();
 			}
 		}
 
-		vkDeviceWaitIdle(m_Device.GetDevice());
+		vkDeviceWaitIdle(m_Device.get_device());
 	}
 
 	void EditorApplication::load_game_objects()
 	{
-		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, get_data_path("models/flat_vase.obj"));
+		Ref<VulkanModel> hdnModel = VulkanModel::create_model_from_obj_file(&m_Device, get_data_path("models/flat_vase.obj"));
 
 		{
-			auto flatVaseGroup = m_ActiveScene->Create("Flat Vase Group");
+			auto flatVaseGroup = m_ActiveScene->create("Flat Vase Group");
 			TransformComponent transformC;
 			flatVaseGroup.Set(transformC);
 
@@ -241,7 +241,7 @@ namespace hdn
 			{
 				std::string eName = fmt::format("Vase {}", i);
 
-				auto flatVase = m_ActiveScene->Create(eName.c_str()); // TODO: Fix game object lifetime
+				auto flatVase = m_ActiveScene->create(eName.c_str()); // TODO: Fix game object lifetime
 
 				TransformComponent transformC;
 				transformC.position = { cos(i), -1 - (float)sin(i), sin(i) };
@@ -255,7 +255,7 @@ namespace hdn
 				PhysicsComponent physicsC;
 				physx::PxVec3 position = physx::PxVec3(transformC.position.x, transformC.position.y, -transformC.position.z);
 				physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
-				physicsC.physicsActor = m_PhysicsWorld.CreateDynamicActor(position, dimension);
+				physicsC.physicsActor = m_PhysicsWorld.create_dynamic_actor(position, dimension);
 				flatVase.Set(physicsC);
 
 				flatVase.GetEntity().child_of(flatVaseGroup.GetEntity());
@@ -263,8 +263,8 @@ namespace hdn
 		}
 
 		{
-			hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, get_data_path("models/quad.obj"));
-			auto floor = m_ActiveScene->Create("floor");
+			hdnModel = VulkanModel::create_model_from_obj_file(&m_Device, get_data_path("models/quad.obj"));
+			auto floor = m_ActiveScene->create("floor");
 
 			TransformComponent transformC;
 			transformC.position = { 0.0f, 2.0f, 0.0f };
@@ -278,7 +278,7 @@ namespace hdn
 			PhysicsComponent physicsC;
 			physx::PxVec3 position = physx::PxVec3(transformC.position.x, transformC.position.y, -transformC.position.z);
 			physx::PxVec3 dimension = physx::PxVec3(3.0f, 0.001f, 3.0f);
-			physicsC.physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
+			physicsC.physicsActor = m_PhysicsWorld.create_static_actor(position, dimension);
 			floor.Set(physicsC);
 
 			floor.AddNativeScript<SimpleLogScript>();
@@ -286,8 +286,8 @@ namespace hdn
 		}
 
 		{
-			hdnModel = VulkanModel::CreateModelFromFbxFile(&m_Device, get_data_path("models/cube.fbx")); // models/cube.fbx
-			auto cube = m_ActiveScene->Create("cube");
+			hdnModel = VulkanModel::create_model_from_fbx_file(&m_Device, get_data_path("models/cube.fbx")); // models/cube.fbx
+			auto cube = m_ActiveScene->create("cube");
 
 			TransformComponent transformC;
 			transformC.position = { 0.0f, 0.0f, 0.0f };
@@ -309,13 +309,13 @@ namespace hdn
 				{1.f, 1.f, 1.f}
 			};
 
-			auto pointLightGroup = m_ActiveScene->Create("pointLightGroup");
+			auto pointLightGroup = m_ActiveScene->create("pointLightGroup");
 			TransformComponent transformC;
 			pointLightGroup.Set(transformC);
 
 			for (int i = 0; i < lightColors.size(); i++)
 			{
-				auto pointLight = m_ActiveScene->MakePointLight(0.2f);
+				auto pointLight = m_ActiveScene->make_point_light(0.2f);
 
 				ColorComponent* colorC = pointLight.GetMut<ColorComponent>();
 				colorC->color = lightColors[i];

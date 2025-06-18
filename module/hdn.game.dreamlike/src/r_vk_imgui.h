@@ -15,7 +15,7 @@ namespace hdn
 	public:
 		ImguiSystem() = default;
 
-		void Init(
+		void init(
 			GLFWwindow* glfwWindow,
 			VkSurfaceKHR surface,
 			VkInstance instance,
@@ -26,19 +26,19 @@ namespace hdn
 			VkDescriptorPool descriptorPool
 		);
 
-		void BeginFrame();
-		void EndFrame(const ImVec4& clearColor, VkCommandBuffer commandBuffer);
-		void Shutdown();
+		void begin_frame();
+		void end_frame(const ImVec4& clearColor, VkCommandBuffer commandBuffer);
+		void shutdown();
 	private:
-		void CreateFramebuffer();
-		void SetupVulKanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height);
+		void create_framebuffer();
+		void setup_vulkan_window(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height);
 
-		void CreateImguiContext();
-		void SetStyle();
-		void SetupBackend(ImGui_ImplVulkanH_Window* wd);
+		void create_imgui_context();
+		void set_style();
+		void setup_backend(ImGui_ImplVulkanH_Window* wd);
 
-		void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data);
-		void FramePresent(ImGui_ImplVulkanH_Window* wd);
+		void frame_render(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data);
+		void frame_present(ImGui_ImplVulkanH_Window* wd);
 	private:
 		GLFWwindow* m_GLFWWindow = nullptr;
 		VkSurfaceKHR m_Surface = VK_NULL_HANDLE;

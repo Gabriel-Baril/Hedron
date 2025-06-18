@@ -18,13 +18,13 @@ namespace hdn
 		{
 		}
 
-		void OnUpdate( float dt ) override
+		void on_update( float dt ) override
 		{
 			// Render Vulkan Scene Texture into ImGui
 			ImGui::Image((ImTextureID)sceneDescriptorSets[m_FrameIndex], ImVec2(1280, 720));
 		}
 
-		void TransitionImage(VkCommandBuffer commandBuffer, VkImageLayout oldLayout, VkImageLayout newLayout) {
+		void transition_image(VkCommandBuffer commandBuffer, VkImageLayout oldLayout, VkImageLayout newLayout) {
 			VkImageMemoryBarrier barrier{};
 			barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 			barrier.oldLayout = oldLayout;
@@ -64,7 +64,7 @@ namespace hdn
 			);
 		}
 
-		uint32_t FindMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+		uint32_t find_memory_type(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
 			VkPhysicalDeviceMemoryProperties memProperties;
 			vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
 
@@ -77,7 +77,7 @@ namespace hdn
 			throw std::runtime_error("Failed to find suitable memory type!");
 		}
 
-		void CreateOffscreenRenderTarget(VkDevice device, VkPhysicalDevice physicalDevice, VkExtent2D extent, VkRenderPass renderPass) {
+		void create_offscreen_rendertarget(VkDevice device, VkPhysicalDevice physicalDevice, VkExtent2D extent, VkRenderPass renderPass) {
 			VkImageCreateInfo imageCreateInfo = {};
 			imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 			imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -100,7 +100,7 @@ namespace hdn
 			VkMemoryAllocateInfo allocInfo = {};
 			allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 			allocInfo.allocationSize = memRequirements.size;
-			allocInfo.memoryTypeIndex = FindMemoryType(physicalDevice, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+			allocInfo.memoryTypeIndex = find_memory_type(physicalDevice, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 			vkAllocateMemory(device, &allocInfo, nullptr, &sceneImageMemory);
 			vkBindImageMemory(device, sceneImage, sceneImageMemory, 0);
@@ -145,7 +145,7 @@ namespace hdn
 			vkCreateFramebuffer(device, &framebufferInfo, nullptr, &sceneFramebuffer);
 		}
 
-		void CreateDescriptorSet(VkDevice device) {
+		void create_descriptor_set(VkDevice device) {
 			for (int i = 0;i < sceneDescriptorSets.size(); i++)
 			{
 				VkDescriptorSetLayoutBinding layoutBinding = {};
@@ -185,7 +185,7 @@ namespace hdn
 			}
 		}
 
-		void UpdateDescriptorSet(VkDevice device, int frameIndex) {
+		void update_descriptor_set(VkDevice device, int frameIndex) {
 			m_FrameIndex = frameIndex;
 
 			VkDescriptorImageInfo imageInfo = {};

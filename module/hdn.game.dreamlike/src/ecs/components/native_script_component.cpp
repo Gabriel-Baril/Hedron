@@ -5,12 +5,12 @@
 namespace hdn
 {
 
-	void INativeScript::Bind(flecs::entity e)
+	void INativeScript::bind(flecs::entity e)
 	{
 		m_Entity = e;
 	}
 
-	flecs::entity INativeScript::GetGameObject()
+	flecs::entity INativeScript::get_gameobject()
 	{
 		return m_Entity;
 	}

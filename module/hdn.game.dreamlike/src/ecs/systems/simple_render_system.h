@@ -20,10 +20,10 @@ namespace hdn
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-		void RenderGameObjects(FrameInfo& frameInfo);
+		void render_game_objects(FrameInfo& frameInfo);
 	private:
-		void CreatePipelineLayout(VkDescriptorSetLayout globalSetLayout);
-		void CreatePipeline(VkRenderPass renderPass);
+		void create_pipeline_layout(VkDescriptorSetLayout globalSetLayout);
+		void create_pipeline(VkRenderPass renderPass);
 	private:
 		VulkanDevice* m_Device;
 		Scope<VulkanPipeline> m_Pipeline; // TODO: Change to Scope<>

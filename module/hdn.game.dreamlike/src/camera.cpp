@@ -2,7 +2,7 @@
 
 namespace hdn
 {
-	void HDNCamera::SetOrthographicProjection(float left, float right, float top, float bottom, float nearPlane, float farPlane)
+	void HDNCamera::set_orthographic_projection(float left, float right, float top, float bottom, float nearPlane, float farPlane)
 	{
 		m_ProjectionMatrix = mat4f32{ 1.0f };
 		m_ProjectionMatrix[0][0] = 2.f / (right - left);
@@ -13,7 +13,7 @@ namespace hdn
 		m_ProjectionMatrix[3][2] = -nearPlane / (farPlane - nearPlane);
 	}
 
-	void HDNCamera::SetPerspectiveProjection(float fovy, float aspect, float nearPlane, float farPlane)
+	void HDNCamera::set_perspective_projection(float fovy, float aspect, float nearPlane, float farPlane)
 	{
 		assert(glm::abs(aspect - std::numeric_limits<f32>::epsilon()) > 0.0f);
 		const f32 tanHalfFovy = tan(fovy / 2.f);
@@ -25,7 +25,7 @@ namespace hdn
 		m_ProjectionMatrix[3][2] = -(farPlane * nearPlane) / (farPlane - nearPlane);
 	}
 
-	void HDNCamera::SetViewDirection(vec3f32 position, vec3f32 direction, vec3f32 up) {
+	void HDNCamera::set_view_direction(vec3f32 position, vec3f32 direction, vec3f32 up) {
 		const vec3f32 w{ glm::normalize(direction) };
 		const vec3f32 u{ glm::normalize(glm::cross(w, up)) };
 		const vec3f32 v{ glm::cross(w, u) };
@@ -59,11 +59,11 @@ namespace hdn
 		m_InverseViewMatrix[3][2] = position.z;
 	}
 
-	void HDNCamera::SetViewTarget(vec3f32 position, vec3f32 target, vec3f32 up) {
-		SetViewDirection(position, target - position, up);
+	void HDNCamera::set_view_target(vec3f32 position, vec3f32 target, vec3f32 up) {
+		set_view_direction(position, target - position, up);
 	}
 
-	void HDNCamera::SetViewYXZ(vec3f32 position, vec3f32 rotation) {
+	void HDNCamera::set_view_yxz(vec3f32 position, vec3f32 rotation) {
 		const float c3 = glm::cos(rotation.z);
 		const float s3 = glm::sin(rotation.z);
 		const float c2 = glm::cos(rotation.x);

@@ -4,7 +4,7 @@ using namespace physx;
 
 namespace hdn
 {
-	void PhysicsWorld::Init()
+	void PhysicsWorld::init()
 	{
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_AllocatorCallback, m_ErrorCallback);
 		m_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale{}, true);
@@ -18,7 +18,7 @@ namespace hdn
 		m_Material = m_Physics->createMaterial(0.5f, 0.5f, 0.5f);
 	}
 
-	PxRigidDynamic* PhysicsWorld::CreateDynamicActor(const PxVec3& position, const PxVec3& dimension)
+	PxRigidDynamic* PhysicsWorld::create_dynamic_actor(const PxVec3& position, const PxVec3& dimension)
 	{
 		PxTransform transform(position);
 		PxShape* shape = m_Physics->createShape(PxBoxGeometry(dimension), *m_Material);
@@ -30,7 +30,7 @@ namespace hdn
 		return dynamicActor;
 	}
 
-	physx::PxRigidStatic* PhysicsWorld::CreateStaticActor(const physx::PxVec3& position, const physx::PxVec3& dimension)
+	physx::PxRigidStatic* PhysicsWorld::create_static_actor(const physx::PxVec3& position, const physx::PxVec3& dimension)
 	{
 		PxTransform transform(position);
 		PxShape* shape = m_Physics->createShape(PxBoxGeometry(dimension), *m_Material);
@@ -41,13 +41,13 @@ namespace hdn
 		return staticActor;
 	}
 
-	void PhysicsWorld::Update(f32 deltaTime)
+	void PhysicsWorld::update(f32 deltaTime)
 	{
 		m_Scene->simulate(deltaTime);
 		m_Scene->fetchResults(true);
 	}
 
-	void PhysicsWorld::Shutdown()
+	void PhysicsWorld::shutdown()
 	{
 		m_Material->release();
 		m_Scene->release();

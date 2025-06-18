@@ -45,16 +45,16 @@ namespace hdn
 		VulkanPipeline(VulkanPipeline&&) = delete;
 		VulkanPipeline& operator=(VulkanPipeline&&) = delete;
 
-		void Bind(VkCommandBuffer commandBuffer);
-		static void DefaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
-		static void EnableAlphaBlending(PipelineConfigInfo& configInfo);
+		void bind(VkCommandBuffer commandBuffer);
+		static void default_pipeline_config_info(PipelineConfigInfo& configInfo);
+		static void enable_alpha_blending(PipelineConfigInfo& configInfo);
 	private:
-		static vector<char> ReadFile(const string& filepath);
-		void CreateGraphicsPipeline(
+		static vector<char> read_file(const string& filepath);
+		void create_graphics_pipeline(
 			const string& vertFilepath,
 			const string& fragFilepath,
 			const PipelineConfigInfo& configInfo);
-		void CreateShaderModule(const vector<char>& code, VkShaderModule* module);
+		void create_shader_module(const vector<char>& code, VkShaderModule* module);
 	private:
 		VulkanDevice* m_Device;
 		VkPipeline m_GraphicsPipeline;

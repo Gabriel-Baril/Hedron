@@ -5,17 +5,17 @@
 
 namespace hdn
 {
-	void InspectorPanel::OnUpdate(f32 dt)
+	void InspectorPanel::on_update(f32 dt)
 	{
-		if (!Editor::Get().HasEntitySelected())
+		if (!Editor::get().has_entity_selected())
 		{
 			ImGui::Text("No Entity Selected");
 			return;
 		}
-		flecs::entity selected = Editor::Get().GetEntitySelected();
+		flecs::entity selected = Editor::get().get_entity_selected();
 		if (selected.has<TransformComponent>())
 		{
-			RenderWithHeader(selected, "Transform");
+			render_with_header(selected, "Transform");
 		}
 	}
 }

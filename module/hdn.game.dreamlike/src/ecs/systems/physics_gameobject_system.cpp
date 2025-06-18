@@ -30,7 +30,7 @@ namespace hdn
 		return euler;
 	}
 
-	void PhysicsGameObjectSystem::Update(FrameInfo& frameInfo)
+	void PhysicsGameObjectSystem::update(FrameInfo& frameInfo)
 	{
 
 		auto query = frameInfo.ecsWorld->query<TransformComponent, PhysicsComponent>();

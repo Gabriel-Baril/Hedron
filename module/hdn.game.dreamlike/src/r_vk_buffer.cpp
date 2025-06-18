@@ -18,7 +18,7 @@ namespace hdn {
      *
      * @return VkResult of the buffer mapping call
      */
-    VkDeviceSize VulkanBuffer::GetAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment) {
+    VkDeviceSize VulkanBuffer::get_alignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment) {
         if (minOffsetAlignment > 0) {
             return (instanceSize + minOffsetAlignment - 1) & ~(minOffsetAlignment - 1);
         }
@@ -37,15 +37,15 @@ namespace hdn {
         m_InstanceCount{ instanceCount },
         m_UsageFlags{ usageFlags },
         m_MemoryPropertyFlags{ memoryPropertyFlags } {
-        m_AlignmentSize = GetAlignment(instanceSize, minOffsetAlignment);
+        m_AlignmentSize = get_alignment(instanceSize, minOffsetAlignment);
         m_BufferSize = m_AlignmentSize * instanceCount;
-        device->CreateBuffer(m_BufferSize, usageFlags, memoryPropertyFlags, m_Buffer, m_Memory);
+        device->create_buffer(m_BufferSize, usageFlags, memoryPropertyFlags, m_Buffer, m_Memory);
     }
 
     VulkanBuffer::~VulkanBuffer() {
-        Unmap();
-        vkDestroyBuffer(m_Device->GetDevice(), m_Buffer, nullptr);
-        vkFreeMemory(m_Device->GetDevice(), m_Memory, nullptr);
+        unmap();
+        vkDestroyBuffer(m_Device->get_device(), m_Buffer, nullptr);
+        vkFreeMemory(m_Device->get_device(), m_Memory, nullptr);
     }
 
     /**
@@ -57,9 +57,9 @@ namespace hdn {
      *
      * @return VkResult of the buffer mapping call
      */
-    VkResult VulkanBuffer::Map(VkDeviceSize size, VkDeviceSize offset) {
+    VkResult VulkanBuffer::map(VkDeviceSize size, VkDeviceSize offset) {
         assert(m_Buffer && m_Memory && "Called map on buffer before create");
-        return vkMapMemory(m_Device->GetDevice(), m_Memory, offset, size, 0, &m_Mapped);
+        return vkMapMemory(m_Device->get_device(), m_Memory, offset, size, 0, &m_Mapped);
     }
 
     /**
@@ -67,9 +67,9 @@ namespace hdn {
      *
      * @note Does not return a result as vkUnmapMemory can't fail
      */
-    void VulkanBuffer::Unmap() {
+    void VulkanBuffer::unmap() {
         if (m_Mapped) {
-            vkUnmapMemory(m_Device->GetDevice(), m_Memory);
+            vkUnmapMemory(m_Device->get_device(), m_Memory);
             m_Mapped = nullptr;
         }
     }
@@ -83,7 +83,7 @@ namespace hdn {
      * @param offset (Optional) Byte offset from beginning of mapped region
      *
      */
-    void VulkanBuffer::WriteToBuffer(void* data, VkDeviceSize size, VkDeviceSize offset) {
+    void VulkanBuffer::write_to_buffer(void* data, VkDeviceSize size, VkDeviceSize offset) {
         assert(m_Mapped && "Cannot copy to unmapped buffer");
 
         if (size == VK_WHOLE_SIZE) {
@@ -107,13 +107,13 @@ namespace hdn {
      *
      * @return VkResult of the flush call
      */
-    VkResult VulkanBuffer::Flush(VkDeviceSize size, VkDeviceSize offset) {
+    VkResult VulkanBuffer::flush(VkDeviceSize size, VkDeviceSize offset) {
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
         mappedRange.memory = m_Memory;
         mappedRange.offset = offset;
         mappedRange.size = size;
-        return vkFlushMappedMemoryRanges(m_Device->GetDevice(), 1, &mappedRange);
+        return vkFlushMappedMemoryRanges(m_Device->get_device(), 1, &mappedRange);
     }
 
     /**
@@ -127,13 +127,13 @@ namespace hdn {
      *
      * @return VkResult of the invalidate call
      */
-    VkResult VulkanBuffer::Invalidate(VkDeviceSize size, VkDeviceSize offset) {
+    VkResult VulkanBuffer::invalidate(VkDeviceSize size, VkDeviceSize offset) {
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
         mappedRange.memory = m_Memory;
         mappedRange.offset = offset;
         mappedRange.size = size;
-        return vkInvalidateMappedMemoryRanges(m_Device->GetDevice(), 1, &mappedRange);
+        return vkInvalidateMappedMemoryRanges(m_Device->get_device(), 1, &mappedRange);
     }
 
     /**
@@ -144,7 +144,7 @@ namespace hdn {
      *
      * @return VkDescriptorBufferInfo of specified offset and range
      */
-    VkDescriptorBufferInfo VulkanBuffer::DescriptorInfo(VkDeviceSize size, VkDeviceSize offset) {
+    VkDescriptorBufferInfo VulkanBuffer::build_descriptor_info(VkDeviceSize size, VkDeviceSize offset) {
         return VkDescriptorBufferInfo{
             m_Buffer,
             offset,
@@ -159,8 +159,8 @@ namespace hdn {
      * @param index Used in offset calculation
      *
      */
-    void VulkanBuffer::WriteToIndex(void* data, int index) {
-        WriteToBuffer(data, m_InstanceSize, index * m_AlignmentSize);
+    void VulkanBuffer::write_to_index(void* data, int index) {
+        write_to_buffer(data, m_InstanceSize, index * m_AlignmentSize);
     }
 
     /**
@@ -169,7 +169,7 @@ namespace hdn {
      * @param index Used in offset calculation
      *
      */
-    VkResult VulkanBuffer::FlushIndex(int index) { return Flush(m_AlignmentSize, index * m_AlignmentSize); }
+    VkResult VulkanBuffer::flush_index(int index) { return flush(m_AlignmentSize, index * m_AlignmentSize); }
 
     /**
      * Create a buffer info descriptor
@@ -178,8 +178,8 @@ namespace hdn {
      *
      * @return VkDescriptorBufferInfo for instance at index
      */
-    VkDescriptorBufferInfo VulkanBuffer::DescriptorInfoForIndex(int index) {
-        return DescriptorInfo(m_AlignmentSize, index * m_AlignmentSize);
+    VkDescriptorBufferInfo VulkanBuffer::descriptor_info_for_index(int index) {
+        return build_descriptor_info(m_AlignmentSize, index * m_AlignmentSize);
     }
 
     /**
@@ -191,8 +191,8 @@ namespace hdn {
      *
      * @return VkResult of the invalidate call
      */
-    VkResult VulkanBuffer::InvalidateIndex(int index) {
-        return Invalidate(m_AlignmentSize, index * m_AlignmentSize);
+    VkResult VulkanBuffer::invalidate_index(int index) {
+        return invalidate(m_AlignmentSize, index * m_AlignmentSize);
     }
 
 }  // namespace lve

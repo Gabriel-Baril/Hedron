@@ -5,7 +5,7 @@
 
 namespace hdn
 {
-	void IdeationManagerPanel::Init()
+	void IdeationManagerPanel::init()
 	{
 		vector<fspath> ideationFiles = filesystem_walk("ideations");
 
@@ -13,16 +13,16 @@ namespace hdn
 		{
 			Ideation ideation;
 			HDEBUG("Parsing: '{0}'", ideationFile.string().c_str());
-			m_Parser.ParseIdeationFile(ideationFile.string(), ideation);
+			m_Parser.parse_ideation_file(ideationFile.string(), ideation);
 			m_Ideations.emplace_back(ideation);
 		}
 	}
 
-	void IdeationManagerPanel::OnUpdate(f32 dt)
+	void IdeationManagerPanel::on_update(f32 dt)
 	{
 		if (!m_Initialized)
 		{
-			Init();
+			init();
 			m_Initialized = true;
 		}
 

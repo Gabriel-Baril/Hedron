@@ -17,9 +17,9 @@ namespace hdn
 
 		mat4f32 worldMatrix;
 
-		mat4f32 Mat4() const;
-		mat3f32 NormalMatrix() const;
-		bool Changed() const;
-		void ClearChange();
+		mat4f32 to_mat() const;
+		mat3f32 normal_matrix() const;
+		bool changed() const;
+		void clear_change();
 	};
 }

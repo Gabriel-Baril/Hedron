@@ -6,7 +6,7 @@ namespace hdn
 {
 	using json = nlohmann::json;
 
-	void IdeationParser::ParseIdeationFile(const string& path, Ideation& ideation)
+	void IdeationParser::parse_ideation_file(const string& path, Ideation& ideation)
 	{
 		std::ifstream file(path);
 		json jsonData;

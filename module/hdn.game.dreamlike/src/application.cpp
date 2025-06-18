@@ -35,22 +35,22 @@ namespace hdn
 	Application::Application()
 	{
 		m_GlobalPool = VulkanDescriptorPool::Builder(m_Device)
-			.SetMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
-			.AddPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
-			.Build();
+			.set_max_sets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
+			.add_pool_size(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
+			.build();
 
-		m_PhysicsWorld.Init();
-		LoadGameObjects();
+		m_PhysicsWorld.init();
+		load_game_objects();
 
 		m_EcsWorld.set_threads(std::thread::hardware_concurrency());
 	}
 
 	Application::~Application()
 	{
-		m_PhysicsWorld.Shutdown();
+		m_PhysicsWorld.shutdown();
 	}
 
-	void Application::Run()
+	void Application::run()
 	{
 		vector<Scope<VulkanBuffer>> uboBuffers(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
 		for (int i = 0;i < uboBuffers.size(); i++)
@@ -62,33 +62,33 @@ namespace hdn
 				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
 			);
-			uboBuffers[i]->Map();
+			uboBuffers[i]->map();
 		}
 
 		auto globalSetLayout = VulkanDescriptorSetLayout::Builder(m_Device)
-			.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
-			.Build();
+			.add_binding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+			.build();
 
 		vector<VkDescriptorSet> globalDescriptorSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT); // One descriptor set per frame
 		for (int i = 0;i < globalDescriptorSets.size(); i++)
 		{
-			auto bufferInfo = uboBuffers[i]->DescriptorInfo();
+			auto bufferInfo = uboBuffers[i]->build_descriptor_info();
 			VulkanDescriptorWriter(*globalSetLayout, *m_GlobalPool)
-				.WriteBuffer(0, &bufferInfo)
-				.Build(globalDescriptorSets[i]);
+				.write_buffer(0, &bufferInfo)
+				.build(globalDescriptorSets[i]);
 		}
 
 		UpdateTransformSystem updateTransformSystem;
 		UpdateScriptSystem updateScriptSystem;
-		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
-		PointLightSystem pointLightSystem{ &m_Device, m_Renderer.GetSwapChainRenderPass(), globalSetLayout->GetDescriptorSetLayout() };
+		SimpleRenderSystem simpleRenderSystem{ &m_Device, m_Renderer.get_swap_chain_render_pass(), globalSetLayout->get_descriptor_set_layout() };
+		PointLightSystem pointLightSystem{ &m_Device, m_Renderer.get_swap_chain_render_pass(), globalSetLayout->get_descriptor_set_layout() };
 		PhysicsGameObjectSystem physicsGameObjectSystem;
 		HDNCamera camera{};
 
-		auto viewerObject = HDNGameObject::CreateGameObject(m_EcsWorld);
+		auto viewerObject = HDNGameObject::create_game_object(m_EcsWorld);
 		TransformComponent transformC;
 		transformC.position.z = -2.5f;
-		viewerObject.GetEntity().set(transformC);
+		viewerObject.get_entity().set(transformC);
 
 		KeyboardMovementController cameraController{};
 
@@ -98,25 +98,25 @@ namespace hdn
 		ImguiSystem imguiSystem;
 		
 		Scope<VulkanDescriptorPool> imguiDescriptorPool = VulkanDescriptorPool::Builder(m_Device)
-			.SetPoolFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
-			.SetMaxSets(1)
-			.AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
-			.Build();
+			.set_pool_flags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
+			.set_max_sets(1)
+			.add_pool_size(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
+			.build();
 		
-		QueueFamilyIndices queueFamilyIndices = m_Device.FindPhysicalQueueFamilies();
-		imguiSystem.Init(
-			m_Window.GetGLFWWindow(),
-			m_Device.GetSurface(),
-			m_Device.GetInstance(),
-			m_Device.GetPhysicalDevice(),
-			m_Device.GetDevice(),
+		QueueFamilyIndices queueFamilyIndices = m_Device.find_physical_queue_families();
+		imguiSystem.init(
+			m_Window.get_glfw_window(),
+			m_Device.get_surface(),
+			m_Device.get_instance(),
+			m_Device.get_physical_device(),
+			m_Device.get_device(),
 			queueFamilyIndices.graphicsFamily,
-			m_Device.GetGraphicsQueue(),
-			imguiDescriptorPool->GetDescriptor()
+			m_Device.get_graphics_queue(),
+			imguiDescriptorPool->get_descriptor()
 		);
 #endif
 
-		while (!m_Window.ShouldClose())
+		while (!m_Window.should_close())
 		{
 			glfwPollEvents();
 
@@ -126,17 +126,17 @@ namespace hdn
 
 			frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 
-			cameraController.MoveInPlaneXZ(m_Window.GetGLFWWindow(), frameTime, viewerObject);
+			cameraController.move_in_plane_xyz(m_Window.get_glfw_window(), frameTime, viewerObject);
 
-			TransformComponent* viewerObjectTransformC = viewerObject.GetMut<TransformComponent>();
-			camera.SetViewYXZ(viewerObjectTransformC->position, viewerObjectTransformC->rotation);
+			TransformComponent* viewerObjectTransformC = viewerObject.get_mut<TransformComponent>();
+			camera.set_view_yxz(viewerObjectTransformC->position, viewerObjectTransformC->rotation);
 
-			f32 aspect = m_Renderer.GetAspectRatio();
-			camera.SetPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
+			f32 aspect = m_Renderer.get_aspect_ratio();
+			camera.set_perspective_projection(glm::radians(50.0f), aspect, 0.01f, 1.0f);
 
-			if (auto commandBuffer = m_Renderer.BeginFrame())
+			if (auto commandBuffer = m_Renderer.begin_frame())
 			{
-				int frameIndex = m_Renderer.GetFrameIndex();
+				int frameIndex = m_Renderer.get_frame_index();
 				FrameInfo frameInfo{};
 				frameInfo.frameIndex = frameIndex;
 				frameInfo.frameTime = frameTime;
@@ -147,112 +147,112 @@ namespace hdn
 
 				// update
 				GlobalUbo ubo{};
-				ubo.projection = camera.GetProjection();
-				ubo.view = camera.GetView();
-				ubo.inverseView = camera.GetInverseView();
+				ubo.projection = camera.get_projection();
+				ubo.view = camera.get_view();
+				ubo.inverseView = camera.get_inverse_view();
 
-				updateTransformSystem.Update(frameInfo);
-				updateScriptSystem.Update(frameInfo);
-				pointLightSystem.Update(frameInfo, ubo);
-				m_PhysicsWorld.Update(frameTime);
-				physicsGameObjectSystem.Update(frameInfo);
+				updateTransformSystem.update(frameInfo);
+				updateScriptSystem.update(frameInfo);
+				pointLightSystem.update(frameInfo, ubo);
+				m_PhysicsWorld.update(frameTime);
+				physicsGameObjectSystem.update(frameInfo);
 
-				uboBuffers[frameIndex]->WriteToBuffer((void*)&ubo);
-				uboBuffers[frameIndex]->Flush();
+				uboBuffers[frameIndex]->write_to_buffer((void*)&ubo);
+				uboBuffers[frameIndex]->flush();
 
 				// render
-				m_Renderer.BeginSwapChainRenderPass(commandBuffer);
+				m_Renderer.begin_swap_chain_render_pass(commandBuffer);
 
 				// Order Here Matters
-				simpleRenderSystem.RenderGameObjects(frameInfo);
-				pointLightSystem.Render(frameInfo);
+				simpleRenderSystem.render_game_objects(frameInfo);
+				pointLightSystem.render(frameInfo);
 
 #if USING(HDN_DEBUG)
-				imguiSystem.BeginFrame();
+				imguiSystem.begin_frame();
 
 				ImGui::Begin("Hello, world!");
 				ImGui::Text("This is some useful text.");
 				ImGui::Text("dt: %.4f", frameTime * 1000);
 				ImGui::End();
 
-				imguiSystem.EndFrame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
+				imguiSystem.end_frame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 #endif
-				m_Renderer.EndSwapChainRenderPass(commandBuffer);
+				m_Renderer.end_swap_chain_render_pass(commandBuffer);
 
-				m_Renderer.EndFrame();
+				m_Renderer.end_frame();
 			}
 		}
 
-		vkDeviceWaitIdle(m_Device.GetDevice());
+		vkDeviceWaitIdle(m_Device.get_device());
 	}
 
-	void Application::LoadGameObjects()
+	void Application::load_game_objects()
 	{
-		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, get_data_path("models/flat_vase.obj"));
+		Ref<VulkanModel> hdnModel = VulkanModel::create_model_from_obj_file(&m_Device, get_data_path("models/flat_vase.obj"));
 
-		auto flatVaseGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "Flat Vase Group");
+		auto flatVaseGroup = HDNGameObject::create_game_object(m_EcsWorld, "Flat Vase Group");
 		TransformComponent transformC;
-		flatVaseGroup.Set(transformC);
+		flatVaseGroup.set(transformC);
 
 		for(int i = 0;i < 100; i++)
 		{
 			std::string eName = fmt::format("Vase {}", i);
 
-			auto flatVase = HDNGameObject::CreateGameObject(m_EcsWorld, eName.c_str()); // TODO: Fix game object lifetime
+			auto flatVase = HDNGameObject::create_game_object(m_EcsWorld, eName.c_str()); // TODO: Fix game object lifetime
 
 			TransformComponent transformC;
 			transformC.position = { cos(i), -1 - (float)sin(i), sin(i) };
 			transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
-			flatVase.Set(transformC);
+			flatVase.set(transformC);
 
 			ModelComponent modelC;
 			modelC.model = hdnModel;
-			flatVase.Set(modelC);
+			flatVase.set(modelC);
 
 			PhysicsComponent physicsC;
 			physx::PxVec3 position = physx::PxVec3(transformC.position.x, transformC.position.y, -transformC.position.z);
 			physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
-			physicsC.physicsActor = m_PhysicsWorld.CreateDynamicActor(position, dimension);
-			flatVase.Set(physicsC);
+			physicsC.physicsActor = m_PhysicsWorld.create_dynamic_actor(position, dimension);
+			flatVase.set(physicsC);
 
-			flatVase.GetEntity().child_of(flatVaseGroup.GetEntity());
+			flatVase.get_entity().child_of(flatVaseGroup.get_entity());
 		}
 
 		{
-			hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, get_data_path("models/quad.obj"));
-			auto floor = HDNGameObject::CreateGameObject(m_EcsWorld, "floor");
+			hdnModel = VulkanModel::create_model_from_obj_file(&m_Device, get_data_path("models/quad.obj"));
+			auto floor = HDNGameObject::create_game_object(m_EcsWorld, "floor");
 
 			TransformComponent transformC;
 			transformC.position = { 0.0f, 2.0f, 0.0f };
 			transformC.scale = vec3f32{ 3.0f, 1.0f, 3.0f };
-			floor.Set(transformC);
+			floor.set(transformC);
 
 			ModelComponent modelC;
 			modelC.model = hdnModel;
-			floor.Set(modelC);
+			floor.set(modelC);
 
 			PhysicsComponent physicsC;
 			physx::PxVec3 position = physx::PxVec3(transformC.position.x, transformC.position.y, -transformC.position.z);
 			physx::PxVec3 dimension = physx::PxVec3(3.0f, 0.001f, 3.0f);
-			physicsC.physicsActor = m_PhysicsWorld.CreateStaticActor(position, dimension);
-			floor.Set(physicsC);
+			physicsC.physicsActor = m_PhysicsWorld.create_static_actor(position, dimension);
+			floor.set(physicsC);
 
-			floor.AddNativeScript<SimpleLogScript>();
+			floor.add_native_script<SimpleLogScript>();
 			// floor.AddNativeScript<RotateZScript>();
 		}
 
 		{
-			hdnModel = VulkanModel::CreateModelFromFbxFile(&m_Device, get_data_path("models/cube.fbx")); // models/cube.fbx
-			auto pot = HDNGameObject::CreateGameObject(m_EcsWorld, "pot");
+			hdnModel = VulkanModel::create_model_from_fbx_file(&m_Device, get_data_path("models/cube.fbx")); // models/cube.fbx
+			auto pot = HDNGameObject::create_game_object(m_EcsWorld, "pot");
 
 			TransformComponent transformC;
 			transformC.position = { 0.0f, 0.0f, 0.0f };
 			transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
-			pot.Set(transformC);
+			pot.set(transformC);
 
 			ModelComponent modelC;
 			modelC.model = hdnModel;
-			pot.Set(modelC);
+			pot.set(modelC);
 		}
 
 		vector<vec3f32> lightColors{
@@ -266,13 +266,13 @@ namespace hdn
 
 		for (int i = 0;i < lightColors.size(); i++)
 		{
-			auto pointLight = HDNGameObject::MakePointLight(m_EcsWorld, 0.2f);
+			auto pointLight = HDNGameObject::make_point_light(m_EcsWorld, 0.2f);
 
-			ColorComponent* colorC = pointLight.GetMut<ColorComponent>();
+			ColorComponent* colorC = pointLight.get_mut<ColorComponent>();
 			colorC->color = lightColors[i];
 
 			auto rotateLight = glm::rotate(mat4f32(1.0f), (i * glm::two_pi<f32>()) / lightColors.size(), {0.0f, -1.0f, 0.0f});
-			TransformComponent* transformC = pointLight.GetMut<TransformComponent>();
+			TransformComponent* transformC = pointLight.get_mut<TransformComponent>();
 			transformC->position = vec3f32(rotateLight * vec4f32(-1.0f, -1.0f, -1.0f, 1.0f));
 		}
 	}

@@ -17,16 +17,16 @@ namespace hdn
 		VulkanWindow(VulkanWindow&&) = delete;
 		VulkanWindow& operator=(VulkanWindow&&) = delete;
 
-		bool ShouldClose();
-		VkExtent2D GetExtent() { return { m_Width, m_Height }; }
-		bool WasWindowResized() { return m_FramebufferResized; }
-		void ResetWindowResizedFlag() { m_FramebufferResized = false; }
-		GLFWwindow* GetGLFWWindow() const { return m_Window; }
+		bool should_close();
+		VkExtent2D get_extent() { return { m_Width, m_Height }; }
+		bool was_window_resized() { return m_FramebufferResized; }
+		void reset_window_resized_flag() { m_FramebufferResized = false; }
+		GLFWwindow* get_glfw_window() const { return m_Window; }
 
-		void CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
+		void create_window_surface(VkInstance instance, VkSurfaceKHR* surface);
 	private:
-		void InitWindow();
-		static void FramebufferResizeCallback(GLFWwindow* window, int width, int height);
+		void init_window();
+		static void framebuffer_resize_callback(GLFWwindow* window, int width, int height);
 	private:
 		u32 m_Width;
 		u32 m_Height;

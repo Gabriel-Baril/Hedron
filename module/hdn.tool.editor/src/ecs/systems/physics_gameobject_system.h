@@ -8,6 +8,6 @@ namespace hdn
 	class PhysicsGameObjectSystem
 	{
 	public:
-		void Update(FrameInfo& frameInfo);
+		void update(FrameInfo& frameInfo);
 	};
 }

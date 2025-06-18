@@ -27,46 +27,46 @@ namespace hdn
 		EditorCamera() = default;
 		EditorCamera(f32 FOV, f32 aspectRatio, f32 nearClip, f32 farClip);
 
-		void OnUpdate(Timestep ts, const UpdateState& keyState);
-		void OnEvent(Event& event);
+		void on_update(Timestep ts, const UpdateState& keyState);
+		void on_event(Event& event);
 
-		inline f32 GetDistance() const { return m_Distance; }
-		inline void SetDistance(f32 distance) { m_Distance = distance; }
+		inline f32 get_distance() const { return m_Distance; }
+		inline void set_distance(f32 distance) { m_Distance = distance; }
 
-		inline void SetViewportSize(f32 width, f32 height)
+		inline void set_viewport_size(f32 width, f32 height)
 		{
 			m_ViewportWidth = width;
 			m_ViewportHeight = height;
-			UpdateProjectionMatrix();
+			update_projection_matrix();
 		};
 
-		const mat4f32& GetViewMatrix() const { return m_ViewMatrix; }
-		const mat4f32& GetInverseViewMatrix() const { return glm::inverse(m_ViewMatrix); }
-		mat4f32 GetViewProjectionMatrix() const { return m_Projection * m_ViewMatrix; }
+		const mat4f32& get_view_matrix() const { return m_ViewMatrix; }
+		const mat4f32& get_inverse_view_matrix() const { return glm::inverse(m_ViewMatrix); }
+		mat4f32 get_view_projection_matrix() const { return m_Projection * m_ViewMatrix; }
 
-		vec3f32 GetUpDirection() const;
-		vec3f32 GetRightDirection() const;
-		vec3f32 GetForwardDirection() const;
-		const vec3f32& GetPosition() const { return m_Position; }
-		glm::quat GetOrientation() const;
+		vec3f32 get_up_direction() const;
+		vec3f32 get_right_direction() const;
+		vec3f32 get_forward_direction() const;
+		const vec3f32& get_position() const { return m_Position; }
+		glm::quat get_orientation() const;
 
-		f32 GetPitch() const { return m_Pitch; }
-		f32 GetYaw() const { return m_Yaw; }
+		f32 get_pitch() const { return m_Pitch; }
+		f32 get_yaw() const { return m_Yaw; }
 	private:
-		void UpdateProjectionMatrix();
-		void UpdateViewMatrix();
+		void update_projection_matrix();
+		void update_view_matrix();
 
-		bool OnMouseScroll(MouseScrolledEvent& e);
+		bool on_mouse_scroll(MouseScrolledEvent& e);
 
-		void Pan(const vec2f32& delta);
-		void Rotate(const vec2f32& delta);
-		void Zoom(f32 delta);
+		void pan(const vec2f32& delta);
+		void rotate(const vec2f32& delta);
+		void zoom(f32 delta);
 
-		vec3f32 CalculatePosition() const;;
+		vec3f32 calculate_position() const;;
 
-		std::pair<f32, f32> GetPanSpeed() const;
-		f32 GetRotationSpeed() const;
-		f32 GetZoomSpeed() const;
+		std::pair<f32, f32> get_pan_speed() const;
+		f32 get_rotation_speed() const;
+		f32 get_zoom_speed() const;
 	private:
 		f32 m_FOV = 45.0f;
 		f32 m_AspectRatio = 1.778f;

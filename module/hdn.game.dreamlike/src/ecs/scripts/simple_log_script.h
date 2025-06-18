@@ -6,12 +6,12 @@ namespace hdn
 {
 	class SimpleLogScript : public INativeScript
 	{
-		virtual const char* Name()
+		virtual const char* name()
 		{ 
 			return "SimpleLogScript";
 		}
 
-		virtual void OnUpdate(float dt) override
+		virtual void on_update(float dt) override
 		{
 			HWARN("SimpleLogScript");
 		}

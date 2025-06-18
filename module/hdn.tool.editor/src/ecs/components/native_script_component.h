@@ -11,11 +11,11 @@ namespace hdn
 	class INativeScript
 	{
 	public:
-		virtual const char* Name() { return "INativeScript"; }
-		virtual void OnUpdate(float dt) = 0;
+		virtual const char* name() { return "INativeScript"; }
+		virtual void on_update(float dt) = 0;
 		
-		void Bind(flecs::entity e);
-		flecs::entity GetGameObject();
+		void bind(flecs::entity e);
+		flecs::entity get_gameobject();
 	protected:
 		flecs::entity m_Entity;
 	};
@@ -24,16 +24,16 @@ namespace hdn
 	{
 		vector<INativeScript*> scripts;
 
-		void Add(INativeScript* script)
+		void add(INativeScript* script)
 		{
 			scripts.push_back(script);
 		}
 
-		void Update(float dt)
+		void update(float dt)
 		{
 			for (const auto& script : scripts)
 			{
-				script->OnUpdate(dt);
+				script->on_update(dt);
 			}
 		}
 
@@ -41,7 +41,7 @@ namespace hdn
 		{
 			for (const auto& script : scripts)
 			{
-				HINFO("Freed script: '{0}'", script->Name());
+				HINFO("Freed script: '{0}'", script->name());
 				delete script;
 			}
 		}

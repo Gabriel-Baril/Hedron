@@ -39,8 +39,8 @@ namespace hdn
 	VulkanModel::VulkanModel(VulkanDevice* device, const VulkanModel::Builder& builder)
 		: m_Device{device}
 	{
-		CreateVertexBuffers(builder.vertices);
-		CreateIndexBuffers(builder.indices);
+		create_vertex_buffers(builder.vertices);
+		create_index_buffers(builder.indices);
 	}
 
 
@@ -48,32 +48,32 @@ namespace hdn
 	{
 	}
 
-	Scope<VulkanModel> VulkanModel::CreateModelFromObjFile(VulkanDevice* device, const string& filepath)
+	Scope<VulkanModel> VulkanModel::create_model_from_obj_file(VulkanDevice* device, const string& filepath)
 	{
 		Builder builder{};
-		builder.LoadObjModel(filepath);
+		builder.load_obj_model(filepath);
 		return make_scope<VulkanModel>(device, builder);
 	}
 
-	Scope<VulkanModel> VulkanModel::CreateModelFromFbxFile(VulkanDevice* device, const string& filepath)
+	Scope<VulkanModel> VulkanModel::create_model_from_fbx_file(VulkanDevice* device, const string& filepath)
 	{
 		Builder builder{};
-		builder.LoadFbxModel(filepath);
+		builder.load_fbx_model(filepath);
 		return make_scope<VulkanModel>(device, builder);
 	}
 
-	void VulkanModel::Bind(VkCommandBuffer commandBuffer)
+	void VulkanModel::bind(VkCommandBuffer commandBuffer)
 	{
-		VkBuffer buffers[] = { m_VertexBuffer->GetBuffer()};
+		VkBuffer buffers[] = { m_VertexBuffer->get_buffer()};
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
 		if (m_HasIndexBuffer)
 		{
-			vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32); // The index type could be smaller based on the model
+			vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->get_buffer(), 0, VK_INDEX_TYPE_UINT32); // The index type could be smaller based on the model
 		}
 	}
 
-	void VulkanModel::Draw(VkCommandBuffer commandBuffer)
+	void VulkanModel::draw(VkCommandBuffer commandBuffer)
 	{
 		if (m_HasIndexBuffer)
 		{
@@ -85,7 +85,7 @@ namespace hdn
 		}
 	}
 
-	void VulkanModel::CreateVertexBuffers(const vector<Vertex>& vertices)
+	void VulkanModel::create_vertex_buffers(const vector<Vertex>& vertices)
 	{
 		m_VertexCount = static_cast<u32>(vertices.size());
 		assert(m_VertexCount >= 3 && "Vertex count must be at least 3");
@@ -100,8 +100,8 @@ namespace hdn
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		};
 
-		stagingBuffer.Map();
-		stagingBuffer.WriteToBuffer((void*)vertices.data());
+		stagingBuffer.map();
+		stagingBuffer.write_to_buffer((void*)vertices.data());
 
 		m_VertexBuffer = make_scope<VulkanBuffer>(
 			m_Device,
@@ -111,10 +111,10 @@ namespace hdn
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
 		);
 
-		m_Device->CopyBuffer(stagingBuffer.GetBuffer(), m_VertexBuffer->GetBuffer(), bufferSize);
+		m_Device->copy_buffer(stagingBuffer.get_buffer(), m_VertexBuffer->get_buffer(), bufferSize);
 	}
 
-	void VulkanModel::CreateIndexBuffers(const vector<u32>& indices)
+	void VulkanModel::create_index_buffers(const vector<u32>& indices)
 	{
 		m_IndexCount = static_cast<u32>(indices.size());
 		m_HasIndexBuffer = m_IndexCount > 0;
@@ -134,8 +134,8 @@ namespace hdn
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		};
 
-		stagingBuffer.Map();
-		stagingBuffer.WriteToBuffer((void*)indices.data());
+		stagingBuffer.map();
+		stagingBuffer.write_to_buffer((void*)indices.data());
 
 		m_IndexBuffer = make_scope<VulkanBuffer>(
 			m_Device,
@@ -145,10 +145,10 @@ namespace hdn
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
 		);
 
-		m_Device->CopyBuffer(stagingBuffer.GetBuffer(), m_IndexBuffer->GetBuffer(), bufferSize);
+		m_Device->copy_buffer(stagingBuffer.get_buffer(), m_IndexBuffer->get_buffer(), bufferSize);
 	}
 
-	vector<VkVertexInputBindingDescription> VulkanModel::Vertex::GetBindingDescriptions()
+	vector<VkVertexInputBindingDescription> VulkanModel::Vertex::get_binding_descriptions()
 	{
 		vector<VkVertexInputBindingDescription> bindingDescriptions(1);
 		bindingDescriptions[0].binding = 0;
@@ -157,7 +157,7 @@ namespace hdn
 		return bindingDescriptions;
 	}
 
-	vector<VkVertexInputAttributeDescription> VulkanModel::Vertex::GetAttributeDescriptions()
+	vector<VkVertexInputAttributeDescription> VulkanModel::Vertex::get_attribute_descriptions()
 	{
 		vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 		attributeDescriptions.reserve(4);
@@ -170,7 +170,7 @@ namespace hdn
 		return attributeDescriptions;
 	}
 
-	void VulkanModel::Builder::LoadObjModel(const string& filepath)
+	void VulkanModel::Builder::load_obj_model(const string& filepath)
 	{
 		tinyobj::attrib_t attrib; // Store positions, colors, uvs
 		std::vector<tinyobj::shape_t> shapes; // Index values for each elements
@@ -234,7 +234,7 @@ namespace hdn
 		}
 	}
 
-	void VulkanModel::Builder::LoadFbxModel(const string& filepath)
+	void VulkanModel::Builder::load_fbx_model(const string& filepath)
 	{
 		std::ifstream file(filepath.c_str(), std::ios::binary | std::ios::ate);
 		if (!file)

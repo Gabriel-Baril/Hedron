@@ -7,7 +7,7 @@
 namespace hdn {
 
 	// local callback functions
-	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+	static VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
 		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
@@ -21,7 +21,7 @@ namespace hdn {
 		return VK_FALSE;
 	}
 
-	VkResult CreateDebugUtilsMessengerEXT(
+	VkResult create_debug_utils_messenger_ext(
 		VkInstance instance,
 		const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
 		const VkAllocationCallbacks* pAllocator,
@@ -37,7 +37,7 @@ namespace hdn {
 		}
 	}
 
-	void DestroyDebugUtilsMessengerEXT(
+	void destroy_debug_utils_messenger_ext(
 		VkInstance instance,
 		VkDebugUtilsMessengerEXT debugMessenger,
 		const VkAllocationCallbacks* pAllocator) {
@@ -51,12 +51,12 @@ namespace hdn {
 
 	// class member functions
 	VulkanDevice::VulkanDevice(VulkanWindow& window) : m_Window{ window } {
-		CreateInstance();		// Create the vulkan instance, initialize the vulkan library
-		SetupDebugMessenger();	// Setup validation layer to have more info on errors
-		CreateSurface();		// Create our surface so that we can pass it to GLFW. Connection between the window (from glfw) and the vulkan ability to display results
-		PickPhysicalDevice();	// The physical device is the graphics device capable of working with the vulkan API (for example, a discrete GPU). It is possible for the program to use multiple GPU at the same time.
-		CreateLogicalDevice();  // Describe what feature of our physical device we want to use
-		CreateCommandPool();	// This will help us with command buffer allocation, 
+		create_instance();		// Create the vulkan instance, initialize the vulkan library
+		setup_debug_messenger();	// Setup validation layer to have more info on errors
+		create_surface();		// Create our surface so that we can pass it to GLFW. Connection between the window (from glfw) and the vulkan ability to display results
+		pick_physical_device();	// The physical device is the graphics device capable of working with the vulkan API (for example, a discrete GPU). It is possible for the program to use multiple GPU at the same time.
+		create_logical_device();  // Describe what feature of our physical device we want to use
+		create_command_pool();	// This will help us with command buffer allocation, 
 	}
 
 	VulkanDevice::~VulkanDevice() {
@@ -64,15 +64,15 @@ namespace hdn {
 		vkDestroyDevice(m_Device, nullptr);
 
 		if (enableValidationLayers) {
-			DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr);
+			destroy_debug_utils_messenger_ext(m_Instance, m_DebugMessenger, nullptr);
 		}
 
 		vkDestroySurfaceKHR(m_Instance, m_Surface, nullptr);
 		vkDestroyInstance(m_Instance, nullptr);
 	}
 
-	void VulkanDevice::CreateInstance() {
-		if (enableValidationLayers && !CheckValidationLayerSupport()) {
+	void VulkanDevice::create_instance() {
+		if (enableValidationLayers && !check_validation_layer_support()) {
 			HTHROW(std::runtime_error, "validation layers requested, but not available!");
 		}
 
@@ -88,7 +88,7 @@ namespace hdn {
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		createInfo.pApplicationInfo = &appInfo;
 
-		auto extensions = GetRequiredExtensions();
+		auto extensions = get_required_extensions();
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 		createInfo.ppEnabledExtensionNames = extensions.data();
 
@@ -97,7 +97,7 @@ namespace hdn {
 			createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.size());
 			createInfo.ppEnabledLayerNames = m_ValidationLayers.data();
 
-			PopulateDebugMessengerCreateInfo(debugCreateInfo);
+			populate_debug_messenger_create_info(debugCreateInfo);
 			createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
 		}
 		else {
@@ -109,10 +109,10 @@ namespace hdn {
 			HTHROW(std::runtime_error, "failed to create instance!");
 		}
 
-		HasGflwRequiredInstanceExtensions();
+		has_gflw_required_instance_extensions();
 	}
 
-	void VulkanDevice::PickPhysicalDevice() {
+	void VulkanDevice::pick_physical_device() {
 		uint32_t deviceCount = 0;
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
 		if (deviceCount == 0) {
@@ -123,7 +123,7 @@ namespace hdn {
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
 
 		for (const auto& device : devices) {
-			if (IsDeviceSuitable(device)) {
+			if (is_device_suitable(device)) {
 				m_PhysicalDevice = device;
 				break;
 			}
@@ -137,8 +137,8 @@ namespace hdn {
 		HINFO("Physical Device: {0}", deviceCount);
 	}
 
-	void VulkanDevice::CreateLogicalDevice() {
-		QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
+	void VulkanDevice::create_logical_device() {
+		QueueFamilyIndices indices = find_queue_families(m_PhysicalDevice);
 
 		vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 		set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };
@@ -184,8 +184,8 @@ namespace hdn {
 		vkGetDeviceQueue(m_Device, indices.presentFamily, 0, &m_PresentQueue);
 	}
 
-	void VulkanDevice::CreateCommandPool() {
-		QueueFamilyIndices queueFamilyIndices = FindPhysicalQueueFamilies();
+	void VulkanDevice::create_command_pool() {
+		QueueFamilyIndices queueFamilyIndices = find_physical_queue_families();
 
 		VkCommandPoolCreateInfo poolInfo = {};
 		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -198,27 +198,27 @@ namespace hdn {
 		}
 	}
 
-	void VulkanDevice::CreateSurface() { m_Window.CreateWindowSurface(m_Instance, &m_Surface); }
+	void VulkanDevice::create_surface() { m_Window.create_window_surface(m_Instance, &m_Surface); }
 
-	bool VulkanDevice::IsDeviceSuitable(VkPhysicalDevice device) {
-		QueueFamilyIndices indices = FindQueueFamilies(device);
+	bool VulkanDevice::is_device_suitable(VkPhysicalDevice device) {
+		QueueFamilyIndices indices = find_queue_families(device);
 
-		bool extensionsSupported = CheckDeviceExtensionSupport(device);
+		bool extensionsSupported = check_device_extension_support(device);
 
 		bool swapChainAdequate = false;
 		if (extensionsSupported) {
-			SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(device);
+			SwapChainSupportDetails swapChainSupport = query_swap_chain_support(device);
 			swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 		}
 
 		VkPhysicalDeviceFeatures supportedFeatures;
 		vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
 
-		return indices.IsComplete() && extensionsSupported && swapChainAdequate &&
+		return indices.is_complete() && extensionsSupported && swapChainAdequate &&
 			supportedFeatures.samplerAnisotropy;
 	}
 
-	void VulkanDevice::PopulateDebugMessengerCreateInfo(
+	void VulkanDevice::populate_debug_messenger_create_info(
 		VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
 		createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -227,20 +227,20 @@ namespace hdn {
 		createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
 			VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
 			VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-		createInfo.pfnUserCallback = debugCallback;
+		createInfo.pfnUserCallback = debug_callback;
 		createInfo.pUserData = nullptr;  // Optional
 	}
 
-	void VulkanDevice::SetupDebugMessenger() {
+	void VulkanDevice::setup_debug_messenger() {
 		if (!enableValidationLayers) return;
 		VkDebugUtilsMessengerCreateInfoEXT createInfo;
-		PopulateDebugMessengerCreateInfo(createInfo);
-		if (CreateDebugUtilsMessengerEXT(m_Instance, &createInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS) {
+		populate_debug_messenger_create_info(createInfo);
+		if (create_debug_utils_messenger_ext(m_Instance, &createInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS) {
 			HTHROW(std::runtime_error, "failed to set up debug messenger!");
 		}
 	}
 
-	bool VulkanDevice::CheckValidationLayerSupport() {
+	bool VulkanDevice::check_validation_layer_support() {
 		uint32_t layerCount;
 		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -265,7 +265,7 @@ namespace hdn {
 		return true;
 	}
 
-	vector<const char*> VulkanDevice::GetRequiredExtensions() {
+	vector<const char*> VulkanDevice::get_required_extensions() {
 		uint32_t glfwExtensionCount = 0;
 		const char** glfwExtensions;
 		glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -279,7 +279,7 @@ namespace hdn {
 		return extensions;
 	}
 
-	void VulkanDevice::HasGflwRequiredInstanceExtensions() {
+	void VulkanDevice::has_gflw_required_instance_extensions() {
 		uint32_t extensionCount = 0;
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
 		vector<VkExtensionProperties> extensions(extensionCount);
@@ -293,7 +293,7 @@ namespace hdn {
 		}
 
 		HINFO("Required Extensions:");
-		auto requiredExtensions = GetRequiredExtensions();
+		auto requiredExtensions = get_required_extensions();
 		for (const auto& required : requiredExtensions) {
 			HINFO("\t{0}", required);
 			if (available.find(required) == available.end()) {
@@ -302,7 +302,7 @@ namespace hdn {
 		}
 	}
 
-	bool VulkanDevice::CheckDeviceExtensionSupport(VkPhysicalDevice device) {
+	bool VulkanDevice::check_device_extension_support(VkPhysicalDevice device) {
 		uint32_t extensionCount;
 		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
@@ -322,7 +322,7 @@ namespace hdn {
 		return requiredExtensions.empty();
 	}
 
-	QueueFamilyIndices VulkanDevice::FindQueueFamilies(VkPhysicalDevice device) {
+	QueueFamilyIndices VulkanDevice::find_queue_families(VkPhysicalDevice device) {
 		QueueFamilyIndices indices;
 
 		uint32_t queueFamilyCount = 0;
@@ -343,7 +343,7 @@ namespace hdn {
 				indices.presentFamily = i;
 				indices.presentFamilyHasValue = true;
 			}
-			if (indices.IsComplete()) {
+			if (indices.is_complete()) {
 				break;
 			}
 
@@ -353,7 +353,7 @@ namespace hdn {
 		return indices;
 	}
 
-	SwapChainSupportDetails VulkanDevice::QuerySwapChainSupport(VkPhysicalDevice device) {
+	SwapChainSupportDetails VulkanDevice::query_swap_chain_support(VkPhysicalDevice device) {
 		SwapChainSupportDetails details;
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_Surface, &details.capabilities);
 
@@ -379,7 +379,7 @@ namespace hdn {
 		return details;
 	}
 
-	VkFormat VulkanDevice::FindSupportedFormat(
+	VkFormat VulkanDevice::find_supported_format(
 		const vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
 		for (VkFormat format : candidates) {
 			VkFormatProperties props;
@@ -397,7 +397,7 @@ namespace hdn {
 		return VK_FORMAT_UNDEFINED;
 	}
 
-	uint32_t VulkanDevice::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+	uint32_t VulkanDevice::find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
 		VkPhysicalDeviceMemoryProperties memProperties;
 		vkGetPhysicalDeviceMemoryProperties(m_PhysicalDevice, &memProperties);
 		for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
@@ -410,7 +410,7 @@ namespace hdn {
 		return 0; // Will never reach
 	}
 
-	void VulkanDevice::CreateBuffer(
+	void VulkanDevice::create_buffer(
 		VkDeviceSize size,
 		VkBufferUsageFlags usage,
 		VkMemoryPropertyFlags properties,
@@ -432,7 +432,7 @@ namespace hdn {
 		VkMemoryAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties);
+		allocInfo.memoryTypeIndex = find_memory_type(memRequirements.memoryTypeBits, properties);
 
 		if (vkAllocateMemory(m_Device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
 			HTHROW(std::runtime_error, "failed to allocate vertex buffer memory!");
@@ -441,7 +441,7 @@ namespace hdn {
 		vkBindBufferMemory(m_Device, buffer, bufferMemory, 0);
 	}
 
-	VkCommandBuffer VulkanDevice::BeginSingleTimeCommands() {
+	VkCommandBuffer VulkanDevice::begin_single_time_commands() {
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -459,7 +459,7 @@ namespace hdn {
 		return commandBuffer;
 	}
 
-	void VulkanDevice::EndSingleTimeCommands(VkCommandBuffer commandBuffer) {
+	void VulkanDevice::end_single_time_commands(VkCommandBuffer commandBuffer) {
 		vkEndCommandBuffer(commandBuffer);
 
 		VkSubmitInfo submitInfo{};
@@ -473,8 +473,8 @@ namespace hdn {
 		vkFreeCommandBuffers(m_Device, m_CommandPool, 1, &commandBuffer);
 	}
 
-	void VulkanDevice::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
-		VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
+	void VulkanDevice::copy_buffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+		VkCommandBuffer commandBuffer = begin_single_time_commands();
 
 		VkBufferCopy copyRegion{};
 		copyRegion.srcOffset = 0;  // Optional
@@ -482,12 +482,12 @@ namespace hdn {
 		copyRegion.size = size;
 		vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 
-		EndSingleTimeCommands(commandBuffer);
+		end_single_time_commands(commandBuffer);
 	}
 
-	void VulkanDevice::CopyBufferToImage(
+	void VulkanDevice::copy_buffer_to_image(
 		VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount) {
-		VkCommandBuffer commandBuffer = BeginSingleTimeCommands();
+		VkCommandBuffer commandBuffer = begin_single_time_commands();
 
 		VkBufferImageCopy region{};
 		region.bufferOffset = 0;
@@ -509,10 +509,10 @@ namespace hdn {
 			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			1,
 			&region);
-		EndSingleTimeCommands(commandBuffer);
+		end_single_time_commands(commandBuffer);
 	}
 
-	void VulkanDevice::CreateImageWithInfo(
+	void VulkanDevice::create_image_with_info(
 		const VkImageCreateInfo& imageInfo,
 		VkMemoryPropertyFlags properties,
 		VkImage& image,
@@ -527,7 +527,7 @@ namespace hdn {
 		VkMemoryAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties);
+		allocInfo.memoryTypeIndex = find_memory_type(memRequirements.memoryTypeBits, properties);
 
 		if (vkAllocateMemory(m_Device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
 			HTHROW(std::runtime_error, "failed to allocate image memory!");

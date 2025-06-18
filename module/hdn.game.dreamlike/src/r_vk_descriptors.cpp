@@ -4,7 +4,7 @@ namespace hdn {
 
 	// *************** Descriptor Set Layout Builder *********************
 
-	VulkanDescriptorSetLayout::Builder& VulkanDescriptorSetLayout::Builder::AddBinding(
+	VulkanDescriptorSetLayout::Builder& VulkanDescriptorSetLayout::Builder::add_binding(
 		uint32_t binding,
 		VkDescriptorType descriptorType,
 		VkShaderStageFlags stageFlags,
@@ -19,7 +19,7 @@ namespace hdn {
 		return *this;
 	}
 
-	Scope<VulkanDescriptorSetLayout> VulkanDescriptorSetLayout::Builder::Build() const {
+	Scope<VulkanDescriptorSetLayout> VulkanDescriptorSetLayout::Builder::build() const {
 		return make_scope<VulkanDescriptorSetLayout>(m_Device, m_Bindings);
 	}
 
@@ -39,7 +39,7 @@ namespace hdn {
 		descriptorSetLayoutInfo.pBindings = setLayoutBindings.data();
 
 		if (vkCreateDescriptorSetLayout(
-			m_Device.GetDevice(),
+			m_Device.get_device(),
 			&descriptorSetLayoutInfo,
 			nullptr,
 			&m_DescriptorSetLayout) != VK_SUCCESS) {
@@ -48,28 +48,28 @@ namespace hdn {
 	}
 
 	VulkanDescriptorSetLayout::~VulkanDescriptorSetLayout() {
-		vkDestroyDescriptorSetLayout(m_Device.GetDevice(), m_DescriptorSetLayout, nullptr);
+		vkDestroyDescriptorSetLayout(m_Device.get_device(), m_DescriptorSetLayout, nullptr);
 	}
 
 	// *************** Descriptor Pool Builder *********************
 
-	VulkanDescriptorPool::Builder& VulkanDescriptorPool::Builder::AddPoolSize(
+	VulkanDescriptorPool::Builder& VulkanDescriptorPool::Builder::add_pool_size(
 		VkDescriptorType descriptorType, uint32_t count) {
 		m_PoolSizes.push_back({ descriptorType, count });
 		return *this;
 	}
 
-	VulkanDescriptorPool::Builder& VulkanDescriptorPool::Builder::SetPoolFlags(
+	VulkanDescriptorPool::Builder& VulkanDescriptorPool::Builder::set_pool_flags(
 		VkDescriptorPoolCreateFlags flags) {
 		m_PoolFlags = flags;
 		return *this;
 	}
-	VulkanDescriptorPool::Builder& VulkanDescriptorPool::Builder::SetMaxSets(uint32_t count) {
+	VulkanDescriptorPool::Builder& VulkanDescriptorPool::Builder::set_max_sets(uint32_t count) {
 		m_MaxSets = count;
 		return *this;
 	}
 
-	Scope<VulkanDescriptorPool> VulkanDescriptorPool::Builder::Build() const {
+	Scope<VulkanDescriptorPool> VulkanDescriptorPool::Builder::build() const {
 		return make_scope<VulkanDescriptorPool>(m_Device, m_MaxSets, m_PoolFlags, m_PoolSizes);
 	}
 
@@ -88,18 +88,18 @@ namespace hdn {
 		descriptorPoolInfo.maxSets = maxSets;
 		descriptorPoolInfo.flags = poolFlags;
 
-		if (vkCreateDescriptorPool(m_Device.GetDevice(), &descriptorPoolInfo, nullptr, &m_DescriptorPool) !=
+		if (vkCreateDescriptorPool(m_Device.get_device(), &descriptorPoolInfo, nullptr, &m_DescriptorPool) !=
 			VK_SUCCESS) {
 			HTHROW(std::runtime_error, "failed to create descriptor pool!");
 		}
 	}
 
 	VulkanDescriptorPool::~VulkanDescriptorPool() {
-		vkDestroyDescriptorPool(m_Device.GetDevice(), m_DescriptorPool, nullptr);
+		vkDestroyDescriptorPool(m_Device.get_device(), m_DescriptorPool, nullptr);
 	}
 
 	// TODO: Rename to allocateDescriptorSet
-	bool VulkanDescriptorPool::AllocateDescriptor(
+	bool VulkanDescriptorPool::allocate_descriptor(
 		const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const {
 		VkDescriptorSetAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -110,22 +110,22 @@ namespace hdn {
 		// Might want to create a "DescriptorPoolManager" class that handles this case, and builds
 		// a new pool whenever an old pool fills up. But this is beyond our current scope
 		// A more production ready descriptor abstraction: https://vkguide.dev/docs/extra-chapter/abstracting_descriptors/
-		if (vkAllocateDescriptorSets(m_Device.GetDevice(), &allocInfo, &descriptor) != VK_SUCCESS) {
+		if (vkAllocateDescriptorSets(m_Device.get_device(), &allocInfo, &descriptor) != VK_SUCCESS) {
 			return false;
 		}
 		return true;
 	}
 
-	void VulkanDescriptorPool::FreeDescriptors(vector<VkDescriptorSet>& descriptors) const {
+	void VulkanDescriptorPool::free_descriptors(vector<VkDescriptorSet>& descriptors) const {
 		vkFreeDescriptorSets(
-			m_Device.GetDevice(),
+			m_Device.get_device(),
 			m_DescriptorPool,
 			static_cast<uint32_t>(descriptors.size()),
 			descriptors.data());
 	}
 
-	void VulkanDescriptorPool::ResetPool() {
-		vkResetDescriptorPool(m_Device.GetDevice(), m_DescriptorPool, 0);
+	void VulkanDescriptorPool::reset_pool() {
+		vkResetDescriptorPool(m_Device.get_device(), m_DescriptorPool, 0);
 	}
 
 	// *************** Descriptor Writer *********************
@@ -134,7 +134,7 @@ namespace hdn {
 		: m_SetLayout{ setLayout }, m_Pool{ pool } {
 	}
 
-	VulkanDescriptorWriter& VulkanDescriptorWriter::WriteBuffer(
+	VulkanDescriptorWriter& VulkanDescriptorWriter::write_buffer(
 		uint32_t binding, VkDescriptorBufferInfo* bufferInfo) {
 		assert(m_SetLayout.m_Bindings.count(binding) == 1 && "Layout does not contain specified binding");
 
@@ -155,7 +155,7 @@ namespace hdn {
 		return *this;
 	}
 
-	VulkanDescriptorWriter& VulkanDescriptorWriter::WriteImage(
+	VulkanDescriptorWriter& VulkanDescriptorWriter::write_image(
 		uint32_t binding, VkDescriptorImageInfo* imageInfo) {
 		assert(m_SetLayout.m_Bindings.count(binding) == 1 && "Layout does not contain specified binding");
 
@@ -176,19 +176,19 @@ namespace hdn {
 		return *this;
 	}
 
-	bool VulkanDescriptorWriter::Build(VkDescriptorSet& set) {
-		bool success = m_Pool.AllocateDescriptor(m_SetLayout.GetDescriptorSetLayout(), set);
+	bool VulkanDescriptorWriter::build(VkDescriptorSet& set) {
+		bool success = m_Pool.allocate_descriptor(m_SetLayout.get_descriptor_set_layout(), set);
 		if (!success) {
 			return false;
 		}
-		Overwrite(set);
+		overwrite(set);
 		return true;
 	}
 
-	void VulkanDescriptorWriter::Overwrite(VkDescriptorSet& set) {
+	void VulkanDescriptorWriter::overwrite(VkDescriptorSet& set) {
 		for (auto& write : m_Writes) {
 			write.dstSet = set;
 		}
-		vkUpdateDescriptorSets(m_Pool.m_Device.GetDevice(), static_cast<u32>(m_Writes.size()), m_Writes.data(), 0, nullptr);
+		vkUpdateDescriptorSets(m_Pool.m_Device.get_device(), static_cast<u32>(m_Writes.size()), m_Writes.data(), 0, nullptr);
 	}
 }

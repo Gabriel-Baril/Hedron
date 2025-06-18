@@ -18,8 +18,8 @@ namespace hdn
 		{
 		}
 
-		void Init();
-		void OnUpdate(f32 dt);
+		void init();
+		void on_update(f32 dt);
 	private:
 		IdeationParser m_Parser;
 		vector<Ideation> m_Ideations;

@@ -4,7 +4,7 @@
 
 namespace hdn
 {
-	void UpdateTransformSystem::Update(FrameInfo& frameInfo)
+	void UpdateTransformSystem::update(FrameInfo& frameInfo)
 	{
 		auto query = frameInfo.scene->World()->query<TransformComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC) {
@@ -13,16 +13,16 @@ namespace hdn
 			// 	return;
 			// }
 
-			transformC.worldMatrix = transformC.Mat4();
+			transformC.worldMatrix = transformC.to_mat();
 			if (e.parent())
 			{
 				auto parent = e.parent();
 				if (parent.has<TransformComponent>()) {
-					transformC.worldMatrix = parent.get<TransformComponent>()->Mat4() * transformC.worldMatrix;
+					transformC.worldMatrix = parent.get<TransformComponent>()->to_mat() * transformC.worldMatrix;
 				}
 			}
 
-			transformC.ClearChange();
+			transformC.clear_change();
 		});
 	}
 }

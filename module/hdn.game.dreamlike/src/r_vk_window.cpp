@@ -5,7 +5,7 @@ namespace hdn
 	VulkanWindow::VulkanWindow(u32 width, u32 height, const string& name)
 		: m_Width{ width }, m_Height{ height }, m_WindowName{ name }
 	{
-		InitWindow();
+		init_window();
 	}
 
 	VulkanWindow::~VulkanWindow()
@@ -14,12 +14,12 @@ namespace hdn
 		glfwTerminate();
 	}
 
-	bool VulkanWindow::ShouldClose()
+	bool VulkanWindow::should_close()
 	{
 		return glfwWindowShouldClose(m_Window);
 	}
 
-	void VulkanWindow::CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface)
+	void VulkanWindow::create_window_surface(VkInstance instance, VkSurfaceKHR* surface)
 	{
 		if (glfwCreateWindowSurface(instance, m_Window, nullptr, surface) != VK_SUCCESS)
 		{
@@ -27,7 +27,7 @@ namespace hdn
 		}
 	}
 
-	void VulkanWindow::InitWindow()
+	void VulkanWindow::init_window()
 	{
 		glfwInit();
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -35,10 +35,10 @@ namespace hdn
 
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_WindowName.c_str(), nullptr, nullptr);
 		glfwSetWindowUserPointer(m_Window, this);
-		glfwSetFramebufferSizeCallback(m_Window, VulkanWindow::FramebufferResizeCallback);
+		glfwSetFramebufferSizeCallback(m_Window, VulkanWindow::framebuffer_resize_callback);
 	}
 
-	void VulkanWindow::FramebufferResizeCallback(GLFWwindow* window, int width, int height)
+	void VulkanWindow::framebuffer_resize_callback(GLFWwindow* window, int width, int height)
 	{
 		auto hdnWindow = reinterpret_cast<VulkanWindow*>(glfwGetWindowUserPointer(window));
 		hdnWindow->m_FramebufferResized = true;
