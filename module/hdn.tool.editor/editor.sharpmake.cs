@@ -68,7 +68,6 @@ public class EditorProject : BaseCppProject
         conf.AddPublicDependency<ImguiProject>(target);
         conf.AddPublicDependency<FlecsProject>(target);
 
-        conf.AddPublicDependency<ConfigProject>(target);
         conf.AddPublicDependency<PugiXMLProject>(target);
         conf.AddPublicDependency<TinyProcessLibraryProject>(target);
         conf.AddPublicDependency<INIHProject>(target);

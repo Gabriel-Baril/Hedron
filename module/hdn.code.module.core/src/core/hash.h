@@ -12,6 +12,14 @@ namespace hdn
 	h64 hash_generate(const void* buffer, u64 length, u64 seed = 0);
 	h64 hash_generate(h64 typeHash, const void* buffer, u64 length, u64 seed = 0);
 	
+
+	// from: https://stackoverflow.com/a/57595105
+	template <typename T, typename... Rest>
+	void hash_merge(std::size_t& seed, const T& v, const Rest&... rest) {
+		seed ^= std::hash<T>{}(v)+0x9e3779b9 + (seed << 6) + (seed >> 2);
+		(hash_merge(seed, rest), ...);
+	};
+
 	template<typename T>
 	h64 hash_generate_from_type()
 	{

@@ -2,7 +2,7 @@
 
 #include "core/stl/unordered_map.h"
 
-#include "utils.h"
+#include "core/hash.h"
 
 #include <tinyobjloader/tiny_obj_loader.h>
 
@@ -19,7 +19,7 @@ namespace std
 		size_t operator()(const hdn::VulkanModel::Vertex& vertex) const
 		{
 			size_t seed = 0;
-			hdn::HashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+			hdn::hash_merge(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
 			return seed;
 		}
 	};

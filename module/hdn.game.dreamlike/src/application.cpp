@@ -26,6 +26,7 @@
 
 #include "hobj/hobj_registry.h"
 #include "hobj/scene/scene_hobj.h"
+#include "core/utils.h"
 
 namespace hdn
 {
@@ -187,11 +188,7 @@ namespace hdn
 
 	void Application::LoadGameObjects()
 	{
-		HScene* scene = HObjectRegistry::get().get<HScene>("scene_01");
-
-
-
-		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
+		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, get_data_path("models/flat_vase.obj"));
 
 		auto flatVaseGroup = HDNGameObject::CreateGameObject(m_EcsWorld, "Flat Vase Group");
 		TransformComponent transformC;
@@ -222,7 +219,7 @@ namespace hdn
 		}
 
 		{
-			hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/quad.obj");
+			hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, get_data_path("models/quad.obj"));
 			auto floor = HDNGameObject::CreateGameObject(m_EcsWorld, "floor");
 
 			TransformComponent transformC;
@@ -245,7 +242,7 @@ namespace hdn
 		}
 
 		{
-			hdnModel = VulkanModel::CreateModelFromFbxFile(&m_Device, "models/cube.fbx"); // models/cube.fbx
+			hdnModel = VulkanModel::CreateModelFromFbxFile(&m_Device, get_data_path("models/cube.fbx")); // models/cube.fbx
 			auto pot = HDNGameObject::CreateGameObject(m_EcsWorld, "pot");
 
 			TransformComponent transformC;

@@ -40,7 +40,6 @@ public class AllSolution : Solution
 
         conf.AddProject<ArchiveLibProject>(target);
         conf.AddProject<AsyncProject>(target);
-        conf.AddProject<ConfigProject>(target);
         conf.AddProject<CoreProject>(target);
         conf.AddProject<CoreProjectTest>(target);
         conf.AddProject<HobjProject>(target);

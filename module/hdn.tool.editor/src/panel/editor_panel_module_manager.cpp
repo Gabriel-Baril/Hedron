@@ -7,7 +7,7 @@
 
 #include "fmt/core.h"
 
-#include "config/config.h"
+#include "core/config/config.h"
 
 
 namespace hdn

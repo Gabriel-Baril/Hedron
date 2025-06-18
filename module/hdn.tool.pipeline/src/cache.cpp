@@ -1,7 +1,7 @@
 #include "cache.h"
 #include "core/core_filesystem.h"
 
-#include "config/config.h"
+#include "core/config/config.h"
 
 namespace hdn
 {

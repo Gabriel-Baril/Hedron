@@ -2,7 +2,7 @@
 #include "core/core_filesystem.h"
 #include "core/stl/vector.h"
 
-#include "config/config.h"
+#include "core/config/config.h"
 
 namespace hdn
 {

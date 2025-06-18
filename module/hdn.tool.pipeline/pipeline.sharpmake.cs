@@ -22,7 +22,6 @@ public class PipelineProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<CoreProject>(target);
-        conf.AddPublicDependency<ConfigProject>(target);
         conf.AddPublicDependency<PugiXMLProject>(target);
         conf.AddPublicDependency<FlecsProject>(target);
         conf.AddPublicDependency<HobjProject>(target);

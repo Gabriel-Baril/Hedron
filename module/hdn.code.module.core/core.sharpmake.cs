@@ -30,5 +30,6 @@ public class CoreProject : BaseCppProject
         conf.AddPublicDependency<EASTLProject>(target);
         conf.AddPublicDependency<XXHashProject>(target);
         conf.AddPublicDependency<TLSFProject>(target);
+        conf.AddPublicDependency<INIHProject>(target);
     }
 }

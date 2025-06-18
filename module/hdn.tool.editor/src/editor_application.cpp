@@ -22,6 +22,7 @@
 
 #include "input/input.h"
 #include "editor.h"
+#include "core/utils.h"
 
 namespace hdn
 {
@@ -229,7 +230,7 @@ namespace hdn
 
 	void EditorApplication::load_game_objects()
 	{
-		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/flat_vase.obj");
+		Ref<VulkanModel> hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, get_data_path("models/flat_vase.obj"));
 
 		{
 			auto flatVaseGroup = m_ActiveScene->Create("Flat Vase Group");
@@ -262,7 +263,7 @@ namespace hdn
 		}
 
 		{
-			hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, "models/quad.obj");
+			hdnModel = VulkanModel::CreateModelFromObjFile(&m_Device, get_data_path("models/quad.obj"));
 			auto floor = m_ActiveScene->Create("floor");
 
 			TransformComponent transformC;
@@ -285,7 +286,7 @@ namespace hdn
 		}
 
 		{
-			hdnModel = VulkanModel::CreateModelFromFbxFile(&m_Device, "models/cube.fbx"); // models/cube.fbx
+			hdnModel = VulkanModel::CreateModelFromFbxFile(&m_Device, get_data_path("models/cube.fbx")); // models/cube.fbx
 			auto cube = m_ActiveScene->Create("cube");
 
 			TransformComponent transformC;
