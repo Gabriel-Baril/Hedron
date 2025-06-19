@@ -5,9 +5,9 @@
 
 namespace hdn
 {
-	HDNGameObject HDNGameObject::make_point_light(flecs::world& ecs, f32 intensity, f32 radius, vec3f32 color)
+	Entity Entity::make_point_light(flecs::world& ecs, f32 intensity, f32 radius, vec3f32 color)
 	{
-		HDNGameObject gameObj = HDNGameObject::create_game_object(ecs);
+		Entity gameObj = ecs.entity();
 		
 		TransformComponent transformC{};
 		transformC.scale.x = radius;

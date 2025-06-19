@@ -31,8 +31,7 @@ namespace hdn
 		int frameIndex;
 		float frameTime;
 		VkCommandBuffer commandBuffer;
-		HDNCamera* camera;
 		VkDescriptorSet globalDescriptorSet;
-		flecs::world* ecsWorld;
+		GlobalUbo* ubo;
 	};
 }

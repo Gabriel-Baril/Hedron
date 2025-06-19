@@ -14,11 +14,11 @@
 #include "panel/editor_panel.h"
 
 // ---
-#include "ecs/systems/simple_render_system.h"
-#include "ecs/systems/point_light_system.h"
-#include "ecs/systems/physics_gameobject_system.h"
-#include "ecs/systems/update_transform_system.h"
-#include "ecs/systems/update_script_system.h"
+#include "systems/simple_render_system.h"
+#include "systems/point_light_system.h"
+#include "systems/physics_gameobject_system.h"
+#include "systems/update_transform_system.h"
+#include "systems/update_script_system.h"
 #include "r_vk_imgui.h"
 // ---
 
@@ -78,9 +78,8 @@ namespace hdn
 		// Order of declarations matters
 		Scope<VulkanDescriptorPool> m_GlobalPool{}; // System that require descriptors only relevant to their work should create their own HDNDescriptorPool
 
-		PhysicsWorld m_PhysicsWorld;
+		PhysicsWorldSystem m_PhysicsWorld;
 
-		// flecs::world m_EcsWorld; // TODO: Replace
 		Ref<Scene> m_ActiveScene;
 
 		vector<Ref<IEditorPanel>> m_Panels;

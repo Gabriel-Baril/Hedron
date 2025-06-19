@@ -11,7 +11,7 @@ namespace hdn
 	{
 	public:
 		template<typename T, typename... Args>
-		IApplicationLayer *Register( Args&&... args )
+		IApplicationLayer *register_layer( Args&&... args )
 		{
 			IApplicationLayer *layer = create_ref<T>( std::forward<Args>( args )... );
 			m_ApplicationLayerStack.layer_push( layer );
@@ -19,12 +19,12 @@ namespace hdn
 		}
 
 		template<typename T>
-		void Unregister()
+		void unregister_layer()
 		{
 			// TODO: Unregister layer of the same type (The layer type is defined by the class type)
 		}
 
-		void Unregister( int id )
+		void unregister_layer( int id )
 		{
 			// TODO: Unregister layer by it's id
 		}

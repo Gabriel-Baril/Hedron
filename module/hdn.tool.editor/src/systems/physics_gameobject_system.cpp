@@ -2,12 +2,12 @@
 
 #include "PxPhysicsAPI.h"
 
-#include "hobj/scene/transform_component.h"
+#include "ecs/components/transform_component.h"
 #include "ecs/components/physics_component.h"
 
 namespace hdn
 {
-	glm::vec3 QuaternionToEulerAngles(const glm::quat& q) {
+	glm::vec3 quaternion_to_euler_angles(const glm::quat& q) {
 		glm::vec3 euler;
 
 		// Yaw (rotation around Y-axis)
@@ -33,7 +33,7 @@ namespace hdn
 	void PhysicsGameObjectSystem::update(FrameInfo& frameInfo)
 	{
 
-		auto query = frameInfo.ecsWorld->query<TransformComponent, PhysicsComponent>();
+		auto query = frameInfo.scene->World()->query<TransformComponent, PhysicsComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, PhysicsComponent& physicsC) {
 			if (physicsC.physicsActor == nullptr)
 			{
@@ -43,7 +43,7 @@ namespace hdn
 			physx::PxTransform pxTransform = physicsC.physicsActor->getGlobalPose();
 			transformC.position = glm::vec3(pxTransform.p.x, pxTransform.p.y, -pxTransform.p.z);
 			const glm::quat rotQuat = glm::quat(pxTransform.q.w, pxTransform.q.x, pxTransform.q.y, pxTransform.q.z);
-			transformC.rotation = QuaternionToEulerAngles(rotQuat);
+			transformC.rotation = quaternion_to_euler_angles(rotQuat);
 		});
 	}
 }

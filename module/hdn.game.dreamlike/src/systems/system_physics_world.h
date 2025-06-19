@@ -3,9 +3,13 @@
 #include "core/core.h"
 #include <PxPhysicsAPI.h>
 
+#include "core/application/system.h"
+
 namespace hdn
 {
-	class PhysicsWorld
+	inline static constexpr const char* NAME_PHYSICS_WORLD_SYSTEM = "PhysicsWorldSystem";
+
+	class PhysicsWorldSystem : public ISystem
 	{
 	public:
 		void init();

@@ -1,11 +1,12 @@
-#include "physics_world.h"
+#include "system_physics_world.h"
 
 using namespace physx;
 
 namespace hdn
 {
-	void PhysicsWorld::init()
+	void PhysicsWorldSystem::init()
 	{
+		HINFO("physicsWorld->init");
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_AllocatorCallback, m_ErrorCallback);
 		m_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale{}, true);
 		m_Dispatcher = PxDefaultCpuDispatcherCreate(2);
@@ -18,7 +19,7 @@ namespace hdn
 		m_Material = m_Physics->createMaterial(0.5f, 0.5f, 0.5f);
 	}
 
-	PxRigidDynamic* PhysicsWorld::create_dynamic_actor(const PxVec3& position, const PxVec3& dimension)
+	PxRigidDynamic* PhysicsWorldSystem::create_dynamic_actor(const PxVec3& position, const PxVec3& dimension)
 	{
 		PxTransform transform(position);
 		PxShape* shape = m_Physics->createShape(PxBoxGeometry(dimension), *m_Material);
@@ -30,7 +31,7 @@ namespace hdn
 		return dynamicActor;
 	}
 
-	physx::PxRigidStatic* PhysicsWorld::create_static_actor(const physx::PxVec3& position, const physx::PxVec3& dimension)
+	physx::PxRigidStatic* PhysicsWorldSystem::create_static_actor(const physx::PxVec3& position, const physx::PxVec3& dimension)
 	{
 		PxTransform transform(position);
 		PxShape* shape = m_Physics->createShape(PxBoxGeometry(dimension), *m_Material);
@@ -41,13 +42,13 @@ namespace hdn
 		return staticActor;
 	}
 
-	void PhysicsWorld::update(f32 deltaTime)
+	void PhysicsWorldSystem::update(f32 deltaTime)
 	{
 		m_Scene->simulate(deltaTime);
 		m_Scene->fetchResults(true);
 	}
 
-	void PhysicsWorld::shutdown()
+	void PhysicsWorldSystem::shutdown()
 	{
 		m_Material->release();
 		m_Scene->release();

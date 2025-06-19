@@ -1,12 +1,12 @@
-#include "update_transform_system.h"
+#include "system_update_transform.h"
 
 #include "hobj/scene/transform_component.h"
 
 namespace hdn
 {
-	void UpdateTransformSystem::update(FrameInfo& frameInfo)
+	void UpdateTransformSystem::update(flecs::world world)
 	{
-		auto query = frameInfo.ecsWorld->query<TransformComponent>();
+		auto query = world.query<TransformComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC) {
 			transformC.worldMatrix = transformC.to_mat();
 			if (e.parent())

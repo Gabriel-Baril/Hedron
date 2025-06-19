@@ -8,11 +8,13 @@
 #include "frame_info.h"
 
 #include "core/stl/vector.h"
+#include "core/application/system.h"
 
 namespace hdn
 {
+	inline static constexpr const char* NAME_SIMPLE_RENDER_SYSTEM = "SimpleRenderSystem";
 
-	class SimpleRenderSystem
+	class SimpleRenderSystem : public ISystem
 	{
 	public:
 		SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
@@ -20,7 +22,7 @@ namespace hdn
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-		void render_game_objects(FrameInfo& frameInfo);
+		void render(FrameInfo& frameInfo, flecs::world world);
 	private:
 		void create_pipeline_layout(VkDescriptorSetLayout globalSetLayout);
 		void create_pipeline(VkRenderPass renderPass);

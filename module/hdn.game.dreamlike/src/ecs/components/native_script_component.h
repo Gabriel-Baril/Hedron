@@ -6,7 +6,7 @@
 
 namespace hdn
 {
-	class HDNGameObject;
+	class Entity;
 
 	class INativeScript
 	{

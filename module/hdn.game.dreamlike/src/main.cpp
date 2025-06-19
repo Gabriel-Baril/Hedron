@@ -13,11 +13,9 @@ int main()
 	registry.add_source<FilesystemObjectSource>("local", "objects");
 	registry.populate();
 
-	hdn::Application app{};
-
 	try
 	{
-		app.run();
+		hdn::Application::get().run();
 	}
 	catch (const std::exception& e)
 	{

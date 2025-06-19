@@ -1,4 +1,4 @@
-#include "point_light_system.h"
+#include "system_point_light.h"
 
 #include "core/core.h"
 #include "core/stl/map.h"
@@ -9,6 +9,9 @@
 
 #include <glm/gtc/constants.hpp>
 #include "core/utils.h"
+
+#include "application.h"
+#include "system_camera.h"
 
 namespace hdn
 {
@@ -69,32 +72,34 @@ namespace hdn
 		m_Pipeline = make_scope<VulkanPipeline>(m_Device, get_data_path("shaders/point_light.vert.spv"), get_data_path("shaders/point_light.frag.spv"), pipelineConfig);
 	}
 
-	void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& ubo)
+	void PointLightSystem::update(FrameInfo& frameInfo, flecs::world world)
 	{
 		auto rotateLight = glm::rotate(mat4f32(1.0f), frameInfo.frameTime, { 0.0f, -1.0f, 0.0f });
 
 		int lightIndex = 0;
-		auto query = frameInfo.ecsWorld->query<TransformComponent, ColorComponent, PointLightComponent>();
+		auto query = world.query<TransformComponent, ColorComponent, PointLightComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, ColorComponent& colorC, PointLightComponent& pointLightC) {
 			assert(lightIndex < MAX_LIGHTS && "Point Light exceed maximum specified");
 			transformC.position = vec3f32(rotateLight * vec4f32(transformC.position, 1.0f));
 
 			// copy light to ubo
-			ubo.pointLights[lightIndex].position = vec4f32(transformC.position, 1.0f);
-			ubo.pointLights[lightIndex].color = vec4f32(colorC.color, pointLightC.lightIntensity);
+			frameInfo.ubo->pointLights[lightIndex].position = vec4f32(transformC.position, 1.0f);
+			frameInfo.ubo->pointLights[lightIndex].color = vec4f32(colorC.color, pointLightC.lightIntensity);
 			lightIndex += 1;
 		});
-		ubo.numLights = lightIndex;
+		frameInfo.ubo->numLights = lightIndex;
 	}
 
-	void PointLightSystem::render(FrameInfo& frameInfo)
+	void PointLightSystem::render(FrameInfo& frameInfo, flecs::world world)
 	{
 		// Sort Lights
+		Ref<CameraSystem> cameraSystem = Application::get_system<CameraSystem>(NAME_CAMERA_SYSTEM);
+
 		map<float, flecs::entity> sorted;
-		auto query = frameInfo.ecsWorld->query<TransformComponent, PointLightComponent>();
-		query.each([&](flecs::entity e, TransformComponent& transformC, PointLightComponent& pointLightC) {
+		auto query = world.query<TransformComponent, PointLightComponent>();
+		query.each([&cameraSystem, &sorted](flecs::entity e, TransformComponent& transformC, PointLightComponent& pointLightC) {
 			// Calculate Distance
-			auto offset = frameInfo.camera->get_position() - transformC.position;
+			auto offset = cameraSystem->get_camera_position() - transformC.position;
 			float distSquared = glm::dot(offset, offset);
 			sorted[distSquared] = e;
 		});

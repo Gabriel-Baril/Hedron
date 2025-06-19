@@ -5,7 +5,7 @@
 
 namespace hdn
 {
-	class PhysicsWorld
+	class PhysicsWorldSystem
 	{
 	public:
 		void init();

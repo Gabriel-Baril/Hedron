@@ -3,8 +3,6 @@
 
 #include "r_vk_device.h"
 #include "r_vk_pipeline.h"
-#include "gameobject.h"
-#include "camera.h"
 #include "frame_info.h"
 
 #include "core/stl/vector.h"
@@ -12,15 +10,20 @@
 namespace hdn
 {
 
-	class PointLightSystem
+	class SimpleRenderSystem
 	{
 	public:
-		PointLightSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
-		virtual ~PointLightSystem();
-		PointLightSystem(const PointLightSystem&) = delete;
-		PointLightSystem& operator=(const PointLightSystem&) = delete;
+		SimpleRenderSystem();
+		SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+		virtual ~SimpleRenderSystem();
 
-		void update(FrameInfo& frameInfo, GlobalUbo& ubo);
+		void Init(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+		{
+			m_Device = device;
+			create_pipeline_layout(globalSetLayout);
+			create_pipeline(renderPass);
+		}
+
 		void render(FrameInfo& frameInfo);
 	private:
 		void create_pipeline_layout(VkDescriptorSetLayout globalSetLayout);

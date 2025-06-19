@@ -194,7 +194,7 @@ namespace hdn
 				// Order Here Matters
 				m_ViewportPanel->transition_image(commandBuffer, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 				
-				m_SimpleRenderSystem.render_game_objects(frameInfo);
+				m_SimpleRenderSystem.render(frameInfo);
 				m_PointLightSystem.render(frameInfo);
 
 				m_ViewportPanel->transition_image(commandBuffer, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);

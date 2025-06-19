@@ -3,7 +3,7 @@
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
 
-#include "hobj/scene/transform_component.h"
+#include "ecs/components/transform_component.h"
 #include "ecs/components/model_component.h"
 #include "core/utils.h"
 
@@ -15,11 +15,13 @@ namespace hdn
 		mat4f32 normalMatrix{ 1.0f };
 	};
 
-	SimpleRenderSystem::SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
-		: m_Device{ device }
+	SimpleRenderSystem::SimpleRenderSystem()
 	{
-		create_pipeline_layout(globalSetLayout);
-		create_pipeline(renderPass);
+	}
+
+	SimpleRenderSystem::SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+	{
+		Init(device, renderPass, globalSetLayout);
 	}
 
 	SimpleRenderSystem::~SimpleRenderSystem()
@@ -61,7 +63,7 @@ namespace hdn
 		m_Pipeline = make_scope<VulkanPipeline>(m_Device, get_data_path("shaders/simple_shader.vert.spv"), get_data_path("shaders/simple_shader.frag.spv"), pipelineConfig);
 	}
 
-	void SimpleRenderSystem::render_game_objects(FrameInfo& frameInfo)
+	void SimpleRenderSystem::render(FrameInfo& frameInfo)
 	{
 		m_Pipeline->bind(frameInfo.commandBuffer);
 
@@ -74,7 +76,7 @@ namespace hdn
 			0, nullptr
 		); // Low frequency descriptor sets needs to occupy the lowest index
 
-		auto query = frameInfo.ecsWorld->query<TransformComponent, ModelComponent>();
+		auto query = frameInfo.scene->World()->query<TransformComponent, ModelComponent>();
 		query.each([&](flecs::entity e, TransformComponent& transformC, ModelComponent& modelC) {
 
 			SimplePushConstantData push{};
