@@ -3,7 +3,7 @@
 #include "editor_panel.h"
 #include <vulkan/vulkan.h>
 #include "imgui.h"
-#include "r_vk_swapchain.h"
+#include "gfx/r_vk_swapchain.h"
 
 #include "core/stl/vector.h"
 

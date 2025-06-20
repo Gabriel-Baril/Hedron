@@ -53,5 +53,7 @@ public class AllSolution : Solution
         conf.AddProject<DreamlikeProject>(target);
         conf.AddProject<ArchiveProject>(target);
         conf.AddProject<EditorProject>(target);
+
+        conf.AddProject<DummyProject>(target);
     }
 }

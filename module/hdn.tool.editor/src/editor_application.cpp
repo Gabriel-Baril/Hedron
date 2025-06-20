@@ -15,7 +15,7 @@
 #include "panel/editor_panel_performance.h"
 #include "panel/editor_panel_inspector.h"
 
-#include "r_vk_buffer.h"
+#include "gfx/r_vk_buffer.h"
 
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>

@@ -1,0 +1,6 @@
+[module]
+Version=0.1.0
+Author=gbaril
+Source=Internal
+Semantic=Game
+Kind=Code

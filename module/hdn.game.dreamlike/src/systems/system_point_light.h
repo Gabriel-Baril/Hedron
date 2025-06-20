@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "r_vk_device.h"
-#include "r_vk_pipeline.h"
+#include "gfx/r_vk_device.h"
+#include "gfx/r_vk_pipeline.h"
 #include "gameobject.h"
 #include "camera.h"
 #include "frame_info.h"

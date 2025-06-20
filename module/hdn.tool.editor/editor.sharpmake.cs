@@ -21,15 +21,6 @@ public class EditorProject : BaseCppProject
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
-
-        string vulkanSDK = System.Environment.GetEnvironmentVariable(Constants.VULKAN_SDK_ENV);
-        if (string.IsNullOrEmpty(vulkanSDK))
-        {
-            throw new System.Exception("VULKAN SDK not found!");
-        }
-        conf.IncludePaths.Add(Path.Combine(vulkanSDK, "Include"));
-        conf.LibraryPaths.Add(Path.Combine(vulkanSDK, "Lib"));
-        conf.LibraryFiles.Add("vulkan-1.lib");
         
         string physxSDK = System.Environment.GetEnvironmentVariable(Constants.PHYSX_SDK_ENV);
         if (string.IsNullOrEmpty(physxSDK))
@@ -37,7 +28,6 @@ public class EditorProject : BaseCppProject
             throw new System.Exception("PHYSX SDK not found!");
         }
         conf.IncludePaths.Add(Path.Combine(physxSDK, "include"));
-        conf.LibraryPaths.Add(Path.Combine(physxSDK, "bin"));
 
         if (target.Platform == Platform.win32 || target.Platform == Platform.win64)
         {
@@ -67,6 +57,7 @@ public class EditorProject : BaseCppProject
         conf.AddPublicDependency<GLFWProject>(target);
         conf.AddPublicDependency<ImguiProject>(target);
         conf.AddPublicDependency<FlecsProject>(target);
+        conf.AddPublicDependency<GfxProject>(target);
 
         conf.AddPublicDependency<PugiXMLProject>(target);
         conf.AddPublicDependency<TinyProcessLibraryProject>(target);

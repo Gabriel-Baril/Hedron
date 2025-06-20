@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include "r_vk_device.h"
-#include "r_vk_window.h"
-#include "r_vk_renderer.h"
-#include "r_vk_descriptors.h"
+#include "gfx/r_vk_device.h"
+#include "gfx/r_vk_window.h"
+#include "gfx/r_vk_renderer.h"
+#include "gfx/r_vk_descriptors.h"
 
 #include "physics/physics_world.h"
 #include "flecs/flecs.h"
@@ -19,7 +19,7 @@
 #include "systems/physics_gameobject_system.h"
 #include "systems/update_transform_system.h"
 #include "systems/update_script_system.h"
-#include "r_vk_imgui.h"
+#include "gfx/r_vk_imgui.h"
 // ---
 
 #include "editor_camera.h"

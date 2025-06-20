@@ -5,7 +5,6 @@
 #include "core/stl/vector.h"
 
 namespace hdn {
-
 	struct SwapChainSupportDetails
 	{
 		VkSurfaceCapabilitiesKHR capabilities{};
@@ -107,4 +106,5 @@ namespace hdn {
 		const vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 		const vector<const char*> m_DeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	};
+
 }

@@ -1,11 +1,10 @@
-
 #pragma once
 
-#include "r_vk_device.h"
-#include "r_vk_window.h"
+#include "gfx/r_vk_device.h"
+#include "gfx/r_vk_window.h"
 #include "gameobject.h"
-#include "r_vk_renderer.h"
-#include "r_vk_descriptors.h"
+#include "gfx/r_vk_renderer.h"
+#include "gfx/r_vk_descriptors.h"
 
 #include "scene.h"
 
@@ -16,6 +15,8 @@
 
 namespace hdn
 {
+	class VulkanWindow;
+
 	class Application : public IApplication
 	{
 	public:
@@ -55,10 +56,16 @@ namespace hdn
 		VulkanDevice m_Device{ m_Window };
 		VulkanRenderer m_Renderer{ &m_Window, &m_Device };
 		Scope<VulkanDescriptorSetLayout> m_GlobalSetLayout;
+		vector<Scope<VulkanBuffer>> m_UboBuffers{ VulkanSwapChain::MAX_FRAMES_IN_FLIGHT };
 
 		// Order of declarations matters
 		Scope<VulkanDescriptorPool> m_GlobalPool{}; // System that require descriptors only relevant to their work should create their own HDNDescriptorPool
 		vector<VkDescriptorSet> m_GlobalDescriptorSets{ VulkanSwapChain::MAX_FRAMES_IN_FLIGHT };
+
+#if USING(HDN_DEBUG)
+		Scope<VulkanDescriptorPool> m_ImguiDescriptorPool;
+		QueueFamilyIndices m_QueueFamilyIndices;
+#endif
 
 		Ref<RuntimeScene> m_Scene;
 

@@ -9,12 +9,12 @@
 #include "systems/system_update_transform.h"
 #include "systems/system_update_script.h"
 #include "systems/system_physics_world.h"
+#include "systems/system_imgui.h"
 
 #include "ecs/scripts/script_simple_log.h"
 #include "ecs/scripts/script_rotate_z.h"
 
-#include "r_vk_imgui.h"
-#include "r_vk_buffer.h"
+#include "gfx/r_vk_buffer.h"
 
 #include "core/core.h"
 #include <glm/gtc/constants.hpp>
@@ -88,17 +88,16 @@ namespace hdn
 
 	void Application::run()
 	{
-		vector<Scope<VulkanBuffer>> uboBuffers(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
-		for (int i = 0;i < uboBuffers.size(); i++)
+		for (int i = 0;i < m_UboBuffers.size(); i++)
 		{
-			uboBuffers[i] = make_scope<VulkanBuffer>(
+			m_UboBuffers[i] = make_scope<VulkanBuffer>(
 				&m_Device,
 				sizeof(GlobalUbo),
 				1,
 				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
 			);
-			uboBuffers[i]->map();
+			m_UboBuffers[i]->map();
 		}
 
 		m_GlobalSetLayout = VulkanDescriptorSetLayout::Builder(m_Device)
@@ -107,7 +106,7 @@ namespace hdn
 
 		for (int i = 0;i < m_GlobalDescriptorSets.size(); i++)
 		{
-			auto bufferInfo = uboBuffers[i]->build_descriptor_info();
+			auto bufferInfo = m_UboBuffers[i]->build_descriptor_info();
 			VulkanDescriptorWriter(*m_GlobalSetLayout, *m_GlobalPool)
 				.write_buffer(0, &bufferInfo)
 				.build(m_GlobalDescriptorSets[i]);
@@ -118,22 +117,22 @@ namespace hdn
 #if USING(HDN_DEBUG)
 		ImguiSystem imguiSystem;
 		
-		Scope<VulkanDescriptorPool> imguiDescriptorPool = VulkanDescriptorPool::Builder(m_Device)
+		m_ImguiDescriptorPool = VulkanDescriptorPool::Builder(m_Device)
 			.set_pool_flags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
 			.set_max_sets(1)
 			.add_pool_size(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
 			.build();
 		
-		QueueFamilyIndices queueFamilyIndices = m_Device.find_physical_queue_families();
+		m_QueueFamilyIndices = m_Device.find_physical_queue_families();
 		imguiSystem.init(
 			m_Window.get_glfw_window(),
 			m_Device.get_surface(),
 			m_Device.get_instance(),
 			m_Device.get_physical_device(),
 			m_Device.get_device(),
-			queueFamilyIndices.graphicsFamily,
+			m_QueueFamilyIndices.graphicsFamily,
 			m_Device.get_graphics_queue(),
-			imguiDescriptorPool->get_descriptor()
+			m_ImguiDescriptorPool->get_descriptor()
 		);
 #endif
 
@@ -180,8 +179,8 @@ namespace hdn
 
 				m_Scene->update(frameInfo);
 
-				uboBuffers[frameIndex]->write_to_buffer((void*)&ubo);
-				uboBuffers[frameIndex]->flush();
+				m_UboBuffers[frameIndex]->write_to_buffer((void*)&ubo);
+				m_UboBuffers[frameIndex]->flush();
 
 				// render
 				m_Renderer.begin_swap_chain_render_pass(commandBuffer);

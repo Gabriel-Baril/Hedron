@@ -37,7 +37,7 @@ namespace hdn
 			}
 		}
 
-		~NativeScriptComponent()
+		virtual ~NativeScriptComponent()
 		{
 			for (const auto& script : scripts)
 			{

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gameobject.h"
-#include "r_vk_window.h"
+#include "gfx/r_vk_window.h"
 
 namespace hdn
 {

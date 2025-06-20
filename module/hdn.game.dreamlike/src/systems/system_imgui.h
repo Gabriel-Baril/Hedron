@@ -1,8 +1,8 @@
 #pragma once
 
-#include "r_vk_window.h"
-#include "r_vk_device.h"
-#include "r_vk_swapchain.h"
+#include "gfx/r_vk_window.h"
+#include "gfx/r_vk_device.h"
+#include "gfx/r_vk_swapchain.h"
 
 #include "imgui.h"
 #include "imgui/imgui_impl_glfw.h"
