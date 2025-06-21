@@ -2,6 +2,7 @@
 
 #include "gameobject.h"
 #include "gfx/r_vk_window.h"
+#include "core/event/key_code.h"
 
 namespace hdn
 {
@@ -9,16 +10,16 @@ namespace hdn
 	{
 	public:
 		struct KeyMappings {
-			int moveLeft = GLFW_KEY_A;
-			int moveRight = GLFW_KEY_D;
-			int moveForward = GLFW_KEY_W;
-			int moveBackward = GLFW_KEY_S;
-			int moveUp = GLFW_KEY_E;
-			int moveDown = GLFW_KEY_Q;
-			int lookLeft = GLFW_KEY_LEFT;
-			int lookRight = GLFW_KEY_RIGHT;
-			int lookUp = GLFW_KEY_UP;
-			int lookDown = GLFW_KEY_DOWN;
+			KeyCode moveLeft = KeyCode::A;
+			KeyCode moveRight = KeyCode::D;
+			KeyCode moveForward = KeyCode::W;
+			KeyCode moveBackward = KeyCode::S;
+			KeyCode moveUp = KeyCode::E;
+			KeyCode moveDown = KeyCode::Q;
+			KeyCode lookLeft = KeyCode::Left;
+			KeyCode lookRight = KeyCode::Right;
+			KeyCode lookUp = KeyCode::Up;
+			KeyCode lookDown = KeyCode::Down;
 		};
 
 		void move_in_plane_xyz(GLFWwindow* window, f32 dt, Entity& gameObject);

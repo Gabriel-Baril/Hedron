@@ -14,6 +14,7 @@ namespace hdn
 {
 	inline static constexpr const char* NAME_POINT_LIGHT_SYSTEM = "PointLightSystem";
 
+	// PointLightSystem offers a stable API for system for update 
 	class PointLightSystem : public ISystem
 	{
 	public:
@@ -24,12 +25,5 @@ namespace hdn
 
 		void update(FrameInfo& frameInfo, flecs::world world);
 		void render(FrameInfo& frameInfo, flecs::world world);
-	private:
-		void create_pipeline_layout(VkDescriptorSetLayout globalSetLayout);
-		void create_pipeline(VkRenderPass renderPass);
-	private:
-		VulkanDevice* m_Device;
-		Scope<VulkanPipeline> m_Pipeline;
-		VkPipelineLayout m_PipelineLayout;
 	};
 }

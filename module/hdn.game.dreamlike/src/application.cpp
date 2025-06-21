@@ -190,12 +190,10 @@ namespace hdn
 
 #if USING(HDN_DEBUG)
 				imguiSystem.begin_frame();
-
 				ImGui::Begin("Hello, world!");
 				ImGui::Text("This is some useful text.");
 				ImGui::Text("dt: %.4f", frameTime * 1000);
 				ImGui::End();
-
 				imguiSystem.end_frame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 #endif
 				m_Renderer.end_swap_chain_render_pass(commandBuffer);

@@ -12,64 +12,18 @@
 
 #include "application.h"
 #include "system_camera.h"
+#include "system_point_light_render.h"
 
 namespace hdn
 {
-	struct PointLightPushConstants
-	{
-		vec4f32 position{};
-		vec4f32 color{};
-		f32 radius;
-	};
-
 	PointLightSystem::PointLightSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
-		: m_Device{ device }
 	{
-		create_pipeline_layout(globalSetLayout);
-		create_pipeline(renderPass);
+		system_point_light_init(renderPass, globalSetLayout, device);
 	}
 
 	PointLightSystem::~PointLightSystem()
 	{
-		vkDestroyPipelineLayout(m_Device->get_device(), m_PipelineLayout, nullptr);
-	}
-
-	void PointLightSystem::create_pipeline_layout(VkDescriptorSetLayout globalSetLayout)
-	{
-		VkPushConstantRange pushConstantRange{};
-		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-		pushConstantRange.offset = 0;
-		pushConstantRange.size = sizeof(PointLightPushConstants);
-
-		vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
-
-		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = static_cast<u32>(descriptorSetLayouts.size());
-		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data(); // Used to pass data other than our vertex data, to our vertex and fragment shader. For example, texture and uniform buffer.
-		pipelineLayoutInfo.pushConstantRangeCount = 1;
-		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // A way to push a very small amount of data to our shader
-		if (vkCreatePipelineLayout(m_Device->get_device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
-		{
-			HTHROW(std::runtime_error, "Failed to create pipeline layout");
-		}
-	}
-
-	void PointLightSystem::create_pipeline(VkRenderPass renderPass)
-	{
-		assert(m_PipelineLayout);
-
-		PipelineConfigInfo pipelineConfig{};
-		VulkanPipeline::default_pipeline_config_info(pipelineConfig);
-		VulkanPipeline::enable_alpha_blending(pipelineConfig);
-
-		pipelineConfig.bindingDescriptions.clear();
-		pipelineConfig.attributeDescriptions.clear();
-
-		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
-		pipelineConfig.pipelineLayout = m_PipelineLayout;
-
-		m_Pipeline = make_scope<VulkanPipeline>(m_Device, get_data_path("shaders/point_light.vert.spv"), get_data_path("shaders/point_light.frag.spv"), pipelineConfig);
+		system_point_light_shutdown(); // TODO: Fine for now, but should ensure that nothing else is using the system point light system
 	}
 
 	void PointLightSystem::update(FrameInfo& frameInfo, flecs::world world)
@@ -88,47 +42,14 @@ namespace hdn
 			lightIndex += 1;
 		});
 		frameInfo.ubo->numLights = lightIndex;
+
+		Ref<CameraSystem> cameraSystem = Application::get_system<CameraSystem>(NAME_CAMERA_SYSTEM);
+		system_point_light_fetch(world, cameraSystem->get_camera_position());
+		system_point_light_queue();
 	}
 
 	void PointLightSystem::render(FrameInfo& frameInfo, flecs::world world)
 	{
-		// Sort Lights
-		Ref<CameraSystem> cameraSystem = Application::get_system<CameraSystem>(NAME_CAMERA_SYSTEM);
-
-		map<float, flecs::entity> sorted;
-		auto query = world.query<TransformComponent, PointLightComponent>();
-		query.each([&cameraSystem, &sorted](flecs::entity e, TransformComponent& transformC, PointLightComponent& pointLightC) {
-			// Calculate Distance
-			auto offset = cameraSystem->get_camera_position() - transformC.position;
-			float distSquared = glm::dot(offset, offset);
-			sorted[distSquared] = e;
-		});
-		m_Pipeline->bind(frameInfo.commandBuffer);
-
-		vkCmdBindDescriptorSets(
-			frameInfo.commandBuffer,
-			VK_PIPELINE_BIND_POINT_GRAPHICS,
-			m_PipelineLayout,
-			0, 1,
-			&frameInfo.globalDescriptorSet,
-			0, nullptr
-		); // Low frequency descriptor sets needs to occupy the lowest index
-
-		// iterate through sorted lights in reverse order (back to front)
-		for (auto it = sorted.rbegin(); it != sorted.rend(); it++)
-		{
-			flecs::entity e = it->second;
-
-			const TransformComponent* transformC = e.get<TransformComponent>();
-			const ColorComponent* colorC = e.get<ColorComponent>();
-			const PointLightComponent* pointLightC = e.get<PointLightComponent>();
-
-			PointLightPushConstants push{};
-			push.position = vec4f32(transformC->position, 1.0f);
-			push.color = vec4f32(colorC->color, pointLightC->lightIntensity);
-			push.radius = transformC->scale.x;
-			vkCmdPushConstants(frameInfo.commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PointLightPushConstants), &push);
-			vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
-		}
+		system_point_light_render(frameInfo.commandBuffer, frameInfo.globalDescriptorSet);
 	}
 }
