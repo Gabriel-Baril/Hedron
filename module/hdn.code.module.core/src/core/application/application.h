@@ -7,6 +7,13 @@
 
 namespace hdn
 {
+	struct ApplicationConfig
+	{
+		u32 windowWidth;
+		u32 windowHeight;
+		const char* applicationName;
+	};
+
 	class IApplication
 	{
 	public:

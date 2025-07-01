@@ -8,13 +8,15 @@
 
 #include "core/stl/vector.h"
 
+#include "core/application/application.h"
+
 namespace hdn
 {
 
 	class VulkanRenderer
 	{
 	public:
-		VulkanRenderer(VulkanWindow* window, VulkanDevice* device);
+		VulkanRenderer(const ApplicationConfig& config);
 		virtual ~VulkanRenderer();
 		VulkanRenderer(const VulkanRenderer&) = delete;
 		VulkanRenderer& operator=(const VulkanRenderer&) = delete;
@@ -35,6 +37,9 @@ namespace hdn
 			return m_CurrentFrameIndex;
 		}
 
+		Ref<VulkanWindow> get_window() { return m_Window; }
+		Ref<VulkanDevice> get_device() { return m_Device; }
+
 		VkCommandBuffer begin_frame();
 		void end_frame();
 		void begin_swap_chain_render_pass(VkCommandBuffer commandBuffer);
@@ -44,8 +49,8 @@ namespace hdn
 		void free_command_buffers();
 		void recreate_swapchain();
 	private:
-		VulkanWindow* m_Window;
-		VulkanDevice* m_Device;
+		Ref<VulkanWindow> m_Window;
+		Ref<VulkanDevice> m_Device;
 		Scope<VulkanSwapChain> m_Swapchain;
 		vector<VkCommandBuffer> m_CommandBuffers;
 

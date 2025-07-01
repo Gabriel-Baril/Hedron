@@ -29,9 +29,17 @@ namespace hdn
 
 	Application::Application()
 	{
-		HINFO("IN");
-		m_Scene = make_ref<RuntimeScene>();
-		m_GlobalPool = VulkanDescriptorPool::Builder(m_Device)
+		ApplicationConfig config;
+		config.windowWidth = WIDTH;
+		config.windowHeight = HEIGHT;
+		config.applicationName = "Dreamlike";
+
+		m_Renderer = make_ref<VulkanRenderer>(config);
+
+		VulkanDevice& device = get_device();
+		m_Scene = create_scene();
+		
+		m_GlobalPool = VulkanDescriptorPool::Builder(device)
 			.set_max_sets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
 			.add_pool_size(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
 			.build();
@@ -86,12 +94,21 @@ namespace hdn
 		return false;
 	}
 
+	Ref<RuntimeScene> Application::create_scene()
+	{
+		Ref<RuntimeScene> scene = make_ref<RuntimeScene>();
+		return scene;
+	}
+
 	void Application::run()
 	{
-		for (int i = 0;i < m_UboBuffers.size(); i++)
+		VulkanWindow& window = get_window();
+		VulkanDevice& device = get_device();
+
+		for (int i = 0; i < m_UboBuffers.size(); i++)
 		{
 			m_UboBuffers[i] = make_scope<VulkanBuffer>(
-				&m_Device,
+				&device,
 				sizeof(GlobalUbo),
 				1,
 				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
@@ -100,11 +117,11 @@ namespace hdn
 			m_UboBuffers[i]->map();
 		}
 
-		m_GlobalSetLayout = VulkanDescriptorSetLayout::Builder(m_Device)
+		m_GlobalSetLayout = VulkanDescriptorSetLayout::Builder(device)
 			.add_binding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
 			.build();
 
-		for (int i = 0;i < m_GlobalDescriptorSets.size(); i++)
+		for (int i = 0; i < m_GlobalDescriptorSets.size(); i++)
 		{
 			auto bufferInfo = m_UboBuffers[i]->build_descriptor_info();
 			VulkanDescriptorWriter(*m_GlobalSetLayout, *m_GlobalPool)
@@ -112,32 +129,31 @@ namespace hdn
 				.build(m_GlobalDescriptorSets[i]);
 		}
 
-		auto currentTime = std::chrono::high_resolution_clock::now();
-
 #if USING(HDN_DEBUG)
 		ImguiSystem imguiSystem;
-		
-		m_ImguiDescriptorPool = VulkanDescriptorPool::Builder(m_Device)
+
+		m_ImguiDescriptorPool = VulkanDescriptorPool::Builder(device)
 			.set_pool_flags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
 			.set_max_sets(1)
 			.add_pool_size(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
 			.build();
-		
-		m_QueueFamilyIndices = m_Device.find_physical_queue_families();
+
+		m_QueueFamilyIndices = device.find_physical_queue_families();
+
 		imguiSystem.init(
-			m_Window.get_glfw_window(),
-			m_Device.get_surface(),
-			m_Device.get_instance(),
-			m_Device.get_physical_device(),
-			m_Device.get_device(),
+			window.get_glfw_window(),
+			device.get_surface(),
+			device.get_instance(),
+			device.get_physical_device(),
+			device.get_device(),
 			m_QueueFamilyIndices.graphicsFamily,
-			m_Device.get_graphics_queue(),
+			device.get_graphics_queue(),
 			m_ImguiDescriptorPool->get_descriptor()
 		);
 #endif
 
-		m_SystemRegistry.register_system<SimpleRenderSystem>(NAME_SIMPLE_RENDER_SYSTEM, &m_Device, m_Renderer.get_swap_chain_render_pass(), m_GlobalSetLayout->get_descriptor_set_layout());
-		m_SystemRegistry.register_system<PointLightSystem>(NAME_POINT_LIGHT_SYSTEM, &m_Device, m_Renderer.get_swap_chain_render_pass(), m_GlobalSetLayout->get_descriptor_set_layout());
+		m_SystemRegistry.register_system<SimpleRenderSystem>(NAME_SIMPLE_RENDER_SYSTEM, &device, m_Renderer->get_swap_chain_render_pass(), m_GlobalSetLayout->get_descriptor_set_layout());
+		m_SystemRegistry.register_system<PointLightSystem>(NAME_POINT_LIGHT_SYSTEM, &device, m_Renderer->get_swap_chain_render_pass(), m_GlobalSetLayout->get_descriptor_set_layout());
 		m_SystemRegistry.register_system<PhysicsGameObjectSystem>(NAME_PHYSICS_GAMEOBJECT_SYSTEM);
 		m_SystemRegistry.register_system<UpdateTransformSystem>(NAME_UPDATE_TRANSFORM_SYSTEM);
 		m_SystemRegistry.register_system<UpdateScriptSystem>(NAME_UPDATE_SCRIPT_SYSTEM);
@@ -148,7 +164,8 @@ namespace hdn
 		Ref<CameraSystem> cameraSystem = m_SystemRegistry.register_system<CameraSystem>(NAME_CAMERA_SYSTEM);
 		cameraSystem->init();
 
-		while (!m_Window.should_close())
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		while (!window.should_close())
 		{
 			glfwPollEvents();
 
@@ -158,16 +175,17 @@ namespace hdn
 
 			frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 
+			// Pre render
 			cameraSystem->update(frameTime);
 
-			if (auto commandBuffer = m_Renderer.begin_frame())
+			if (auto commandBuffer = m_Renderer->begin_frame())
 			{
 				GlobalUbo ubo{};
 				ubo.projection = cameraSystem->get_camera().get_projection();
 				ubo.view = cameraSystem->get_camera().get_view();
 				ubo.inverseView = cameraSystem->get_camera().get_inverse_view();
 
-				int frameIndex = m_Renderer.get_frame_index();
+				int frameIndex = m_Renderer->get_frame_index();
 				FrameInfo frameInfo{};
 				frameInfo.frameIndex = frameIndex;
 				frameInfo.frameTime = frameTime;
@@ -177,13 +195,14 @@ namespace hdn
 
 				// update
 
+				// Scene Update
 				m_Scene->update(frameInfo);
 
 				m_UboBuffers[frameIndex]->write_to_buffer((void*)&ubo);
 				m_UboBuffers[frameIndex]->flush();
 
 				// render
-				m_Renderer.begin_swap_chain_render_pass(commandBuffer);
+				m_Renderer->begin_swap_chain_render_pass(commandBuffer);
 
 				// Order Here Matters
 				m_Scene->render(frameInfo);
@@ -196,12 +215,17 @@ namespace hdn
 				ImGui::End();
 				imguiSystem.end_frame(ImVec4(0.45f, 0.55f, 0.60f, 1.00f), commandBuffer);
 #endif
-				m_Renderer.end_swap_chain_render_pass(commandBuffer);
+				m_Renderer->end_swap_chain_render_pass(commandBuffer);
 
-				m_Renderer.end_frame();
+				m_Renderer->end_frame();
 			}
 		}
 
-		vkDeviceWaitIdle(m_Device.get_device());
+		vkDeviceWaitIdle(get_device().get_device());
+	}
+
+	void Application::frame()
+	{
+
 	}
 }

@@ -30,7 +30,7 @@ namespace hdn {
 		const bool enableValidationLayers = true;
 #endif
 
-		VulkanDevice(VulkanWindow& window);
+		VulkanDevice(Ref<VulkanWindow> window);
 		~VulkanDevice();
 
 		// Not copyable or movable
@@ -93,7 +93,7 @@ namespace hdn {
 		VkInstance m_Instance;
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
 		VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
-		VulkanWindow& m_Window;
+		Ref<VulkanWindow> m_Window;
 		VkCommandPool m_CommandPool;
 
 		VkDevice m_Device;

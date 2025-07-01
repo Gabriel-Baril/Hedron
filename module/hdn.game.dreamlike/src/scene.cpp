@@ -42,29 +42,29 @@ namespace hdn
 		TransformComponent transformC;
 		flatVaseGroup.set(transformC);
 
-		for (int i = 0; i < 100; i++)
-		{
-			std::string eName = fmt::format("Vase {}", i);
-
-			auto flatVase = create_entity(eName.c_str());
-
-			TransformComponent transformC;
-			transformC.position = { cos(i), -1 - (float)sin(i), sin(i) };
-			transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
-			flatVase.set(transformC);
-
-			ModelComponent modelC;
-			modelC.model = hdnModel;
-			flatVase.set(modelC);
-
-			PhysicsComponent physicsC;
-			physx::PxVec3 position = physx::PxVec3(transformC.position.x, transformC.position.y, -transformC.position.z);
-			physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
-			physicsC.physicsActor = m_PhysicsWorldSystem->create_dynamic_actor(position, dimension);
-			flatVase.set(physicsC);
-
-			flatVase.get_entity().child_of(flatVaseGroup.get_entity());
-		}
+		// for (int i = 0; i < 100; i++)
+		// {
+		// 	std::string eName = fmt::format("Vase {}", i);
+		// 
+		// 	auto flatVase = create_entity(eName.c_str());
+		// 
+		// 	TransformComponent transformC;
+		// 	transformC.position = { cos(i), -1 - (float)sin(i), sin(i) };
+		// 	transformC.scale = vec3f32{ 1.0f, 1.0f, 1.0f };
+		// 	flatVase.set(transformC);
+		// 
+		// 	ModelComponent modelC;
+		// 	modelC.model = hdnModel;
+		// 	flatVase.set(modelC);
+		// 
+		// 	PhysicsComponent physicsC;
+		// 	physx::PxVec3 position = physx::PxVec3(transformC.position.x, transformC.position.y, -transformC.position.z);
+		// 	physx::PxVec3 dimension = physx::PxVec3(0.1f, 0.2f, 0.1f);
+		// 	physicsC.physicsActor = m_PhysicsWorldSystem->create_dynamic_actor(position, dimension);
+		// 	flatVase.set(physicsC);
+		// 
+		// 	flatVase.get_entity().child_of(flatVaseGroup.get_entity());
+		// }
 
 		{
 			hdnModel = VulkanModel::create_model_from_obj_file(&device, get_data_path("models/quad.obj"));

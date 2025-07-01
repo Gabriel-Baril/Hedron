@@ -5,9 +5,11 @@
 
 namespace hdn
 {
-	VulkanRenderer::VulkanRenderer(VulkanWindow* window, VulkanDevice* device)
-		: m_Window{window}, m_Device{device}
+	VulkanRenderer::VulkanRenderer(const ApplicationConfig& config)
 	{
+		m_Window = make_ref<VulkanWindow>(config.windowWidth, config.windowHeight, config.applicationName);
+		m_Device = make_ref<VulkanDevice>(m_Window);
+
 		recreate_swapchain();
 		create_command_buffers();
 	}

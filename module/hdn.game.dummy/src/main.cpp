@@ -1,15 +1,7 @@
-#include "gfx/dummy.h"
-
-int add(int a, int b)
-{
-	return a + b;
-}
+#include "core/core.h"
+#include "hobj/hobj.h"
 
 int main()
 {
-	using namespace hdn;
-
-	dummy_test();
-
 	return 0;
 }

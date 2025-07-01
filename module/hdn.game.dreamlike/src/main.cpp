@@ -4,8 +4,6 @@
 #include "hobj/hobj_registry.h"
 #include "hobj/hobj_source_filesystem.h"
 
-#include "gfx/dummy.h"
-
 int main()
 {
 	using namespace hdn;
@@ -14,8 +12,6 @@ int main()
 	HObjectRegistry& registry = HObjectRegistry::get();
 	registry.add_source<FilesystemObjectSource>("local", "objects");
 	registry.populate();
-
-	dummy_test();
 
 	try
 	{

@@ -50,7 +50,7 @@ namespace hdn {
 	}
 
 	// class member functions
-	VulkanDevice::VulkanDevice(VulkanWindow& window) : m_Window{ window } {
+	VulkanDevice::VulkanDevice(Ref<VulkanWindow> window) : m_Window{ window } {
 		create_instance();		// Create the vulkan instance, initialize the vulkan library
 		setup_debug_messenger();	// Setup validation layer to have more info on errors
 		create_surface();		// Create our surface so that we can pass it to GLFW. Connection between the window (from glfw) and the vulkan ability to display results
@@ -198,7 +198,7 @@ namespace hdn {
 		}
 	}
 
-	void VulkanDevice::create_surface() { m_Window.create_window_surface(m_Instance, &m_Surface); }
+	void VulkanDevice::create_surface() { m_Window->create_window_surface(m_Instance, &m_Surface); }
 
 	bool VulkanDevice::is_device_suitable(VkPhysicalDevice device) {
 		QueueFamilyIndices indices = find_queue_families(device);

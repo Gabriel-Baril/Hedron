@@ -15,7 +15,18 @@
 
 namespace hdn
 {
-	class VulkanWindow;
+	struct ApplicationRenderSystem
+	{
+		ApplicationRenderSystem()
+		{
+
+		}
+
+		void init()
+		{
+			
+		}
+	};
 
 	class Application : public IApplication
 	{
@@ -41,20 +52,23 @@ namespace hdn
 			return get().m_Scene;
 		}
 
-		VulkanWindow& get_window() { return m_Window; }
-		VulkanRenderer& get_renderer() { return m_Renderer; }
-		VulkanDevice& get_device() { return m_Device; }
+		VulkanWindow& get_window() { return *m_Renderer->get_window(); }
+		VulkanDevice& get_device() { return *m_Renderer->get_device(); }
+		VulkanRenderer& get_renderer() { return *m_Renderer; }
 
 		void on_event(Event& event) override;
 		bool on_window_resized(WindowResizedEvent& event);
 		bool on_key_pressed(KeyPressedEvent& event);
 		bool on_mouse_button_pressed(MouseButtonPressedEvent& event);
 
+		Ref<RuntimeScene> create_scene();
+
 		void run();
 	private:
-		VulkanWindow m_Window{ WIDTH, HEIGHT, "First App"};
-		VulkanDevice m_Device{ m_Window };
-		VulkanRenderer m_Renderer{ &m_Window, &m_Device };
+		void frame();
+	private:
+		Ref<VulkanRenderer> m_Renderer;
+
 		Scope<VulkanDescriptorSetLayout> m_GlobalSetLayout;
 		vector<Scope<VulkanBuffer>> m_UboBuffers{ VulkanSwapChain::MAX_FRAMES_IN_FLIGHT };
 

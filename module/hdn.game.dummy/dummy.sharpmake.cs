@@ -25,6 +25,7 @@ public class DummyProject : BaseCppProject
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
         
         conf.AddPublicDependency<CoreProject>(target);
+        conf.AddPublicDependency<HobjProject>(target);
         conf.AddPublicDependency<GfxProject>(target);
     }
 }
