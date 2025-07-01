@@ -2,11 +2,11 @@
 
 namespace hdn
 {
-	struct ExampleCompute
+	struct FExampleCompute
 	{
 		int number;
 		int count;
 	};
 
-	ExampleCompute example_compute(int number, int count);
+	FExampleCompute example_compute(int number, int count);
 }

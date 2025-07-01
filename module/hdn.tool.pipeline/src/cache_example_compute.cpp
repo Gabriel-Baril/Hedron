@@ -7,7 +7,7 @@
 
 namespace hdn
 {
-	ExampleCompute example_compute(int number, int count)
+	FExampleCompute example_compute(int number, int count)
 	{
 		HashBuilder builder;
 		builder.add(EXAMPLE_COMPUTE_V1);
@@ -23,16 +23,16 @@ namespace hdn
 			u64 entrySize = cache->cache_entry_size(builder.hash);
 			data = new char[entrySize];
 			cache->cache_fetch(builder.hash, data);
-			ExampleCompute example;
-			example = *reinterpret_cast<ExampleCompute*>(data);
+			FExampleCompute example;
+			example = *reinterpret_cast<FExampleCompute*>(data);
 			delete[] data;
 			return example;
 		}
 
-		ExampleCompute example;
+		FExampleCompute example;
 		example.number = number;
 		example.count = count;
-		cache->cache_create_entry(builder.hash, &example, sizeof(ExampleCompute));
+		cache->cache_create_entry(builder.hash, &example, sizeof(FExampleCompute));
 		return example;
 	}
 }

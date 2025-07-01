@@ -3,11 +3,11 @@
 
 namespace hdn
 {
-	struct PipelineCmdArgs
+	struct FPipelineCmdArgs
 	{
 		std::string scenePath;
 	};
 
 	bool args_init(int argc, char* argv[]);
-	const PipelineCmdArgs& args_get();
+	const FPipelineCmdArgs& args_get();
 }

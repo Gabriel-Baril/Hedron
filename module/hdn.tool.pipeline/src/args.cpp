@@ -4,7 +4,7 @@
 
 namespace hdn
 {
-	static PipelineCmdArgs s_PipelineCmdArgs;
+	static FPipelineCmdArgs s_PipelineCmdArgs;
 
 	bool args_init(int argc, char* argv[])
 	{
@@ -22,7 +22,7 @@ namespace hdn
 		}
 	}
 
-	const PipelineCmdArgs& args_get()
+	const FPipelineCmdArgs& args_get()
 	{
 		return s_PipelineCmdArgs;
 	}

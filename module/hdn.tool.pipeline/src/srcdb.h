@@ -5,7 +5,7 @@
 namespace hdn
 {
 	// The high level source type supported by the pipeline
-	enum class SourceFileType
+	enum class ESourceFileType
 	{
 		UNKNOWN,
 		DEFINITION, // Most common format for engine-specific assets (xml-like)
@@ -16,15 +16,15 @@ namespace hdn
 		COUNT
 	};
 
-	struct Source
+	struct FSource
 	{
-		SourceFileType type;
+		ESourceFileType type;
 		string path;
 		// string name; // The given name to a source, depending on the source the algorithm to determine the name will differ.
 	};
 
-	const char* srcdb_source_file_type_to_string(SourceFileType type);
-	SourceFileType srcdb_get_source_file_type(const fspath& path);
+	const char* srcdb_source_file_type_to_string(ESourceFileType type);
+	ESourceFileType srcdb_get_source_file_type(const fspath& path);
 	void srcdb_explore_sources(const fspath& path);
 	
 	void srcdb_get(const char* name);

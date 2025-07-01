@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 	std::string dataModulePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_DATA, CONFIG_KEY_DATA_MODULE_PATH, "");
 	srcdb_explore_sources(dataModulePath);
 
-	const PipelineCmdArgs& args = args_get();
+	const FPipelineCmdArgs& args = args_get();
 
 	std::string scenePath = fmt::format("{0}\\{1}", dataModulePath, args.scenePath);
 

@@ -11,7 +11,7 @@ namespace hdn
 	inline static constexpr const char* SOURCE_EXTENSION_FBX = ".fbx";
 	inline static constexpr const char* SOURCE_EXTENSION_OBJ = ".obj";
 
-	static constexpr const char* s_SourceTypeStr[underlying(SourceFileType::COUNT)] = {
+	static constexpr const char* s_SourceTypeStr[underlying(ESourceFileType::COUNT)] = {
 		"UNKNOWN",
 		"DEFINITION",
 		"PREFAB",
@@ -26,8 +26,8 @@ namespace hdn
 	{
 		if (!filesystem_is_directory(path))
 		{
-			SourceFileType type = srcdb_get_source_file_type(path);
-			if (type != SourceFileType::UNKNOWN)
+			ESourceFileType type = srcdb_get_source_file_type(path);
+			if (type != ESourceFileType::UNKNOWN)
 			{
 				HINFO("Source '{0}' found: {1}", path.string().c_str(), srcdb_source_file_type_to_string(type));
 				// Extract sources from the source file
@@ -36,34 +36,34 @@ namespace hdn
 		}
 	}
 
-	const char* srcdb_source_file_type_to_string(SourceFileType type)
+	const char* srcdb_source_file_type_to_string(ESourceFileType type)
 	{
 		return s_SourceTypeStr[underlying(type)];
 	}
 
-	SourceFileType srcdb_get_source_file_type(const fspath& path)
+	ESourceFileType srcdb_get_source_file_type(const fspath& path)
 	{
 		if (filesystem_has_extension(path, SOURCE_EXTENSION_DEFINITION))
 		{
-			return SourceFileType::DEFINITION;
+			return ESourceFileType::DEFINITION;
 		}
 		else if (filesystem_has_extension(path, SOURCE_EXTENSION_PREFAB))
 		{
-			return SourceFileType::PREFAB;
+			return ESourceFileType::PREFAB;
 		}
 		else if (filesystem_has_extension(path, SOURCE_EXTENSION_SHADER_FRAG) || filesystem_has_extension(path, SOURCE_EXTENSION_SHADER_VERT))
 		{
-			return SourceFileType::SHADER;
+			return ESourceFileType::SHADER;
 		}
 		else if (filesystem_has_extension(path, SOURCE_EXTENSION_FBX))
 		{
-			return SourceFileType::FBX;
+			return ESourceFileType::FBX;
 		}
 		else if (filesystem_has_extension(path, SOURCE_EXTENSION_OBJ))
 		{
-			return SourceFileType::OBJ;
+			return ESourceFileType::OBJ;
 		}
-		return SourceFileType::UNKNOWN;
+		return ESourceFileType::UNKNOWN;
 	}
 
 	void srcdb_explore_sources(const fspath& path)
