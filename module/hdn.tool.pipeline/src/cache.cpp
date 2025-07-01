@@ -5,42 +5,37 @@
 
 namespace hdn
 {
-	struct CacheSettings
-	{
-		std::string cachePath = "";
-	};
-	CacheSettings s_CacheSettings;
 
-	bool cache_init()
+	bool HDataCache::cache_init()
 	{
-		s_CacheSettings.cachePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
-		HINFO("Cache Path: {0}", s_CacheSettings.cachePath.c_str());
+		m_CachePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
+		HINFO("Cache Path: {0}", m_CachePath.c_str());
 
 		return true;
 	}
 
-	void cache_shutdown()
+	void HDataCache::cache_shutdown()
 	{
 	}
 
-	void cache_get_entry_path(h64 hash, std::string& path)
+	void HDataCache::cache_get_entry_path(h64 hash, std::string& path)
 	{
-		path = fmt::format("{0}\\{1}", s_CacheSettings.cachePath.c_str(), hash);
+		path = fmt::format("{0}\\{1}", m_CachePath.c_str(), hash);
 	}
 
-	bool cache_entry_exist(const std::string& cachePath)
+	bool HDataCache::cache_entry_exist(const std::string& cachePath)
 	{
 		return filesystem_exists(cachePath);
 	}
 
-	bool cache_entry_exist(h64 hash)
+	bool HDataCache::cache_entry_exist(h64 hash)
 	{
 		std::string cacheEntryPath;
 		cache_get_entry_path(hash, cacheEntryPath);
 		return cache_entry_exist(cacheEntryPath);
 	}
 
-	void cache_create_entry(h64 hash, const void* buffer, u64 length)
+	void HDataCache::cache_create_entry(h64 hash, const void* buffer, u64 length)
 	{
 		std::string cacheEntryPath;
 		cache_get_entry_path(hash, cacheEntryPath);
@@ -53,14 +48,14 @@ namespace hdn
 		outFile.write(reinterpret_cast<const char*>(buffer), length);
 	}
 
-	u64 cache_entry_size(h64 hash)
+	u64 HDataCache::cache_entry_size(h64 hash)
 	{
 		std::string path;
 		cache_get_entry_path(hash, path);
 		return filesystem_file_size(path);
 	}
 
-	bool cache_fetch(h64 hash, char* out)
+	bool HDataCache::cache_fetch(h64 hash, char* out)
 	{
 		std::string path;
 		cache_get_entry_path(hash, path);

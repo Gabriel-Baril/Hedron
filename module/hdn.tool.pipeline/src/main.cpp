@@ -34,8 +34,11 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-	cache_init();
+
 	hobj_registry_init();
+
+	HRef<HDataCache> cache = HObjectRegistry::get().new_object<HDataCache>("cache");
+	cache->cache_init();
 
 	HINFO("Pipeline started");
 

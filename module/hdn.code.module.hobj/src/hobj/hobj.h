@@ -20,7 +20,8 @@ namespace hdn
 	};
 	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectLoadState)
 
-	template<typename T> using HRef = Ref<T>;
+	template<typename T>
+	using HRef = Ref<T>;
 
 	// Each hobj should override the get_hash() method
 	class HObject
