@@ -42,7 +42,7 @@ void create_hson()
 		def["__sources"][0]["source_hash"] = hson::pack<u64>(9837929990112112233);
 	}
 
-	HRef<HHson> hson = HObjectRegistry::get().new_object<HHson>("player_profile");
+	HRef<HHson> hson = HObjectRegistry::get().create<HHson>("player_profile");
 	hson_builder_build(def, hson->get_hson());
 	
 	HObjectFilesystemData data;

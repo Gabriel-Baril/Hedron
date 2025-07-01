@@ -2,13 +2,13 @@
 
 namespace hdn
 {
-	HObjectRegistry& HObjectRegistry::get()
+	HObjectRegistry& HObjectRegistry::get_instance()
 	{
 		static HObjectRegistry s_Instance;
 		return s_Instance;
 	}
 
-	void HObjectRegistry::populate()
+	void HObjectRegistry::registry_populate()
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::REGISTRY_MANIFEST_POPULATE);
 		for (auto& [_, source] : m_Sources)

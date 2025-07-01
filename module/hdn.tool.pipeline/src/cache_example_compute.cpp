@@ -14,7 +14,7 @@ namespace hdn
 		builder.add(number);
 		builder.add(count);
 
-		HDataCache* cache = HObjectRegistry::get().get<HDataCache>("cache");
+		HDataCache* cache = HObjectRegistry::get<HDataCache>("cache");
 		HASSERT(cache, "Cache was not found");
 
 		char* data = nullptr;

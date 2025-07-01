@@ -4,7 +4,7 @@
 
 namespace hdn
 {
-	bool IsObjectFile(const fspath& path)
+	bool is_object_file(const fspath& path)
 	{
 		return filesystem_extension(path) == HOBJ_FILE_EXT;
 	}
@@ -163,7 +163,7 @@ namespace hdn
 	void FilesystemObjectSource::populate(HObjectRegistry* registry)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_MANIFEST_POPULATE);
-		vector<fspath> files = filesystem_walk(m_SourcePath, IsObjectFile);
+		vector<fspath> files = filesystem_walk(m_SourcePath, is_object_file);
 		for (const auto& file : files)
 		{
 			HObject object;

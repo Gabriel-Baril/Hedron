@@ -19,10 +19,9 @@ namespace hdn
 {
 	void hobj_registry_init()
 	{
-		HObjectRegistry& registry = HObjectRegistry::get();
 		std::string cachePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
-		registry.add_source<FilesystemObjectSource>("local", cachePath);
-		registry.populate();
+		HObjectRegistry::add_source<FilesystemObjectSource>("local", cachePath);
+		HObjectRegistry::populate();
 	}
 }
 
@@ -37,7 +36,7 @@ int main(int argc, char* argv[])
 
 	hobj_registry_init();
 
-	HRef<HDataCache> cache = HObjectRegistry::get().new_object<HDataCache>("cache");
+	HRef<HDataCache> cache = HObjectRegistry::create<HDataCache>("cache");
 	cache->cache_init();
 
 	HINFO("Pipeline started");
@@ -53,19 +52,19 @@ int main(int argc, char* argv[])
 	prefab_parse(prefab, scenePath);
 
 	{
-		HRef<HScene> hScene = HObjectRegistry::get().new_object<HScene>("scene_01");
+		HRef<HScene> hScene = HObjectRegistry::create<HScene>("scene_01");
 		scene_set_world(hScene->get_scene(), prefab.world);
 		HObjectFilesystemData data;
 		data.path = "scene_01.hobj";
-		HObjectRegistry::get().object_save(hScene.get(), "local", &data, sizeof(data));
+		HObjectRegistry::save(hScene.get(), "local", &data, sizeof(data));
 	}
 
 	{
-		HRef<HPrefab> hPrefab = HObjectRegistry::get().new_object<HPrefab>("scene_01_prefab");
+		HRef<HPrefab> hPrefab = HObjectRegistry::create<HPrefab>("scene_01_prefab");
 		prefab_set_world(hPrefab->get_prefab(), prefab.world);
 		HObjectFilesystemData data;
 		data.path = "scene_01_prefab.hobj";
-		HObjectRegistry::get().object_save(hPrefab.get(), "local", &data, sizeof(data));
+		HObjectRegistry::save(hPrefab.get(), "local", &data, sizeof(data));
 	}
 
 	return 0;

@@ -10,7 +10,7 @@ namespace hdn
 		string path;
 	};
 
-	bool IsObjectFile(const fspath& path);
+	bool is_object_file(const fspath& path);
 
 	class FilesystemObjectSource : public IHObjectSource
 	{
