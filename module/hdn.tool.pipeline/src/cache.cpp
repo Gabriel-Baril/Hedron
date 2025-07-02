@@ -1,14 +1,16 @@
 #include "cache.h"
 #include "core/core_filesystem.h"
 
-#include "core/config/config.h"
+#include "hobj/config/config.h"
+#include "hobj/hobj_registry.h"
 
 namespace hdn
 {
 
 	bool HDataCache::cache_init()
 	{
-		m_CachePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
+		HConfigurator* configurator = HObjectRegistry::get<HConfigurator>("config");
+		m_CachePath = configurator->get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
 		HINFO("Cache Path: {0}", m_CachePath.c_str());
 
 		return true;

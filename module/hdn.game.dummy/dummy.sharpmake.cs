@@ -27,5 +27,6 @@ public class DummyProject : BaseCppProject
         conf.AddPublicDependency<CoreProject>(target);
         conf.AddPublicDependency<HobjProject>(target);
         conf.AddPublicDependency<GfxProject>(target);
+        conf.AddPublicDependency<TLSFProject>(target);
     }
 }

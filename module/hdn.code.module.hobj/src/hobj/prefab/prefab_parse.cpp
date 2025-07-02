@@ -5,7 +5,7 @@
 #include "prefab_component_parse.h"
 #include "prefab_component_uuid.h"
 
-#include "utils.h"
+#include "hobj/utils.h"
 
 namespace hdn
 {

@@ -4,6 +4,7 @@
 #include "core/core_filesystem.h"
 
 #include "inih/INIReader.h"
+#include "../../hdn.code.module.hobj/src/hobj/hobj.h"
 
 namespace hdn
 {
@@ -28,16 +29,19 @@ namespace hdn
 	inline constexpr const char* CONFIG_SECTION_DATA = "data";
 	inline constexpr const char* CONFIG_KEY_DATA_MODULE_PATH = "DataModulePath";
 
-	class HDN_MODULE_CONFIG_API Configuration
+	class FConfiguratorUtil
 	{
-	private:
-		Configuration(const fspath& rootConfigPath);
-	private:
-		INIReader m_Reader;
 	public:
-		static Configuration& get();
 		static fspath get_root_config_path();
+	};
 
+	class HConfigurator : public HObject
+	{
+	public:
+		HConfigurator();
 		string get_root_config_variable(const string& section, const string& name, const string& defaultValue);
+	private:
+		fspath m_RootConfigPath;
+		INIReader m_Reader;
 	};
 }

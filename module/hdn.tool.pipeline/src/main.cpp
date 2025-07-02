@@ -5,7 +5,7 @@
 #include "hobj/hobj_registry.h"
 #include "hobj/hobj_source_filesystem.h"
 
-#include "core/config/config.h"
+#include "hobj/config/config.h"
 
 #include "cache.h"
 #include "args.h"
@@ -17,9 +17,21 @@
 
 namespace hdn
 {
+	class HPipeline : public HObject
+	{
+	public:
+		HPipeline()
+		{
+
+		}
+
+	private:
+	};
+
 	void hobj_registry_init()
 	{
-		std::string cachePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
+		HConfigurator* configurator = HObjectRegistry::get<HConfigurator>("config");
+		std::string cachePath = configurator->get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
 		HObjectRegistry::add_source<FilesystemObjectSource>("local", cachePath);
 		HObjectRegistry::populate();
 	}
@@ -33,6 +45,7 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
+	HRef<HConfigurator> configurator = HObjectRegistry::create<HConfigurator>("config");
 
 	hobj_registry_init();
 
@@ -41,7 +54,7 @@ int main(int argc, char* argv[])
 
 	HINFO("Pipeline started");
 
-	std::string dataModulePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_DATA, CONFIG_KEY_DATA_MODULE_PATH, "");
+	std::string dataModulePath = configurator->get_root_config_variable(CONFIG_SECTION_DATA, CONFIG_KEY_DATA_MODULE_PATH, "");
 	srcdb_explore_sources(dataModulePath);
 
 	const FPipelineCmdArgs& args = args_get();
