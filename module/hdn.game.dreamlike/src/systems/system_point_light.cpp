@@ -8,7 +8,7 @@
 #include "ecs/components/point_light_component.h"
 
 #include <glm/gtc/constants.hpp>
-#include "core/utils.h"
+#include "hobj/utils.h"
 
 #include "application.h"
 #include "system_camera.h"

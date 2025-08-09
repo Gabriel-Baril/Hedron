@@ -73,3 +73,6 @@
 [submodule "module/hdn.code.external.tlsf"]
 	path = module/hdn.code.external.tlsf
 	url = https://github.com/Gabriel-Baril/tlsf
+[submodule "module/hdn.code.external.tracy"]
+	path = module/hdn.code.external.tracy
+	url = https://github.com/Gabriel-Baril/tracy

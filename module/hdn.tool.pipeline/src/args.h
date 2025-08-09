@@ -5,7 +5,7 @@ namespace hdn
 {
 	struct FPipelineCmdArgs
 	{
-		std::string scenePath;
+		std::string buildConfigPath;
 	};
 
 	bool args_init(int argc, char* argv[]);

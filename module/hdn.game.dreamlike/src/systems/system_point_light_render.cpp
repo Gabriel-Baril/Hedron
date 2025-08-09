@@ -3,7 +3,8 @@
 #include "hobj/scene/transform_component.h"
 #include "ecs/components/color_component.h"
 #include "ecs/components/point_light_component.h"
-#include "core/utils.h"
+#include "hobj/utils.h"
+#include "hobj/hobj_registry.h"
 
 namespace hdn
 {
@@ -60,7 +61,8 @@ namespace hdn
 		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
 		pipelineConfig.pipelineLayout = s_PointLightGlob.layout;
 
-		s_PointLightGlob.pipeline = make_scope<VulkanPipeline>(s_PointLightGlob.device, get_data_path("shaders/point_light.vert.spv"), get_data_path("shaders/point_light.frag.spv"), pipelineConfig);
+		HConfigurator* configurator = HObjectRegistry::get<HConfigurator>("config");
+		s_PointLightGlob.pipeline = make_scope<VulkanPipeline>(s_PointLightGlob.device, get_data_path(configurator, "shaders/point_light.vert.spv"), get_data_path(configurator, "shaders/point_light.frag.spv"), pipelineConfig);
 	}
 
 	void system_point_light_init(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout, VulkanDevice* device)

@@ -3,15 +3,17 @@
 #include "hobj/scene/scene_hobj.h"
 #include "hobj/hobj_registry.h"
 #include "hobj/hobj_source_filesystem.h"
+#include "hobj/config/config.h"
 
 int main()
 {
 	using namespace hdn;
 	log_init();
 
-	HObjectRegistry& registry = HObjectRegistry::get();
-	registry.add_source<FilesystemObjectSource>("local", "objects");
-	registry.populate();
+	HRef<HConfigurator> configurator = HObjectRegistry::create<HConfigurator>("config");
+
+	HObjectRegistry::add_source<FilesystemObjectSource>("local", "objects");
+	HObjectRegistry::populate();
 
 	try
 	{

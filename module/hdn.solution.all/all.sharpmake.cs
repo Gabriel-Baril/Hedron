@@ -35,6 +35,7 @@ public class AllSolution : Solution
         // conf.AddProject<SpdlogProject>(target);
         // conf.AddProject<StbImageProject>(target);
         // conf.AddProject<TinyProcessLibraryProject>(target);
+        // conf.AddProject<TracyProject>(target);
         // conf.AddProject<TinyObjLoaderProject>(target);
         // conf.AddProject<XXHashProject>(target);
 
@@ -48,6 +49,7 @@ public class AllSolution : Solution
         conf.AddProject<AsyncPlaygroundProject>(target);
         conf.AddProject<CfgPlaygroundProject>(target);
         conf.AddProject<EcsPlaygroundProject>(target);
+        conf.AddProject<FmodPlaygroundProject>(target);
         conf.AddProject<HsonPlaygroundProject>(target);
         conf.AddProject<PipelineProject>(target);
         conf.AddProject<DreamlikeProject>(target);

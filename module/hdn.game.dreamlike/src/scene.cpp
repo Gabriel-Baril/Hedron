@@ -8,7 +8,8 @@
 
 #include "application.h"
 
-#include "core/utils.h"
+#include "hobj/utils.h"
+#include "hobj/hobj_registry.h"
 
 namespace hdn
 {
@@ -36,7 +37,8 @@ namespace hdn
 	{
 		VulkanDevice& device = Application::get().get_device();
 
-		Ref<VulkanModel> hdnModel = VulkanModel::create_model_from_obj_file(&device, get_data_path("models/flat_vase.obj"));
+		HConfigurator* configurator = HObjectRegistry::get<HConfigurator>("config");
+		Ref<VulkanModel> hdnModel = VulkanModel::create_model_from_obj_file(&device, get_data_path(configurator, "models/flat_vase.obj"));
 		
 		auto flatVaseGroup = create_entity("Flat Vase Group");
 		TransformComponent transformC;
@@ -67,7 +69,8 @@ namespace hdn
 		// }
 
 		{
-			hdnModel = VulkanModel::create_model_from_obj_file(&device, get_data_path("models/quad.obj"));
+			HConfigurator* configurator = HObjectRegistry::get<HConfigurator>("config");
+			hdnModel = VulkanModel::create_model_from_obj_file(&device, get_data_path(configurator, "models/quad.obj"));
 			auto floor = create_entity("floor");
 
 			TransformComponent transformC;
@@ -90,7 +93,8 @@ namespace hdn
 		}
 
 		{
-			hdnModel = VulkanModel::create_model_from_fbx_file(&device, get_data_path("models/cube.fbx")); // models/cube.fbx
+			HConfigurator* configurator = HObjectRegistry::get<HConfigurator>("config");
+			hdnModel = VulkanModel::create_model_from_fbx_file(&device, get_data_path(configurator, "models/cube.fbx")); // models/cube.fbx
 
 			auto pot = create_entity("pot");
 

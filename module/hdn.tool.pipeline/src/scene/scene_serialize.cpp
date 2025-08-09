@@ -1,7 +1,7 @@
 #include "scene.h"
 #include "transform_component.h"
-#include "hobj/prefab/prefab_component_transform.h"
-#include "hobj/prefab/prefab_component_uuid.h"
+#include "prefab/prefab_component_transform.h"
+#include "prefab/prefab_component_uuid.h"
 
 namespace hdn
 {

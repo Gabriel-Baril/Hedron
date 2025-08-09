@@ -5,7 +5,8 @@
 
 #include "hobj/scene/transform_component.h"
 #include "ecs/components/model_component.h"
-#include "core/utils.h"
+#include "hobj/utils.h"
+#include "hobj/hobj_registry.h"
 
 namespace hdn
 {
@@ -58,7 +59,8 @@ namespace hdn
 		pipelineConfig.renderPass = renderPass; // A render pass describe the structure and format of our framebuffer objects and their attachments
 		pipelineConfig.pipelineLayout = m_PipelineLayout;
 
-		m_Pipeline = make_scope<VulkanPipeline>(m_Device, get_data_path("shaders/simple_shader.vert.spv"), get_data_path("shaders/simple_shader.frag.spv"), pipelineConfig);
+		HConfigurator* configurator = HObjectRegistry::get<HConfigurator>("config");
+		m_Pipeline = make_scope<VulkanPipeline>(m_Device, get_data_path(configurator, "shaders/simple_shader.vert.spv"), get_data_path(configurator, "shaders/simple_shader.frag.spv"), pipelineConfig);
 	}
 
 	void SimpleRenderSystem::render(FrameInfo& frameInfo, flecs::world world)

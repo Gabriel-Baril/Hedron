@@ -9,7 +9,7 @@ namespace hdn
 	bool args_init(int argc, char* argv[])
 	{
 		CLI::App app{ "pipeline" };
-		app.add_option("-s,--scene", s_PipelineCmdArgs.scenePath, "Scene Path");
+		app.add_option("-b,--buildconfig", s_PipelineCmdArgs.buildConfigPath, "Build Config Path");
 		try
 		{
 			app.parse(argc, argv);               

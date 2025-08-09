@@ -7,12 +7,12 @@
 
 namespace hdn
 {
-	void prefab_set_world(Prefab& prefab, flecs::world world)
+	void prefab_set_world(SPrefabDef& prefab, flecs::world world)
 	{
 		prefab.world = world;
 	}
 
-	void prefab_serialize(hostream& stream, const Prefab& prefab)
+	void prefab_serialize(hostream& stream, const SPrefabDef& prefab)
 	{
 		u32 entityCount = 0;
 		const u64 entityCountMarker = stream.marker();
@@ -57,7 +57,7 @@ namespace hdn
 		stream.write_at((const void*)&entityCount, sizeof(entityCount), entityCountMarker); // Patch entity count
 	}
 
-	static void prefab_deserialize_component(histream& stream, Prefab& prefab, flecs::entity ent, PrefabComponentType type)
+	static void prefab_deserialize_component(histream& stream, SPrefabDef& prefab, flecs::entity ent, PrefabComponentType type)
 	{
 		switch (type)
 		{
@@ -96,7 +96,7 @@ namespace hdn
 		}
 	}
 
-	void prefab_deserialize(histream& stream, Prefab& prefab)
+	void prefab_deserialize(histream& stream, SPrefabDef& prefab)
 	{
 		u32 entityCount = 0;
 		stream >> entityCount;

@@ -6,6 +6,6 @@
 
 namespace hdn
 {
-	string get_data_path(HConfigurator* config, const string& relativeDataPath);
+	string get_data_path(const string& relativeDataPath);
 	u64 str_uuid_to_u64(const char* uuid);
 }

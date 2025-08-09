@@ -9,16 +9,13 @@
 
 namespace hdn
 {
-	bool prefab_parse(Prefab& prefab, const fspath& prefabPath)
+	bool prefab_parse(SPrefabDef& def, const pugi::xml_node& node)
 	{
-		pugi::xml_document doc;
-		pugi::xml_parse_result result = doc.load_file(prefabPath.c_str()); // "prefabs/example_prefab.xml"
-		if (!result)
-		{
-			return false;
-		}
+		const pugi::char_t* nameStr = node.attribute("name").as_string();
+		HASSERT(nameStr, "xsymbol require a name");
+		def.name = get_symbol_from_name(nameStr);
 
-		for (pugi::xml_node entityNode : doc.child("Prefab").children("Entity"))
+		for (pugi::xml_node entityNode : node.children("Entity"))
 		{
 			const pugi::char_t* uuid = entityNode.attribute("uuid").as_string();
 			HASSERT(uuid, "Entity without uuid found");
@@ -34,7 +31,7 @@ namespace hdn
 			}
 
 			u64 id = str_uuid_to_u64(uuid);
-			flecs::entity ent = prefab.world.entity();
+			flecs::entity ent = def.world.entity();
 			
 			PrefabUUIDComponent uuidC{};
 			uuidC.uuid = id;
@@ -54,5 +51,15 @@ namespace hdn
 		}
 
 		return true;
+	}
+
+	bool prefab_parse_callback(const pugi::xml_node& symbolNode)
+	{
+		SPrefabDef def;
+		bool success = prefab_parse(def, symbolNode);
+
+		HINFO("xsymbol (prefab) '{0}' registered", def.name);
+		// TODO: Register prefab to relevant pipeline systems
+		return success;
 	}
 }

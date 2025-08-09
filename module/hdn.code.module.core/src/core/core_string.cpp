@@ -57,7 +57,13 @@ namespace hdn
 		return true;
 	}
 
-	int str_to_lowercase(char c)
+	int str_to_lowercase(char* buffer, size_t count)
+	{
+		str_transform(buffer, count, char_to_lowercase);
+		return 0;
+	}
+
+	char char_to_lowercase(char c)
 	{
 		return tolower(c);
 	}

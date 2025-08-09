@@ -7,5 +7,6 @@
 
 namespace hdn
 {
-	bool prefab_parse(Prefab& prefab, const fspath& prefabPath);
+	bool prefab_parse(SPrefabDef& def, const pugi::xml_node& node);
+	bool prefab_parse_callback(const pugi::xml_node& symbolNode);
 }

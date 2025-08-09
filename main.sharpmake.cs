@@ -22,6 +22,7 @@ public static class Constants
 
     public const string VULKAN_SDK_ENV = "VULKAN_SDK";
     public const string PHYSX_SDK_ENV = "PHYSX_SDK";
+    public const string FMOD_SDK_ENV = "FMOD_SDK";
 
     public const string MODULE_FOLDER = "module";
     public static string[] SHARPMAKE_FOLDERS = { Constants.MODULE_FOLDER };
@@ -84,13 +85,18 @@ public abstract class BaseCppProject : Project
 
     public void AddLib(Project.Configuration conf, string sourceLibraryPath, string destinationLibraryPath, string libName, bool includeDebugArtefacts, bool includeDll)
     {
+        AddLib(conf, sourceLibraryPath, destinationLibraryPath, libName, libName, includeDebugArtefacts, includeDll);
+    }
+
+    public void AddLib(Project.Configuration conf, string sourceLibraryPath, string destinationLibraryPath, string libName, string dllName, bool includeDebugArtefacts, bool includeDll)
+    {
         string libFile = $"{libName}.lib";
         string sourceLibPath = Path.Combine(sourceLibraryPath, libFile);
         conf.LibraryFiles.Add(sourceLibPath);
 
         if (includeDll)
         {
-            string dllFile = $"{libName}.dll";
+            string dllFile = $"{dllName}.dll";
             string sourceDllPath = Path.Combine(sourceLibraryPath, dllFile);
             conf.EventPostBuild.Add($"xcopy /Y /Q \"{sourceDllPath}\" \"{destinationLibraryPath}\"");
 

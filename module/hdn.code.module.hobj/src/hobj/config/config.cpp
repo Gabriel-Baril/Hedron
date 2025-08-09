@@ -5,7 +5,30 @@
 
 namespace hdn
 {
-	fspath FConfiguratorUtil::get_root_config_path()
+	struct ConfigurationGlob
+	{
+		INIReader* reader = nullptr;
+		bool initialized = false;
+	} s_Config;
+
+	static bool config_initialized()
+	{
+		return s_Config.initialized;
+	}
+
+	void config_init()
+	{
+		if (config_initialized())
+		{
+			return;
+		}
+
+		static INIReader reader{ config_get_root_config_path().string() };
+		s_Config.reader = &reader;
+		s_Config.initialized = true;
+	}
+
+	fspath config_get_root_config_path()
 	{
 		const char* root = std::getenv(HDN_ROOT_ENV);
 		const char* configName = std::getenv(HDN_ROOT_CONFIG_NAME_ENV);
@@ -13,14 +36,13 @@ namespace hdn
 		return rootPath / configName;
 	}
 
-	HConfigurator::HConfigurator()
-		: m_Reader { FConfiguratorUtil::get_root_config_path().string() }
+	string config_get_root_config_variable(const string& section, const string& name, const string& defaultValue)
 	{
-	}
+		HASSERT(config_initialized(), "Config needs to be initialized");
 
-	string HConfigurator::get_root_config_variable(const string& section, const string& name, const string& defaultValue)
-	{
-		string result = m_Reader.Get(section, name, defaultValue);
+		INIReader* reader = s_Config.reader;
+
+		string result = reader->Get(section, name, defaultValue);
 		HASSERT(result != defaultValue, "Configuration Variable '[{0}]{1}' not found", section.c_str(), name.c_str());
 		std::regex variablePattern(R"(\$\{([^:}]+)(?::([^}]+))?\})"); // Regex to match ${prefix:key} or ${key} (environment variable)
 		std::smatch match;
@@ -38,7 +60,7 @@ namespace hdn
 			}
 			else
 			{
-				string rep = get_root_config_variable(matchedSection, matchedKey, "");
+				string rep = config_get_root_config_variable(matchedSection, matchedKey, "");
 				HASSERT(rep != "", "Configuration Variable '[{0}]{1}' not found while parsing '{2}'", matchedSection.c_str(), matchedKey.c_str(), result.c_str());
 				replacement = rep;
 			}
