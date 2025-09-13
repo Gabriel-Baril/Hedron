@@ -51,6 +51,7 @@ public class AllSolution : Solution
         conf.AddProject<EcsPlaygroundProject>(target);
         conf.AddProject<FmodPlaygroundProject>(target);
         conf.AddProject<HsonPlaygroundProject>(target);
+        conf.AddProject<ZonePlaygroundProject>(target);
         conf.AddProject<PipelineProject>(target);
         conf.AddProject<DreamlikeProject>(target);
         conf.AddProject<ArchiveProject>(target);

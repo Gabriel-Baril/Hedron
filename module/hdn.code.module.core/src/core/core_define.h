@@ -111,6 +111,17 @@
 	#error "Unknown platform!"
 #endif
 
+#ifdef _MSC_VER
+#define DISABLE_OPTIMIZATION __pragma(optimize("", off))
+#define ENABLE_OPTIMIZATION  __pragma(optimize("", on))
+#elif defined(__GNUC__) || defined(__clang__)
+#define DISABLE_OPTIMIZATION __attribute__((optimize("O0")))
+#define ENABLE_OPTIMIZATION
+#else
+#define DISABLE_OPTIMIZATION
+#define ENABLE_OPTIMIZATION
+#endif
+
 #define DEV					USE_IF( USING(HDN_DEBUG) )
 
 #define LOG_ENABLE			USE_IF( USING(DEV) )

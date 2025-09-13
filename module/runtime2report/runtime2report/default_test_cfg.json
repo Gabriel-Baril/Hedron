@@ -1,0 +1,79 @@
+{  
+  "assets": {
+    "sources": {
+      "pc_capricorn_fork": {
+        "type": "folder",
+        "path": "E:\\REPORT\\pc_capricorn_fork",
+        "platform": "pc",
+        "target": "profile",
+        "runtime_context": "mp_sat_ob_capricorn"
+      },
+      "pc_capricorn_dxalloc_folder": {
+        "type": "folder",
+        "path": "E:\\REPORT\\pc_capricorn_dxalloc",
+        "platform": "pc",
+        "target": "test",
+        "runtime_context": "mp_sat_ob_capricorn"
+      },
+      "main_dump_folder": {
+        "type": "flex_folder",
+        "path": "E:\\DUMPS",
+        "layout": ["timestamp", "platform", "target", "runtime_context"]
+      }
+    },
+    "selector": {
+      "all_pc_profile_capricorn": {
+          "timestamp": ["*"],
+          "platform": ["pc"],
+          "target": ["profile"],
+          "runtime_context": ["mp_sat_ob_capricorn"]
+      },
+      "all_pc_test_capricorn": {
+          "timestamp": ["*"],
+          "platform": ["pc"],
+          "target": ["test"],
+          "runtime_context": ["mp_sat_ob_capricorn"]
+      },
+      "all_pc_xb3_profile_test_capricorn_aries": {
+          "timestamp": "*",
+          "platform": ["pc", "xb3"],
+          "target": ["profile", "test"],
+          "runtime_context": ["mp_sat_ob_capricorn", "mp_sat_ob_aries"]
+      }
+    }
+  },
+  "reports": [
+      {
+        "name": "pc_capricorn",
+        "path": "pc_capricorn.xlsx",
+        "type": "excel",
+        "subreports": [
+          {
+            "name": "iwmem",
+            "type": "dated_iwmem",
+            "generate_adjacent_pair": true,
+            "sources": [ "pc_capricorn_fork" ],
+            "selector": "all_pc_profile_capricorn"
+          },
+          {
+            "name": "dxalloc",
+            "type": "dated_dxalloc",
+            "sources": [ "pc_capricorn_dxalloc_folder" ],
+            "selector": "all_pc_test_capricorn"
+          },
+          {
+            "name": "Complex Report",
+            "type": "flex",
+            "sources": [ "main_dump_folder" ],
+            "selector": "all_pc_xb3_profile_test_capricorn_aries",
+            "header": {
+              "discard_empty_columns": false,
+              "date_as_timestamp": true,
+              "layout": ["runtime_context", "platform", "target", "timestamp"]
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

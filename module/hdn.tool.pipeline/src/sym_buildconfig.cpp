@@ -1,24 +1,25 @@
 #include "sym_buildconfig.h"
 
+DISABLE_OPTIMIZATION
 namespace hdn
 {
-	static constexpr const char* s_BuildConfigPlatformTypeStr[underlying(EBuildConfigPlatform::COUNT)] = {
+	static constexpr const char* s_BuildConfigPlatformTypeStr[underlying(buildconfig::EPlatform::COUNT)] = {
 		"pc"
 	};
 
-	EBuildConfigPlatform buildconfig_str_to_platform(const char* platform)
+	buildconfig::EPlatform buildconfig_str_to_platform(const char* platform)
 	{
 		char lowerCaseBuffer[SYMBOL_ATTRIBUTE_VALUE_MAX_LENGTH];
 		str_copy(lowerCaseBuffer, platform);
 		str_to_lowercase(lowerCaseBuffer, strlen(lowerCaseBuffer));
-		for (int i = 0; i < underlying(EBuildConfigPlatform::COUNT); i++)
+		for (int i = 0; i < underlying(buildconfig::EPlatform::COUNT); i++)
 		{
 			if (str_equals(lowerCaseBuffer, s_BuildConfigPlatformTypeStr[i]))
 			{
-				return static_cast<EBuildConfigPlatform>(i);
+				return static_cast<buildconfig::EPlatform>(i);
 			}
 		}
-		return EBuildConfigPlatform::UNKNOWN;
+		return buildconfig::EPlatform::UNKNOWN;
 	}
 
 	static bool buildconfig_parse(SBuildConfigDef& def, const pugi::xml_node& node)
@@ -38,7 +39,7 @@ namespace hdn
 				const pugi::char_t* sceneSymbolStr = nScene.attribute("scene").as_string();
 				HASSERT(sceneSymbolStr, "scene attibute cannot be ommited");
 
-				Variant<SBuildConfigDef::Scene> vScene;
+				Variant<buildconfig::Scene> vScene;
 				vScene.node.sceneSymbol = get_symbol_from_name(sceneSymbolStr);
 				const pugi::char_t* variantSymbolStr = nScene.attribute("variant").as_string();
 				if (variantSymbolStr)
@@ -49,6 +50,13 @@ namespace hdn
 			}
 		}
 		return true;
+	}
+
+	bool buildconfig_contextualize(const PipelineContext& ctx, const SBuildConfigDef& def, SBuildConfig& out)
+	{
+
+
+		return false;
 	}
 
 	bool buildconfig_parse_callback(const pugi::xml_node& node)

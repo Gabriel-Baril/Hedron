@@ -8,34 +8,44 @@
 
 namespace hdn
 {
-	enum class EBuildConfigPlatform
+	struct PipelineContext
 	{
-		PC,
-		COUNT,
-
-		UNKNOWN
-	};
-	EBuildConfigPlatform buildconfig_str_to_platform(const char* platform);
-
-	// Data flagged as variant can be impacted by context
-	template<typename T>
-	struct Variant
-	{
-		T node;
-		Symbol variant = NULL_SYMBOL;
 	};
 
-	struct SBuildConfigDef
+	namespace buildconfig
 	{
+		enum class EPlatform
+		{
+			PC,
+			COUNT,
+
+			UNKNOWN
+		};
+		EPlatform buildconfig_str_to_platform(const char* platform);
+
 		struct Scene
 		{
 			Symbol sceneSymbol;
 		};
+	}
 
-		Symbol name;
-		EBuildConfigPlatform platform;
-		vector<Variant<Scene>> scenes;
+	// Agnostic buildconfig
+	struct SBuildConfigDef
+	{
+		Symbol name = SYMNULL;
+		Symbol parent = SYMNULL;
+		buildconfig::EPlatform platform = buildconfig::EPlatform::UNKNOWN;
+		vector<Variant<buildconfig::Scene>> scenes;
 	};
 
+	// Contextualized buildconfig
+	struct SBuildConfig
+	{
+		Symbol name = SYMNULL;
+		buildconfig::EPlatform platform = buildconfig::EPlatform::UNKNOWN;
+		vector<buildconfig::Scene> scenes;
+	};
+
+	bool buildconfig_contextualize(const PipelineContext& ctx, const SBuildConfigDef& def, SBuildConfig& out);
 	bool buildconfig_parse_callback(const pugi::xml_node& symbolNode);
 }

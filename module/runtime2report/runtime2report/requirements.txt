@@ -1,0 +1,2 @@
+pandas
+line_profiler

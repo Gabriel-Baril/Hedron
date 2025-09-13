@@ -13,6 +13,8 @@
 
 #include <iostream>
 
+#include "sym_buildconfig.h"
+
 namespace hdn
 {
 	void hobj_registry_init()

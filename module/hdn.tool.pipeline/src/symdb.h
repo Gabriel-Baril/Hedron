@@ -5,9 +5,17 @@
 namespace hdn
 {
 	using Symbol = u64;
-	constexpr u64 NULL_SYMBOL = 0;
+	constexpr u64 SYMNULL = 0;
 	constexpr u32 SYMBOL_TYPE_MAX_LENGTH = 255;
 	constexpr u32 SYMBOL_ATTRIBUTE_VALUE_MAX_LENGTH = 512;
+
+	// Data flagged as variant can be impacted by context
+	template<typename T>
+	struct Variant
+	{
+		T node;
+		Symbol variant = SYMNULL;
+	};
 
 	// The symbol types supported by the pipeline
 	enum class ESymbolType
@@ -32,7 +40,7 @@ namespace hdn
 
 	struct SymbolMeta
 	{
-		Symbol hash = NULL_SYMBOL;
+		Symbol hash = SYMNULL;
 		const char* name = nullptr; // Pointer to string database
 		ESymbolType type = ESymbolType::unknown;
 		void* data = nullptr; // Handle to the symbol definition
