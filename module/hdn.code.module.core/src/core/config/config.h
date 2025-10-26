@@ -4,7 +4,6 @@
 #include "core/core_filesystem.h"
 
 #include "inih/INIReader.h"
-#include "../../hdn.code.module.hobj/src/hobj/hobj.h"
 
 namespace hdn
 {
@@ -22,9 +21,9 @@ namespace hdn
 	inline constexpr const char* CONFIG_KEY_EXECUTABLE_LIST_PATH = "ExecutableListFilePath";
 
 	inline constexpr const char* CONFIG_SECTION_PIPELINE = "pipeline";
-	inline constexpr const char* CONFIG_KEY_PIPELINE_MODULE_PATH = "PipelineModulePath";
-	inline constexpr const char* CONFIG_KEY_CACHE_FOLDER_NAME = "CacheFolderName";
-	inline constexpr const char* CONFIG_KEY_CACHE_PATH = "CachePath";
+	inline constexpr const char* CONFIG_KEY_CACHE_MODULE_PATH = "CacheModulePath";
+	inline constexpr const char* CONFIG_KEY_CACHE_FOLDER_NAME = "ObjectCacheFolderName";
+	inline constexpr const char* CONFIG_KEY_CACHE_PATH = "ObjectCachePath";
 
 	inline constexpr const char* CONFIG_SECTION_DATA = "data";
 	inline constexpr const char* CONFIG_KEY_DATA_MODULE_PATH = "DataModulePath";

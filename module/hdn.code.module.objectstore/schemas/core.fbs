@@ -1,0 +1,22 @@
+namespace hdn;
+
+table KeyValue {
+    key:string;
+    value:string;
+}
+
+// Define a math vector type
+table Vec3
+{ 
+    x:float; 
+    y:float;
+    z:float;
+}
+
+table Vec4
+{
+    x:float;
+    y:float;
+    z:float;
+    w:float;
+}

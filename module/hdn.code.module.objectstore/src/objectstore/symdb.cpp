@@ -1,6 +1,7 @@
 #include "symdb.h"
 #include "core/stl/unordered_map.h"
-#include "hobj/hobj.h"
+
+#include "core/hash.h"
 
 #include "xsrc.h"
 #include "nxsrc.h"

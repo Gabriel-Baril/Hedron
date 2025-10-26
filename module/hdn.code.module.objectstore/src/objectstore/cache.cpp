@@ -1,8 +1,7 @@
 #include "cache.h"
 #include "core/core_filesystem.h"
 
-#include "hobj/config/config.h"
-#include "hobj/hobj_registry.h"
+#include "core/config/config.h"
 
 namespace hdn
 {

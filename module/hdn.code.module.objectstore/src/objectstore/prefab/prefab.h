@@ -6,7 +6,7 @@
 #include "core/io/stream_read.h"
 
 #include "flecs/flecs.h"
-#include "symdb.h"
+#include "objectstore/symdb.h"
 
 namespace hdn
 {

@@ -52,7 +52,7 @@ public class HdnCodeGameDreamlikeProject : BaseCppProject
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
         
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleCommonProject>(target);
+        conf.AddPublicDependency<HdnCodeModuleSharedProject>(target);
         conf.AddPublicDependency<HdnCodeExternalImguiProject>(target);
         conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
         conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);

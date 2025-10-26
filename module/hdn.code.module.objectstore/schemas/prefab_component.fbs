@@ -1,0 +1,56 @@
+include "core.fbs";
+
+namespace hdn;
+// Define all component data tables
+
+table TransformComponent {
+    position:Vec3;
+    rotation:Vec4;  // quaternion
+    scale:Vec3;
+}
+
+table ModelComponent {
+    mesh:string;
+    material:string;
+}
+
+table LightComponent {
+    color:Vec3;
+    intensity:float;
+}
+
+table CameraComponent {
+    fov:float;
+    near_plane:float;
+    far_plane:float;
+}
+
+table ScriptComponent {
+    class_name:string;
+    parameters:[KeyValue];
+}
+
+// All possible component types
+enum ComponentType:byte {
+    NONE = 0,
+    Transform,
+    Model,
+    Light,
+    Camera,
+    Script
+}
+
+// Define the component union
+union ComponentUnion {
+    TransformComponent,
+    ModelComponent,
+    LightComponent,
+    CameraComponent,
+    ScriptComponent
+}
+
+// A generic component container
+table Component {
+    type:ComponentType;     // enum
+    data:ComponentUnion;    // union for specific component data
+}

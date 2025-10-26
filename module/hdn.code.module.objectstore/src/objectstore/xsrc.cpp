@@ -4,7 +4,7 @@
 #include "symdb.h"
 
 #include "prefab/prefab_parse.h"
-#include "sym_buildconfig.h"
+#include "buildconfig/buildconfig.h"
 
 namespace hdn
 {

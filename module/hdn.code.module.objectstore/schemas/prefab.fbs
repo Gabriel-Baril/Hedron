@@ -1,0 +1,20 @@
+include "prefab_component.fbs";
+
+namespace hdn;
+
+// An entity within a prefab
+table Entity {
+    name:string;
+    id:uint64;
+    components:[Component];
+    children:[Entity]; // optional, for hierarchy
+}
+
+// A single prefab
+table Prefab {
+    name:string;
+    entities:[Entity];
+}
+
+// Define the root
+root_type Prefab;

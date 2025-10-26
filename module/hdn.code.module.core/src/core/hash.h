@@ -11,7 +11,7 @@ namespace hdn
 	h64 hash_generate(const char* str, u64 seed = 0);
 	h64 hash_generate(const void* buffer, u64 length, u64 seed = 0);
 	h64 hash_generate(h64 typeHash, const void* buffer, u64 length, u64 seed = 0);
-	
+	u64 str_uuid_to_u64(const char* uuid);
 
 	// from: https://stackoverflow.com/a/57595105
 	template <typename T, typename... Rest>

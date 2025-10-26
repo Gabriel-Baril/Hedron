@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeToolPipelineProject : BaseCppProject
+public class HdnCodeModuleObjectStoreProject : BaseCppProject
 {
-    public HdnCodeToolPipelineProject()
+    public HdnCodeModuleObjectStoreProject()
     {
-        Name = "hdn.code.tool.pipeline";
+        Name = "hdn.code.module.objectstore";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -15,19 +15,18 @@ public class HdnCodeToolPipelineProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
-        conf.SolutionFolder = Constants.TOOL_VS_CATEGORY;
+        conf.SolutionFolder = Constants.MODULE_VS_CATEGORY;
 
-        conf.Output = Project.Configuration.OutputType.Exe;
+        conf.Output = Project.Configuration.OutputType.Lib;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
+        conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
+
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleSharedProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleObjectStoreProject>(target);
         conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
         conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalCLI11Project>(target);
+        conf.AddPublicDependency<HdnCodeExternalFlatbuffersProject>(target);
 
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
     }

@@ -3,7 +3,7 @@
 #include "core/hash.h"
 #include "core/stl/vector.h"
 
-#include "symdb.h"
+#include "objectstore/symdb.h"
 #include "pugixml/pugixml.hpp"
 
 namespace hdn

@@ -30,4 +30,9 @@ namespace hdn
 	{
 		return hash_combine(typeHash, hash_generate(buffer, length, seed));
 	}
+
+	u64 str_uuid_to_u64(const char* uuid)
+	{
+		return XXH64(uuid, strlen(uuid), 0); // TODO: Fix
+	}
 }

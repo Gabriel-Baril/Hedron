@@ -2,11 +2,11 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeModuleCommonProject : BaseCppProject
+public class HdnCodeModuleSharedProject : BaseCppProject
 {
-    public HdnCodeModuleCommonProject()
+    public HdnCodeModuleSharedProject()
     {
-        Name = "hdn.code.module.common";
+        Name = "hdn.code.module.shared";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -16,7 +16,7 @@ public class HdnCodeModuleCommonProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
-        conf.SolutionFolder = Constants.MODULE_VS_CATEGORY;
+        conf.SolutionFolder = Constants.SHARED_VS_CATEGORY;
 
         conf.Output = Project.Configuration.OutputType.Lib;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";

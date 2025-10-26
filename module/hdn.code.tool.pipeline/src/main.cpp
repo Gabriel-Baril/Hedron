@@ -4,16 +4,14 @@
 #include "hobj/hobj_registry.h"
 #include "hobj/hobj_source_filesystem.h"
 
-#include "hobj/config/config.h"
+#include "core/config/config.h"
 
-#include "cache.h"
 #include "args.h"
-
-#include "symdb.h"
-
 #include <iostream>
 
-#include "buildconfig/buildconfig.h"
+#include "objectstore/cache.h"
+#include "objectstore/symdb.h"
+#include "objectstore/buildconfig/buildconfig.h"
 
 namespace hdn
 {
