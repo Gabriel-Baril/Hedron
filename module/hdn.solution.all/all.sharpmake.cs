@@ -39,24 +39,17 @@ public class AllSolution : Solution
         // conf.AddProject<TinyObjLoaderProject>(target);
         // conf.AddProject<XXHashProject>(target);
 
-        conf.AddProject<ArchiveLibProject>(target);
-        conf.AddProject<AsyncProject>(target);
-        conf.AddProject<CoreProject>(target);
-        conf.AddProject<CoreProjectTest>(target);
-        conf.AddProject<HobjProject>(target);
-        conf.AddProject<TreeBuilderCPPProject>(target);
-        conf.AddProject<ArchivePlaygroundProject>(target);
-        conf.AddProject<AsyncPlaygroundProject>(target);
-        conf.AddProject<CfgPlaygroundProject>(target);
-        conf.AddProject<EcsPlaygroundProject>(target);
-        conf.AddProject<FmodPlaygroundProject>(target);
-        conf.AddProject<HsonPlaygroundProject>(target);
-        conf.AddProject<ZonePlaygroundProject>(target);
-        conf.AddProject<PipelineProject>(target);
-        conf.AddProject<DreamlikeProject>(target);
-        conf.AddProject<ArchiveProject>(target);
-        conf.AddProject<EditorProject>(target);
-
-        conf.AddProject<DummyProject>(target);
+        conf.AddProject<HdnCodeModuleCoreProject>(target);
+        conf.AddProject<HdnTestModuleCore>(target);
+        conf.AddProject<HdnCodeModuleHobjProject>(target);
+        conf.AddProject<HdnCodePlaygroundAsyncProject>(target);
+        conf.AddProject<HdnCodePlaygroundCfgProject>(target);
+        conf.AddProject<HdnCodePlaygroundEcsProject>(target);
+        conf.AddProject<HdnCodePlaygroundFmodProject>(target);
+        conf.AddProject<HdnCodePlaygroundHsonProject>(target);
+        conf.AddProject<HdnCodePlaygroundZoneProject>(target);
+        conf.AddProject<HdnCodeToolPipelineProject>(target);
+        conf.AddProject<HdnCodeGameDreamlikeProject>(target);
+        conf.AddProject<HdnCodeToolEditorProject>(target);
     }
 }

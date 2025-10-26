@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeModuleHobjProject : BaseCppProject
+public class HdnTestModuleCore : BaseCppTestProject
 {
-    public HdnCodeModuleHobjProject()
+    public HdnTestModuleCore()
     {
-        Name = "hdn.code.module.hobj";
+        Name = "hdn.test.module.core";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -15,15 +15,15 @@ public class HdnCodeModuleHobjProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
-        conf.SolutionFolder = Constants.MODULE_VS_CATEGORY;
+        conf.SolutionFolder = Constants.TEST_VS_CATEGORY;
 
-        conf.Output = Project.Configuration.OutputType.Lib;
+        conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
-        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
+        // conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\include");
+        // conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
 
+        conf.AddPublicDependency<Catch2Project>(target);
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<FlecsProject>(target);
-        conf.AddPublicDependency<PugiXMLProject>(target);
     }
 }

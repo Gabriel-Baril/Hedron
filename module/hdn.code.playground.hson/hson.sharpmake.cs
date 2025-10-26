@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeModuleHobjProject : BaseCppProject
+public class HdnCodePlaygroundHsonProject : BaseCppProject
 {
-    public HdnCodeModuleHobjProject()
+    public HdnCodePlaygroundHsonProject()
     {
-        Name = "hdn.code.module.hobj";
+        Name = "hdn.code.playground.hson";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -15,15 +15,15 @@ public class HdnCodeModuleHobjProject : BaseCppProject
     {
         base.ConfigureAll(conf, target);
 
-        conf.SolutionFolder = Constants.MODULE_VS_CATEGORY;
-
-        conf.Output = Project.Configuration.OutputType.Lib;
+        conf.SolutionFolder = Constants.PLAYGROUND_VS_CATEGORY;
+        
+        conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
-        conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<FlecsProject>(target);
-        conf.AddPublicDependency<PugiXMLProject>(target);
+        conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
+        conf.AddPublicDependency<StbImageProject>(target);
+        conf.AddPublicDependency<XXHashProject>(target);
     }
 }

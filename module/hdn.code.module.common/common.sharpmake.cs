@@ -2,11 +2,11 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeModuleCoreProject : BaseCppProject
+public class HdnCodeModuleCommonProject : BaseCppProject
 {
-    public HdnCodeModuleCoreProject()
+    public HdnCodeModuleCommonProject()
     {
-        Name = "hdn.code.module.core";
+        Name = "hdn.code.module.common";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -25,11 +25,7 @@ public class HdnCodeModuleCoreProject : BaseCppProject
 
         conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
 
-        conf.AddPublicDependency<GlmProject>(target);
-        conf.AddPublicDependency<SpdlogProject>(target);
-        conf.AddPublicDependency<EASTLProject>(target);
-        conf.AddPublicDependency<XXHashProject>(target);
-        conf.AddPublicDependency<TLSFProject>(target);
-        conf.AddPublicDependency<INIHProject>(target);
+        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<FlecsProject>(target);
     }
 }

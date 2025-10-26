@@ -1,2 +1,0 @@
-pandas
-line_profiler
