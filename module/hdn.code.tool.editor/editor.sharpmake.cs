@@ -52,18 +52,18 @@ public class HdnCodeToolEditorProject : BaseCppProject
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<TinyObjLoaderProject>(target);
-        conf.AddPublicDependency<OpenFBXProject>(target);
-        conf.AddPublicDependency<GLFWProject>(target);
-        conf.AddPublicDependency<ImguiProject>(target);
-        conf.AddPublicDependency<FlecsProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalTinyObjLoaderProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalOpenFBXProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalGLFWProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalImguiProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
         conf.AddPublicDependency<HdnCodeModuleGfxProject>(target);
 
-        conf.AddPublicDependency<PugiXMLProject>(target);
-        conf.AddPublicDependency<TinyProcessLibraryProject>(target);
-        conf.AddPublicDependency<INIHProject>(target);
-        conf.AddPublicDependency<CLI11Project>(target);
-        conf.AddPublicDependency<FmtProject>(target);
-        conf.AddPublicDependency<NlohmannJsonProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalTinyProcessLibraryProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalINIHProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalCLI11Project>(target);
+        conf.AddPublicDependency<HdnCodeExternalFmtProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalNlohmannJsonProject>(target);
     }
 }

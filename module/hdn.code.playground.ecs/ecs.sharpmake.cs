@@ -22,7 +22,7 @@ public class HdnCodePlaygroundEcsProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<FlecsProject>(target);
-        conf.AddPublicDependency<NlohmannJsonProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalNlohmannJsonProject>(target);
     }
 }

@@ -23,7 +23,7 @@ public class HdnTestModuleCore : BaseCppTestProject
         // conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\include");
         // conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
 
-        conf.AddPublicDependency<Catch2Project>(target);
+        conf.AddPublicDependency<HdnCodeExternalCatch2Project>(target);
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
     }
 }

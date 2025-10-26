@@ -23,10 +23,10 @@ public class HdnCodeToolPipelineProject : BaseCppProject
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
         conf.AddPublicDependency<HdnCodeModuleCommonProject>(target);
-        conf.AddPublicDependency<PugiXMLProject>(target);
-        conf.AddPublicDependency<FlecsProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
         conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
-        conf.AddPublicDependency<CLI11Project>(target);
+        conf.AddPublicDependency<HdnCodeExternalCLI11Project>(target);
 
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
     }

@@ -25,11 +25,11 @@ public class HdnCodeModuleCoreProject : BaseCppProject
 
         conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
 
-        conf.AddPublicDependency<GlmProject>(target);
-        conf.AddPublicDependency<SpdlogProject>(target);
-        conf.AddPublicDependency<EASTLProject>(target);
-        conf.AddPublicDependency<XXHashProject>(target);
-        conf.AddPublicDependency<TLSFProject>(target);
-        conf.AddPublicDependency<INIHProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalGlmProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalSpdlogProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalEASTLProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalXXHashProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalTLSFProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalINIHProject>(target);
     }
 }

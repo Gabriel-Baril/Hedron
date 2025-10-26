@@ -53,8 +53,8 @@ public class HdnCodeGameDreamlikeProject : BaseCppProject
         
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
         conf.AddPublicDependency<HdnCodeModuleCommonProject>(target);
-        conf.AddPublicDependency<ImguiProject>(target);
-        conf.AddPublicDependency<FlecsProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalImguiProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
         conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
         conf.AddPublicDependency<HdnCodeModuleGfxProject>(target);
     }

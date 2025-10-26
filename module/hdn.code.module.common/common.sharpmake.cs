@@ -26,6 +26,6 @@ public class HdnCodeModuleCommonProject : BaseCppProject
         conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<FlecsProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
     }
 }

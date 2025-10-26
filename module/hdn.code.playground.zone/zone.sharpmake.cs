@@ -22,6 +22,6 @@ public class HdnCodePlaygroundZoneProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<CLI11Project>(target);
+        conf.AddPublicDependency<HdnCodeExternalCLI11Project>(target);
     }
 }

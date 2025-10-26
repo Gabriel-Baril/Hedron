@@ -32,8 +32,8 @@ public class HdnCodeModuleGfxProject : BaseCppProject
         conf.LibraryFiles.Add(Path.Combine(vulkanSDK, "Lib", "vulkan-1.lib"));
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<TinyObjLoaderProject>(target);
-        conf.AddPublicDependency<OpenFBXProject>(target);
-        conf.AddPublicDependency<GLFWProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalTinyObjLoaderProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalOpenFBXProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalGLFWProject>(target);
     }
 }

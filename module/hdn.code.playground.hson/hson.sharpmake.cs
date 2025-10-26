@@ -23,7 +23,7 @@ public class HdnCodePlaygroundHsonProject : BaseCppProject
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
         conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
-        conf.AddPublicDependency<StbImageProject>(target);
-        conf.AddPublicDependency<XXHashProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalStbImageProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalXXHashProject>(target);
     }
 }

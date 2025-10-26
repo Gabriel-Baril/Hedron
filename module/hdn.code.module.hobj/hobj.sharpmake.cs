@@ -23,7 +23,7 @@ public class HdnCodeModuleHobjProject : BaseCppProject
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<FlecsProject>(target);
-        conf.AddPublicDependency<PugiXMLProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
     }
 }

@@ -17,27 +17,27 @@ public class AllSolution : Solution
         // They will also be indirectly tested by project depending on them
         // Visual Studio will also trigger an error for header only projects/module 
 
-        // conf.AddProject<Catch2Project>(target);
-        // conf.AddProject<CLI11Project>(target);
-        // conf.AddProject<EABaseProject>(target);
-        // conf.AddProject<EASTLProject>(target);
-        // conf.AddProject<FlatbuffersProject>(target);
-        // conf.AddProject<FmtProject>(target);
-        // conf.AddProject<GLFWProject>(target);
-        // conf.AddProject<GlmProject>(target);
-        // conf.AddProject<ImguiProject>(target);
-        // conf.AddProject<INIHProject>(target);
-        // conf.AddProject<NlohmannJsonProject>(target);
-        // conf.AddProject<OctreeCppProject>(target);
-        // conf.AddProject<OpenFBXProject>(target);
-        // conf.AddProject<PugiXMLProject>(target);
-        // conf.AddProject<SheredomJsonProject>(target);
-        // conf.AddProject<SpdlogProject>(target);
-        // conf.AddProject<StbImageProject>(target);
-        // conf.AddProject<TinyProcessLibraryProject>(target);
-        // conf.AddProject<TracyProject>(target);
-        // conf.AddProject<TinyObjLoaderProject>(target);
-        // conf.AddProject<XXHashProject>(target);
+        // conf.AddProject<HdnCodeExternalCatch2Project>(target);
+        // conf.AddProject<HdnCodeExternalCLI11Project>(target);
+        // conf.AddProject<HdnCodeExternalEABaseProject>(target);
+        // conf.AddProject<HdnCodeExternalEASTLProject>(target);
+        // conf.AddProject<HdnCodeExternalFlatbuffersProject>(target);
+        // conf.AddProject<HdnCodeExternalFmtProject>(target);
+        // conf.AddProject<HdnCodeExternalGLFWProject>(target);
+        // conf.AddProject<HdnCodeExternalGlmProject>(target);
+        // conf.AddProject<HdnCodeExternalImguiProject>(target);
+        // conf.AddProject<HdnCodeExternalINIHProject>(target);
+        // conf.AddProject<HdnCodeExternalNlohmannJsonProject>(target);
+        // conf.AddProject<HdnCodeExternalOctreeCppProject>(target);
+        // conf.AddProject<HdnCodeExternalOpenFBXProject>(target);
+        // conf.AddProject<HdnCodeExternalPugiXMLProject>(target);
+        // conf.AddProject<HdnCodeExternalSheredomJsonProject>(target);
+        // conf.AddProject<HdnCodeExternalSpdlogProject>(target);
+        // conf.AddProject<HdnCodeExternalStbImageProject>(target);
+        // conf.AddProject<HdnCodeExternalTinyProcessLibraryProject>(target);
+        // conf.AddProject<HdnCodeExternalTracyProject>(target);
+        // conf.AddProject<HdnCodeExternalTinyObjLoaderProject>(target);
+        // conf.AddProject<HdnCodeExternalXXHashProject>(target);
 
         conf.AddProject<HdnCodeModuleCoreProject>(target);
         conf.AddProject<HdnTestModuleCore>(target);

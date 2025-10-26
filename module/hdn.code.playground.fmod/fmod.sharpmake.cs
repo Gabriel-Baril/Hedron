@@ -59,6 +59,6 @@ public class HdnCodePlaygroundFmodProject : BaseCppProject
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
         conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
-        conf.AddPublicDependency<XXHashProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalXXHashProject>(target);
     }
 }
