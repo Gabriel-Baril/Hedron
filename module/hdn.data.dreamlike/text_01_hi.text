@@ -1,16 +1,16 @@
 <Symbols>
-    <StringTable name="text_01_hi_st">
+	<StringTable name="text_01_hi_st">
 		<Language lang="fr" text="Bonjour" />
 		<Language lang="en" text="Hello" />
 		<Language lang="es" text="Hola" />
 	</StringTable>
-    <StringTable name="text_02_hi_st">
+	<StringTable name="text_02_hi_st">
 		<Language lang="fr" text="Bonjour" />
 		<Language lang="en" text="Hello" />
 		<Language lang="es" text="Hola" />
 	</StringTable>
-    <Text name="text_01_hi">
-	    <TextCompressionOptions compression="zlib" />
-	    <Localization table="text_01_hi_st"/>
-    </Text>
+	<Text name="text_01_hi">
+		<TextCompressionOptions compression="zlib" />
+		<Localization table="text_01_hi_st"/>
+	</Text>
 </Symbols>

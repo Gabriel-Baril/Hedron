@@ -8,7 +8,7 @@
 
 namespace hdn
 {
-	using SymbolParseCallback = bool(*)(const pugi::xml_node& symbolNode);
+	using SymbolParseCallback = bool(*)(const pugi::xml_node& symbolNode, const SourceContext& ctx);
 	static constexpr SymbolParseCallback s_XSymbolParseCallbacks[underlying(ESymbolType::count)] = {
 		nullptr,
 		nullptr,
@@ -20,17 +20,15 @@ namespace hdn
 		buildconfig_parse_callback // buildconfig
 	};
 
-	static void xsymbol_agnostic_parse(ESymbolType type, const pugi::xml_node& symbolNode)
+	static bool xsymbol_agnostic_parse(ESymbolType type, const pugi::xml_node& symbolNode, const SourceContext& ctx)
 	{
 		SymbolParseCallback callback = s_XSymbolParseCallbacks[underlying(type)];
 		if (callback)
 		{
-			callback(symbolNode);
+			return callback(symbolNode, ctx);
 		}
-		else
-		{
-			HWARN("Callback not found for type '{0}'", symdb_sym_to_str(type));
-		}
+		HWARN("Callback not found for type '{0}'", symdb_sym_to_str(type));
+		return false;
 	}
 
 	bool xsrc_agnostic_parse(const fspath& path)
@@ -52,7 +50,17 @@ namespace hdn
 			if (symdb_is_xsymbol(type))
 			{
 				const pugi::char_t* symbolName = symbolNode.attribute("name").as_string(); // Every xsymbol node has a name
-				xsymbol_agnostic_parse(type, symbolNode);
+				Symbol symbol = get_symbol_from_name(symbolName);
+
+				SourceContext ctx;
+				ctx.path = path;
+				const bool ok = xsymbol_agnostic_parse(type, symbolNode, ctx);
+
+				if (ok)
+				{
+					symdb_register(ctx.path, symbol);
+					HINFO("xsymbol ({0}) '{1}' ({2}) registered", symdb_sym_to_str(type), symbolName, symbol);
+				}
 			}
 			else if (type != ESymbolType::unknown)
 			{

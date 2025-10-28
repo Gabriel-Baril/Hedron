@@ -1,0 +1,5 @@
+<Symbols>
+	<Scene name="test_scene_01.scene">
+		<Source prefab="test_scene_01.prefab" />
+	</Scene>
+</Symbols>

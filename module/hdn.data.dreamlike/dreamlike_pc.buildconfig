@@ -1,16 +1,8 @@
 <Symbols>
-    <BuildConfig name="dreamlike_pc_2.buildconfig">
-		<Platform platform="pc"/>
-		<Scenes>
-			<Scene scene="dreamlike_main_menu.prefab" />
-			<Scene scene="dreamlike_world_scene.prefab" />
-		</Scenes>
-	</BuildConfig>
 	<BuildConfig name="dreamlike_pc.buildconfig">
 		<Platform platform="pc"/>
-		<Scenes>
-			<Scene scene="dreamlike_main_menu.prefab" />
-			<Scene scene="dreamlike_world_scene.prefab" />
-		</Scenes>
+		<Features>
+			<Feature feature="dreamlike_test_scene_01.feature" />
+		</Features>
 	</BuildConfig>
 </Symbols>

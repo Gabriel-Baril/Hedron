@@ -13,17 +13,7 @@
 #include "objectstore/symdb.h"
 #include "objectstore/buildconfig/buildconfig.h"
 
-namespace hdn
-{
-	void hobj_registry_init()
-	{
-		std::string cachePath = config_get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
-		HObjectRegistry::add_source<FilesystemObjectSource>("local", cachePath);
-		HObjectRegistry::populate();
-	}
-}
-
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	using namespace hdn;
 	log_init();
@@ -32,20 +22,19 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	config_init();
-	hobj_registry_init();
 	cache_init();
 
 	HINFO("Pipeline started");
 
-	const FPipelineCmdArgs& args = args_get();
-	
+	const FPipelineCmdArgs &args = args_get();
+
 	std::string dataModulePath = config_get_root_config_variable(CONFIG_SECTION_DATA, CONFIG_KEY_DATA_MODULE_PATH, "");
 
 	auto start = std::chrono::high_resolution_clock::now();
 	symdb_explore_sources(dataModulePath);
 	auto end = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-	std::cout << "symdb_explore_sources took {0} nanoseconds: " << duration.count();
+	std::cout << "symdb_explore_sources took " << duration.count() << " nanoseconds.";
 
 	return 0;
 }

@@ -8,6 +8,13 @@
 
 namespace hdn
 {
+	struct SymDBGlob
+	{
+		unordered_map<fspath, vector<Symbol>> symmap{};
+	};
+
+	static SymDBGlob s_SymDBGlob{};
+
 	static constexpr const char* s_SymTypeStr[underlying(ESymbolType::count)] = {
 		"vert",
 		"frag",
@@ -107,7 +114,8 @@ namespace hdn
 		filesystem_iterate(path, explore_source, true);
 	}
 
-	void symdb_register(Symbol symbol)
+	void symdb_register(const fspath& source, Symbol symbol)
 	{
+		s_SymDBGlob.symmap[source].emplace_back(symbol);
 	}
 }

@@ -260,6 +260,16 @@ namespace hdn
 		return std::filesystem::file_size(path);
 	}
 
+	u64 filesystem_last_write_time(const fspath& path)
+	{
+		auto ftime = std::filesystem::last_write_time(path);
+		auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
+		auto epoch = std::chrono::duration_cast<std::chrono::seconds>(
+			sctp.time_since_epoch()
+		).count();
+		return epoch;
+	}
+
 	optional<fspath> filesystem_read_link(const fspath& path)
 	{
 		if (filesystem_is_symlink(path))

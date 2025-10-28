@@ -20,3 +20,17 @@ table Vec4
     z:float;
     w:float;
 }
+
+struct uuid
+{
+    low: ulong;
+    high: ulong;
+}
+
+enum AssetType: uint {
+    buildconfig,
+    feature,
+    prefab,
+    variant,
+    zonealias
+}

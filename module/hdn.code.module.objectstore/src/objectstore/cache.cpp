@@ -5,82 +5,88 @@
 
 namespace hdn
 {
-	struct CacheGlob
-	{
-		std::string cachePath;
-	} s_Cache;
+    struct CacheGlob
+    {
+        std::string cachePath;
+    } s_Cache;
 
+    bool cache_init()
+    {
+        s_Cache.cachePath = config_get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
+        HINFO("Cache Path: {0}", s_Cache.cachePath.c_str());
+        filesystem_create_directory(s_Cache.cachePath);
+        return true;
+    }
 
-	bool cache_init()
-	{
-		s_Cache.cachePath = config_get_root_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
-		HINFO("Cache Path: {0}", s_Cache.cachePath.c_str());
+    void cache_shutdown() {}
 
-		return true;
-	}
+    void cache_get_entry_path(h64 hash, std::string& path)
+    {
+        path = fmt::format("{0}\\{1}", s_Cache.cachePath.c_str(), hash);
+    }
 
-	void cache_shutdown()
-	{
-	}
+    bool cache_entry_exist(const std::string& cachePath)
+    {
+        return filesystem_exists(cachePath);
+    }
 
-	void cache_get_entry_path(h64 hash, std::string& path)
-	{
-		path = fmt::format("{0}\\{1}", s_Cache.cachePath.c_str(), hash);
-	}
+    bool cache_entry_exist(h64 hash)
+    {
+        std::string cacheEntryPath;
+        cache_get_entry_path(hash, cacheEntryPath);
+        return cache_entry_exist(cacheEntryPath);
+    }
 
-	bool cache_entry_exist(const std::string& cachePath)
-	{
-		return filesystem_exists(cachePath);
-	}
+    void cache_create_entry(h64 hash, const void* buffer, u64 length, bool overwrite)
+    {
+        std::string cacheEntryPath;
+        cache_get_entry_path(hash, cacheEntryPath);
+        if (cache_entry_exist(cacheEntryPath) && !overwrite)
+        {
+        // The cache entry associated with the hash already exists
+        return;
+        }
 
-	bool cache_entry_exist(h64 hash)
-	{
-		std::string cacheEntryPath;
-		cache_get_entry_path(hash, cacheEntryPath);
-		return cache_entry_exist(cacheEntryPath);
-	}
+        auto openFileFlags = std::ios::binary;
+        if (overwrite)
+        {
+        openFileFlags |= std::ios::trunc;
+        }
+        std::ofstream outFile(cacheEntryPath, openFileFlags);
+        outFile.write(reinterpret_cast<const char*>(buffer), length);
+        outFile.close();
+    }
 
-	void cache_create_entry(h64 hash, const void* buffer, u64 length)
-	{
-		std::string cacheEntryPath;
-		cache_get_entry_path(hash, cacheEntryPath);
-		if (cache_entry_exist(cacheEntryPath))
-		{
-			// The cache entry associated with the hash already exists
-			return;
-		}
-		std::ofstream outFile(cacheEntryPath, std::ios::binary);
-		outFile.write(reinterpret_cast<const char*>(buffer), length);
-	}
+    u64 cache_entry_size(h64 hash)
+    {
+        std::string path;
+        cache_get_entry_path(hash, path);
+        return filesystem_file_size(path);
+    }
 
-	u64 cache_entry_size(h64 hash)
-	{
-		std::string path;
-		cache_get_entry_path(hash, path);
-		return filesystem_file_size(path);
-	}
+    bool cache_fetch(h64 hash, char* out)
+    {
+        std::string path;
+        cache_get_entry_path(hash, path);
 
-	bool cache_fetch(h64 hash, char* out)
-	{
-		std::string path;
-		cache_get_entry_path(hash, path);
+        std::ifstream inFile(path, std::ios::binary | std::ios::ate);
+        if (!inFile)
+        {
+        HERR("Could not open file '{0}' for reading", path);
+        return false;
+        }
 
-		std::ifstream inFile(path, std::ios::binary | std::ios::ate);
-		if (!inFile) {
-			HERR("Could not open file '{0}' for reading", path);
-			return false;
-		}
+        // Get the file size
+        std::streamsize fileSize = inFile.tellg();
+        inFile.seekg(0, std::ios::beg);
 
-		// Get the file size
-		std::streamsize fileSize = inFile.tellg();
-		inFile.seekg(0, std::ios::beg);
+        // Read the file into the buffer
+        if (!inFile.read(out, fileSize))
+        {
+        HERR("Failed to read the file", path);
+        return false;
+        }
 
-		// Read the file into the buffer
-		if (!inFile.read(out, fileSize)) {
-			HERR("Failed to read the file", path);
-			return false;
-		}
-
-		return true;
-	}
+        return true;
+    }
 }

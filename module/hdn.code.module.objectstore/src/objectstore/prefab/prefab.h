@@ -18,7 +18,4 @@ namespace hdn
 
 	void prefab_set_world(SPrefabDef& prefab, flecs::world world);
 
-	// Instead of having hostream at that stage use a normal struct
-	void prefab_serialize(hostream& stream, const SPrefabDef& object);
-	void prefab_deserialize(histream& stream, SPrefabDef& object);
 }

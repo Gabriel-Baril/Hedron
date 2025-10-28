@@ -14,14 +14,14 @@ namespace hdn
 		builder.add(number);
 		builder.add(count);
 
-		char* data = nullptr;
+		char *data = nullptr;
 		if (cache_entry_exist(builder.hash))
 		{
 			u64 entrySize = cache_entry_size(builder.hash);
 			data = new char[entrySize];
 			cache_fetch(builder.hash, data);
 			FExampleCompute example;
-			example = *reinterpret_cast<FExampleCompute*>(data);
+			example = *reinterpret_cast<FExampleCompute *>(data);
 			delete[] data;
 			return example;
 		}

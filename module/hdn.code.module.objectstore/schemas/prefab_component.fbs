@@ -19,25 +19,23 @@ table LightComponent {
     intensity:float;
 }
 
-table CameraComponent {
-    fov:float;
-    near_plane:float;
-    far_plane:float;
-}
-
 table ScriptComponent {
     class_name:string;
     parameters:[KeyValue];
 }
 
+table HierarchyComponent {
+    children: [uuid];
+}
+
 // All possible component types
 enum ComponentType:byte {
     NONE = 0,
-    Transform,
-    Model,
-    Light,
-    Camera,
-    Script
+    TRANSFORM,
+    MODEL,
+    LIGHT,
+    SCRIPT,
+    HIERARCHY
 }
 
 // Define the component union
@@ -45,7 +43,6 @@ union ComponentUnion {
     TransformComponent,
     ModelComponent,
     LightComponent,
-    CameraComponent,
     ScriptComponent
 }
 

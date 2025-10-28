@@ -4,5 +4,10 @@
 
 namespace hdn
 {
+	struct SourceContext
+	{
+		fspath path;
+	};
+
 	bool xsrc_agnostic_parse(const fspath& path);
 }

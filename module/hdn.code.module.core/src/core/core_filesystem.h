@@ -61,6 +61,7 @@ namespace hdn
 
 	HDN_MODULE_CORE_API FileStats filesystem_stats(const fspath& path);
 	HDN_MODULE_CORE_API u64 filesystem_file_size(const fspath& path);
+	HDN_MODULE_CORE_API u64 filesystem_last_write_time(const fspath& path);
 	HDN_MODULE_CORE_API optional<fspath> filesystem_read_link(const fspath& path);
 	HDN_MODULE_CORE_API void filesystem_create_link(const fspath& target, const fspath& link);
 	HDN_MODULE_CORE_API bool filesystem_unlink(const fspath& path);

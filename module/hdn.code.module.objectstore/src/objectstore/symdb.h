@@ -9,14 +9,6 @@ namespace hdn
 	constexpr u32 SYMBOL_TYPE_MAX_LENGTH = 255;
 	constexpr u32 SYMBOL_ATTRIBUTE_VALUE_MAX_LENGTH = 512;
 
-	// Data flagged as variant can be impacted by context
-	template<typename T>
-	struct Variant
-	{
-		T node;
-		Symbol variant = SYMNULL;
-	};
-
 	// The symbol types supported by the pipeline
 	enum class ESymbolType
 	{
@@ -38,14 +30,6 @@ namespace hdn
 		unknown
 	};
 
-	struct SymbolMeta
-	{
-		Symbol hash = SYMNULL;
-		const char* name = nullptr; // Pointer to string database
-		ESymbolType type = ESymbolType::unknown;
-		void* data = nullptr; // Handle to the symbol definition
-	};
-
 	using SourceParseCallback = bool(*)(const fspath& path);
 
 	const char* symdb_sym_to_str(ESymbolType type);
@@ -59,5 +43,5 @@ namespace hdn
 	ESymbolType symdb_get_source_file_type(const fspath& path);
 	void symdb_explore_sources(const fspath& path);
 
-	void symdb_register(Symbol symbol);
+	void symdb_register(const fspath& source, Symbol symbol);
 }

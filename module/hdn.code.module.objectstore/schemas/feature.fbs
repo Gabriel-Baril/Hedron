@@ -1,0 +1,24 @@
+include "core.fbs";
+include "meta.fbs";
+
+namespace hdn;
+
+table FeatureZoneEntry {
+    asset_name: string;
+    asset_type: AssetType;
+}
+
+table FeatureZone {
+    alias_asset: string;
+    asset_entries: [FeatureZoneEntry];
+}
+
+table FeatureAsset {
+    id: ulong;
+    meta: Metadata;
+    name: string;
+    feature_assets: string; // Child features of this features
+    zones: [FeatureZone];
+}
+
+root_type FeatureAsset;

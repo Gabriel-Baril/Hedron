@@ -1,0 +1,20 @@
+include "core.fbs";
+include "meta.fbs";
+
+namespace hdn;
+
+enum Platform : byte
+{
+    UNKNOWN,
+    PC,
+}
+
+table BuildConfigAsset {
+    meta: Metadata;
+    id: ulong;
+    name: string;
+    platform: Platform;
+    features: [string];
+}
+
+root_type BuildConfigAsset;

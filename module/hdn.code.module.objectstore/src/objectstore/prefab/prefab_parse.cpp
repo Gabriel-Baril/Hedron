@@ -6,6 +6,7 @@
 #include "prefab_component_uuid.h"
 
 #include "core/hash.h"
+#include "objectstore/xsrc.h"
 
 namespace hdn
 {
@@ -53,13 +54,11 @@ namespace hdn
 		return true;
 	}
 
-	bool prefab_parse_callback(const pugi::xml_node& symbolNode)
+	bool prefab_parse_callback(const pugi::xml_node& symbolNode, const SourceContext& ctx)
 	{
 		SPrefabDef def;
 		bool success = prefab_parse(def, symbolNode);
 
-		HINFO("xsymbol (prefab) '{0}' registered", def.name);
-		// TODO: Register prefab to relevant pipeline systems
 		return success;
 	}
 }
