@@ -44,4 +44,5 @@ namespace hdn
 	void symdb_explore_sources(const fspath& path);
 
 	void symdb_register(const fspath& source, Symbol symbol);
+	fspath* symdb_get_source(Symbol symbol);
 }

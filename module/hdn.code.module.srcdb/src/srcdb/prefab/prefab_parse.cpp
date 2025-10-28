@@ -6,7 +6,7 @@
 #include "prefab_component_uuid.h"
 
 #include "core/hash.h"
-#include "objectstore/xsrc.h"
+#include "srcdb/xsrc.h"
 
 namespace hdn
 {

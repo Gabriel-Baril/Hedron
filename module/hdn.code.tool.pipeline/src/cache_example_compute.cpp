@@ -1,6 +1,6 @@
 #include "cache_example_compute.h"
 
-#include "objectstore/cache.h"
+#include "srcdb/cache.h"
 #include "hobj/hobj_registry.h"
 
 #define EXAMPLE_COMPUTE_V1 "EXAMPLE_COMPUTE_V1"

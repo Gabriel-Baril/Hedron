@@ -23,7 +23,7 @@ public class HdnCodeToolPipelineProject : BaseCppProject
 
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
         conf.AddPublicDependency<HdnCodeModuleSharedProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleObjectStoreProject>(target);
+        conf.AddPublicDependency<HdnCodeModuleSrcDBProject>(target);
         conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
         conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
         conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);

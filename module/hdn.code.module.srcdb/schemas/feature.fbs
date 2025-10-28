@@ -17,7 +17,7 @@ table FeatureAsset {
     id: ulong;
     meta: Metadata;
     name: string;
-    feature_assets: string; // Child features of this features
+    feature_assets: [string]; // Child features of this features
     zones: [FeatureZone];
 }
 

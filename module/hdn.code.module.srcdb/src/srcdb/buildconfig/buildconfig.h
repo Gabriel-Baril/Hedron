@@ -3,11 +3,11 @@
 #include "core/hash.h"
 #include "core/stl/vector.h"
 
-#include "objectstore/symdb.h"
 #include "pugixml/pugixml.hpp"
-#include "objectstore/xsrc.h"
 
-#include "objectstore/generated/buildconfig_generated.h"
+#include "srcdb/symdb.h"
+#include "srcdb/xsrc.h"
+#include "srcdb/generated/buildconfig_generated.h"
 
 namespace hdn
 {

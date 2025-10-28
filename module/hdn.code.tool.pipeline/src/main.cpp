@@ -9,9 +9,9 @@
 #include "args.h"
 #include <iostream>
 
-#include "objectstore/cache.h"
-#include "objectstore/symdb.h"
-#include "objectstore/buildconfig/buildconfig.h"
+#include "srcdb/cache.h"
+#include "srcdb/symdb.h"
+#include "srcdb/buildconfig/buildconfig.h"
 
 int main(int argc, char *argv[])
 {

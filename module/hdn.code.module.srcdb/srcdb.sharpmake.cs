@@ -1,11 +1,11 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeModuleObjectStoreProject : BaseCppProject
+public class HdnCodeModuleSrcDBProject : BaseCppProject
 {
-    public HdnCodeModuleObjectStoreProject()
+    public HdnCodeModuleSrcDBProject()
     {
-        Name = "hdn.code.module.objectstore";
+        Name = "hdn.code.module.srcdb";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

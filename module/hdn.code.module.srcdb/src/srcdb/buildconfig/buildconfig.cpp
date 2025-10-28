@@ -1,5 +1,5 @@
 #include "buildconfig.h"
-#include "objectstore/cache.h"
+#include "srcdb/cache.h"
 
 namespace hdn
 {

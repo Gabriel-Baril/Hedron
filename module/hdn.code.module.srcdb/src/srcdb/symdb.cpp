@@ -10,7 +10,7 @@ namespace hdn
 {
 	struct SymDBGlob
 	{
-		unordered_map<fspath, vector<Symbol>> symmap{};
+		unordered_map<Symbol, fspath> symmap{};
 	};
 
 	static SymDBGlob s_SymDBGlob{};
@@ -116,6 +116,15 @@ namespace hdn
 
 	void symdb_register(const fspath& source, Symbol symbol)
 	{
-		s_SymDBGlob.symmap[source].emplace_back(symbol);
+		s_SymDBGlob.symmap[symbol] = source;
+	}
+
+	fspath* symdb_get_source(Symbol symbol)
+	{
+		if (s_SymDBGlob.symmap.contains(symbol))
+		{
+			return &s_SymDBGlob.symmap[symbol];
+		}
+		return nullptr;
 	}
 }
