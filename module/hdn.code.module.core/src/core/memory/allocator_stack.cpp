@@ -17,7 +17,7 @@ namespace hdn
 	void* stack_allocator_allocate(StackAllocator& allocator, u64 size, u64 alignment)
 	{
 		HASSERT(size > 0, "Size needs to be greater than 0");
-		const u64 newStart = memory_align(allocator.allocatedSize, alignment);
+		const u64 newStart = core_memalign(allocator.allocatedSize, alignment);
 		HASSERT(newStart < allocator.totalSize, "Overflow!");
 		const u64 newAllocatedSize = newStart + size;
 		HASSERT(newAllocatedSize < allocator.totalSize, "Overflow!");

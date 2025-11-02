@@ -78,7 +78,7 @@ namespace hdn
 				fbFeatures);
 
 		FinishBuildConfigAssetBuffer(builder, buildConfig);
-		cache_create_entry(id, builder.GetBufferPointer(), builder.GetSize(), true);
+		cache_obj_store(id, builder.GetBufferPointer(), builder.GetSize(), true);
 		return true;
 	}
 
@@ -92,6 +92,6 @@ namespace hdn
 	void buildconfig_get(const char *name, BuildConfigAsset *builconfig)
 	{
 		uint64_t object_id = static_cast<uint64_t>(hash_generate(name, strlen(name)));
-		cache_fetch(object_id, reinterpret_cast<char *>(builconfig));
+		cache_obj_load(object_id, reinterpret_cast<char *>(builconfig));
 	}
 }

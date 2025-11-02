@@ -27,6 +27,7 @@ public class HdnCodeModuleSrcDBProject : BaseCppProject
         conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
         conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
         conf.AddPublicDependency<HdnCodeExternalFlatbuffersProject>(target);
+        conf.AddPublicDependency<HdnCodeExternalTLSFProject>(target);
 
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
     }

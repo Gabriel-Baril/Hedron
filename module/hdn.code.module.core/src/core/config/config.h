@@ -30,5 +30,5 @@ namespace hdn
 
 	void config_init();
 	fspath config_get_root_config_path();
-	string config_get_root_config_variable(const string& section, const string& name, const string& defaultValue);
+	string config_get_config_variable(const string& section, const string& name, const string& defaultValue);
 }

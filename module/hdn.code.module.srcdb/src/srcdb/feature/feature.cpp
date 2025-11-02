@@ -22,7 +22,7 @@ namespace hdn
 		Symbol sym = get_symbol_from_name(name);
 		const fspath* path = symdb_get_source(sym);
 		xsrc_agnostic_parse(*path);
-		if(cache_entry_exist(id))
+		if(cache_obj_exist(id))
 		{
 			return RequestResult::NOT_FOUND;
 		}

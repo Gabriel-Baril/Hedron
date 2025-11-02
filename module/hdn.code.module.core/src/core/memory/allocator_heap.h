@@ -8,7 +8,7 @@ namespace hdn
 	struct HeapAllocator
 	{
 		void* memory;
-		void* TLSFHandle;
+		tlsf_t TLSFHandle;
 		u64 allocatedSize;
 		u64 maxSize;
 	};

@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
 	const FPipelineCmdArgs &args = args_get();
 
-	std::string dataModulePath = config_get_root_config_variable(CONFIG_SECTION_DATA, CONFIG_KEY_DATA_MODULE_PATH, "");
+	std::string dataModulePath = config_get_config_variable(CONFIG_SECTION_DATA, CONFIG_KEY_DATA_MODULE_PATH, "");
 
 	auto start = std::chrono::high_resolution_clock::now();
 	symdb_explore_sources(dataModulePath);

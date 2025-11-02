@@ -1,0 +1,20 @@
+namespace hdn;
+
+struct PathDep {
+    path_hash: ulong;
+    timestamp: ulong;
+}
+
+struct ObjDep {
+    obj_id: ulong;
+}
+
+table CacheObject {
+    total_path_dep: ushort;
+    total_obj_dep: ushort;
+    path_dependencies: [PathDep];
+    obj_dependencies: [ObjDep];
+    payload: [byte];
+}
+
+root_type CacheObject;

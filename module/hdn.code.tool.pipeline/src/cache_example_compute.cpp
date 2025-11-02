@@ -15,11 +15,11 @@ namespace hdn
 		builder.add(count);
 
 		char *data = nullptr;
-		if (cache_entry_exist(builder.hash))
+		if (cache_obj_exist(builder.hash))
 		{
-			u64 entrySize = cache_entry_size(builder.hash);
+			u64 entrySize = cache_obj_size(builder.hash);
 			data = new char[entrySize];
-			cache_fetch(builder.hash, data);
+			cache_obj_load(builder.hash, data);
 			FExampleCompute example;
 			example = *reinterpret_cast<FExampleCompute *>(data);
 			delete[] data;
@@ -29,7 +29,7 @@ namespace hdn
 		FExampleCompute example;
 		example.number = number;
 		example.count = count;
-		cache_create_entry(builder.hash, &example, sizeof(FExampleCompute));
+		cache_obj_store(builder.hash, &example, sizeof(FExampleCompute));
 		return example;
 	}
 }
