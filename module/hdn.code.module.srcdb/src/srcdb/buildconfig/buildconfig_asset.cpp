@@ -29,8 +29,8 @@ namespace hdn
 		object_request_failure_generic(sig, result);
 	}
 
-	void object_fetch_failure(const Signature<XBuildConfigAsset>& sig)
+	void object_load_failure(const Signature<XBuildConfigAsset>& sig)
 	{
-		object_fetch_failure_generic(sig);
+		object_load_failure_generic(sig);
 	}
 }

@@ -13,7 +13,6 @@ namespace hdn
 	void* object_touch(const Signature<T>& sig)
 	{
 		const u64 objectId = object_get_id(sig);
-		// TODO: Store the signature of the underlying object id
 
 		if (void* object = cache_obj_load(objectId))
 		{
@@ -32,7 +31,7 @@ namespace hdn
 		void* object = cache_obj_load(objectId);
 		if (!object)
 		{
-			object_fetch_failure(sig);
+			object_load_failure(sig);
 			return nullptr;
 		}
 
@@ -52,7 +51,8 @@ namespace hdn
 		{
 		}
 
-		void* get()
+		template<typename U>
+		U* get()
 		{
 			void* object = (void*)cache_obj_load(objectId);
 			if (object)
@@ -65,7 +65,7 @@ namespace hdn
 			{
 				return nullptr;
 			}
-			return object_touch(*sig);
+			return (U*)object_touch<T>(*sig);
 		}
 
 		~Handle()
@@ -81,8 +81,8 @@ namespace hdn
 	template<typename T>
 	Handle<T> object_get(const Signature<T>& sig)
 	{
-		const u64 objectId = object_get_id(sig);
 		(void*)object_touch(sig);
+		const u64 objectId = object_get_id(sig);
 		return Handle<T>{ objectId };
 	}
 	
@@ -95,7 +95,7 @@ namespace hdn
 	}
 	
 	template<typename T>
-	void object_fetch_failure_generic(const Signature<T>& sig)
+	void object_load_failure_generic(const Signature<T>& sig)
 	{
 		char slug[512];
 		object_get_slug(sig, slug, ARRLEN(slug));

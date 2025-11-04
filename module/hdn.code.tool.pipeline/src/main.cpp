@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
 	}
 	config_init();
 	cache_init();
+	signature_init();
 
 	HINFO("Pipeline started");
 
