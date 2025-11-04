@@ -151,6 +151,7 @@ namespace hdn
 			ObjectMetadata* meta = cache_obj_meta(id);
 			if (meta)
 			{
+                meta->useCount++;
 				// The object is already in memory
 				return meta->data;
 			}
@@ -178,6 +179,7 @@ namespace hdn
 			return false;
         }
 
+		meta.useCount++;
         return true;
     }
 
@@ -185,19 +187,26 @@ namespace hdn
     {
         ObjectMetadata* meta = cache_obj_meta(id);
         if (!meta)
-        {
+		{
             // The object is already not in the cache no need to unload it
             return;
         }
 
-        if (!cache_cold_cached(id))
-        {
-            cache_obj_store(id, meta->data, meta->size);
-        }
+		meta->useCount--;
 
-        heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->pathDependencies);
-        heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->objDependencies);
-        heap_allocator_deallocate(s_CacheGlob.objectAllocator, meta->data);
+        if (meta->useCount > 0)
+		{
+            return;
+		}
+
+		if (!cache_cold_cached(id))
+		{
+			cache_obj_store(id, meta->data, meta->size);
+		}
+
+		heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->pathDependencies);
+		heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->objDependencies);
+		heap_allocator_deallocate(s_CacheGlob.objectAllocator, meta->data);
     }
 
     bool cache_obj_invalidated(obj_t id)

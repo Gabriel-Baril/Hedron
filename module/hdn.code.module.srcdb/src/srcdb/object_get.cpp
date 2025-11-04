@@ -6,9 +6,4 @@ namespace hdn
 	{
 		return result == RequestResult::SUCCESS;
 	}
-
-	bool fetch_success(FetchResult result)
-	{
-		return result == FetchResult::SUCCESS;
-	}
 }

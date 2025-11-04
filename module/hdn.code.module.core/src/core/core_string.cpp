@@ -2,6 +2,8 @@
 
 #include <string.h>
 #include <ctype.h>
+#include <cstdarg>   // va_list, va_start, va_end
+#include <cstdio>    // vsnprintf
 
 namespace hdn
 {
@@ -153,6 +155,14 @@ namespace hdn
 			return;
 		}
 		strcpy(dest, begin);
+	}
+
+	void core_snprintf(char* buffer, size_t bufferSize, const char* format, ...)
+	{
+		va_list args;
+		va_start(args, format);
+		vsnprintf(buffer, bufferSize, format, args);
+		va_end(args);
 	}
 
 	string trim(const string& str)

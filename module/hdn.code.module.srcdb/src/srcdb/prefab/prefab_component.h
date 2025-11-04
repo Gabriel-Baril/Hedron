@@ -1,10 +1,19 @@
 #pragma once
 
 #include "core/core.h"
-#include "prefab_component_parse.h"
 
 namespace hdn
 {
+	struct PrefabHierarchyComponent
+	{
+		int dummy;
+	};
+
+	struct PrefabModelComponent
+	{
+		int dummy;
+	};
+
 	struct PrefabTransformComponent
 	{
 		vec3f32 position{};
@@ -12,5 +21,8 @@ namespace hdn
 		vec3f32 rotation{}; // In radians (Euler YXZ)
 	};
 
-	bool component_parse_transform(pugi::xml_node componentNode, flecs::entity ent);
+	struct PrefabUUIDComponent
+	{
+		u64 uuid;
+	};
 }

@@ -5,12 +5,13 @@
 
 #include "xsrc.h"
 #include "nxsrc.h"
+#include "strdb.h"
 
 namespace hdn
 {
 	struct SymDBGlob
 	{
-		unordered_map<Symbol, fspath> symmap{};
+		unordered_map<sym_t, SymbolMetadata> symmap{};
 	};
 
 	static SymDBGlob s_SymDBGlob{};
@@ -80,7 +81,7 @@ namespace hdn
 		return s_SourceParseCallbacks[underlying(type)];
 	}
 
-	Symbol get_symbol_from_name(const char* symbol)
+	sym_t get_symbol_from_name(const char* symbol)
 	{
 		return hash_generate(symbol);
 	}
@@ -114,17 +115,25 @@ namespace hdn
 		filesystem_iterate(path, explore_source, true);
 	}
 
-	void symdb_register(const fspath& source, Symbol symbol)
-	{
-		s_SymDBGlob.symmap[symbol] = source;
-	}
-
-	fspath* symdb_get_source(Symbol symbol)
+	const SymbolMetadata* symdb_get_meta(sym_t symbol)
 	{
 		if (s_SymDBGlob.symmap.contains(symbol))
 		{
 			return &s_SymDBGlob.symmap[symbol];
 		}
 		return nullptr;
+	}
+
+	void symdb_register(sym_t symbol, const char* name, ESymbolType type, const fspath& path)
+	{
+		if (symdb_get_meta(symbol))
+		{
+			return;
+		}
+		
+		SymbolMetadata& meta = s_SymDBGlob.symmap[symbol];
+		meta.name = strdb_allocate(name);
+		meta.type = type;
+		meta.path = path;
 	}
 }

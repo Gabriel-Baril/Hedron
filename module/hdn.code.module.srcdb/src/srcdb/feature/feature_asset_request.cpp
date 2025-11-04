@@ -1,9 +1,9 @@
-#include "feature_convert.h"
+#include "feature_asset_request.h"
 
 #include "srcdb/generated/feature_generated.h"
 #include "srcdb/xml_util.h"
 #include "srcdb/fbs_util.h"
-#include "feature.h"
+#include "feature_asset.h"
 
 namespace hdn
 {	
@@ -15,10 +15,10 @@ namespace hdn
 	static constexpr const char* XML_FEATURE_NODE_ZONE_NAME = "Zone";
 	static constexpr const char* XML_FEATURE_ATTR_ZONE_NAME = "zone";
 	
-	static bool feature_parse(flatbuffers::FlatBufferBuilder &builder, const pugi::xml_node &node, const SourceContext &ctx)
+	static bool feature_asset_parse(flatbuffers::FlatBufferBuilder &builder, const pugi::xml_node &node, const SourceContext &ctx)
 	{	
 		// Meta
-		auto fbMeta = create_meta(builder, ctx, FEATURE_CODE_VERSION);
+		auto fbMeta = create_meta(builder, ctx, FEATURE_ASSET_CODE_VERSION);
 
 		// Name & id
 		const char* nameStr = get_xml_attr(node, "name");
@@ -57,10 +57,10 @@ namespace hdn
 		return true;
 	}
 
-	bool feature_parse_callback(const pugi::xml_node &node, const SourceContext &ctx)
+	bool feature_asset_xsrc_parse(const pugi::xml_node &node, const SourceContext &ctx)
 	{
 		flatbuffers::FlatBufferBuilder builder(2048);
-		feature_parse(builder, node, ctx);
+		feature_asset_parse(builder, node, ctx);
 
 		// TODO
 		// FeatureAssetSignature sig;

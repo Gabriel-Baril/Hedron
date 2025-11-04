@@ -12,10 +12,9 @@ namespace hdn
 {
 	struct SPrefabDef
 	{
-		Symbol name;
+		sym_t name;
 		flecs::world world;
 	};
 
 	void prefab_set_world(SPrefabDef& prefab, flecs::world world);
-
 }

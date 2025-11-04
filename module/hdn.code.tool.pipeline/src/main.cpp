@@ -36,5 +36,8 @@ int main(int argc, char *argv[])
 	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 	std::cout << "symdb_explore_sources took " << duration.count() << " nanoseconds.";
 
+	Signature<XBuildConfigAsset> sig = make_signature<XBuildConfigAsset>("dreamlike_pc.buildconfig");
+	Handle<XBuildConfigAsset> buildconfig = buildconfig_get(sig);
+
 	return 0;
 }

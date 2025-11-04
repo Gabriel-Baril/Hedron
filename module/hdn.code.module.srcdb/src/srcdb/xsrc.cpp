@@ -17,7 +17,7 @@ namespace hdn
 		nullptr, // stringtable
 		nullptr, // text
 		prefab_parse_callback, // prefab
-		buildconfig_parse_callback // buildconfig
+		buildconfig_asset_xsrc_parse // buildconfig
 	};
 
 	static bool xsymbol_agnostic_parse(ESymbolType type, const pugi::xml_node& symbolNode, const SourceContext& ctx)
@@ -50,7 +50,7 @@ namespace hdn
 			if (symdb_is_xsymbol(type))
 			{
 				const pugi::char_t* symbolName = symbolNode.attribute("name").as_string(); // Every xsymbol node has a name
-				Symbol symbol = get_symbol_from_name(symbolName);
+				sym_t symbol = get_symbol_from_name(symbolName);
 
 				SourceContext ctx;
 				ctx.path = path;
@@ -58,7 +58,7 @@ namespace hdn
 
 				if (ok)
 				{
-					symdb_register(ctx.path, symbol);
+					symdb_register(symbol, symbolName, type, ctx.path);
 					HINFO("xsymbol ({0}) '{1}' ({2}) registered", symdb_sym_to_str(type), symbolName, symbol);
 				}
 			}

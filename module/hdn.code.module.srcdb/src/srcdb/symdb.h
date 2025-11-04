@@ -4,7 +4,7 @@
 
 namespace hdn
 {
-	using Symbol = u64;
+	using sym_t = u64;
 	constexpr u64 SYMNULL = 0;
 	constexpr u32 SYMBOL_TYPE_MAX_LENGTH = 255;
 	constexpr u32 SYMBOL_ATTRIBUTE_VALUE_MAX_LENGTH = 512;
@@ -30,6 +30,13 @@ namespace hdn
 		unknown
 	};
 
+	struct SymbolMetadata
+	{
+		const char* name;
+		ESymbolType type;
+		fspath path;
+	};
+
 	using SourceParseCallback = bool(*)(const fspath& path);
 
 	const char* symdb_sym_to_str(ESymbolType type);
@@ -37,12 +44,12 @@ namespace hdn
 
 	SourceParseCallback symdb_get_parse_callback(ESymbolType type);
 
-	Symbol get_symbol_from_name(const char* symbol);
+	sym_t get_symbol_from_name(const char* symbol);
 	bool symdb_is_xsymbol(ESymbolType type);
 	bool symdb_is_nxsymbol(ESymbolType type);
 	ESymbolType symdb_get_source_file_type(const fspath& path);
 	void symdb_explore_sources(const fspath& path);
 
-	void symdb_register(const fspath& source, Symbol symbol);
-	fspath* symdb_get_source(Symbol symbol);
+	const SymbolMetadata* symdb_get_meta(sym_t symbol);
+	void symdb_register(sym_t symbol, const char* name, ESymbolType type, const fspath& path);
 }

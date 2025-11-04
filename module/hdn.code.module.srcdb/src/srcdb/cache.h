@@ -28,6 +28,7 @@ namespace hdn
 	struct ObjectMetadata
 	{
 		bool built = false;
+		u16 useCount = 0;
 		u16 totalPathDep = 0;
 		u16 totalObjDep = 0;
 		u16 currentPathDep = 0;

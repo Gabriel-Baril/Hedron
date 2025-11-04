@@ -1,5 +1,6 @@
 #include "core/core.h"
 #include "cache.h"
+#include "signature.h"
 
 namespace hdn
 {
@@ -8,46 +9,85 @@ namespace hdn
 		NOT_FOUND
 	};
 	
-	enum class FetchResult {
-		SUCCESS,
-		NOT_FOUND,
-		INVALIDATED
-	};
-
-	bool request_success(RequestResult result);
-	bool fetch_success(FetchResult result);
-
 	template<typename T>
-	bool object_get(const T& sig, void* data)
+	void* object_touch(const Signature<T>& sig)
 	{
 		const u64 objectId = object_get_id(sig);
-		const FetchResult fetchResult = FetchResult::NOT_FOUND; // TODO: cache_fetch(objectId, &data);
-		if(fetch_success(fetchResult))
+		// TODO: Store the signature of the underlying object id
+
+		if (void* object = cache_obj_load(objectId))
 		{
-			return true;
+			return object;
 		}
-		
+
 		// If fetching fails for some reasons that's ok. Multiple causes are possible.
 		// Object not in the cache, one dependency of the object was invalidated, etc
 		const RequestResult requestResult = object_request(sig);
-		if(!request_success(requestResult))
+		if (!request_success(requestResult))
 		{
 			object_request_failure(sig, requestResult);
 			return false;
 		}
-		
-		const FetchResult result = FetchResult::NOT_FOUND; // cache_fetch(objectId, &data);
-		if(!fetch_success(result))
+
+		void* object = cache_obj_load(objectId);
+		if (!object)
 		{
-			object_fetch_failure(sig, result);
-			return false;
+			object_fetch_failure(sig);
+			return nullptr;
+		}
+
+		return object;
+	}
+
+	template<typename T>
+	struct Handle
+	{
+		Handle(obj_t id)
+			: objectId{ id }
+		{
 		}
 		
-		return true;
+		Handle()
+			: objectId{}
+		{
+		}
+
+		void* get()
+		{
+			void* object = (void*)cache_obj_load(objectId);
+			if (object)
+			{
+				return object;
+			}
+
+			Signature<T>* sig = (Signature<T>*)signature_get(objectId);
+			if (!sig)
+			{
+				return nullptr;
+			}
+			return object_touch(*sig);
+		}
+
+		~Handle()
+		{
+			cache_obj_unload(objectId);
+		}
+
+		obj_t objectId = 0;
+	};
+
+	bool request_success(RequestResult result);
+
+	template<typename T>
+	Handle<T> object_get(const Signature<T>& sig)
+	{
+		const u64 objectId = object_get_id(sig);
+		(void*)object_touch(sig);
+		return Handle<T>{ objectId };
 	}
 	
 	template<typename T>
-	void object_request_failure_generic(const T& sig, RequestResult result)
+	void object_request_failure_generic(const Signature<T>& sig, RequestResult result)
 	{
 		char slug[512];
 		object_get_slug(sig, slug, ARRLEN(slug));
@@ -55,7 +95,7 @@ namespace hdn
 	}
 	
 	template<typename T>
-	void object_fetch_failure_generic(const T& sig, FetchResult result)
+	void object_fetch_failure_generic(const Signature<T>& sig)
 	{
 		char slug[512];
 		object_get_slug(sig, slug, ARRLEN(slug));

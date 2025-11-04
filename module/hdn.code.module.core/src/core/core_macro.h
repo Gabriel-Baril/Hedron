@@ -56,4 +56,16 @@ namespace hdn
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
+
+	template<typename T, typename Tag>
+	struct StrongTypedef {
+		T value;
+
+		constexpr StrongTypedef() = default;
+		constexpr explicit StrongTypedef(const T& v) : value(v) {}
+
+		// Implicit access if desired
+		constexpr operator const T& () const { return value; }
+		constexpr operator T& () { return value; }
+	};
 }

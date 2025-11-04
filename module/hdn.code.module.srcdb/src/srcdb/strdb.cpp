@@ -1,6 +1,6 @@
 #include "strdb.h"
 
-#include "core/memory/allocator_heap.h"
+#include "core/memory/allocator_heap_string.h"
 #include "core/memory/core_memory.h"
 
 namespace hdn
@@ -22,7 +22,7 @@ namespace hdn
 
 		u8* strMemory = new u8[STRDB_MEMORY_POOL_SIZE];
 		core_memset(strMemory, 0, STRDB_MEMORY_POOL_SIZE);
-		heap_allocator_init(s_StrDBGlob.strAllocator, strMemory, STRDB_MEMORY_POOL_SIZE);
+		str_heap_allocator_init(s_StrDBGlob.strAllocator, strMemory, STRDB_MEMORY_POOL_SIZE);
 		s_StrDBGlob.initialized = true;
 	}
 
@@ -30,19 +30,17 @@ namespace hdn
 	{
 		if (!s_StrDBGlob.initialized)
 		{
-			s_StrDBGlob.initialized = false;
+			return;
 		}
 
-		heap_allocator_shutdown(s_StrDBGlob.strAllocator);
+		str_heap_allocator_shutdown(s_StrDBGlob.strAllocator);
 		delete[] s_StrDBGlob.strAllocator.memory;
 		s_StrDBGlob.initialized = false;
 	}
 
 	char* strdb_allocate(const char* source, u64 len)
-	{	
-		char* ptr = (char*)heap_allocator_allocate(s_StrDBGlob.strAllocator, sizeof(char) * len, alignof(char));
-		core_strcpy(ptr, source);
-		return ptr;
+	{
+		return str_heap_allocator_allocate(s_StrDBGlob.strAllocator, source); // str_heap_allocator_allocate already core_memcpy the data into the dst string
 	}
 
 	char* strdb_allocate(const char* source)
@@ -52,6 +50,6 @@ namespace hdn
 
 	void strdb_deallocate(char* source)
 	{
-		heap_allocator_deallocate(s_StrDBGlob.strAllocator, source);
+		str_heap_allocator_deallocate(s_StrDBGlob.strAllocator, source);
 	}
 }
