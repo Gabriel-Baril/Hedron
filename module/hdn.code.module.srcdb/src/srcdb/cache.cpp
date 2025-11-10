@@ -31,7 +31,6 @@ namespace hdn
 	
     static void create_meta_from_cache(ObjectMetadata& meta)
     {
-
     }
 
 	static void cache_file_write(const std::string& path, const u8* buffer, size_t size)
@@ -63,6 +62,23 @@ namespace hdn
 			return false;
 		}
 		return true;
+	}
+
+	static void cache_init_meta(ObjectMetadata& meta, const BeginObjectInfo& info)
+	{
+		meta.totalPathDep = info.totalPathDep;
+		meta.totalObjDep = info.totalObjDep;
+		meta.pathDependencies = nullptr;
+
+		if (meta.totalPathDep > 0)
+		{
+			meta.pathDependencies = (CPathDep*)heap_allocator_allocate(s_CacheGlob.metadataAllocator, sizeof(CPathDep) * meta.totalPathDep, alignof(CPathDep));
+		}
+
+		if (meta.currentObjDep > 0)
+		{
+			meta.objDependencies = (CObjDep*)heap_allocator_allocate(s_CacheGlob.metadataAllocator, sizeof(CObjDep) * meta.totalObjDep, alignof(CObjDep));
+		}
 	}
 
     bool cache_init()
@@ -105,24 +121,24 @@ namespace hdn
         return s_CacheGlob.meta[id];
     }
 
+	void cache_obj_meta_delete(obj_t id)
+	{
+		ObjectMetadata* meta = cache_obj_meta(id);
+		if (meta)
+		{
+			heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->pathDependencies);
+			heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->objDependencies);
+			heap_allocator_deallocate(s_CacheGlob.objectAllocator, const_cast<void*>(meta->data));
+			s_CacheGlob.meta.erase(id);
+		}
+	}
+
 	void cache_obj_begin(obj_t id, const BeginObjectInfo& info)
 	{
 		ObjectMetadata& meta = cache_obj_meta_create(id);
-		meta.totalPathDep = info.totalPathDep;
-		meta.totalObjDep = info.totalObjDep;
+		cache_init_meta(meta, info);
 		meta.currentPathDep = 0;
 		meta.currentObjDep = 0;
-        meta.pathDependencies = nullptr;
-
-        if (meta.totalPathDep > 0)
-		{
-			meta.pathDependencies = (CPathDep*)heap_allocator_allocate(s_CacheGlob.metadataAllocator, sizeof(CPathDep) * meta.totalPathDep, alignof(CPathDep));
-        }
-
-        if (meta.currentObjDep > 0)
-		{
-			meta.objDependencies = (CObjDep*)heap_allocator_allocate(s_CacheGlob.metadataAllocator, sizeof(CObjDep) * meta.totalObjDep, alignof(CObjDep));
-        }
 	}
 
 	void cache_obj_objdep(obj_t id, obj_t objDepId)
@@ -150,7 +166,6 @@ namespace hdn
 
 		void* objData = heap_allocator_allocate(s_CacheGlob.objectAllocator, payloadSize, alignof(u8));
 		core_memcpy(objData, payload, payloadSize);
-
 		meta->data = objData;
         meta->size = payloadSize;
     }
@@ -162,20 +177,23 @@ namespace hdn
 		HASSERT(meta->currentPathDep == meta->totalPathDep, "cache_obj_end: mismatch in path dependency count for object '{0}'", id);
 		HASSERT(meta->currentObjDep == meta->totalObjDep, "cache_obj_end: mismatch in object dependency count for object '{0}'", id);
 
-		std::string cacheObjPath;
-		cache_obj_path(id, cacheObjPath);
-		if (cache_obj_exist(cacheObjPath))
-		{
-			// The cache entry associated with the hash already exists
-			return;
-		}
+		meta->built = true;
+    }
+
+	void cache_obj_save(obj_t id)
+	{
+		ObjectMetadata* meta = cache_obj_meta(id);
+		HASSERT(!meta->built, "Cannot save an unfinished object");
+
 
 		// For now the cold-cache is just a 1:1 mapping between file and id for simplicity
 		flatbuffers::FlatBufferBuilder builder(meta->size + 1 * KB);
 		create_cache_from_meta(builder, *meta);
+
+		std::string cacheObjPath;
+		cache_obj_path(id, cacheObjPath);
 		cache_file_write(cacheObjPath, builder.GetBufferPointer(), builder.GetSize());
-		meta->built = true;
-    }
+	}
 
 
 	void cache_obj_path(obj_t id, std::string& path)
@@ -224,11 +242,27 @@ namespace hdn
 		ObjectMetadata& meta = cache_obj_meta_create(id);
         std::string path;
 		cache_obj_path(id, path);
+
 		std::vector<char> out;
 		cache_file_read(path, out);
+		const hdn::CacheObject* obj = flatbuffers::GetRoot<hdn::CacheObject>(out.data());
+
+		BeginObjectInfo info;
+		info.totalObjDep = obj->obj_dependencies()->size();
+		info.totalPathDep = obj->path_dependencies()->size();
+
+		cache_init_meta(meta, info);
+		meta.currentPathDep = info.totalObjDep;
+		meta.currentObjDep = info.totalPathDep;
+		core_memcpy(meta.objDependencies, obj->obj_dependencies(), obj->obj_dependencies()->size() * sizeof(CObjDep));
+		core_memcpy(meta.pathDependencies, obj->path_dependencies(), obj->path_dependencies()->size() * sizeof(CPathDep));
+		void* objData = heap_allocator_allocate(s_CacheGlob.objectAllocator, obj->payload()->size(), alignof(u8));
+		core_memcpy(objData, obj->payload(), obj->payload()->size());
+		meta.data = objData;
+		meta.size = obj->payload()->size();
 
 		meta.useCount++;
-        return nullptr; 
+        return meta.data;
     }
 
     void cache_obj_unload(obj_t id)
@@ -249,12 +283,10 @@ namespace hdn
 
 		if (!cache_cold_cached(id))
 		{
-			cache_obj_store(id, meta->data, meta->size);
+			cache_obj_save(id);
 		}
 
-		heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->pathDependencies);
-		heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->objDependencies);
-		heap_allocator_deallocate(s_CacheGlob.objectAllocator, meta->data);
+		cache_obj_meta_delete(id);
     }
 
     bool cache_obj_invalidated(obj_t id)

@@ -45,6 +45,7 @@ namespace hdn
 	void cache_obj_pathdep(obj_t id, fspath pathdep);
 	void cache_obj_payload(obj_t id, const void* payload, u64 payloadSize);
 	void cache_obj_end(obj_t id);
+	void cache_obj_save(obj_t id);
 
 	void cache_obj_path(obj_t id, std::string& path);
 	bool cache_obj_exist(obj_t id);
