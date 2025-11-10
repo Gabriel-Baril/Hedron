@@ -1,9 +1,9 @@
-#include "feature_asset_request.h"
+#include "xasset_parse.h"
+#include "xasset.h"
 
 #include "srcdb/generated/feature_generated.h"
 #include "srcdb/xml_util.h"
 #include "srcdb/fbs_util.h"
-#include "feature_asset.h"
 
 namespace hdn
 {	
@@ -16,13 +16,9 @@ namespace hdn
 	static constexpr const char* XML_FEATURE_ATTR_ZONE_NAME = "zone";
 	
 	static bool feature_asset_parse(flatbuffers::FlatBufferBuilder &builder, const pugi::xml_node &node, const SourceContext &ctx)
-	{	
-		// Meta
-		auto fbMeta = create_meta(builder, ctx, FEATURE_ASSET_CODE_VERSION);
-
+	{
 		// Name & id
 		const char* nameStr = get_xml_attr(node, "name");
-		uint64_t id = static_cast<uint64_t>(hash_generate(nameStr, strlen(nameStr)));
 		auto fbName = builder.CreateString(nameStr);
 		
 		// <Features>
@@ -42,22 +38,23 @@ namespace hdn
 		);
 		
 
-		// TODO
-		// auto fbFeatureAsset = CreateFeatureAsset(
-		// 		builder,
-		// 	id,
-		// 	fbMeta,
-		// 		fbName,
-		// 		fbFeatures,
-		// 	fbZones
-		// );
+		Signature<XFeatureAssetObject> sig(nameStr);
+		const u64 oId = object_get_id(sig);
+		auto fbFeatureAsset = CreateXFeatureAsset(
+			builder,
+			oId,
+			fbName,
+			fbFeatures,
+			fbZones
+		);
 
-		// FinishFeatureAssetBuffer(builder, fbFeatureAsset);
+		FinishXFeatureAssetBuffer(builder, fbFeatureAsset);
+		cache_obj_store(oId, builder.GetBufferPointer(), builder.GetSize());
 		
 		return true;
 	}
 
-	bool feature_asset_xsrc_parse(const pugi::xml_node &node, const SourceContext &ctx)
+	bool xasset_parse_feature(const pugi::xml_node &node, const SourceContext &ctx)
 	{
 		flatbuffers::FlatBufferBuilder builder(2048);
 		feature_asset_parse(builder, node, ctx);

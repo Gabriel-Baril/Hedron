@@ -1,4 +1,5 @@
 #pragma once
+
 #include "core/core.h"
 
 // A module refer to a folder in \module containing a .module file. This file offer reflection mechanisms on modules.

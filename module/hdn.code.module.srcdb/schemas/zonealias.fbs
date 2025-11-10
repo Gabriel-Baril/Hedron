@@ -1,13 +1,11 @@
 include "core.fbs";
-include "meta.fbs";
 
 namespace hdn;
 
-table ZoneAliasAsset {
+table XZoneAliasAsset {
     id: ulong;
-    meta: Metadata;
     name: string;
     zone_name: string;
 }
 
-root_type ZoneAliasAsset;
+root_type XZoneAliasAsset;

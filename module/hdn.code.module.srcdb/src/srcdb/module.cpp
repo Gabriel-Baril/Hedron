@@ -61,7 +61,6 @@ namespace hdn
 
 				if (hasModule)
 				{
-					module_load();
 					HINFO("Found module folder: {0}", entry.path().string().c_str());
 				}
 			}

@@ -1,33 +1,33 @@
 namespace hdn;
 
-table KeyValue {
-    key:string;
-    value:string;
+table CKeyValue {
+    key: string;
+    value: string;
 }
 
 // Define a math vector type
-table Vec3
+table CVec3
 { 
-    x:float; 
-    y:float;
-    z:float;
+    x: float; 
+    y: float;
+    z: float;
 }
 
-table Vec4
+table CVec4
 {
-    x:float;
-    y:float;
-    z:float;
-    w:float;
+    x: float;
+    y: float;
+    z: float;
+    w: float;
 }
 
-struct uuid
+struct CUUID
 {
     low: ulong;
     high: ulong;
 }
 
-enum AssetType: uint {
+enum CAssetType: uint {
     buildconfig,
     feature,
     prefab,

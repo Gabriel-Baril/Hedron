@@ -12,6 +12,7 @@
 #include "srcdb/cache.h"
 #include "srcdb/symdb.h"
 #include "srcdb/buildconfig/buildconfig.h"
+#include "srcdb/request.h"
 
 int main(int argc, char *argv[])
 {
@@ -37,8 +38,19 @@ int main(int argc, char *argv[])
 	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 	std::cout << "symdb_explore_sources took " << duration.count() << " nanoseconds.";
 
-	Signature<XBuildConfigAsset> sig = make_signature<XBuildConfigAsset>("dreamlike_pc.buildconfig");
-	Handle<XBuildConfigAsset> buildconfig = buildconfig_get(sig);
+	Response<BuildConfigGetRequest> buildConfig = request_send<BuildConfigGetRequest>("dreamlike_pc.buildconfig");
+	const auto* vec = buildConfig.data->features();
+	if (vec)
+	{
+		for (flatbuffers::uoffset_t i = 0; i < vec->size(); ++i)
+		{
+			const char* featureName = vec->Get(i)->c_str();
+			if (featureName)
+			{
+				std::cout << "Feature[" << i << "]: " << featureName << '\n';
+			}
+		}
+	}
 
 	return 0;
 }

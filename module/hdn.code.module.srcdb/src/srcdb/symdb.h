@@ -1,4 +1,5 @@
 #pragma once
+
 #include "core/core.h"
 #include "core/core_filesystem.h"
 
@@ -20,6 +21,7 @@ namespace hdn
 		text,
 		prefab, // Format for structuring entities (xml-like)
 		buildconfig,
+		feature,
 		count,
 
 		nxsymbol_begin = vert_shader, // non xsymbol

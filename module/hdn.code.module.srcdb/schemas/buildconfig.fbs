@@ -1,20 +1,18 @@
 include "core.fbs";
-include "meta.fbs";
 
 namespace hdn;
 
-enum Platform : byte
+enum CPlatform : byte
 {
     UNKNOWN,
     PC,
 }
 
-table BuildConfigAsset {
-    meta: Metadata;
+table XBuildConfigAsset {
     id: ulong;
     name: string;
-    platform: Platform;
+    platform: CPlatform;
     features: [string];
 }
 
-root_type BuildConfigAsset;
+root_type XBuildConfigAsset;

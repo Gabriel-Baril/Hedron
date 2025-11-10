@@ -14,29 +14,28 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
              "Non-compatible flatbuffers version included");
 
 #include "core_generated.h"
-#include "meta_generated.h"
 
 namespace hdn {
 
-struct BuildConfigAsset;
-struct BuildConfigAssetBuilder;
+struct XBuildConfigAsset;
+struct XBuildConfigAssetBuilder;
 
-enum Platform : int8_t {
-  Platform_UNKNOWN = 0,
-  Platform_PC = 1,
-  Platform_MIN = Platform_UNKNOWN,
-  Platform_MAX = Platform_PC
+enum CPlatform : int8_t {
+  CPlatform_UNKNOWN = 0,
+  CPlatform_PC = 1,
+  CPlatform_MIN = CPlatform_UNKNOWN,
+  CPlatform_MAX = CPlatform_PC
 };
 
-inline const Platform (&EnumValuesPlatform())[2] {
-  static const Platform values[] = {
-    Platform_UNKNOWN,
-    Platform_PC
+inline const CPlatform (&EnumValuesCPlatform())[2] {
+  static const CPlatform values[] = {
+    CPlatform_UNKNOWN,
+    CPlatform_PC
   };
   return values;
 }
 
-inline const char * const *EnumNamesPlatform() {
+inline const char * const *EnumNamesCPlatform() {
   static const char * const names[3] = {
     "UNKNOWN",
     "PC",
@@ -45,40 +44,34 @@ inline const char * const *EnumNamesPlatform() {
   return names;
 }
 
-inline const char *EnumNamePlatform(Platform e) {
-  if (::flatbuffers::IsOutRange(e, Platform_UNKNOWN, Platform_PC)) return "";
+inline const char *EnumNameCPlatform(CPlatform e) {
+  if (::flatbuffers::IsOutRange(e, CPlatform_UNKNOWN, CPlatform_PC)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesPlatform()[index];
+  return EnumNamesCPlatform()[index];
 }
 
-struct BuildConfigAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef BuildConfigAssetBuilder Builder;
+struct XBuildConfigAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef XBuildConfigAssetBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_META = 4,
-    VT_ID = 6,
-    VT_NAME = 8,
-    VT_PLATFORM = 10,
-    VT_FEATURES = 12
+    VT_ID = 4,
+    VT_NAME = 6,
+    VT_PLATFORM = 8,
+    VT_FEATURES = 10
   };
-  const hdn::Metadata *meta() const {
-    return GetPointer<const hdn::Metadata *>(VT_META);
-  }
   uint64_t id() const {
     return GetField<uint64_t>(VT_ID, 0);
   }
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  hdn::Platform platform() const {
-    return static_cast<hdn::Platform>(GetField<int8_t>(VT_PLATFORM, 0));
+  hdn::CPlatform platform() const {
+    return static_cast<hdn::CPlatform>(GetField<int8_t>(VT_PLATFORM, 0));
   }
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *features() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FEATURES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_META) &&
-           verifier.VerifyTable(meta()) &&
            VerifyField<uint64_t>(verifier, VT_ID, 8) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
@@ -90,97 +83,90 @@ struct BuildConfigAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct BuildConfigAssetBuilder {
-  typedef BuildConfigAsset Table;
+struct XBuildConfigAssetBuilder {
+  typedef XBuildConfigAsset Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_meta(::flatbuffers::Offset<hdn::Metadata> meta) {
-    fbb_.AddOffset(BuildConfigAsset::VT_META, meta);
-  }
   void add_id(uint64_t id) {
-    fbb_.AddElement<uint64_t>(BuildConfigAsset::VT_ID, id, 0);
+    fbb_.AddElement<uint64_t>(XBuildConfigAsset::VT_ID, id, 0);
   }
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
-    fbb_.AddOffset(BuildConfigAsset::VT_NAME, name);
+    fbb_.AddOffset(XBuildConfigAsset::VT_NAME, name);
   }
-  void add_platform(hdn::Platform platform) {
-    fbb_.AddElement<int8_t>(BuildConfigAsset::VT_PLATFORM, static_cast<int8_t>(platform), 0);
+  void add_platform(hdn::CPlatform platform) {
+    fbb_.AddElement<int8_t>(XBuildConfigAsset::VT_PLATFORM, static_cast<int8_t>(platform), 0);
   }
   void add_features(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> features) {
-    fbb_.AddOffset(BuildConfigAsset::VT_FEATURES, features);
+    fbb_.AddOffset(XBuildConfigAsset::VT_FEATURES, features);
   }
-  explicit BuildConfigAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit XBuildConfigAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<BuildConfigAsset> Finish() {
+  ::flatbuffers::Offset<XBuildConfigAsset> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<BuildConfigAsset>(end);
+    auto o = ::flatbuffers::Offset<XBuildConfigAsset>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<BuildConfigAsset> CreateBuildConfigAsset(
+inline ::flatbuffers::Offset<XBuildConfigAsset> CreateXBuildConfigAsset(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<hdn::Metadata> meta = 0,
     uint64_t id = 0,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
-    hdn::Platform platform = hdn::Platform_UNKNOWN,
+    hdn::CPlatform platform = hdn::CPlatform_UNKNOWN,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> features = 0) {
-  BuildConfigAssetBuilder builder_(_fbb);
+  XBuildConfigAssetBuilder builder_(_fbb);
   builder_.add_id(id);
   builder_.add_features(features);
   builder_.add_name(name);
-  builder_.add_meta(meta);
   builder_.add_platform(platform);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<BuildConfigAsset> CreateBuildConfigAssetDirect(
+inline ::flatbuffers::Offset<XBuildConfigAsset> CreateXBuildConfigAssetDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<hdn::Metadata> meta = 0,
     uint64_t id = 0,
     const char *name = nullptr,
-    hdn::Platform platform = hdn::Platform_UNKNOWN,
+    hdn::CPlatform platform = hdn::CPlatform_UNKNOWN,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *features = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
   auto features__ = features ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*features) : 0;
-  return hdn::CreateBuildConfigAsset(
+  return hdn::CreateXBuildConfigAsset(
       _fbb,
-      meta,
       id,
       name__,
       platform,
       features__);
 }
 
-inline const hdn::BuildConfigAsset *GetBuildConfigAsset(const void *buf) {
-  return ::flatbuffers::GetRoot<hdn::BuildConfigAsset>(buf);
+inline const hdn::XBuildConfigAsset *GetXBuildConfigAsset(const void *buf) {
+  return ::flatbuffers::GetRoot<hdn::XBuildConfigAsset>(buf);
 }
 
-inline const hdn::BuildConfigAsset *GetSizePrefixedBuildConfigAsset(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<hdn::BuildConfigAsset>(buf);
+inline const hdn::XBuildConfigAsset *GetSizePrefixedXBuildConfigAsset(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<hdn::XBuildConfigAsset>(buf);
 }
 
-inline bool VerifyBuildConfigAssetBuffer(
+inline bool VerifyXBuildConfigAssetBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<hdn::BuildConfigAsset>(nullptr);
+  return verifier.VerifyBuffer<hdn::XBuildConfigAsset>(nullptr);
 }
 
-inline bool VerifySizePrefixedBuildConfigAssetBuffer(
+inline bool VerifySizePrefixedXBuildConfigAssetBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<hdn::BuildConfigAsset>(nullptr);
+  return verifier.VerifySizePrefixedBuffer<hdn::XBuildConfigAsset>(nullptr);
 }
 
-inline void FinishBuildConfigAssetBuffer(
+inline void FinishXBuildConfigAssetBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<hdn::BuildConfigAsset> root) {
+    ::flatbuffers::Offset<hdn::XBuildConfigAsset> root) {
   fbb.Finish(root);
 }
 
-inline void FinishSizePrefixedBuildConfigAssetBuffer(
+inline void FinishSizePrefixedXBuildConfigAssetBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<hdn::BuildConfigAsset> root) {
+    ::flatbuffers::Offset<hdn::XBuildConfigAsset> root) {
   fbb.FinishSizePrefixed(root);
 }
 

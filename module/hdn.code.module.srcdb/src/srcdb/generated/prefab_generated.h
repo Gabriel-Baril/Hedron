@@ -13,40 +13,39 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 23,
              "Non-compatible flatbuffers version included");
 
-#include "meta_generated.h"
 #include "prefab_component_generated.h"
 
 namespace hdn {
 
-struct Entity;
-struct EntityBuilder;
+struct CEntity;
+struct CEntityBuilder;
 
-struct PrefabAsset;
-struct PrefabAssetBuilder;
+struct XPrefabAsset;
+struct XPrefabAssetBuilder;
 
-struct Entity FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef EntityBuilder Builder;
+struct CEntity FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CEntityBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_NAME = 6,
     VT_COMPONENTS = 8,
     VT_CHILDREN = 10
   };
-  const hdn::uuid *id() const {
-    return GetStruct<const hdn::uuid *>(VT_ID);
+  const hdn::CUUID *id() const {
+    return GetStruct<const hdn::CUUID *>(VT_ID);
   }
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::Component>> *components() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::Component>> *>(VT_COMPONENTS);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CComponent>> *components() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CComponent>> *>(VT_COMPONENTS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::Entity>> *children() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::Entity>> *>(VT_CHILDREN);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CEntity>> *children() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CEntity>> *>(VT_CHILDREN);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<hdn::uuid>(verifier, VT_ID, 8) &&
+           VerifyField<hdn::CUUID>(verifier, VT_ID, 8) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyOffset(verifier, VT_COMPONENTS) &&
@@ -59,40 +58,40 @@ struct Entity FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct EntityBuilder {
-  typedef Entity Table;
+struct CEntityBuilder {
+  typedef CEntity Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_id(const hdn::uuid *id) {
-    fbb_.AddStruct(Entity::VT_ID, id);
+  void add_id(const hdn::CUUID *id) {
+    fbb_.AddStruct(CEntity::VT_ID, id);
   }
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
-    fbb_.AddOffset(Entity::VT_NAME, name);
+    fbb_.AddOffset(CEntity::VT_NAME, name);
   }
-  void add_components(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::Component>>> components) {
-    fbb_.AddOffset(Entity::VT_COMPONENTS, components);
+  void add_components(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CComponent>>> components) {
+    fbb_.AddOffset(CEntity::VT_COMPONENTS, components);
   }
-  void add_children(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::Entity>>> children) {
-    fbb_.AddOffset(Entity::VT_CHILDREN, children);
+  void add_children(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CEntity>>> children) {
+    fbb_.AddOffset(CEntity::VT_CHILDREN, children);
   }
-  explicit EntityBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CEntityBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<Entity> Finish() {
+  ::flatbuffers::Offset<CEntity> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Entity>(end);
+    auto o = ::flatbuffers::Offset<CEntity>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<Entity> CreateEntity(
+inline ::flatbuffers::Offset<CEntity> CreateCEntity(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const hdn::uuid *id = nullptr,
+    const hdn::CUUID *id = nullptr,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::Component>>> components = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::Entity>>> children = 0) {
-  EntityBuilder builder_(_fbb);
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CComponent>>> components = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CEntity>>> children = 0) {
+  CEntityBuilder builder_(_fbb);
   builder_.add_children(children);
   builder_.add_components(components);
   builder_.add_name(name);
@@ -100,16 +99,16 @@ inline ::flatbuffers::Offset<Entity> CreateEntity(
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<Entity> CreateEntityDirect(
+inline ::flatbuffers::Offset<CEntity> CreateCEntityDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const hdn::uuid *id = nullptr,
+    const hdn::CUUID *id = nullptr,
     const char *name = nullptr,
-    const std::vector<::flatbuffers::Offset<hdn::Component>> *components = nullptr,
-    const std::vector<::flatbuffers::Offset<hdn::Entity>> *children = nullptr) {
+    const std::vector<::flatbuffers::Offset<hdn::CComponent>> *components = nullptr,
+    const std::vector<::flatbuffers::Offset<hdn::CEntity>> *children = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  auto components__ = components ? _fbb.CreateVector<::flatbuffers::Offset<hdn::Component>>(*components) : 0;
-  auto children__ = children ? _fbb.CreateVector<::flatbuffers::Offset<hdn::Entity>>(*children) : 0;
-  return hdn::CreateEntity(
+  auto components__ = components ? _fbb.CreateVector<::flatbuffers::Offset<hdn::CComponent>>(*components) : 0;
+  auto children__ = children ? _fbb.CreateVector<::flatbuffers::Offset<hdn::CEntity>>(*children) : 0;
+  return hdn::CreateCEntity(
       _fbb,
       id,
       name__,
@@ -117,31 +116,25 @@ inline ::flatbuffers::Offset<Entity> CreateEntityDirect(
       children__);
 }
 
-struct PrefabAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PrefabAssetBuilder Builder;
+struct XPrefabAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef XPrefabAssetBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_META = 6,
-    VT_NAME = 8,
-    VT_ENTITIES = 10
+    VT_NAME = 6,
+    VT_ENTITIES = 8
   };
   uint64_t id() const {
     return GetField<uint64_t>(VT_ID, 0);
   }
-  const hdn::Metadata *meta() const {
-    return GetPointer<const hdn::Metadata *>(VT_META);
-  }
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::Entity>> *entities() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::Entity>> *>(VT_ENTITIES);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CEntity>> *entities() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CEntity>> *>(VT_ENTITIES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint64_t>(verifier, VT_ID, 8) &&
-           VerifyOffset(verifier, VT_META) &&
-           verifier.VerifyTable(meta()) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyOffset(verifier, VT_ENTITIES) &&
@@ -151,90 +144,83 @@ struct PrefabAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct PrefabAssetBuilder {
-  typedef PrefabAsset Table;
+struct XPrefabAssetBuilder {
+  typedef XPrefabAsset Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_id(uint64_t id) {
-    fbb_.AddElement<uint64_t>(PrefabAsset::VT_ID, id, 0);
-  }
-  void add_meta(::flatbuffers::Offset<hdn::Metadata> meta) {
-    fbb_.AddOffset(PrefabAsset::VT_META, meta);
+    fbb_.AddElement<uint64_t>(XPrefabAsset::VT_ID, id, 0);
   }
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
-    fbb_.AddOffset(PrefabAsset::VT_NAME, name);
+    fbb_.AddOffset(XPrefabAsset::VT_NAME, name);
   }
-  void add_entities(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::Entity>>> entities) {
-    fbb_.AddOffset(PrefabAsset::VT_ENTITIES, entities);
+  void add_entities(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CEntity>>> entities) {
+    fbb_.AddOffset(XPrefabAsset::VT_ENTITIES, entities);
   }
-  explicit PrefabAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit XPrefabAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<PrefabAsset> Finish() {
+  ::flatbuffers::Offset<XPrefabAsset> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PrefabAsset>(end);
+    auto o = ::flatbuffers::Offset<XPrefabAsset>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<PrefabAsset> CreatePrefabAsset(
+inline ::flatbuffers::Offset<XPrefabAsset> CreateXPrefabAsset(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t id = 0,
-    ::flatbuffers::Offset<hdn::Metadata> meta = 0,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::Entity>>> entities = 0) {
-  PrefabAssetBuilder builder_(_fbb);
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CEntity>>> entities = 0) {
+  XPrefabAssetBuilder builder_(_fbb);
   builder_.add_id(id);
   builder_.add_entities(entities);
   builder_.add_name(name);
-  builder_.add_meta(meta);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<PrefabAsset> CreatePrefabAssetDirect(
+inline ::flatbuffers::Offset<XPrefabAsset> CreateXPrefabAssetDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t id = 0,
-    ::flatbuffers::Offset<hdn::Metadata> meta = 0,
     const char *name = nullptr,
-    const std::vector<::flatbuffers::Offset<hdn::Entity>> *entities = nullptr) {
+    const std::vector<::flatbuffers::Offset<hdn::CEntity>> *entities = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  auto entities__ = entities ? _fbb.CreateVector<::flatbuffers::Offset<hdn::Entity>>(*entities) : 0;
-  return hdn::CreatePrefabAsset(
+  auto entities__ = entities ? _fbb.CreateVector<::flatbuffers::Offset<hdn::CEntity>>(*entities) : 0;
+  return hdn::CreateXPrefabAsset(
       _fbb,
       id,
-      meta,
       name__,
       entities__);
 }
 
-inline const hdn::PrefabAsset *GetPrefabAsset(const void *buf) {
-  return ::flatbuffers::GetRoot<hdn::PrefabAsset>(buf);
+inline const hdn::XPrefabAsset *GetXPrefabAsset(const void *buf) {
+  return ::flatbuffers::GetRoot<hdn::XPrefabAsset>(buf);
 }
 
-inline const hdn::PrefabAsset *GetSizePrefixedPrefabAsset(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<hdn::PrefabAsset>(buf);
+inline const hdn::XPrefabAsset *GetSizePrefixedXPrefabAsset(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<hdn::XPrefabAsset>(buf);
 }
 
-inline bool VerifyPrefabAssetBuffer(
+inline bool VerifyXPrefabAssetBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<hdn::PrefabAsset>(nullptr);
+  return verifier.VerifyBuffer<hdn::XPrefabAsset>(nullptr);
 }
 
-inline bool VerifySizePrefixedPrefabAssetBuffer(
+inline bool VerifySizePrefixedXPrefabAssetBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<hdn::PrefabAsset>(nullptr);
+  return verifier.VerifySizePrefixedBuffer<hdn::XPrefabAsset>(nullptr);
 }
 
-inline void FinishPrefabAssetBuffer(
+inline void FinishXPrefabAssetBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<hdn::PrefabAsset> root) {
+    ::flatbuffers::Offset<hdn::XPrefabAsset> root) {
   fbb.Finish(root);
 }
 
-inline void FinishSizePrefixedPrefabAssetBuffer(
+inline void FinishSizePrefixedXPrefabAssetBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<hdn::PrefabAsset> root) {
+    ::flatbuffers::Offset<hdn::XPrefabAsset> root) {
   fbb.FinishSizePrefixed(root);
 }
 

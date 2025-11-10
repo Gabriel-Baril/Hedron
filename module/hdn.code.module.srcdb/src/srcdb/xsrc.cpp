@@ -3,8 +3,10 @@
 #include "pugixml/pugixml.hpp"
 #include "symdb.h"
 
-#include "prefab/prefab_parse.h"
-#include "buildconfig/buildconfig.h"
+#include "prefab/xasset_parse.h"
+#include "buildconfig/xasset_parse.h"
+#include "feature/xasset_parse.h"
+
 
 namespace hdn
 {
@@ -16,8 +18,9 @@ namespace hdn
 		nullptr,
 		nullptr, // stringtable
 		nullptr, // text
-		prefab_parse_callback, // prefab
-		buildconfig_asset_xsrc_parse // buildconfig
+		xasset_parse_prefab, // prefab
+		xasset_parse_buildconfig, // buildconfig
+		xasset_parse_feature
 	};
 
 	static bool xsymbol_agnostic_parse(ESymbolType type, const pugi::xml_node& symbolNode, const SourceContext& ctx)

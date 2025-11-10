@@ -26,7 +26,7 @@ namespace hdn
 	HDN_MODULE_CORE_API int str_count_occurences(const char* str, char c);
 	HDN_MODULE_CORE_API i64 str_find_first_not_of_index(const char* str, char c);
 	HDN_MODULE_CORE_API void str_copy_substring(char* dest, const char* begin, const char* end = nullptr);
-	HDN_MODULE_CORE_API void core_snprintf(char* buffer, size_t buffer_size, const char* format, ...);
+	HDN_MODULE_CORE_API int core_snprintf(char* buffer, size_t bufferCount, const char* format, ...);
 
 	HDN_MODULE_CORE_API string trim(const string& str);
 	HDN_MODULE_CORE_API constexpr std::size_t strlen_ct(const char* str);

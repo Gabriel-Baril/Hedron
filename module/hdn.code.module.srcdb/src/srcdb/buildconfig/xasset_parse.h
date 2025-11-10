@@ -10,5 +10,5 @@
 
 namespace hdn
 {
-	bool buildconfig_asset_xsrc_parse(const pugi::xml_node& symbolNode, const SourceContext& ctx);
+	bool xasset_parse_buildconfig(const pugi::xml_node& symbolNode, const SourceContext& ctx);
 }

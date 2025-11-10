@@ -1,23 +1,18 @@
-include "meta.fbs";
 include "prefab_component.fbs";
 
 namespace hdn;
 
-// An entity within a prefab
-table Entity {
-    id: uuid;
+table CEntity {
+    id: CUUID;
     name: string;
-    components: [Component];
-    children: [Entity]; // optional, for hierarchy
+    components: [CComponent];
+    children: [CEntity];
 }
 
-// A single prefab
-table PrefabAsset {
-    id: ulong; // Built from the input required to build the object
-    meta: Metadata;
+table XPrefabAsset {
+    id: ulong;
     name: string;
-    entities: [Entity];
+    entities: [CEntity];
 }
 
-// Define the root
-root_type PrefabAsset;
+root_type XPrefabAsset;

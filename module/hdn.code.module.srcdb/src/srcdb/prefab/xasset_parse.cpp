@@ -1,9 +1,9 @@
-#include "prefab_parse.h"
+#include "xasset_parse.h"
 
 #include "flecs/flecs.h"
 
+#include "prefab_component.h"
 #include "prefab_component_parse.h"
-#include "prefab_component_uuid.h"
 
 #include "core/hash.h"
 #include "srcdb/xsrc.h"
@@ -54,7 +54,7 @@ namespace hdn
 		return true;
 	}
 
-	bool prefab_parse_callback(const pugi::xml_node& symbolNode, const SourceContext& ctx)
+	bool xasset_parse_prefab(const pugi::xml_node& symbolNode, const SourceContext& ctx)
 	{
 		SPrefabDef def;
 		bool success = prefab_parse(def, symbolNode);

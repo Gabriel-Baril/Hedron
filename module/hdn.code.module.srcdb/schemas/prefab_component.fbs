@@ -3,33 +3,33 @@ include "core.fbs";
 namespace hdn;
 // Define all component data tables
 
-table TransformComponent {
-    position:Vec3;
-    rotation:Vec4;  // quaternion
-    scale:Vec3;
+table CTransformComponent {
+    position: CVec3;
+    rotation: CVec4;  // quaternion
+    scale: CVec3;
 }
 
-table ModelComponent {
-    mesh:string;
-    material:string;
+table CModelComponent {
+    mesh: string;
+    material: string;
 }
 
-table LightComponent {
-    color:Vec3;
-    intensity:float;
+table CLightComponent {
+    color: CVec3;
+    intensity: float;
 }
 
-table ScriptComponent {
-    class_name:string;
-    parameters:[KeyValue];
+table CScriptComponent {
+    class_name: string;
+    parameters: [CKeyValue];
 }
 
-table HierarchyComponent {
-    children: [uuid];
+table CHierarchyComponent {
+    children: [CUUID];
 }
 
 // All possible component types
-enum ComponentType:byte {
+enum CComponentType:byte {
     NONE = 0,
     TRANSFORM,
     MODEL,
@@ -39,15 +39,15 @@ enum ComponentType:byte {
 }
 
 // Define the component union
-union ComponentUnion {
-    TransformComponent,
-    ModelComponent,
-    LightComponent,
-    ScriptComponent
+union CComponentUnion {
+    CTransformComponent,
+    CModelComponent,
+    CLightComponent,
+    CScriptComponent
 }
 
 // A generic component container
-table Component {
-    type:ComponentType;     // enum
-    data:ComponentUnion;    // union for specific component data
+table CComponent {
+    type: CComponentType;     // enum
+    data: CComponentUnion;    // union for specific component data
 }

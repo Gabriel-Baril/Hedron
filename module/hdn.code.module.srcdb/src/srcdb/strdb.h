@@ -1,4 +1,5 @@
 #pragma once
+
 #include "core/core.h"
 
 // General purpose system dedicated to manage a heap of immutable strings to prevent the memory, performance and fragmentation cost of heap-allocated string

@@ -14,21 +14,20 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
              "Non-compatible flatbuffers version included");
 
 #include "core_generated.h"
-#include "meta_generated.h"
 
 namespace hdn {
 
-struct FeatureZoneEntry;
-struct FeatureZoneEntryBuilder;
+struct CFeatureZoneEntry;
+struct CFeatureZoneEntryBuilder;
 
-struct FeatureZone;
-struct FeatureZoneBuilder;
+struct CFeatureZone;
+struct CFeatureZoneBuilder;
 
-struct FeatureAsset;
-struct FeatureAssetBuilder;
+struct XFeatureAsset;
+struct XFeatureAssetBuilder;
 
-struct FeatureZoneEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef FeatureZoneEntryBuilder Builder;
+struct CFeatureZoneEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CFeatureZoneEntryBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ASSET_NAME = 4,
     VT_ASSET_TYPE = 6
@@ -36,8 +35,8 @@ struct FeatureZoneEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *asset_name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ASSET_NAME);
   }
-  hdn::AssetType asset_type() const {
-    return static_cast<hdn::AssetType>(GetField<uint32_t>(VT_ASSET_TYPE, 0));
+  hdn::CAssetType asset_type() const {
+    return static_cast<hdn::CAssetType>(GetField<uint32_t>(VT_ASSET_TYPE, 0));
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -48,50 +47,50 @@ struct FeatureZoneEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct FeatureZoneEntryBuilder {
-  typedef FeatureZoneEntry Table;
+struct CFeatureZoneEntryBuilder {
+  typedef CFeatureZoneEntry Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_asset_name(::flatbuffers::Offset<::flatbuffers::String> asset_name) {
-    fbb_.AddOffset(FeatureZoneEntry::VT_ASSET_NAME, asset_name);
+    fbb_.AddOffset(CFeatureZoneEntry::VT_ASSET_NAME, asset_name);
   }
-  void add_asset_type(hdn::AssetType asset_type) {
-    fbb_.AddElement<uint32_t>(FeatureZoneEntry::VT_ASSET_TYPE, static_cast<uint32_t>(asset_type), 0);
+  void add_asset_type(hdn::CAssetType asset_type) {
+    fbb_.AddElement<uint32_t>(CFeatureZoneEntry::VT_ASSET_TYPE, static_cast<uint32_t>(asset_type), 0);
   }
-  explicit FeatureZoneEntryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CFeatureZoneEntryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<FeatureZoneEntry> Finish() {
+  ::flatbuffers::Offset<CFeatureZoneEntry> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<FeatureZoneEntry>(end);
+    auto o = ::flatbuffers::Offset<CFeatureZoneEntry>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<FeatureZoneEntry> CreateFeatureZoneEntry(
+inline ::flatbuffers::Offset<CFeatureZoneEntry> CreateCFeatureZoneEntry(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> asset_name = 0,
-    hdn::AssetType asset_type = hdn::AssetType_buildconfig) {
-  FeatureZoneEntryBuilder builder_(_fbb);
+    hdn::CAssetType asset_type = hdn::CAssetType_buildconfig) {
+  CFeatureZoneEntryBuilder builder_(_fbb);
   builder_.add_asset_type(asset_type);
   builder_.add_asset_name(asset_name);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<FeatureZoneEntry> CreateFeatureZoneEntryDirect(
+inline ::flatbuffers::Offset<CFeatureZoneEntry> CreateCFeatureZoneEntryDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *asset_name = nullptr,
-    hdn::AssetType asset_type = hdn::AssetType_buildconfig) {
+    hdn::CAssetType asset_type = hdn::CAssetType_buildconfig) {
   auto asset_name__ = asset_name ? _fbb.CreateString(asset_name) : 0;
-  return hdn::CreateFeatureZoneEntry(
+  return hdn::CreateCFeatureZoneEntry(
       _fbb,
       asset_name__,
       asset_type);
 }
 
-struct FeatureZone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef FeatureZoneBuilder Builder;
+struct CFeatureZone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CFeatureZoneBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ALIAS_ASSET = 4,
     VT_ASSET_ENTRIES = 6
@@ -99,8 +98,8 @@ struct FeatureZone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *alias_asset() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ALIAS_ASSET);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::FeatureZoneEntry>> *asset_entries() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::FeatureZoneEntry>> *>(VT_ASSET_ENTRIES);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CFeatureZoneEntry>> *asset_entries() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CFeatureZoneEntry>> *>(VT_ASSET_ENTRIES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -113,63 +112,59 @@ struct FeatureZone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct FeatureZoneBuilder {
-  typedef FeatureZone Table;
+struct CFeatureZoneBuilder {
+  typedef CFeatureZone Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_alias_asset(::flatbuffers::Offset<::flatbuffers::String> alias_asset) {
-    fbb_.AddOffset(FeatureZone::VT_ALIAS_ASSET, alias_asset);
+    fbb_.AddOffset(CFeatureZone::VT_ALIAS_ASSET, alias_asset);
   }
-  void add_asset_entries(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::FeatureZoneEntry>>> asset_entries) {
-    fbb_.AddOffset(FeatureZone::VT_ASSET_ENTRIES, asset_entries);
+  void add_asset_entries(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CFeatureZoneEntry>>> asset_entries) {
+    fbb_.AddOffset(CFeatureZone::VT_ASSET_ENTRIES, asset_entries);
   }
-  explicit FeatureZoneBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CFeatureZoneBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<FeatureZone> Finish() {
+  ::flatbuffers::Offset<CFeatureZone> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<FeatureZone>(end);
+    auto o = ::flatbuffers::Offset<CFeatureZone>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<FeatureZone> CreateFeatureZone(
+inline ::flatbuffers::Offset<CFeatureZone> CreateCFeatureZone(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> alias_asset = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::FeatureZoneEntry>>> asset_entries = 0) {
-  FeatureZoneBuilder builder_(_fbb);
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CFeatureZoneEntry>>> asset_entries = 0) {
+  CFeatureZoneBuilder builder_(_fbb);
   builder_.add_asset_entries(asset_entries);
   builder_.add_alias_asset(alias_asset);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<FeatureZone> CreateFeatureZoneDirect(
+inline ::flatbuffers::Offset<CFeatureZone> CreateCFeatureZoneDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *alias_asset = nullptr,
-    const std::vector<::flatbuffers::Offset<hdn::FeatureZoneEntry>> *asset_entries = nullptr) {
+    const std::vector<::flatbuffers::Offset<hdn::CFeatureZoneEntry>> *asset_entries = nullptr) {
   auto alias_asset__ = alias_asset ? _fbb.CreateString(alias_asset) : 0;
-  auto asset_entries__ = asset_entries ? _fbb.CreateVector<::flatbuffers::Offset<hdn::FeatureZoneEntry>>(*asset_entries) : 0;
-  return hdn::CreateFeatureZone(
+  auto asset_entries__ = asset_entries ? _fbb.CreateVector<::flatbuffers::Offset<hdn::CFeatureZoneEntry>>(*asset_entries) : 0;
+  return hdn::CreateCFeatureZone(
       _fbb,
       alias_asset__,
       asset_entries__);
 }
 
-struct FeatureAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef FeatureAssetBuilder Builder;
+struct XFeatureAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef XFeatureAssetBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_META = 6,
-    VT_NAME = 8,
-    VT_FEATURE_ASSETS = 10,
-    VT_ZONES = 12
+    VT_NAME = 6,
+    VT_FEATURE_ASSETS = 8,
+    VT_ZONES = 10
   };
   uint64_t id() const {
     return GetField<uint64_t>(VT_ID, 0);
-  }
-  const hdn::Metadata *meta() const {
-    return GetPointer<const hdn::Metadata *>(VT_META);
   }
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
@@ -177,14 +172,12 @@ struct FeatureAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *feature_assets() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FEATURE_ASSETS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::FeatureZone>> *zones() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::FeatureZone>> *>(VT_ZONES);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CFeatureZone>> *zones() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CFeatureZone>> *>(VT_ZONES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint64_t>(verifier, VT_ID, 8) &&
-           VerifyOffset(verifier, VT_META) &&
-           verifier.VerifyTable(meta()) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyOffset(verifier, VT_FEATURE_ASSETS) &&
@@ -197,98 +190,91 @@ struct FeatureAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct FeatureAssetBuilder {
-  typedef FeatureAsset Table;
+struct XFeatureAssetBuilder {
+  typedef XFeatureAsset Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_id(uint64_t id) {
-    fbb_.AddElement<uint64_t>(FeatureAsset::VT_ID, id, 0);
-  }
-  void add_meta(::flatbuffers::Offset<hdn::Metadata> meta) {
-    fbb_.AddOffset(FeatureAsset::VT_META, meta);
+    fbb_.AddElement<uint64_t>(XFeatureAsset::VT_ID, id, 0);
   }
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
-    fbb_.AddOffset(FeatureAsset::VT_NAME, name);
+    fbb_.AddOffset(XFeatureAsset::VT_NAME, name);
   }
   void add_feature_assets(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> feature_assets) {
-    fbb_.AddOffset(FeatureAsset::VT_FEATURE_ASSETS, feature_assets);
+    fbb_.AddOffset(XFeatureAsset::VT_FEATURE_ASSETS, feature_assets);
   }
-  void add_zones(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::FeatureZone>>> zones) {
-    fbb_.AddOffset(FeatureAsset::VT_ZONES, zones);
+  void add_zones(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CFeatureZone>>> zones) {
+    fbb_.AddOffset(XFeatureAsset::VT_ZONES, zones);
   }
-  explicit FeatureAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit XFeatureAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<FeatureAsset> Finish() {
+  ::flatbuffers::Offset<XFeatureAsset> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<FeatureAsset>(end);
+    auto o = ::flatbuffers::Offset<XFeatureAsset>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<FeatureAsset> CreateFeatureAsset(
+inline ::flatbuffers::Offset<XFeatureAsset> CreateXFeatureAsset(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t id = 0,
-    ::flatbuffers::Offset<hdn::Metadata> meta = 0,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> feature_assets = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::FeatureZone>>> zones = 0) {
-  FeatureAssetBuilder builder_(_fbb);
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CFeatureZone>>> zones = 0) {
+  XFeatureAssetBuilder builder_(_fbb);
   builder_.add_id(id);
   builder_.add_zones(zones);
   builder_.add_feature_assets(feature_assets);
   builder_.add_name(name);
-  builder_.add_meta(meta);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<FeatureAsset> CreateFeatureAssetDirect(
+inline ::flatbuffers::Offset<XFeatureAsset> CreateXFeatureAssetDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t id = 0,
-    ::flatbuffers::Offset<hdn::Metadata> meta = 0,
     const char *name = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *feature_assets = nullptr,
-    const std::vector<::flatbuffers::Offset<hdn::FeatureZone>> *zones = nullptr) {
+    const std::vector<::flatbuffers::Offset<hdn::CFeatureZone>> *zones = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
   auto feature_assets__ = feature_assets ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*feature_assets) : 0;
-  auto zones__ = zones ? _fbb.CreateVector<::flatbuffers::Offset<hdn::FeatureZone>>(*zones) : 0;
-  return hdn::CreateFeatureAsset(
+  auto zones__ = zones ? _fbb.CreateVector<::flatbuffers::Offset<hdn::CFeatureZone>>(*zones) : 0;
+  return hdn::CreateXFeatureAsset(
       _fbb,
       id,
-      meta,
       name__,
       feature_assets__,
       zones__);
 }
 
-inline const hdn::FeatureAsset *GetFeatureAsset(const void *buf) {
-  return ::flatbuffers::GetRoot<hdn::FeatureAsset>(buf);
+inline const hdn::XFeatureAsset *GetXFeatureAsset(const void *buf) {
+  return ::flatbuffers::GetRoot<hdn::XFeatureAsset>(buf);
 }
 
-inline const hdn::FeatureAsset *GetSizePrefixedFeatureAsset(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<hdn::FeatureAsset>(buf);
+inline const hdn::XFeatureAsset *GetSizePrefixedXFeatureAsset(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<hdn::XFeatureAsset>(buf);
 }
 
-inline bool VerifyFeatureAssetBuffer(
+inline bool VerifyXFeatureAssetBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<hdn::FeatureAsset>(nullptr);
+  return verifier.VerifyBuffer<hdn::XFeatureAsset>(nullptr);
 }
 
-inline bool VerifySizePrefixedFeatureAssetBuffer(
+inline bool VerifySizePrefixedXFeatureAssetBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<hdn::FeatureAsset>(nullptr);
+  return verifier.VerifySizePrefixedBuffer<hdn::XFeatureAsset>(nullptr);
 }
 
-inline void FinishFeatureAssetBuffer(
+inline void FinishXFeatureAssetBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<hdn::FeatureAsset> root) {
+    ::flatbuffers::Offset<hdn::XFeatureAsset> root) {
   fbb.Finish(root);
 }
 
-inline void FinishSizePrefixedFeatureAssetBuffer(
+inline void FinishSizePrefixedXFeatureAssetBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<hdn::FeatureAsset> root) {
+    ::flatbuffers::Offset<hdn::XFeatureAsset> root) {
   fbb.FinishSizePrefixed(root);
 }
 

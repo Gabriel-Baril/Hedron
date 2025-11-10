@@ -1,24 +1,22 @@
 include "core.fbs";
-include "meta.fbs";
 
 namespace hdn;
 
-table FeatureZoneEntry {
+table CFeatureZoneEntry {
     asset_name: string;
-    asset_type: AssetType;
+    asset_type: CAssetType;
 }
 
-table FeatureZone {
+table CFeatureZone {
     alias_asset: string;
-    asset_entries: [FeatureZoneEntry];
+    asset_entries: [CFeatureZoneEntry];
 }
 
-table FeatureAsset {
+table XFeatureAsset {
     id: ulong;
-    meta: Metadata;
     name: string;
     feature_assets: [string]; // Child features of this features
-    zones: [FeatureZone];
+    zones: [CFeatureZone];
 }
 
-root_type FeatureAsset;
+root_type XFeatureAsset;

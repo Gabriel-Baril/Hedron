@@ -14,26 +14,21 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
              "Non-compatible flatbuffers version included");
 
 #include "core_generated.h"
-#include "meta_generated.h"
 
 namespace hdn {
 
-struct ZoneAliasAsset;
-struct ZoneAliasAssetBuilder;
+struct XZoneAliasAsset;
+struct XZoneAliasAssetBuilder;
 
-struct ZoneAliasAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef ZoneAliasAssetBuilder Builder;
+struct XZoneAliasAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef XZoneAliasAssetBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_META = 6,
-    VT_NAME = 8,
-    VT_ZONE_NAME = 10
+    VT_NAME = 6,
+    VT_ZONE_NAME = 8
   };
   uint64_t id() const {
     return GetField<uint64_t>(VT_ID, 0);
-  }
-  const hdn::Metadata *meta() const {
-    return GetPointer<const hdn::Metadata *>(VT_META);
   }
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
@@ -44,8 +39,6 @@ struct ZoneAliasAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint64_t>(verifier, VT_ID, 8) &&
-           VerifyOffset(verifier, VT_META) &&
-           verifier.VerifyTable(meta()) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyOffset(verifier, VT_ZONE_NAME) &&
@@ -54,90 +47,83 @@ struct ZoneAliasAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct ZoneAliasAssetBuilder {
-  typedef ZoneAliasAsset Table;
+struct XZoneAliasAssetBuilder {
+  typedef XZoneAliasAsset Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_id(uint64_t id) {
-    fbb_.AddElement<uint64_t>(ZoneAliasAsset::VT_ID, id, 0);
-  }
-  void add_meta(::flatbuffers::Offset<hdn::Metadata> meta) {
-    fbb_.AddOffset(ZoneAliasAsset::VT_META, meta);
+    fbb_.AddElement<uint64_t>(XZoneAliasAsset::VT_ID, id, 0);
   }
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
-    fbb_.AddOffset(ZoneAliasAsset::VT_NAME, name);
+    fbb_.AddOffset(XZoneAliasAsset::VT_NAME, name);
   }
   void add_zone_name(::flatbuffers::Offset<::flatbuffers::String> zone_name) {
-    fbb_.AddOffset(ZoneAliasAsset::VT_ZONE_NAME, zone_name);
+    fbb_.AddOffset(XZoneAliasAsset::VT_ZONE_NAME, zone_name);
   }
-  explicit ZoneAliasAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit XZoneAliasAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<ZoneAliasAsset> Finish() {
+  ::flatbuffers::Offset<XZoneAliasAsset> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<ZoneAliasAsset>(end);
+    auto o = ::flatbuffers::Offset<XZoneAliasAsset>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<ZoneAliasAsset> CreateZoneAliasAsset(
+inline ::flatbuffers::Offset<XZoneAliasAsset> CreateXZoneAliasAsset(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t id = 0,
-    ::flatbuffers::Offset<hdn::Metadata> meta = 0,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
     ::flatbuffers::Offset<::flatbuffers::String> zone_name = 0) {
-  ZoneAliasAssetBuilder builder_(_fbb);
+  XZoneAliasAssetBuilder builder_(_fbb);
   builder_.add_id(id);
   builder_.add_zone_name(zone_name);
   builder_.add_name(name);
-  builder_.add_meta(meta);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<ZoneAliasAsset> CreateZoneAliasAssetDirect(
+inline ::flatbuffers::Offset<XZoneAliasAsset> CreateXZoneAliasAssetDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t id = 0,
-    ::flatbuffers::Offset<hdn::Metadata> meta = 0,
     const char *name = nullptr,
     const char *zone_name = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
   auto zone_name__ = zone_name ? _fbb.CreateString(zone_name) : 0;
-  return hdn::CreateZoneAliasAsset(
+  return hdn::CreateXZoneAliasAsset(
       _fbb,
       id,
-      meta,
       name__,
       zone_name__);
 }
 
-inline const hdn::ZoneAliasAsset *GetZoneAliasAsset(const void *buf) {
-  return ::flatbuffers::GetRoot<hdn::ZoneAliasAsset>(buf);
+inline const hdn::XZoneAliasAsset *GetXZoneAliasAsset(const void *buf) {
+  return ::flatbuffers::GetRoot<hdn::XZoneAliasAsset>(buf);
 }
 
-inline const hdn::ZoneAliasAsset *GetSizePrefixedZoneAliasAsset(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<hdn::ZoneAliasAsset>(buf);
+inline const hdn::XZoneAliasAsset *GetSizePrefixedXZoneAliasAsset(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<hdn::XZoneAliasAsset>(buf);
 }
 
-inline bool VerifyZoneAliasAssetBuffer(
+inline bool VerifyXZoneAliasAssetBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<hdn::ZoneAliasAsset>(nullptr);
+  return verifier.VerifyBuffer<hdn::XZoneAliasAsset>(nullptr);
 }
 
-inline bool VerifySizePrefixedZoneAliasAssetBuffer(
+inline bool VerifySizePrefixedXZoneAliasAssetBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<hdn::ZoneAliasAsset>(nullptr);
+  return verifier.VerifySizePrefixedBuffer<hdn::XZoneAliasAsset>(nullptr);
 }
 
-inline void FinishZoneAliasAssetBuffer(
+inline void FinishXZoneAliasAssetBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<hdn::ZoneAliasAsset> root) {
+    ::flatbuffers::Offset<hdn::XZoneAliasAsset> root) {
   fbb.Finish(root);
 }
 
-inline void FinishSizePrefixedZoneAliasAssetBuffer(
+inline void FinishSizePrefixedXZoneAliasAssetBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<hdn::ZoneAliasAsset> root) {
+    ::flatbuffers::Offset<hdn::XZoneAliasAsset> root) {
   fbb.FinishSizePrefixed(root);
 }
 

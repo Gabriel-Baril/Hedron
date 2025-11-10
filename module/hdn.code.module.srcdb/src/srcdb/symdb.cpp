@@ -24,7 +24,8 @@ namespace hdn
 		"stringtable",
 		"text",
 		"prefab",
-		"buildconfig"
+		"buildconfig",
+		"feature"
 	};
 
 	static constexpr SourceParseCallback s_SourceParseCallbacks[underlying(ESymbolType::count)] = {

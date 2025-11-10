@@ -2,8 +2,8 @@
 
 namespace hdn
 {
-	bool request_success(RequestResult result)
+	bool request_success(ObjectRequestResult result)
 	{
-		return result == RequestResult::SUCCESS;
+		return result == ObjectRequestResult::SUCCESS;
 	}
 }

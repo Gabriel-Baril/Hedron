@@ -1,4 +1,5 @@
 #pragma once
+
 #include "core/core.h"
 #include "core/core_filesystem.h"
 
@@ -9,5 +10,5 @@
 namespace hdn
 {
 	bool prefab_parse(SPrefabDef& def, const pugi::xml_node& node);
-	bool prefab_parse_callback(const pugi::xml_node& symbolNode, const SourceContext& ctx);
+	bool xasset_parse_prefab(const pugi::xml_node& symbolNode, const SourceContext& ctx);
 }

@@ -67,7 +67,7 @@ namespace hdn
 		return heap_allocator_allocate(s_SignatureGlob.sigAllocator, size, alignment);
 	}
 
-	void signature_register(obj_t id, void* data, u64 size, u64 alignment)
+	void signature_register(obj_t id, const void* data, u64 size, u64 alignment)
 	{
 		HASSERT(signature_initialized(), "The signature system must be initialized");
 		void* dst = signature_allocate(size, alignment);

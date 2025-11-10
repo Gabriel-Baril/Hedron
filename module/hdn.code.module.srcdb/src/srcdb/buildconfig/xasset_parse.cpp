@@ -1,4 +1,4 @@
-#include "buildconfig_asset_request.h"
+#include "xasset_parse.h"
 
 #include "core/hash.h"
 #include "core/stl/vector.h"
@@ -9,41 +9,38 @@
 #include "srcdb/xsrc.h"
 #include "srcdb/generated/buildconfig_generated.h"
 #include "srcdb/fbs_util.h"
-#include "buildconfig_asset.h"
+
+#include "srcdb/buildconfig/xasset.h"
 
 namespace hdn
 {
-	Platform buildconfig_str_to_platform(const char* platform)
+	CPlatform buildconfig_str_to_platform(const char* platform)
 	{
 		char lowerCaseBuffer[SYMBOL_ATTRIBUTE_VALUE_MAX_LENGTH];
 		str_copy(lowerCaseBuffer, platform);
 		str_to_lowercase(lowerCaseBuffer, strlen(lowerCaseBuffer));
-		for (int i = 0; i < underlying(Platform::Platform_MAX); i++)
+		for (int i = 0; i < underlying(CPlatform::CPlatform_MAX); i++)
 		{
-			if (str_equals(lowerCaseBuffer, EnumNamesPlatform()[i]))
+			if (str_equals(lowerCaseBuffer, EnumNamesCPlatform()[i]))
 			{
-				return static_cast<Platform>(i);
+				return static_cast<CPlatform>(i);
 			}
 		}
-		return Platform::Platform_UNKNOWN;
+		return CPlatform::CPlatform_UNKNOWN;
 	}
 
 	static bool buildconfig_parse(flatbuffers::FlatBufferBuilder& builder, const pugi::xml_node& node, const SourceContext& ctx)
 	{
-		// Meta
-		auto fbMeta = create_meta(builder, ctx, BUILDCONFIG_ASSET_CODE_VERSION);
-
 		// Name & id
-		const pugi::char_t* nameStr = node.attribute("name").as_string();
+		const char* nameStr = get_xml_attr(node, "name");
 		HASSERT(nameStr, "xsymbol require a name");
-		uint64_t id = static_cast<uint64_t>(hash_generate(nameStr, strlen(nameStr)));
 		auto fbName = builder.CreateString(nameStr);
 
-		// Platform
-		auto nPlatform = node.child("Platform");
+		// CPlatform
+		auto nPlatform = node.child("CPlatform");
 		HASSERT(nPlatform, "buildconfig symbol require a platform node");
 		const pugi::char_t* platformStr = nPlatform.attribute("platform").as_string();
-		Platform platform = buildconfig_str_to_platform(platformStr);
+		CPlatform platform = buildconfig_str_to_platform(platformStr);
 
 		// Feature iteration
 		std::vector<flatbuffers::Offset<flatbuffers::String>> fbFeaturesVector = {};
@@ -60,20 +57,22 @@ namespace hdn
 		}
 		auto fbFeatures = builder.CreateVector(fbFeaturesVector);
 
-		auto buildConfig = CreateBuildConfigAsset(
+		Signature<XBuildConfigAssetObject> sig(nameStr);
+		const u64 oId = object_get_id(sig);
+
+		auto buildConfig = CreateXBuildConfigAsset(
 			builder,
-			fbMeta,
-			id,
+			oId,
 			fbName,
 			platform,
 			fbFeatures);
 
-		FinishBuildConfigAssetBuffer(builder, buildConfig);
-		cache_obj_store(id, builder.GetBufferPointer(), builder.GetSize());
+		FinishXBuildConfigAssetBuffer(builder, buildConfig);
+		cache_obj_store(oId, builder.GetBufferPointer(), builder.GetSize());
 		return true;
 	}
 
-	bool buildconfig_asset_xsrc_parse(const pugi::xml_node& node, const SourceContext& ctx)
+	bool xasset_parse_buildconfig(const pugi::xml_node& node, const SourceContext& ctx)
 	{
 		flatbuffers::FlatBufferBuilder builder(2048);
 		buildconfig_parse(builder, node, ctx);

@@ -15,39 +15,39 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 
 namespace hdn {
 
-struct KeyValue;
-struct KeyValueBuilder;
+struct CKeyValue;
+struct CKeyValueBuilder;
 
-struct Vec3;
-struct Vec3Builder;
+struct CVec3;
+struct CVec3Builder;
 
-struct Vec4;
-struct Vec4Builder;
+struct CVec4;
+struct CVec4Builder;
 
-struct uuid;
+struct CUUID;
 
-enum AssetType : uint32_t {
-  AssetType_buildconfig = 0,
-  AssetType_feature = 1,
-  AssetType_prefab = 2,
-  AssetType_variant = 3,
-  AssetType_zonealias = 4,
-  AssetType_MIN = AssetType_buildconfig,
-  AssetType_MAX = AssetType_zonealias
+enum CAssetType : uint32_t {
+  CAssetType_buildconfig = 0,
+  CAssetType_feature = 1,
+  CAssetType_prefab = 2,
+  CAssetType_variant = 3,
+  CAssetType_zonealias = 4,
+  CAssetType_MIN = CAssetType_buildconfig,
+  CAssetType_MAX = CAssetType_zonealias
 };
 
-inline const AssetType (&EnumValuesAssetType())[5] {
-  static const AssetType values[] = {
-    AssetType_buildconfig,
-    AssetType_feature,
-    AssetType_prefab,
-    AssetType_variant,
-    AssetType_zonealias
+inline const CAssetType (&EnumValuesCAssetType())[5] {
+  static const CAssetType values[] = {
+    CAssetType_buildconfig,
+    CAssetType_feature,
+    CAssetType_prefab,
+    CAssetType_variant,
+    CAssetType_zonealias
   };
   return values;
 }
 
-inline const char * const *EnumNamesAssetType() {
+inline const char * const *EnumNamesCAssetType() {
   static const char * const names[6] = {
     "buildconfig",
     "feature",
@@ -59,23 +59,23 @@ inline const char * const *EnumNamesAssetType() {
   return names;
 }
 
-inline const char *EnumNameAssetType(AssetType e) {
-  if (::flatbuffers::IsOutRange(e, AssetType_buildconfig, AssetType_zonealias)) return "";
+inline const char *EnumNameCAssetType(CAssetType e) {
+  if (::flatbuffers::IsOutRange(e, CAssetType_buildconfig, CAssetType_zonealias)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesAssetType()[index];
+  return EnumNamesCAssetType()[index];
 }
 
-FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) uuid FLATBUFFERS_FINAL_CLASS {
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) CUUID FLATBUFFERS_FINAL_CLASS {
  private:
   uint64_t low_;
   uint64_t high_;
 
  public:
-  uuid()
+  CUUID()
       : low_(0),
         high_(0) {
   }
-  uuid(uint64_t _low, uint64_t _high)
+  CUUID(uint64_t _low, uint64_t _high)
       : low_(::flatbuffers::EndianScalar(_low)),
         high_(::flatbuffers::EndianScalar(_high)) {
   }
@@ -86,10 +86,10 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) uuid FLATBUFFERS_FINAL_CLASS {
     return ::flatbuffers::EndianScalar(high_);
   }
 };
-FLATBUFFERS_STRUCT_END(uuid, 16);
+FLATBUFFERS_STRUCT_END(CUUID, 16);
 
-struct KeyValue FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef KeyValueBuilder Builder;
+struct CKeyValue FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CKeyValueBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_KEY = 4,
     VT_VALUE = 6
@@ -110,51 +110,51 @@ struct KeyValue FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct KeyValueBuilder {
-  typedef KeyValue Table;
+struct CKeyValueBuilder {
+  typedef CKeyValue Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_key(::flatbuffers::Offset<::flatbuffers::String> key) {
-    fbb_.AddOffset(KeyValue::VT_KEY, key);
+    fbb_.AddOffset(CKeyValue::VT_KEY, key);
   }
   void add_value(::flatbuffers::Offset<::flatbuffers::String> value) {
-    fbb_.AddOffset(KeyValue::VT_VALUE, value);
+    fbb_.AddOffset(CKeyValue::VT_VALUE, value);
   }
-  explicit KeyValueBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CKeyValueBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<KeyValue> Finish() {
+  ::flatbuffers::Offset<CKeyValue> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<KeyValue>(end);
+    auto o = ::flatbuffers::Offset<CKeyValue>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<KeyValue> CreateKeyValue(
+inline ::flatbuffers::Offset<CKeyValue> CreateCKeyValue(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> key = 0,
     ::flatbuffers::Offset<::flatbuffers::String> value = 0) {
-  KeyValueBuilder builder_(_fbb);
+  CKeyValueBuilder builder_(_fbb);
   builder_.add_value(value);
   builder_.add_key(key);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<KeyValue> CreateKeyValueDirect(
+inline ::flatbuffers::Offset<CKeyValue> CreateCKeyValueDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *key = nullptr,
     const char *value = nullptr) {
   auto key__ = key ? _fbb.CreateString(key) : 0;
   auto value__ = value ? _fbb.CreateString(value) : 0;
-  return hdn::CreateKeyValue(
+  return hdn::CreateCKeyValue(
       _fbb,
       key__,
       value__);
 }
 
-struct Vec3 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef Vec3Builder Builder;
+struct CVec3 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CVec3Builder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_X = 4,
     VT_Y = 6,
@@ -178,44 +178,44 @@ struct Vec3 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct Vec3Builder {
-  typedef Vec3 Table;
+struct CVec3Builder {
+  typedef CVec3 Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_x(float x) {
-    fbb_.AddElement<float>(Vec3::VT_X, x, 0.0f);
+    fbb_.AddElement<float>(CVec3::VT_X, x, 0.0f);
   }
   void add_y(float y) {
-    fbb_.AddElement<float>(Vec3::VT_Y, y, 0.0f);
+    fbb_.AddElement<float>(CVec3::VT_Y, y, 0.0f);
   }
   void add_z(float z) {
-    fbb_.AddElement<float>(Vec3::VT_Z, z, 0.0f);
+    fbb_.AddElement<float>(CVec3::VT_Z, z, 0.0f);
   }
-  explicit Vec3Builder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CVec3Builder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<Vec3> Finish() {
+  ::flatbuffers::Offset<CVec3> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Vec3>(end);
+    auto o = ::flatbuffers::Offset<CVec3>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<Vec3> CreateVec3(
+inline ::flatbuffers::Offset<CVec3> CreateCVec3(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     float x = 0.0f,
     float y = 0.0f,
     float z = 0.0f) {
-  Vec3Builder builder_(_fbb);
+  CVec3Builder builder_(_fbb);
   builder_.add_z(z);
   builder_.add_y(y);
   builder_.add_x(x);
   return builder_.Finish();
 }
 
-struct Vec4 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef Vec4Builder Builder;
+struct CVec4 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CVec4Builder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_X = 4,
     VT_Y = 6,
@@ -244,40 +244,40 @@ struct Vec4 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct Vec4Builder {
-  typedef Vec4 Table;
+struct CVec4Builder {
+  typedef CVec4 Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_x(float x) {
-    fbb_.AddElement<float>(Vec4::VT_X, x, 0.0f);
+    fbb_.AddElement<float>(CVec4::VT_X, x, 0.0f);
   }
   void add_y(float y) {
-    fbb_.AddElement<float>(Vec4::VT_Y, y, 0.0f);
+    fbb_.AddElement<float>(CVec4::VT_Y, y, 0.0f);
   }
   void add_z(float z) {
-    fbb_.AddElement<float>(Vec4::VT_Z, z, 0.0f);
+    fbb_.AddElement<float>(CVec4::VT_Z, z, 0.0f);
   }
   void add_w(float w) {
-    fbb_.AddElement<float>(Vec4::VT_W, w, 0.0f);
+    fbb_.AddElement<float>(CVec4::VT_W, w, 0.0f);
   }
-  explicit Vec4Builder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CVec4Builder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<Vec4> Finish() {
+  ::flatbuffers::Offset<CVec4> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Vec4>(end);
+    auto o = ::flatbuffers::Offset<CVec4>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<Vec4> CreateVec4(
+inline ::flatbuffers::Offset<CVec4> CreateCVec4(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     float x = 0.0f,
     float y = 0.0f,
     float z = 0.0f,
     float w = 0.0f) {
-  Vec4Builder builder_(_fbb);
+  CVec4Builder builder_(_fbb);
   builder_.add_w(w);
   builder_.add_z(z);
   builder_.add_y(y);

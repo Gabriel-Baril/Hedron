@@ -17,48 +17,48 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 
 namespace hdn {
 
-struct TransformComponent;
-struct TransformComponentBuilder;
+struct CTransformComponent;
+struct CTransformComponentBuilder;
 
-struct ModelComponent;
-struct ModelComponentBuilder;
+struct CModelComponent;
+struct CModelComponentBuilder;
 
-struct LightComponent;
-struct LightComponentBuilder;
+struct CLightComponent;
+struct CLightComponentBuilder;
 
-struct ScriptComponent;
-struct ScriptComponentBuilder;
+struct CScriptComponent;
+struct CScriptComponentBuilder;
 
-struct HierarchyComponent;
-struct HierarchyComponentBuilder;
+struct CHierarchyComponent;
+struct CHierarchyComponentBuilder;
 
-struct Component;
-struct ComponentBuilder;
+struct CComponent;
+struct CComponentBuilder;
 
-enum ComponentType : int8_t {
-  ComponentType_NONE = 0,
-  ComponentType_TRANSFORM = 1,
-  ComponentType_MODEL = 2,
-  ComponentType_LIGHT = 3,
-  ComponentType_SCRIPT = 4,
-  ComponentType_HIERARCHY = 5,
-  ComponentType_MIN = ComponentType_NONE,
-  ComponentType_MAX = ComponentType_HIERARCHY
+enum CComponentType : int8_t {
+  CComponentType_NONE = 0,
+  CComponentType_TRANSFORM = 1,
+  CComponentType_MODEL = 2,
+  CComponentType_LIGHT = 3,
+  CComponentType_SCRIPT = 4,
+  CComponentType_HIERARCHY = 5,
+  CComponentType_MIN = CComponentType_NONE,
+  CComponentType_MAX = CComponentType_HIERARCHY
 };
 
-inline const ComponentType (&EnumValuesComponentType())[6] {
-  static const ComponentType values[] = {
-    ComponentType_NONE,
-    ComponentType_TRANSFORM,
-    ComponentType_MODEL,
-    ComponentType_LIGHT,
-    ComponentType_SCRIPT,
-    ComponentType_HIERARCHY
+inline const CComponentType (&EnumValuesCComponentType())[6] {
+  static const CComponentType values[] = {
+    CComponentType_NONE,
+    CComponentType_TRANSFORM,
+    CComponentType_MODEL,
+    CComponentType_LIGHT,
+    CComponentType_SCRIPT,
+    CComponentType_HIERARCHY
   };
   return values;
 }
 
-inline const char * const *EnumNamesComponentType() {
+inline const char * const *EnumNamesCComponentType() {
   static const char * const names[7] = {
     "NONE",
     "TRANSFORM",
@@ -71,89 +71,89 @@ inline const char * const *EnumNamesComponentType() {
   return names;
 }
 
-inline const char *EnumNameComponentType(ComponentType e) {
-  if (::flatbuffers::IsOutRange(e, ComponentType_NONE, ComponentType_HIERARCHY)) return "";
+inline const char *EnumNameCComponentType(CComponentType e) {
+  if (::flatbuffers::IsOutRange(e, CComponentType_NONE, CComponentType_HIERARCHY)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesComponentType()[index];
+  return EnumNamesCComponentType()[index];
 }
 
-enum ComponentUnion : uint8_t {
-  ComponentUnion_NONE = 0,
-  ComponentUnion_TransformComponent = 1,
-  ComponentUnion_ModelComponent = 2,
-  ComponentUnion_LightComponent = 3,
-  ComponentUnion_ScriptComponent = 4,
-  ComponentUnion_MIN = ComponentUnion_NONE,
-  ComponentUnion_MAX = ComponentUnion_ScriptComponent
+enum CComponentUnion : uint8_t {
+  CComponentUnion_NONE = 0,
+  CComponentUnion_CTransformComponent = 1,
+  CComponentUnion_CModelComponent = 2,
+  CComponentUnion_CLightComponent = 3,
+  CComponentUnion_CScriptComponent = 4,
+  CComponentUnion_MIN = CComponentUnion_NONE,
+  CComponentUnion_MAX = CComponentUnion_CScriptComponent
 };
 
-inline const ComponentUnion (&EnumValuesComponentUnion())[5] {
-  static const ComponentUnion values[] = {
-    ComponentUnion_NONE,
-    ComponentUnion_TransformComponent,
-    ComponentUnion_ModelComponent,
-    ComponentUnion_LightComponent,
-    ComponentUnion_ScriptComponent
+inline const CComponentUnion (&EnumValuesCComponentUnion())[5] {
+  static const CComponentUnion values[] = {
+    CComponentUnion_NONE,
+    CComponentUnion_CTransformComponent,
+    CComponentUnion_CModelComponent,
+    CComponentUnion_CLightComponent,
+    CComponentUnion_CScriptComponent
   };
   return values;
 }
 
-inline const char * const *EnumNamesComponentUnion() {
+inline const char * const *EnumNamesCComponentUnion() {
   static const char * const names[6] = {
     "NONE",
-    "TransformComponent",
-    "ModelComponent",
-    "LightComponent",
-    "ScriptComponent",
+    "CTransformComponent",
+    "CModelComponent",
+    "CLightComponent",
+    "CScriptComponent",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNameComponentUnion(ComponentUnion e) {
-  if (::flatbuffers::IsOutRange(e, ComponentUnion_NONE, ComponentUnion_ScriptComponent)) return "";
+inline const char *EnumNameCComponentUnion(CComponentUnion e) {
+  if (::flatbuffers::IsOutRange(e, CComponentUnion_NONE, CComponentUnion_CScriptComponent)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesComponentUnion()[index];
+  return EnumNamesCComponentUnion()[index];
 }
 
-template<typename T> struct ComponentUnionTraits {
-  static const ComponentUnion enum_value = ComponentUnion_NONE;
+template<typename T> struct CComponentUnionTraits {
+  static const CComponentUnion enum_value = CComponentUnion_NONE;
 };
 
-template<> struct ComponentUnionTraits<hdn::TransformComponent> {
-  static const ComponentUnion enum_value = ComponentUnion_TransformComponent;
+template<> struct CComponentUnionTraits<hdn::CTransformComponent> {
+  static const CComponentUnion enum_value = CComponentUnion_CTransformComponent;
 };
 
-template<> struct ComponentUnionTraits<hdn::ModelComponent> {
-  static const ComponentUnion enum_value = ComponentUnion_ModelComponent;
+template<> struct CComponentUnionTraits<hdn::CModelComponent> {
+  static const CComponentUnion enum_value = CComponentUnion_CModelComponent;
 };
 
-template<> struct ComponentUnionTraits<hdn::LightComponent> {
-  static const ComponentUnion enum_value = ComponentUnion_LightComponent;
+template<> struct CComponentUnionTraits<hdn::CLightComponent> {
+  static const CComponentUnion enum_value = CComponentUnion_CLightComponent;
 };
 
-template<> struct ComponentUnionTraits<hdn::ScriptComponent> {
-  static const ComponentUnion enum_value = ComponentUnion_ScriptComponent;
+template<> struct CComponentUnionTraits<hdn::CScriptComponent> {
+  static const CComponentUnion enum_value = CComponentUnion_CScriptComponent;
 };
 
-bool VerifyComponentUnion(::flatbuffers::Verifier &verifier, const void *obj, ComponentUnion type);
-bool VerifyComponentUnionVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
+bool VerifyCComponentUnion(::flatbuffers::Verifier &verifier, const void *obj, CComponentUnion type);
+bool VerifyCComponentUnionVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
-struct TransformComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef TransformComponentBuilder Builder;
+struct CTransformComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CTransformComponentBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_POSITION = 4,
     VT_ROTATION = 6,
     VT_SCALE = 8
   };
-  const hdn::Vec3 *position() const {
-    return GetPointer<const hdn::Vec3 *>(VT_POSITION);
+  const hdn::CVec3 *position() const {
+    return GetPointer<const hdn::CVec3 *>(VT_POSITION);
   }
-  const hdn::Vec4 *rotation() const {
-    return GetPointer<const hdn::Vec4 *>(VT_ROTATION);
+  const hdn::CVec4 *rotation() const {
+    return GetPointer<const hdn::CVec4 *>(VT_ROTATION);
   }
-  const hdn::Vec3 *scale() const {
-    return GetPointer<const hdn::Vec3 *>(VT_SCALE);
+  const hdn::CVec3 *scale() const {
+    return GetPointer<const hdn::CVec3 *>(VT_SCALE);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -167,44 +167,44 @@ struct TransformComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   }
 };
 
-struct TransformComponentBuilder {
-  typedef TransformComponent Table;
+struct CTransformComponentBuilder {
+  typedef CTransformComponent Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_position(::flatbuffers::Offset<hdn::Vec3> position) {
-    fbb_.AddOffset(TransformComponent::VT_POSITION, position);
+  void add_position(::flatbuffers::Offset<hdn::CVec3> position) {
+    fbb_.AddOffset(CTransformComponent::VT_POSITION, position);
   }
-  void add_rotation(::flatbuffers::Offset<hdn::Vec4> rotation) {
-    fbb_.AddOffset(TransformComponent::VT_ROTATION, rotation);
+  void add_rotation(::flatbuffers::Offset<hdn::CVec4> rotation) {
+    fbb_.AddOffset(CTransformComponent::VT_ROTATION, rotation);
   }
-  void add_scale(::flatbuffers::Offset<hdn::Vec3> scale) {
-    fbb_.AddOffset(TransformComponent::VT_SCALE, scale);
+  void add_scale(::flatbuffers::Offset<hdn::CVec3> scale) {
+    fbb_.AddOffset(CTransformComponent::VT_SCALE, scale);
   }
-  explicit TransformComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CTransformComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<TransformComponent> Finish() {
+  ::flatbuffers::Offset<CTransformComponent> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<TransformComponent>(end);
+    auto o = ::flatbuffers::Offset<CTransformComponent>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<TransformComponent> CreateTransformComponent(
+inline ::flatbuffers::Offset<CTransformComponent> CreateCTransformComponent(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<hdn::Vec3> position = 0,
-    ::flatbuffers::Offset<hdn::Vec4> rotation = 0,
-    ::flatbuffers::Offset<hdn::Vec3> scale = 0) {
-  TransformComponentBuilder builder_(_fbb);
+    ::flatbuffers::Offset<hdn::CVec3> position = 0,
+    ::flatbuffers::Offset<hdn::CVec4> rotation = 0,
+    ::flatbuffers::Offset<hdn::CVec3> scale = 0) {
+  CTransformComponentBuilder builder_(_fbb);
   builder_.add_scale(scale);
   builder_.add_rotation(rotation);
   builder_.add_position(position);
   return builder_.Finish();
 }
 
-struct ModelComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef ModelComponentBuilder Builder;
+struct CModelComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CModelComponentBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_MESH = 4,
     VT_MATERIAL = 6
@@ -225,57 +225,57 @@ struct ModelComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct ModelComponentBuilder {
-  typedef ModelComponent Table;
+struct CModelComponentBuilder {
+  typedef CModelComponent Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_mesh(::flatbuffers::Offset<::flatbuffers::String> mesh) {
-    fbb_.AddOffset(ModelComponent::VT_MESH, mesh);
+    fbb_.AddOffset(CModelComponent::VT_MESH, mesh);
   }
   void add_material(::flatbuffers::Offset<::flatbuffers::String> material) {
-    fbb_.AddOffset(ModelComponent::VT_MATERIAL, material);
+    fbb_.AddOffset(CModelComponent::VT_MATERIAL, material);
   }
-  explicit ModelComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CModelComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<ModelComponent> Finish() {
+  ::flatbuffers::Offset<CModelComponent> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<ModelComponent>(end);
+    auto o = ::flatbuffers::Offset<CModelComponent>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<ModelComponent> CreateModelComponent(
+inline ::flatbuffers::Offset<CModelComponent> CreateCModelComponent(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> mesh = 0,
     ::flatbuffers::Offset<::flatbuffers::String> material = 0) {
-  ModelComponentBuilder builder_(_fbb);
+  CModelComponentBuilder builder_(_fbb);
   builder_.add_material(material);
   builder_.add_mesh(mesh);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<ModelComponent> CreateModelComponentDirect(
+inline ::flatbuffers::Offset<CModelComponent> CreateCModelComponentDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *mesh = nullptr,
     const char *material = nullptr) {
   auto mesh__ = mesh ? _fbb.CreateString(mesh) : 0;
   auto material__ = material ? _fbb.CreateString(material) : 0;
-  return hdn::CreateModelComponent(
+  return hdn::CreateCModelComponent(
       _fbb,
       mesh__,
       material__);
 }
 
-struct LightComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef LightComponentBuilder Builder;
+struct CLightComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CLightComponentBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_COLOR = 4,
     VT_INTENSITY = 6
   };
-  const hdn::Vec3 *color() const {
-    return GetPointer<const hdn::Vec3 *>(VT_COLOR);
+  const hdn::CVec3 *color() const {
+    return GetPointer<const hdn::CVec3 *>(VT_COLOR);
   }
   float intensity() const {
     return GetField<float>(VT_INTENSITY, 0.0f);
@@ -289,39 +289,39 @@ struct LightComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct LightComponentBuilder {
-  typedef LightComponent Table;
+struct CLightComponentBuilder {
+  typedef CLightComponent Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_color(::flatbuffers::Offset<hdn::Vec3> color) {
-    fbb_.AddOffset(LightComponent::VT_COLOR, color);
+  void add_color(::flatbuffers::Offset<hdn::CVec3> color) {
+    fbb_.AddOffset(CLightComponent::VT_COLOR, color);
   }
   void add_intensity(float intensity) {
-    fbb_.AddElement<float>(LightComponent::VT_INTENSITY, intensity, 0.0f);
+    fbb_.AddElement<float>(CLightComponent::VT_INTENSITY, intensity, 0.0f);
   }
-  explicit LightComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CLightComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<LightComponent> Finish() {
+  ::flatbuffers::Offset<CLightComponent> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<LightComponent>(end);
+    auto o = ::flatbuffers::Offset<CLightComponent>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<LightComponent> CreateLightComponent(
+inline ::flatbuffers::Offset<CLightComponent> CreateCLightComponent(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<hdn::Vec3> color = 0,
+    ::flatbuffers::Offset<hdn::CVec3> color = 0,
     float intensity = 0.0f) {
-  LightComponentBuilder builder_(_fbb);
+  CLightComponentBuilder builder_(_fbb);
   builder_.add_intensity(intensity);
   builder_.add_color(color);
   return builder_.Finish();
 }
 
-struct ScriptComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef ScriptComponentBuilder Builder;
+struct CScriptComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CScriptComponentBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_CLASS_NAME = 4,
     VT_PARAMETERS = 6
@@ -329,8 +329,8 @@ struct ScriptComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *class_name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CLASS_NAME);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::KeyValue>> *parameters() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::KeyValue>> *>(VT_PARAMETERS);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CKeyValue>> *parameters() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<hdn::CKeyValue>> *>(VT_PARAMETERS);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -343,56 +343,56 @@ struct ScriptComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct ScriptComponentBuilder {
-  typedef ScriptComponent Table;
+struct CScriptComponentBuilder {
+  typedef CScriptComponent Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_class_name(::flatbuffers::Offset<::flatbuffers::String> class_name) {
-    fbb_.AddOffset(ScriptComponent::VT_CLASS_NAME, class_name);
+    fbb_.AddOffset(CScriptComponent::VT_CLASS_NAME, class_name);
   }
-  void add_parameters(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::KeyValue>>> parameters) {
-    fbb_.AddOffset(ScriptComponent::VT_PARAMETERS, parameters);
+  void add_parameters(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CKeyValue>>> parameters) {
+    fbb_.AddOffset(CScriptComponent::VT_PARAMETERS, parameters);
   }
-  explicit ScriptComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CScriptComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<ScriptComponent> Finish() {
+  ::flatbuffers::Offset<CScriptComponent> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<ScriptComponent>(end);
+    auto o = ::flatbuffers::Offset<CScriptComponent>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<ScriptComponent> CreateScriptComponent(
+inline ::flatbuffers::Offset<CScriptComponent> CreateCScriptComponent(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> class_name = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::KeyValue>>> parameters = 0) {
-  ScriptComponentBuilder builder_(_fbb);
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<hdn::CKeyValue>>> parameters = 0) {
+  CScriptComponentBuilder builder_(_fbb);
   builder_.add_parameters(parameters);
   builder_.add_class_name(class_name);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<ScriptComponent> CreateScriptComponentDirect(
+inline ::flatbuffers::Offset<CScriptComponent> CreateCScriptComponentDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *class_name = nullptr,
-    const std::vector<::flatbuffers::Offset<hdn::KeyValue>> *parameters = nullptr) {
+    const std::vector<::flatbuffers::Offset<hdn::CKeyValue>> *parameters = nullptr) {
   auto class_name__ = class_name ? _fbb.CreateString(class_name) : 0;
-  auto parameters__ = parameters ? _fbb.CreateVector<::flatbuffers::Offset<hdn::KeyValue>>(*parameters) : 0;
-  return hdn::CreateScriptComponent(
+  auto parameters__ = parameters ? _fbb.CreateVector<::flatbuffers::Offset<hdn::CKeyValue>>(*parameters) : 0;
+  return hdn::CreateCScriptComponent(
       _fbb,
       class_name__,
       parameters__);
 }
 
-struct HierarchyComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef HierarchyComponentBuilder Builder;
+struct CHierarchyComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CHierarchyComponentBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_CHILDREN = 4
   };
-  const ::flatbuffers::Vector<const hdn::uuid *> *children() const {
-    return GetPointer<const ::flatbuffers::Vector<const hdn::uuid *> *>(VT_CHILDREN);
+  const ::flatbuffers::Vector<const hdn::CUUID *> *children() const {
+    return GetPointer<const ::flatbuffers::Vector<const hdn::CUUID *> *>(VT_CHILDREN);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -402,163 +402,163 @@ struct HierarchyComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   }
 };
 
-struct HierarchyComponentBuilder {
-  typedef HierarchyComponent Table;
+struct CHierarchyComponentBuilder {
+  typedef CHierarchyComponent Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_children(::flatbuffers::Offset<::flatbuffers::Vector<const hdn::uuid *>> children) {
-    fbb_.AddOffset(HierarchyComponent::VT_CHILDREN, children);
+  void add_children(::flatbuffers::Offset<::flatbuffers::Vector<const hdn::CUUID *>> children) {
+    fbb_.AddOffset(CHierarchyComponent::VT_CHILDREN, children);
   }
-  explicit HierarchyComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CHierarchyComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<HierarchyComponent> Finish() {
+  ::flatbuffers::Offset<CHierarchyComponent> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<HierarchyComponent>(end);
+    auto o = ::flatbuffers::Offset<CHierarchyComponent>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<HierarchyComponent> CreateHierarchyComponent(
+inline ::flatbuffers::Offset<CHierarchyComponent> CreateCHierarchyComponent(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<const hdn::uuid *>> children = 0) {
-  HierarchyComponentBuilder builder_(_fbb);
+    ::flatbuffers::Offset<::flatbuffers::Vector<const hdn::CUUID *>> children = 0) {
+  CHierarchyComponentBuilder builder_(_fbb);
   builder_.add_children(children);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<HierarchyComponent> CreateHierarchyComponentDirect(
+inline ::flatbuffers::Offset<CHierarchyComponent> CreateCHierarchyComponentDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<hdn::uuid> *children = nullptr) {
-  auto children__ = children ? _fbb.CreateVectorOfStructs<hdn::uuid>(*children) : 0;
-  return hdn::CreateHierarchyComponent(
+    const std::vector<hdn::CUUID> *children = nullptr) {
+  auto children__ = children ? _fbb.CreateVectorOfStructs<hdn::CUUID>(*children) : 0;
+  return hdn::CreateCHierarchyComponent(
       _fbb,
       children__);
 }
 
-struct Component FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef ComponentBuilder Builder;
+struct CComponent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CComponentBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_TYPE = 4,
     VT_DATA_TYPE = 6,
     VT_DATA = 8
   };
-  hdn::ComponentType type() const {
-    return static_cast<hdn::ComponentType>(GetField<int8_t>(VT_TYPE, 0));
+  hdn::CComponentType type() const {
+    return static_cast<hdn::CComponentType>(GetField<int8_t>(VT_TYPE, 0));
   }
-  hdn::ComponentUnion data_type() const {
-    return static_cast<hdn::ComponentUnion>(GetField<uint8_t>(VT_DATA_TYPE, 0));
+  hdn::CComponentUnion data_type() const {
+    return static_cast<hdn::CComponentUnion>(GetField<uint8_t>(VT_DATA_TYPE, 0));
   }
   const void *data() const {
     return GetPointer<const void *>(VT_DATA);
   }
   template<typename T> const T *data_as() const;
-  const hdn::TransformComponent *data_as_TransformComponent() const {
-    return data_type() == hdn::ComponentUnion_TransformComponent ? static_cast<const hdn::TransformComponent *>(data()) : nullptr;
+  const hdn::CTransformComponent *data_as_CTransformComponent() const {
+    return data_type() == hdn::CComponentUnion_CTransformComponent ? static_cast<const hdn::CTransformComponent *>(data()) : nullptr;
   }
-  const hdn::ModelComponent *data_as_ModelComponent() const {
-    return data_type() == hdn::ComponentUnion_ModelComponent ? static_cast<const hdn::ModelComponent *>(data()) : nullptr;
+  const hdn::CModelComponent *data_as_CModelComponent() const {
+    return data_type() == hdn::CComponentUnion_CModelComponent ? static_cast<const hdn::CModelComponent *>(data()) : nullptr;
   }
-  const hdn::LightComponent *data_as_LightComponent() const {
-    return data_type() == hdn::ComponentUnion_LightComponent ? static_cast<const hdn::LightComponent *>(data()) : nullptr;
+  const hdn::CLightComponent *data_as_CLightComponent() const {
+    return data_type() == hdn::CComponentUnion_CLightComponent ? static_cast<const hdn::CLightComponent *>(data()) : nullptr;
   }
-  const hdn::ScriptComponent *data_as_ScriptComponent() const {
-    return data_type() == hdn::ComponentUnion_ScriptComponent ? static_cast<const hdn::ScriptComponent *>(data()) : nullptr;
+  const hdn::CScriptComponent *data_as_CScriptComponent() const {
+    return data_type() == hdn::CComponentUnion_CScriptComponent ? static_cast<const hdn::CScriptComponent *>(data()) : nullptr;
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_TYPE, 1) &&
            VerifyField<uint8_t>(verifier, VT_DATA_TYPE, 1) &&
            VerifyOffset(verifier, VT_DATA) &&
-           VerifyComponentUnion(verifier, data(), data_type()) &&
+           VerifyCComponentUnion(verifier, data(), data_type()) &&
            verifier.EndTable();
   }
 };
 
-template<> inline const hdn::TransformComponent *Component::data_as<hdn::TransformComponent>() const {
-  return data_as_TransformComponent();
+template<> inline const hdn::CTransformComponent *CComponent::data_as<hdn::CTransformComponent>() const {
+  return data_as_CTransformComponent();
 }
 
-template<> inline const hdn::ModelComponent *Component::data_as<hdn::ModelComponent>() const {
-  return data_as_ModelComponent();
+template<> inline const hdn::CModelComponent *CComponent::data_as<hdn::CModelComponent>() const {
+  return data_as_CModelComponent();
 }
 
-template<> inline const hdn::LightComponent *Component::data_as<hdn::LightComponent>() const {
-  return data_as_LightComponent();
+template<> inline const hdn::CLightComponent *CComponent::data_as<hdn::CLightComponent>() const {
+  return data_as_CLightComponent();
 }
 
-template<> inline const hdn::ScriptComponent *Component::data_as<hdn::ScriptComponent>() const {
-  return data_as_ScriptComponent();
+template<> inline const hdn::CScriptComponent *CComponent::data_as<hdn::CScriptComponent>() const {
+  return data_as_CScriptComponent();
 }
 
-struct ComponentBuilder {
-  typedef Component Table;
+struct CComponentBuilder {
+  typedef CComponent Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_type(hdn::ComponentType type) {
-    fbb_.AddElement<int8_t>(Component::VT_TYPE, static_cast<int8_t>(type), 0);
+  void add_type(hdn::CComponentType type) {
+    fbb_.AddElement<int8_t>(CComponent::VT_TYPE, static_cast<int8_t>(type), 0);
   }
-  void add_data_type(hdn::ComponentUnion data_type) {
-    fbb_.AddElement<uint8_t>(Component::VT_DATA_TYPE, static_cast<uint8_t>(data_type), 0);
+  void add_data_type(hdn::CComponentUnion data_type) {
+    fbb_.AddElement<uint8_t>(CComponent::VT_DATA_TYPE, static_cast<uint8_t>(data_type), 0);
   }
   void add_data(::flatbuffers::Offset<void> data) {
-    fbb_.AddOffset(Component::VT_DATA, data);
+    fbb_.AddOffset(CComponent::VT_DATA, data);
   }
-  explicit ComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CComponentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<Component> Finish() {
+  ::flatbuffers::Offset<CComponent> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Component>(end);
+    auto o = ::flatbuffers::Offset<CComponent>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<Component> CreateComponent(
+inline ::flatbuffers::Offset<CComponent> CreateCComponent(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    hdn::ComponentType type = hdn::ComponentType_NONE,
-    hdn::ComponentUnion data_type = hdn::ComponentUnion_NONE,
+    hdn::CComponentType type = hdn::CComponentType_NONE,
+    hdn::CComponentUnion data_type = hdn::CComponentUnion_NONE,
     ::flatbuffers::Offset<void> data = 0) {
-  ComponentBuilder builder_(_fbb);
+  CComponentBuilder builder_(_fbb);
   builder_.add_data(data);
   builder_.add_data_type(data_type);
   builder_.add_type(type);
   return builder_.Finish();
 }
 
-inline bool VerifyComponentUnion(::flatbuffers::Verifier &verifier, const void *obj, ComponentUnion type) {
+inline bool VerifyCComponentUnion(::flatbuffers::Verifier &verifier, const void *obj, CComponentUnion type) {
   switch (type) {
-    case ComponentUnion_NONE: {
+    case CComponentUnion_NONE: {
       return true;
     }
-    case ComponentUnion_TransformComponent: {
-      auto ptr = reinterpret_cast<const hdn::TransformComponent *>(obj);
+    case CComponentUnion_CTransformComponent: {
+      auto ptr = reinterpret_cast<const hdn::CTransformComponent *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case ComponentUnion_ModelComponent: {
-      auto ptr = reinterpret_cast<const hdn::ModelComponent *>(obj);
+    case CComponentUnion_CModelComponent: {
+      auto ptr = reinterpret_cast<const hdn::CModelComponent *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case ComponentUnion_LightComponent: {
-      auto ptr = reinterpret_cast<const hdn::LightComponent *>(obj);
+    case CComponentUnion_CLightComponent: {
+      auto ptr = reinterpret_cast<const hdn::CLightComponent *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case ComponentUnion_ScriptComponent: {
-      auto ptr = reinterpret_cast<const hdn::ScriptComponent *>(obj);
+    case CComponentUnion_CScriptComponent: {
+      auto ptr = reinterpret_cast<const hdn::CScriptComponent *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;
   }
 }
 
-inline bool VerifyComponentUnionVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
+inline bool VerifyCComponentUnionVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
   if (!values || !types) return !values && !types;
   if (values->size() != types->size()) return false;
   for (::flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
-    if (!VerifyComponentUnion(
-        verifier,  values->Get(i), types->GetEnum<ComponentUnion>(i))) {
+    if (!VerifyCComponentUnion(
+        verifier,  values->Get(i), types->GetEnum<CComponentUnion>(i))) {
       return false;
     }
   }

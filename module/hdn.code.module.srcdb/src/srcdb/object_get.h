@@ -1,10 +1,12 @@
+#pragma once
+
 #include "core/core.h"
 #include "cache.h"
 #include "signature.h"
 
 namespace hdn
 {
-	enum class RequestResult {
+	enum class ObjectRequestResult {
 		SUCCESS,
 		NOT_FOUND
 	};
@@ -21,11 +23,11 @@ namespace hdn
 
 		// If fetching fails for some reasons that's ok. Multiple causes are possible.
 		// Object not in the cache, one dependency of the object was invalidated, etc
-		const RequestResult requestResult = object_request(sig);
+		const ObjectRequestResult requestResult = object_request(sig);
 		if (!request_success(requestResult))
 		{
 			object_request_failure(sig, requestResult);
-			return false;
+			return nullptr;
 		}
 
 		void* object = cache_obj_load(objectId);
@@ -41,6 +43,8 @@ namespace hdn
 	template<typename T>
 	struct Handle
 	{
+		using Underlying = typename T::Underlying;
+
 		Handle(obj_t id)
 			: objectId{ id }
 		{
@@ -51,21 +55,29 @@ namespace hdn
 		{
 		}
 
-		template<typename U>
-		U* get()
+		bool valid() const
 		{
-			void* object = (void*)cache_obj_load(objectId);
+			return objectId != NULL_OBJ;
+		}
+
+		Underlying* get()
+		{
+			Underlying* object = (Underlying*)cache_obj_load(objectId);
 			if (object)
 			{
 				return object;
 			}
-
 			Signature<T>* sig = (Signature<T>*)signature_get(objectId);
 			if (!sig)
 			{
 				return nullptr;
 			}
-			return (U*)object_touch<T>(*sig);
+			return (Underlying*)object_touch<T>(*sig);
+		}
+
+		Underlying* operator->()
+		{
+			return get();
 		}
 
 		~Handle()
@@ -76,7 +88,7 @@ namespace hdn
 		obj_t objectId = 0;
 	};
 
-	bool request_success(RequestResult result);
+	bool request_success(ObjectRequestResult result);
 
 	template<typename T>
 	Handle<T> object_get(const Signature<T>& sig)
@@ -87,7 +99,7 @@ namespace hdn
 	}
 	
 	template<typename T>
-	void object_request_failure_generic(const Signature<T>& sig, RequestResult result)
+	void object_request_failure_generic(const Signature<T>& sig, ObjectRequestResult result)
 	{
 		char slug[512];
 		object_get_slug(sig, slug, ARRLEN(slug));

@@ -15,24 +15,24 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 
 namespace hdn {
 
-struct PathDep;
+struct CPathDep;
 
-struct ObjDep;
+struct CObjDep;
 
 struct CacheObject;
 struct CacheObjectBuilder;
 
-FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) PathDep FLATBUFFERS_FINAL_CLASS {
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) CPathDep FLATBUFFERS_FINAL_CLASS {
  private:
   uint64_t path_hash_;
   uint64_t timestamp_;
 
  public:
-  PathDep()
+  CPathDep()
       : path_hash_(0),
         timestamp_(0) {
   }
-  PathDep(uint64_t _path_hash, uint64_t _timestamp)
+  CPathDep(uint64_t _path_hash, uint64_t _timestamp)
       : path_hash_(::flatbuffers::EndianScalar(_path_hash)),
         timestamp_(::flatbuffers::EndianScalar(_timestamp)) {
   }
@@ -43,53 +43,43 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) PathDep FLATBUFFERS_FINAL_CLASS {
     return ::flatbuffers::EndianScalar(timestamp_);
   }
 };
-FLATBUFFERS_STRUCT_END(PathDep, 16);
+FLATBUFFERS_STRUCT_END(CPathDep, 16);
 
-FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) ObjDep FLATBUFFERS_FINAL_CLASS {
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) CObjDep FLATBUFFERS_FINAL_CLASS {
  private:
   uint64_t obj_id_;
 
  public:
-  ObjDep()
+  CObjDep()
       : obj_id_(0) {
   }
-  ObjDep(uint64_t _obj_id)
+  CObjDep(uint64_t _obj_id)
       : obj_id_(::flatbuffers::EndianScalar(_obj_id)) {
   }
   uint64_t obj_id() const {
     return ::flatbuffers::EndianScalar(obj_id_);
   }
 };
-FLATBUFFERS_STRUCT_END(ObjDep, 8);
+FLATBUFFERS_STRUCT_END(CObjDep, 8);
 
 struct CacheObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CacheObjectBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_TOTAL_PATH_DEP = 4,
-    VT_TOTAL_OBJ_DEP = 6,
-    VT_PATH_DEPENDENCIES = 8,
-    VT_OBJ_DEPENDENCIES = 10,
-    VT_PAYLOAD = 12
+    VT_PATH_DEPENDENCIES = 4,
+    VT_OBJ_DEPENDENCIES = 6,
+    VT_PAYLOAD = 8
   };
-  uint16_t total_path_dep() const {
-    return GetField<uint16_t>(VT_TOTAL_PATH_DEP, 0);
+  const ::flatbuffers::Vector<const hdn::CPathDep *> *path_dependencies() const {
+    return GetPointer<const ::flatbuffers::Vector<const hdn::CPathDep *> *>(VT_PATH_DEPENDENCIES);
   }
-  uint16_t total_obj_dep() const {
-    return GetField<uint16_t>(VT_TOTAL_OBJ_DEP, 0);
+  const ::flatbuffers::Vector<const hdn::CObjDep *> *obj_dependencies() const {
+    return GetPointer<const ::flatbuffers::Vector<const hdn::CObjDep *> *>(VT_OBJ_DEPENDENCIES);
   }
-  const ::flatbuffers::Vector<const hdn::PathDep *> *path_dependencies() const {
-    return GetPointer<const ::flatbuffers::Vector<const hdn::PathDep *> *>(VT_PATH_DEPENDENCIES);
-  }
-  const ::flatbuffers::Vector<const hdn::ObjDep *> *obj_dependencies() const {
-    return GetPointer<const ::flatbuffers::Vector<const hdn::ObjDep *> *>(VT_OBJ_DEPENDENCIES);
-  }
-  const ::flatbuffers::Vector<int8_t> *payload() const {
-    return GetPointer<const ::flatbuffers::Vector<int8_t> *>(VT_PAYLOAD);
+  const ::flatbuffers::Vector<uint8_t> *payload() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_PAYLOAD);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint16_t>(verifier, VT_TOTAL_PATH_DEP, 2) &&
-           VerifyField<uint16_t>(verifier, VT_TOTAL_OBJ_DEP, 2) &&
            VerifyOffset(verifier, VT_PATH_DEPENDENCIES) &&
            verifier.VerifyVector(path_dependencies()) &&
            VerifyOffset(verifier, VT_OBJ_DEPENDENCIES) &&
@@ -104,19 +94,13 @@ struct CacheObjectBuilder {
   typedef CacheObject Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_total_path_dep(uint16_t total_path_dep) {
-    fbb_.AddElement<uint16_t>(CacheObject::VT_TOTAL_PATH_DEP, total_path_dep, 0);
-  }
-  void add_total_obj_dep(uint16_t total_obj_dep) {
-    fbb_.AddElement<uint16_t>(CacheObject::VT_TOTAL_OBJ_DEP, total_obj_dep, 0);
-  }
-  void add_path_dependencies(::flatbuffers::Offset<::flatbuffers::Vector<const hdn::PathDep *>> path_dependencies) {
+  void add_path_dependencies(::flatbuffers::Offset<::flatbuffers::Vector<const hdn::CPathDep *>> path_dependencies) {
     fbb_.AddOffset(CacheObject::VT_PATH_DEPENDENCIES, path_dependencies);
   }
-  void add_obj_dependencies(::flatbuffers::Offset<::flatbuffers::Vector<const hdn::ObjDep *>> obj_dependencies) {
+  void add_obj_dependencies(::flatbuffers::Offset<::flatbuffers::Vector<const hdn::CObjDep *>> obj_dependencies) {
     fbb_.AddOffset(CacheObject::VT_OBJ_DEPENDENCIES, obj_dependencies);
   }
-  void add_payload(::flatbuffers::Offset<::flatbuffers::Vector<int8_t>> payload) {
+  void add_payload(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> payload) {
     fbb_.AddOffset(CacheObject::VT_PAYLOAD, payload);
   }
   explicit CacheObjectBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
@@ -132,34 +116,26 @@ struct CacheObjectBuilder {
 
 inline ::flatbuffers::Offset<CacheObject> CreateCacheObject(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint16_t total_path_dep = 0,
-    uint16_t total_obj_dep = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<const hdn::PathDep *>> path_dependencies = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<const hdn::ObjDep *>> obj_dependencies = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<int8_t>> payload = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<const hdn::CPathDep *>> path_dependencies = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<const hdn::CObjDep *>> obj_dependencies = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> payload = 0) {
   CacheObjectBuilder builder_(_fbb);
   builder_.add_payload(payload);
   builder_.add_obj_dependencies(obj_dependencies);
   builder_.add_path_dependencies(path_dependencies);
-  builder_.add_total_obj_dep(total_obj_dep);
-  builder_.add_total_path_dep(total_path_dep);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<CacheObject> CreateCacheObjectDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint16_t total_path_dep = 0,
-    uint16_t total_obj_dep = 0,
-    const std::vector<hdn::PathDep> *path_dependencies = nullptr,
-    const std::vector<hdn::ObjDep> *obj_dependencies = nullptr,
-    const std::vector<int8_t> *payload = nullptr) {
-  auto path_dependencies__ = path_dependencies ? _fbb.CreateVectorOfStructs<hdn::PathDep>(*path_dependencies) : 0;
-  auto obj_dependencies__ = obj_dependencies ? _fbb.CreateVectorOfStructs<hdn::ObjDep>(*obj_dependencies) : 0;
-  auto payload__ = payload ? _fbb.CreateVector<int8_t>(*payload) : 0;
+    const std::vector<hdn::CPathDep> *path_dependencies = nullptr,
+    const std::vector<hdn::CObjDep> *obj_dependencies = nullptr,
+    const std::vector<uint8_t> *payload = nullptr) {
+  auto path_dependencies__ = path_dependencies ? _fbb.CreateVectorOfStructs<hdn::CPathDep>(*path_dependencies) : 0;
+  auto obj_dependencies__ = obj_dependencies ? _fbb.CreateVectorOfStructs<hdn::CObjDep>(*obj_dependencies) : 0;
+  auto payload__ = payload ? _fbb.CreateVector<uint8_t>(*payload) : 0;
   return hdn::CreateCacheObject(
       _fbb,
-      total_path_dep,
-      total_obj_dep,
       path_dependencies__,
       obj_dependencies__,
       payload__);

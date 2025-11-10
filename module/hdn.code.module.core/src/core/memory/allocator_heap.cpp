@@ -1,4 +1,5 @@
 #include "allocator_heap.h"
+#include "core_memory.h"
 
 
 namespace hdn
@@ -29,6 +30,8 @@ namespace hdn
 	void* heap_allocator_allocate(HeapAllocator& allocator, u64 size, u64 alignment)
 	{
 		void* mem = alignment == 1 ? tlsf_malloc(allocator.TLSFHandle, size) : tlsf_memalign(allocator.TLSFHandle, alignment, size);
+		HASSERT(mem, "Failed to allocate memory!");
+		core_memzero(mem, size);
 		u64 actualSize = tlsf_block_size(mem);
 		allocator.allocatedSize += actualSize;
 		return mem;

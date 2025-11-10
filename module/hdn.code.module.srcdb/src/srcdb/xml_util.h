@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pugixml/pugixml.hpp"
 
 namespace hdn

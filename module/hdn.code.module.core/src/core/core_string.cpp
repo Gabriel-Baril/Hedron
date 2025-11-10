@@ -157,12 +157,13 @@ namespace hdn
 		strcpy(dest, begin);
 	}
 
-	void core_snprintf(char* buffer, size_t bufferSize, const char* format, ...)
+	i32 core_snprintf(char* buffer, size_t bufferCount, const char* format, ...)
 	{
 		va_list args;
 		va_start(args, format);
-		vsnprintf(buffer, bufferSize, format, args);
+		i32 r = static_cast<i32>(vsnprintf(buffer, bufferCount, format, args));
 		va_end(args);
+		return r;
 	}
 
 	string trim(const string& str)

@@ -6,8 +6,6 @@
 #include "core/memory/allocator_heap.h"
 #include "core/memory/core_memory.h"
 
-#include "srcdb/generated/cache_generated.h"
-
 namespace hdn
 {
 	static constexpr u64 METADATA_MEMORY_POOL_SIZE = 50 * MB;
@@ -22,6 +20,50 @@ namespace hdn
         HeapAllocator metadataAllocator;
         HeapAllocator objectAllocator;
     } s_CacheGlob;
+
+    static void create_cache_from_meta(flatbuffers::FlatBufferBuilder& builder, const ObjectMetadata& meta)
+	{
+		auto pathDepsVec = builder.CreateVectorOfStructs(meta.pathDependencies, meta.totalPathDep);
+		auto objDepsVec = builder.CreateVectorOfStructs(meta.objDependencies, meta.totalObjDep);
+		auto payloadVec = builder.CreateVector(reinterpret_cast<const u8*>(meta.data), meta.size);
+		builder.Finish(hdn::CreateCacheObject(builder, pathDepsVec, objDepsVec, payloadVec));
+    }
+	
+    static void create_meta_from_cache(ObjectMetadata& meta)
+    {
+
+    }
+
+	static void cache_file_write(const std::string& path, const u8* buffer, size_t size)
+	{
+		std::ofstream outFile(path, std::ios::out | std::ios::binary | std::ios::trunc);
+		HASSERT(outFile.is_open(), "Failed to cache object '{0}'", path.c_str());
+		outFile.write(reinterpret_cast<const char*>(buffer), size);
+		outFile.close();
+	}
+
+	static bool cache_file_read(const std::string& path, std::vector<char> out)
+	{
+		std::ifstream inFile(path, std::ios::binary | std::ios::ate);
+		if (!inFile)
+		{
+			HERR("Could not open file '{0}' for reading", path);
+			return false;
+		}
+
+		// Get the file size
+		std::streamsize fileSize = inFile.tellg();
+		inFile.seekg(0, std::ios::beg);
+
+		// Read the file into the buffer
+		out.reserve(fileSize);
+		if (!inFile.read(out.data(), fileSize))
+		{
+			HERR("Failed to read the file", path);
+			return false;
+		}
+		return true;
+	}
 
     bool cache_init()
     {
@@ -70,17 +112,26 @@ namespace hdn
 		meta.totalObjDep = info.totalObjDep;
 		meta.currentPathDep = 0;
 		meta.currentObjDep = 0;
-		meta.pathDependencies = (PathDep*)heap_allocator_allocate(s_CacheGlob.metadataAllocator, sizeof(PathDep) * meta.totalPathDep, alignof(PathDep));
-		meta.objDependencies = (ObjDep*)heap_allocator_allocate(s_CacheGlob.metadataAllocator, sizeof(ObjDep) * meta.totalObjDep, alignof(ObjDep));
+        meta.pathDependencies = nullptr;
+
+        if (meta.totalPathDep > 0)
+		{
+			meta.pathDependencies = (CPathDep*)heap_allocator_allocate(s_CacheGlob.metadataAllocator, sizeof(CPathDep) * meta.totalPathDep, alignof(CPathDep));
+        }
+
+        if (meta.currentObjDep > 0)
+		{
+			meta.objDependencies = (CObjDep*)heap_allocator_allocate(s_CacheGlob.metadataAllocator, sizeof(CObjDep) * meta.totalObjDep, alignof(CObjDep));
+        }
 	}
 
 	void cache_obj_objdep(obj_t id, obj_t objDepId)
 	{
 		ObjectMetadata* meta = cache_obj_meta(id);
 		HASSERT(meta, "cache_add_objdep called on a non-existing object!");
-        HASSERT(!meta->built, "Cannot add dependency to object that are already built!");
-        meta->objDependencies[meta->currentObjDep].objId = objDepId;
-		meta->currentObjDep++;
+		HASSERT(!meta->built, "Cannot add dependency to object that are already built!");
+		HASSERT(meta->currentObjDep < meta->totalObjDep, "Exceeded object dependency capacity for object '{0}'", id);
+        meta->objDependencies[meta->currentObjDep++] = CObjDep(objDepId);
 	}
 
 	void cache_obj_pathdep(obj_t id, fspath pathdep)
@@ -88,71 +139,83 @@ namespace hdn
 		ObjectMetadata* meta = cache_obj_meta(id);
         HASSERT(meta, "cache_add_pathdep called on a non-existing object!");
 		HASSERT(!meta->built, "Cannot add dependency to object that are already built!");
-		meta->pathDependencies[meta->currentPathDep].pathHash = hash(pathdep); // TODO: Fix
-		meta->pathDependencies[meta->currentPathDep].timestamp = 0; // TODO: Fix
-		meta->currentPathDep++;
+        HASSERT(meta->currentPathDep < meta->totalPathDep, "Exceeded path dependency capacity for object '{0}'", id);
+		meta->pathDependencies[meta->currentPathDep++] = CPathDep(0, 0);
 	}
 
-    void cache_obj_path(obj_t id, std::string& path)
-    {
-        path = fmt::format("{0}\\{1}", s_CacheGlob.cachePath.c_str(), id);
-    }
-
-    static bool cache_obj_exist(const std::string& cachePath)
-    {
-        return filesystem_exists(cachePath);
-    }
-
-    bool cache_obj_exist(obj_t id)
-    {
-        std::string cacheObjPath;
-        cache_obj_path(id, cacheObjPath);
-        return cache_obj_exist(cacheObjPath) || s_CacheGlob.meta.contains(id);
-    }
-
-    void cache_obj_store(obj_t id, const void* buffer, u64 length)
+    void cache_obj_payload(obj_t id, const void* payload, u64 payloadSize)
 	{
 		ObjectMetadata* meta = cache_obj_meta(id);
-        HASSERT(meta, "Trying to store an object before calling cache_begin");
+        HASSERT(meta, "Trying to store an object before calling cache_obj_begin");
 
-        std::string cacheObjPath;
-        cache_obj_path(id, cacheObjPath);
-        if (cache_obj_exist(cacheObjPath))
-        {
-            // The cache entry associated with the hash already exists
-            return;
-        }
+		void* objData = heap_allocator_allocate(s_CacheGlob.objectAllocator, payloadSize, alignof(u8));
+		core_memcpy(objData, payload, payloadSize);
 
-        // For now the cold-cache is just a 1:1 mapping between file and id for simplicity
-        auto openFileFlags = std::ios::binary | std::ios::trunc;
-        std::ofstream outFile(cacheObjPath, openFileFlags);
-        outFile.write(reinterpret_cast<const char*>(buffer), length);
-        outFile.close();
+		meta->data = objData;
+        meta->size = payloadSize;
+    }
+
+    void cache_obj_end(obj_t id)
+	{
+		ObjectMetadata* meta = cache_obj_meta(id);
+		HASSERT(meta, "Trying to end an object before calling cache_obj_begin");
+		HASSERT(meta->currentPathDep == meta->totalPathDep, "cache_obj_end: mismatch in path dependency count for object '{0}'", id);
+		HASSERT(meta->currentObjDep == meta->totalObjDep, "cache_obj_end: mismatch in object dependency count for object '{0}'", id);
+
+		std::string cacheObjPath;
+		cache_obj_path(id, cacheObjPath);
+		if (cache_obj_exist(cacheObjPath))
+		{
+			// The cache entry associated with the hash already exists
+			return;
+		}
+
+		// For now the cold-cache is just a 1:1 mapping between file and id for simplicity
+		flatbuffers::FlatBufferBuilder builder(meta->size + 1 * KB);
+		create_cache_from_meta(builder, *meta);
+		cache_file_write(cacheObjPath, builder.GetBufferPointer(), builder.GetSize());
 		meta->built = true;
     }
+
+
+	void cache_obj_path(obj_t id, std::string& path)
+	{
+		path = fmt::format("{0}\\{1}", s_CacheGlob.cachePath.c_str(), id);
+	}
+
+	static bool cache_obj_exist(const std::string& cachePath)
+	{
+		return filesystem_exists(cachePath);
+	}
+
+	bool cache_obj_exist(obj_t id)
+	{
+		std::string cacheObjPath;
+		cache_obj_path(id, cacheObjPath);
+		return cache_obj_exist(cacheObjPath) || s_CacheGlob.meta.contains(id);
+	}
 
     u64 cache_obj_size(obj_t id)
     {
         std::string path;
         cache_obj_path(id, path);
         return filesystem_file_size(path);
-    }
+	}
 
-    bool cache_cold_cached(obj_t id)
-    {
+	bool cache_cold_cached(obj_t id)
+	{
 
 
-        return false;
-    }
+		return false;
+	}
 
-    void* cache_obj_load(obj_t id)
+    const void* cache_obj_load(obj_t id)
 	{
 		{
 			ObjectMetadata* meta = cache_obj_meta(id);
 			if (meta)
 			{
                 meta->useCount++;
-				// The object is already in memory
 				return meta->data;
 			}
 		}
@@ -160,27 +223,12 @@ namespace hdn
 		// Otherwise fetch from cold-cache
 		ObjectMetadata& meta = cache_obj_meta_create(id);
         std::string path;
-        cache_obj_path(id, path);
-        std::ifstream inFile(path, std::ios::binary | std::ios::ate);
-        if (!inFile)
-        {
-			HERR("Could not open file '{0}' for reading", path);
-			return false;
-        }
-
-        // Get the file size
-        std::streamsize fileSize = inFile.tellg();
-        inFile.seekg(0, std::ios::beg);
-
-        // Read the file into the buffer
-        if (!inFile.read(out, fileSize))
-        {
-			HERR("Failed to read the file", path);
-			return false;
-        }
+		cache_obj_path(id, path);
+		std::vector<char> out;
+		cache_file_read(path, out);
 
 		meta.useCount++;
-        return true;
+        return nullptr; 
     }
 
     void cache_obj_unload(obj_t id)

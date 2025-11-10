@@ -1,4 +1,7 @@
+#pragma once
+
 #include "pugixml/pugixml.hpp"
+#include "xml_util.h"
 
 namespace hdn
 {
@@ -20,22 +23,5 @@ namespace hdn
 			}
 		}
 		return builder.CreateVector(fbVec);
-	}
-	
-	inline auto create_meta(flatbuffers::FlatBufferBuilder &builder, const SourceContext &ctx, u64 codeVersion)
-	{
-		// Create file dependencies
-		hdn::FileDependencyBuilder fd1(builder);
-		std::string filePathStr = ctx.path.string();
-		const char *filePath = filePathStr.c_str();
-		fd1.add_path_hash(hash_generate(filePath, strlen(filePath)));
-		fd1.add_last_modified_timestamp(filesystem_last_write_time(ctx.path));
-		auto fd_offset1 = fd1.Finish();
-
-		flatbuffers::Offset<hdn::FileDependency> file_dep_array[] = {fd_offset1};
-		auto fbFileDeps = builder.CreateVector(file_dep_array, 1);
-
-		// Build Metadata
-		return hdn::CreateMetadata(builder, fbFileDeps, codeVersion);
 	}
 }
