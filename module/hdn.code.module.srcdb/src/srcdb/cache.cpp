@@ -183,8 +183,7 @@ namespace hdn
 	void cache_obj_save(obj_t id)
 	{
 		ObjectMetadata* meta = cache_obj_meta(id);
-		HASSERT(!meta->built, "Cannot save an unfinished object");
-
+		HASSERT(meta->built, "Cannot save an unfinished object");
 
 		// For now the cold-cache is just a 1:1 mapping between file and id for simplicity
 		flatbuffers::FlatBufferBuilder builder(meta->size + 1 * KB);
@@ -238,11 +237,16 @@ namespace hdn
 			}
 		}
 
-		// Otherwise fetch from cold-cache
-		ObjectMetadata& meta = cache_obj_meta_create(id);
         std::string path;
 		cache_obj_path(id, path);
 
+		// Make sure the object exists in the cache, otherwise return nullptr
+		if (!cache_obj_exist(path))
+		{
+			return nullptr;
+		}
+
+		ObjectMetadata& meta = cache_obj_meta_create(id);
 		std::vector<char> out;
 		cache_file_read(path, out);
 		const hdn::CacheObject* obj = flatbuffers::GetRoot<hdn::CacheObject>(out.data());
@@ -262,7 +266,7 @@ namespace hdn
 		meta.size = obj->payload()->size();
 
 		meta.useCount++;
-        return meta.data;
+		return meta.data;
     }
 
     void cache_obj_unload(obj_t id)

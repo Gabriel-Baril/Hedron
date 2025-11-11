@@ -7,8 +7,11 @@ namespace hdn
 {
 	u64 object_get_id(const Signature<XFeatureAssetObject>& sig)
 	{
-		h64 objectId = hash_combine(sig.symbol, XASSET_CODE_VERSION_FEATURE);
-		return static_cast<u64>(objectId);
+		HashBuilder hb;
+		hb.add_type<XFeatureAssetObject>();
+		hb.add(XASSET_CODE_VERSION_FEATURE);
+		hb.add(sig.symbol);
+		return hb.get();
 	}
 
 	i32 object_get_slug(const Signature<XFeatureAssetObject>& sig, char* buffer, u64 count)

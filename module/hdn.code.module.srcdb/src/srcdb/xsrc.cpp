@@ -23,7 +23,7 @@ namespace hdn
 		xasset_parse_feature
 	};
 
-	static bool xsymbol_agnostic_parse(ESymbolType type, const pugi::xml_node& symbolNode, const SourceContext& ctx)
+	static bool xsym_agnostic_parse(ESymbolType type, const pugi::xml_node& symbolNode, const SourceContext& ctx)
 	{
 		SymbolParseCallback callback = s_XSymbolParseCallbacks[underlying(type)];
 		if (callback)
@@ -57,7 +57,7 @@ namespace hdn
 
 				SourceContext ctx;
 				ctx.path = path;
-				const bool ok = xsymbol_agnostic_parse(type, symbolNode, ctx);
+				const bool ok = xsym_agnostic_parse(type, symbolNode, ctx);
 
 				if (ok)
 				{

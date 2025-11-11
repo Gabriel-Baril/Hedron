@@ -45,11 +45,19 @@ namespace hdn
 			oId,
 			fbName,
 			fbFeatures,
-			fbZones
+			0
 		);
 
 		FinishXFeatureAssetBuffer(builder, fbFeatureAsset);
-		cache_obj_store(oId, builder.GetBufferPointer(), builder.GetSize());
+
+		BeginObjectInfo info;
+		info.totalPathDep = 1;
+		info.totalObjDep = 0;
+		cache_obj_begin(oId, info);
+		cache_obj_pathdep(oId, ctx.path);
+		cache_obj_payload(oId, builder.GetBufferPointer(), builder.GetSize());
+		cache_obj_end(oId);
+		cache_obj_save(oId);
 		
 		return true;
 	}

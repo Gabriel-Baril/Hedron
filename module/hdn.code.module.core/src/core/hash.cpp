@@ -4,21 +4,32 @@
 
 namespace hdn
 {
-	h64 hash_combine(h64 hash1, h64 hash2)
+	h64 const_hash64(const char* str)
 	{
-		constexpr std::size_t magic_constant = 0x9e3779b9; // A large prime number for mixing
-		return hash1 ^ (hash2 + magic_constant + (hash1 << 6) + (hash1 >> 2));
+		h64 hash = 1469598103934665603ULL; // FNV offset basis
+		while (*str)
+		{
+			hash ^= static_cast<unsigned char>(*str++);
+			hash *= 1099511628211ULL; // FNV prime
+		}
+		return hash;
+	}
+
+	h64 hash_combine(h64 a, h64 b)
+	{
+		a ^= b + 0x9e3779b97f4a7c15ULL + (a << 12) + (a >> 4);
+		return a;
 	}
 
 	h64 hash_generate(const char* str, u64 seed)
 	{
-		return XXH64(str, strlen(str), seed);
+		return str ? XXH64(str,  strlen(str), seed) : 0;
 	}
 
 	h64 hash_generate(const void* buffer, u64 length, u64 seed)
 	{
 		HASSERT(buffer != nullptr && length != 0, "Invalid inputs provided to GenerateHash");
-		if (buffer == nullptr || length == 0)
+		if (!buffer || !length)
 		{
 			return 0;
 		}

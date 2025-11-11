@@ -6,6 +6,12 @@
 namespace hdn
 {
 	template<typename T>
+	constexpr bool is_primitive_v = std::is_fundamental_v<T> || std::is_enum_v<T>;
+
+	template<typename T>
+	constexpr bool is_primitive_non_ptr_v = is_primitive_v<T> && !std::is_pointer_v<T>;
+
+	template<typename T>
 	using utype = typename std::underlying_type<T>::type;
 
 	template<typename T>

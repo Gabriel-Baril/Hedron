@@ -17,7 +17,10 @@ namespace hdn
 
 	u64 request_get_id(const Request<BuildConfigGetRequest>& req)
 	{
-		return object_get_id(req.sig);
+		HashBuilder hb;
+		hb.add_type<BuildConfigGetRequest>();
+		hb.add(object_get_id(req.sig));
+		return hb.get();
 	}
 
 	i32 request_get_slug(const Request<BuildConfigGetRequest>& req, char* buffer, u64 count)

@@ -12,11 +12,11 @@ namespace hdn
 	};
 	
 	template<typename T>
-	void* object_touch(const Signature<T>& sig)
+	const void* object_touch(const Signature<T>& sig)
 	{
 		const u64 objectId = object_get_id(sig);
 
-		if (void* object = cache_obj_load(objectId))
+		if (const void* object = cache_obj_load(objectId))
 		{
 			return object;
 		}
@@ -30,7 +30,7 @@ namespace hdn
 			return nullptr;
 		}
 
-		void* object = cache_obj_load(objectId);
+		const void* object = cache_obj_load(objectId);
 		if (!object)
 		{
 			object_load_failure(sig);
