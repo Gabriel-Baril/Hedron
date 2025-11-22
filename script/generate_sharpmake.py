@@ -58,7 +58,7 @@ def try_clean_file(path):
         print(f"CLEANED '{path}'")
     except PermissionError:
         print(f"[PermissionError] Cannot clean '{path}'")
-    
+
 def try_clean_folder(path):
     try:
         shutil.rmtree(path)
@@ -123,7 +123,7 @@ def main():
 
     print(f"---------- SHARPMAKE FILE SEARCH ----------")
     print(f"Searching for .sharpmake.cs files in {allowed_folders} folders under {base_path}")
-    
+
     # Find all .sharpmake.cs files in allowed folders
     sharpmake_files = find_sharpmake_files(base_path, allowed_folders)
     sharpmake_files.append('.\\main.sharpmake.cs') # The main sharpmake file

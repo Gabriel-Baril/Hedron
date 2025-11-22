@@ -15,7 +15,7 @@ public class AllSolution : Solution
     {
         // We don't really need to test the compilation of external projects, they should already be working properly.
         // They will also be indirectly tested by project depending on them
-        // Visual Studio will also trigger an error for header only projects/module 
+        // Visual Studio will also trigger an error for header only projects/module
 
         // conf.AddProject<HdnCodeExternalCatch2Project>(target);
         // conf.AddProject<HdnCodeExternalCLI11Project>(target);
@@ -42,13 +42,14 @@ public class AllSolution : Solution
         conf.AddProject<HdnCodeModuleCoreProject>(target);
         conf.AddProject<HdnTestModuleCore>(target);
         conf.AddProject<HdnCodeModuleHobjProject>(target);
+        conf.AddProject<HdnCodeModulePipelineProject>(target);
         conf.AddProject<HdnCodePlaygroundAsyncProject>(target);
         conf.AddProject<HdnCodePlaygroundCfgProject>(target);
         conf.AddProject<HdnCodePlaygroundEcsProject>(target);
         conf.AddProject<HdnCodePlaygroundFmodProject>(target);
         conf.AddProject<HdnCodePlaygroundHsonProject>(target);
         conf.AddProject<HdnCodePlaygroundZoneProject>(target);
-        conf.AddProject<HdnCodeToolPipelineProject>(target);
+        conf.AddProject<HdnCodeToolHBuildProject>(target);
         conf.AddProject<HdnCodeGameDreamlikeProject>(target);
         conf.AddProject<HdnCodeToolEditorProject>(target);
     }
