@@ -1,5 +1,8 @@
 #pragma once
 
+#include "core/core_define.h"
+
+#if USING(SYM_BUILDCONFIG)
 #include "pugixml/pugixml.hpp"
 
 #include "core/core.h"
@@ -12,3 +15,4 @@ namespace hdn
 {
 	bool xasset_parse_buildconfig(const pugi::xml_node &symbolNode, const SourceContext &ctx);
 }
+#endif

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "core/core_define.h"
+
+#if USING(SYM_BUILDCONFIG)
 #include "pipeline/object_get.h"
 #include "pipeline/symdb.h"
 #include "pipeline/generated/buildconfig_generated.h"
@@ -16,6 +19,11 @@ namespace hdn
 	template <>
 	struct Signature<XBuildConfigAssetObject>
 	{
+		Signature(sym_t _symbol)
+			: symbol{ _symbol }
+		{
+		}
+
 		Signature(const char *name)
 				: symbol{get_symbol_from_name(name)}
 		{
@@ -30,3 +38,4 @@ namespace hdn
 	void object_request_failure(const Signature<XBuildConfigAssetObject> &sig, ObjectRequestResult result);
 	void object_load_failure(const Signature<XBuildConfigAssetObject> &sig);
 }
+#endif

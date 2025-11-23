@@ -24,6 +24,7 @@ namespace hdn
 
 	void slab_allocator_shutdown(SlabAllocator& allocator)
 	{
+		MAYBE_UNUSED(allocator);
 	}
 
 	void* slab_allocator_allocate(SlabAllocator& allocator)

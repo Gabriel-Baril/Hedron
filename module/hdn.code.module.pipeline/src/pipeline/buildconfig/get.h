@@ -1,7 +1,9 @@
 #pragma once
 
-#include "core/core.h"
+#include "core/core_define.h"
 
+#if USING(SYM_BUILDCONFIG)
+#include "core/core.h"
 #include "pipeline/generated/buildconfig_generated.h"
 #include "pipeline/buildconfig/xasset.h"
 #include "pipeline/request.h"
@@ -27,10 +29,11 @@ namespace hdn
 		Handle<XBuildConfigAssetObject> data;
 	};
 
-	Response<BuildConfigGetRequest> request_handle(const Request<BuildConfigGetRequest> &req);
-	bool request_valid(const Request<BuildConfigGetRequest> &req);
-	u64 request_get_id(const Request<BuildConfigGetRequest> &req);
-	i32 request_get_slug(const Request<BuildConfigGetRequest> &, char *buffer, u64 count);
+	Response<BuildConfigGetRequest> request_handle(const Request<BuildConfigGetRequest>& req);
+	bool request_valid(const Request<BuildConfigGetRequest>& req);
+	u64 request_get_id(const Request<BuildConfigGetRequest>& req);
+	i32 request_get_slug(const Request<BuildConfigGetRequest>& req, char *buffer, u64 count);
 
 	ResponseStatus response_success(const Response<BuildConfigGetRequest> &res);
 }
+#endif

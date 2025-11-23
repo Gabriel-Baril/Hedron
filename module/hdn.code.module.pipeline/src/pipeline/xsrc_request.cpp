@@ -14,7 +14,7 @@ namespace hdn
 
 		const fspath& path = meta->path;
 		xsrc_agnostic_parse(path);
-		if (cache_obj_exist(id))
+		if (!cache_obj_cached(id))
 		{
 			return ObjectRequestResult::NOT_FOUND;
 		}

@@ -1,5 +1,6 @@
 #include "get.h"
 
+#if USING(SYM_BUILDCONFIG)
 #include "pipeline/cache.h"
 
 namespace hdn
@@ -13,6 +14,7 @@ namespace hdn
 
 	bool request_valid(const Request<BuildConfigGetRequest> &req)
 	{
+		MAYBE_UNUSED(req);
 		return true;
 	}
 
@@ -24,7 +26,7 @@ namespace hdn
 		return hb.get();
 	}
 
-	i32 request_get_slug(const Request<BuildConfigGetRequest> &req, char *buffer, u64 count)
+	i32 request_get_slug(const Request<BuildConfigGetRequest>& req, char *buffer, u64 count)
 	{
 		char objectSlugBuffer[256];
 		i32 objectSlugLen = object_get_slug(req.sig, objectSlugBuffer, ARRLEN(objectSlugBuffer));
@@ -36,3 +38,4 @@ namespace hdn
 		return res.data.valid() ? ResponseStatus::SUCCESS : ResponseStatus::FAILED;
 	}
 }
+#endif

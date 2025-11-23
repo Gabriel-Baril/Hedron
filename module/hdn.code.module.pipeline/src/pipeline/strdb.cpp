@@ -40,12 +40,13 @@ namespace hdn
 
 	char* strdb_allocate(const char* source, u64 len)
 	{
-		return str_heap_allocator_allocate(s_StrDBGlob.strAllocator, source); // str_heap_allocator_allocate already core_memcpy the data into the dst string
+		return str_heap_allocator_allocate(s_StrDBGlob.strAllocator, source, len); // str_heap_allocator_allocate already core_memcpy the data into the dst string
 	}
 
 	char* strdb_allocate(const char* source)
 	{
-		return strdb_allocate(source, strlen(source));
+		const size_t len = strlen(source) + 1;
+		return strdb_allocate(source, len);
 	}
 
 	void strdb_deallocate(char* source)

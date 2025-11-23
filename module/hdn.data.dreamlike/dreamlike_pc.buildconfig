@@ -3,6 +3,8 @@
 		<Platform platform="pc"/>
 		<Features>
 			<Feature feature="dreamlike_test_scene_01.feature" />
+			<Feature feature="dreamlike_test_scene_02.feature" />
+			<Feature feature="dreamlike_test_scene_03.feature" />
 		</Features>
 	</BuildConfig>
 </Symbols>

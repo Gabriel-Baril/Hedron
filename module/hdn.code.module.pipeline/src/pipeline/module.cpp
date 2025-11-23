@@ -1,5 +1,6 @@
 #include "module.h"
 
+#if USING(PIPELINE_MODULE)
 #include "core/stl/unordered_map.h"
 #include "core/hash.h"
 #include "core/ini/ini.h"
@@ -159,3 +160,4 @@ namespace hdn
 		// TODO: insert return statement here
 	}
 }
+#endif

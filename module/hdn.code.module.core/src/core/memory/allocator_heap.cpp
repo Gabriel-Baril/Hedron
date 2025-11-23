@@ -32,7 +32,7 @@ namespace hdn
 		void* mem = alignment == 1 ? tlsf_malloc(allocator.TLSFHandle, size) : tlsf_memalign(allocator.TLSFHandle, alignment, size);
 		HASSERT(mem, "Failed to allocate memory!");
 		core_memzero(mem, size);
-		u64 actualSize = tlsf_block_size(mem);
+		const u64 actualSize = tlsf_block_size(mem);
 		allocator.allocatedSize += actualSize;
 		return mem;
 	}

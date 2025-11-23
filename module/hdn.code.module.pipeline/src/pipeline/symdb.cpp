@@ -37,6 +37,7 @@ namespace hdn
 		xsrc_agnostic_parse,
 		xsrc_agnostic_parse,
 		xsrc_agnostic_parse,
+		xsrc_agnostic_parse,
 	};
 
 	static void explore_source(const fspath& path)

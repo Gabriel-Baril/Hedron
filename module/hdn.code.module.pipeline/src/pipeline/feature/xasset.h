@@ -1,5 +1,8 @@
 #pragma once
 
+#include "core/core_define.h"
+
+#if USING(SYM_FEATURE)
 #include "pipeline/generated/feature_generated.h"
 #include "pipeline/object_get.h"
 #include "pipeline/symdb.h"
@@ -30,3 +33,4 @@ namespace hdn
 	void object_request_failure(const Signature<XFeatureAssetObject> &sig, ObjectRequestResult result);
 	void object_load_failure(const Signature<XFeatureAssetObject> &sig);
 }
+#endif

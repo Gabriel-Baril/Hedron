@@ -1,5 +1,8 @@
 #include "get.h"
 
+#include "core/core_define.h"
+
+#if USING(SYM_FEATURE)
 #include "pipeline/cache.h"
 
 namespace hdn
@@ -37,3 +40,4 @@ namespace hdn
 		return res.data.valid() ? ResponseStatus::SUCCESS : ResponseStatus::FAILED;
 	}
 }
+#endif

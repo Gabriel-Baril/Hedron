@@ -16,8 +16,9 @@ namespace hdn
 	// Contains information hinting the cache the nature of the underlying object for performance
 	struct BeginObjectInfo
 	{
-		u16 totalPathDep;
-		u16 totalObjDep;
+		bool force = true;
+		u16 totalPathDep = 0;
+		u16 totalObjDep = 0;
 	};
 
 	struct ObjectMetadata
@@ -34,13 +35,22 @@ namespace hdn
 		u64 size = 0;
 	};
 
+	enum class ObjectCacheState
+	{
+		COLD = BIT(0),
+		HOT = BIT(1),
+		COUNT,
+		NOT_CACHED = 0,
+	};
+	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(ObjectCacheState);
+
 	bool cache_init();
 	void cache_shutdown();
 
 	ObjectMetadata *cache_obj_meta(obj_t id);
 	ObjectMetadata &cache_obj_meta_create(obj_t id);
 
-	void cache_obj_begin(obj_t id, const BeginObjectInfo &info);
+	bool cache_obj_begin(obj_t id, const BeginObjectInfo &info);
 	void cache_obj_objdep(obj_t id, obj_t objDepId);
 	void cache_obj_pathdep(obj_t id, fspath pathdep);
 	void cache_obj_payload(obj_t id, const void *payload, u64 payloadSize);
@@ -48,12 +58,22 @@ namespace hdn
 	void cache_obj_save(obj_t id);
 
 	void cache_obj_path(obj_t id, std::string &path);
-	bool cache_obj_exist(obj_t id);
-	u64 cache_obj_size(obj_t id);
+	
+	bool cache_file_exist(obj_t id);
+	void cache_file_delete(obj_t id);
+	u64 cache_file_size(obj_t id);
+
 	const void *cache_obj_load(obj_t id);
 	void cache_obj_unload(obj_t id);
 	bool cache_obj_invalidated(obj_t id);
 
-	bool cache_obj_cold_cached(obj_t id);
+	void cache_obj_cold_delete(obj_t id);
+	void cache_obj_hot_delete(obj_t id);
+	void cache_obj_delete(obj_t id);
 
+	bool cache_obj_cold_cached(obj_t id);
+	bool cache_obj_hot_cached(obj_t id);
+	bool cache_obj_cached(obj_t id);
+	
+	ObjectCacheState cache_obj_cache_state(obj_t id);
 }

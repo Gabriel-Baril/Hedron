@@ -61,9 +61,9 @@ namespace hdn
 			return objectId != NULL_OBJ;
 		}
 
-		Underlying* get()
+		const Underlying* get()
 		{
-			Underlying* object = (Underlying*)cache_obj_load(objectId);
+			const Underlying* object = flatbuffers::GetRoot<Underlying>(cache_obj_load(objectId));
 			if (object)
 			{
 				return object;
@@ -73,17 +73,17 @@ namespace hdn
 			{
 				return nullptr;
 			}
-			return (Underlying*)object_touch<T>(*sig);
+			return flatbuffers::GetRoot<Underlying>(object_touch<T>(*sig));
 		}
 
-		Underlying* operator->()
+		const Underlying* operator->()
 		{
 			return get();
 		}
 
 		~Handle()
 		{
-			cache_obj_unload(objectId);
+			// cache_obj_unload(objectId);
 		}
 
 		obj_t objectId = 0;
@@ -102,6 +102,8 @@ namespace hdn
 	template<typename T>
 	void object_request_failure_generic(const Signature<T>& sig, ObjectRequestResult result)
 	{
+		MAYBE_UNUSED(result);
+
 		char slug[512];
 		object_get_slug(sig, slug, ARRLEN(slug));
 		HERR("Failed to request object '{0}'. Did you forget to store the result while requesting the object?", slug);

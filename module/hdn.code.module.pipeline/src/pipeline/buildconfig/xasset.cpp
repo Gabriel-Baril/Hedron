@@ -1,5 +1,6 @@
 #include "xasset.h"
 
+#if USING(SYM_BUILDCONFIG)
 #include "pipeline/cache.h"
 #include "pipeline/xsrc_request.h"
 
@@ -19,7 +20,7 @@ namespace hdn
 		const SymbolMetadata *meta = symdb_get_meta(sig.symbol);
 		HASSERT(meta, "symbol not found");
 
-		return core_snprintf(buffer, count, "%s_v%zu", meta->name, XASSET_CODE_VERSION_BUILDCONFIG);
+		return core_snprintf(buffer, count, "[%s, v%zu]", meta->name, XASSET_CODE_VERSION_BUILDCONFIG);
 	}
 
 	ObjectRequestResult object_request(const Signature<XBuildConfigAssetObject> &sig)
@@ -38,3 +39,4 @@ namespace hdn
 		object_load_failure_generic(sig);
 	}
 }
+#endif

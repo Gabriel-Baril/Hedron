@@ -1,5 +1,8 @@
 #pragma once
 
+#include "core/core_define.h"
+
+#if USING(SYM_FEATURE)
 #include "core/core.h"
 
 #include "pipeline/feature/xasset.h"
@@ -33,3 +36,4 @@ namespace hdn
 
 	ResponseStatus response_success(const Response<FeatureGetRequest> &res);
 }
+#endif

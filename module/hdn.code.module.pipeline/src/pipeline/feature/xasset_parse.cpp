@@ -1,5 +1,8 @@
 #include "xasset_parse.h"
 
+#include "core/core_define.h"
+
+#if USING(SYM_FEATURE)
 #include "pipeline/generated/feature_generated.h"
 #include "pipeline/xml_util.h"
 #include "pipeline/fbs_util.h"
@@ -50,13 +53,16 @@ namespace hdn
 		BeginObjectInfo info;
 		info.totalPathDep = 1;
 		info.totalObjDep = 0;
-		cache_obj_begin(oId, info);
-		cache_obj_pathdep(oId, ctx.path);
-		cache_obj_payload(oId, builder.GetBufferPointer(), builder.GetSize());
-		cache_obj_end(oId);
-		cache_obj_save(oId);
+		bool ok = cache_obj_begin(oId, info);
+		if (ok)
+		{
+			cache_obj_pathdep(oId, ctx.path);
+			cache_obj_payload(oId, builder.GetBufferPointer(), builder.GetSize());
+			cache_obj_end(oId);
+			cache_obj_save(oId);
+		}
 
-		return true;
+		return ok;
 	}
 
 	bool xasset_parse_feature(const pugi::xml_node &node, const SourceContext &ctx)
@@ -72,3 +78,4 @@ namespace hdn
 		return false;
 	}
 }
+#endif

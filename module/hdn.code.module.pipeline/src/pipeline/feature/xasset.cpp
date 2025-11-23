@@ -1,5 +1,8 @@
 #include "xasset.h"
 
+#include "core/core_define.h"
+
+#if USING(SYM_FEATURE)
 #include "pipeline/cache.h"
 #include "pipeline/xsrc_request.h"
 
@@ -19,7 +22,7 @@ namespace hdn
 		const SymbolMetadata *meta = symdb_get_meta(sig.symbol);
 		HASSERT(meta, "symbol not found");
 
-		return core_snprintf(buffer, count, "%s_v%zu", meta->name, XASSET_CODE_VERSION_FEATURE);
+		return core_snprintf(buffer, count, "[%s, v%zu]", meta->name, XASSET_CODE_VERSION_FEATURE);
 	}
 
 	ObjectRequestResult object_request(const Signature<XFeatureAssetObject> &sig)
@@ -38,3 +41,4 @@ namespace hdn
 		object_load_failure_generic(sig);
 	}
 }
+#endif

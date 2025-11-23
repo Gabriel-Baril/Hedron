@@ -1,5 +1,6 @@
 #include "xasset_parse.h"
 
+#if USING(SYM_BUILDCONFIG)
 #include "pugixml/pugixml.hpp"
 
 #include "core/hash.h"
@@ -18,9 +19,12 @@ namespace hdn
 		char lowerCaseBuffer[SYMBOL_ATTRIBUTE_VALUE_MAX_LENGTH];
 		str_copy(lowerCaseBuffer, platform);
 		str_to_lowercase(lowerCaseBuffer, strlen(lowerCaseBuffer));
-		for (int i = 0; i < underlying(CPlatform::CPlatform_MAX); i++)
+		for (int i = 0; i < underlying(CPlatform::CPlatform_MAX) + 1; i++)
 		{
-			if (str_equals(lowerCaseBuffer, EnumNamesCPlatform()[i]))
+			char lowerCaseBufferPlatform[SYMBOL_ATTRIBUTE_VALUE_MAX_LENGTH];
+			str_copy(lowerCaseBufferPlatform, EnumNamesCPlatform()[i]);
+			str_to_lowercase(lowerCaseBufferPlatform, strlen(lowerCaseBufferPlatform));
+			if (str_equals(lowerCaseBuffer, lowerCaseBufferPlatform))
 			{
 				return static_cast<CPlatform>(i);
 			}
@@ -36,7 +40,7 @@ namespace hdn
 		auto fbName = builder.CreateString(nameStr);
 
 		// CPlatform
-		auto nPlatform = node.child("CPlatform");
+		auto nPlatform = node.child("Platform");
 		HASSERT(nPlatform, "buildconfig symbol require a platform node");
 		const pugi::char_t *platformStr = nPlatform.attribute("platform").as_string();
 		CPlatform platform = buildconfig_str_to_platform(platformStr);
@@ -48,9 +52,9 @@ namespace hdn
 		{
 			for (const auto &nFeature : nFeatures.children("Feature"))
 			{
-				const pugi::char_t *sceneSymbolStr = nFeature.attribute("scene").as_string();
-				HASSERT(sceneSymbolStr, "scene attibute cannot be ommited");
-				auto fbFeatureName = builder.CreateString(sceneSymbolStr);
+				const pugi::char_t *featureSymbolStr = nFeature.attribute("feature").as_string();
+				HASSERT(featureSymbolStr, "scene attibute cannot be ommited");
+				auto fbFeatureName = builder.CreateString(featureSymbolStr);
 				fbFeaturesVector.emplace_back(fbFeatureName);
 			}
 		}
@@ -71,19 +75,22 @@ namespace hdn
 		BeginObjectInfo info;
 		info.totalPathDep = 1;
 		info.totalObjDep = 0;
-		cache_obj_begin(oId, info);
-		cache_obj_pathdep(oId, ctx.path); // TODO: Once xsym parenting will exist, this logic will get more complex (if we want parent to be in different xsrc)
-		cache_obj_payload(oId, builder.GetBufferPointer(), builder.GetSize());
-		cache_obj_end(oId);
-		cache_obj_save(oId);
+		bool ok = cache_obj_begin(oId, info);
+		if (ok)
+		{
+			cache_obj_pathdep(oId, ctx.path); // TODO: Once xsym parenting will exist, this logic will get more complex (if we want parent to be in different xsrc)
+			cache_obj_payload(oId, builder.GetBufferPointer(), builder.GetSize());
+			cache_obj_end(oId);
+			cache_obj_save(oId);
+		}
 
-		return true;
+		return ok;
 	}
 
 	bool xasset_parse_buildconfig(const pugi::xml_node &node, const SourceContext &ctx)
 	{
 		flatbuffers::FlatBufferBuilder builder(2048);
-		buildconfig_parse(builder, node, ctx);
-		return false;
+		return buildconfig_parse(builder, node, ctx);
 	}
 }
+#endif

@@ -17,6 +17,7 @@ namespace hdn
 		frag_shader,
 		fbx, // fbx 3d model source
 		obj, // obj 3d model source
+
 		stringtable,
 		text,
 		prefab, // Format for structuring entities (xml-like)
@@ -27,7 +28,7 @@ namespace hdn
 		nxsymbol_begin = vert_shader, // non xsymbol
 		nxsymbol_end = obj,
 		xsymbol_begin = stringtable, // engine-specific xml-like symbol 
-		xsymbol_end = buildconfig,
+		xsymbol_end = feature,
 
 		unknown
 	};
