@@ -18,7 +18,7 @@ namespace hdn
 	i32 object_get_slug(const Signature<XBuildConfigAssetObject> &sig, char *buffer, u64 count)
 	{
 		const SymbolMetadata *meta = symdb_get_meta(sig.symbol);
-		HASSERT(meta, "symbol not found");
+		HASSERT_PTR(meta, "symbol not found");
 
 		return core_snprintf(buffer, count, "[%s, v%zu]", meta->name, XASSET_CODE_VERSION_BUILDCONFIG);
 	}

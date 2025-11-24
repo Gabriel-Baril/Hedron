@@ -44,13 +44,32 @@ namespace hdn
 #endif
 
 #if USING(ASSERT_ENABLE)
-#define HASSERT(x, ...) { if(!(x)) { HFATAL(__VA_ARGS__); } }
-#define HASSERT_PTR(x, ...) { if(x == nullptr) { HFATAL(__VA_ARGS__); } }
-#define HASSERT_INDEX(min, index, max, ...) { if(!(index >= 0 && index <= max)) { HFATAL(__VA_ARGS__); } }
+#define HASSERT_CORE_MACRO(expr, ...) \
+	do                                     \
+	{                                      \
+		if ( !( expr ) )				   \
+		{                                  \
+			HFATAL(__VA_ARGS__);	   \
+		}                                  \
+	} while ( false )
+
+#define HASSERT_CORE_MACRO_ALWAYS(...) \
+	do                                      \
+	{                                       \
+		HFATAL(__VA_ARGS__);			    \
+	} while ( false )
+
+#define HASSERT(expr, ...) HASSERT_CORE_MACRO( (expr), __VA_ARGS__)
+#define HASSERT_PTR(expr, ...) HASSERT_CORE_MACRO( (expr), __VA_ARGS__)
+#define HASSERT_RANGE(min, index, max, ...) HASSERT_CORE_MACRO( (index >= min && index <= max), __VA_ARGS__)
+#define HASSERT_ALWAYS(...) HASSERT_CORE_MACRO_ALWAYS(__VA_ARGS__)
+#define CORE_UNIMPLEMENTED() HASSERT_CORE_MACRO_ALWAYS("unimplemented code")
+#define CORE_UNREACHABLE() HASSERT_CORE_MACRO_ALWAYS("unreachable code")
 #else
 #define HASSERT(...)
 #define HASSERT_PTR(...)
-#define HASSERT_INDEX(...)
+#define HASSERT_RANGE(...)
+#define HASSERT_ALWAYS(...)
 #endif
 
 #if USING(THROW_ENABLE)

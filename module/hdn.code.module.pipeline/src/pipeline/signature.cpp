@@ -23,6 +23,11 @@ namespace hdn
 
 	static SignatureGlob s_SignatureGlob;
 
+	static bool signature_contains(obj_t id)
+	{
+		return s_SignatureGlob.signatures.contains(id);
+	}
+
 	bool signature_initialized()
 	{
 		return s_SignatureGlob.initialized;
@@ -70,12 +75,15 @@ namespace hdn
 
 	void signature_register(obj_t id, const void* data, u64 size, u64 alignment)
 	{
-		HASSERT(signature_initialized(), "The signature system must be initialized");
-		void* dst = signature_allocate(size, alignment);
-		core_memcpy(dst, data, size);
+		if (!signature_contains(id))
+		{
+			HASSERT(signature_initialized(), "The signature system must be initialized");
+			void* dst = signature_allocate(size, alignment);
+			core_memcpy(dst, data, size);
 
-		SignatureMetadata& meta = s_SignatureGlob.signatures[id];
-		meta.data = dst;
-		meta.size = size;
+			SignatureMetadata& meta = s_SignatureGlob.signatures[id];
+			meta.data = dst;
+			meta.size = size;
+		}
 	}
 }
