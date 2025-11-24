@@ -15,8 +15,8 @@ void test_request()
 	using namespace hdn;
 
 	auto start = std::chrono::high_resolution_clock::now();
-	Request<BuildConfigGetRequest> req("dreamlike_pc.buildconfig");
-	Response<BuildConfigGetRequest> buildConfig = request_send(req);
+	Request<BuildConfigReadRequest> req("dreamlike_pc.buildconfig");
+	Response<BuildConfigReadRequest> buildConfig = request_send(req);
 	char buffer[512];
 	request_get_slug(req, buffer, 512);
 	HINFO("Request -> {0}", buffer);
@@ -41,10 +41,9 @@ void test_request()
 void test_request_noprint()
 {
 	using namespace hdn;
-
 	auto start = std::chrono::high_resolution_clock::now();
-	Request<BuildConfigGetRequest> req("dreamlike_pc.buildconfig");
-	Response<BuildConfigGetRequest> buildConfig = request_send(req);
+	Request<BuildConfigReadRequest> req("dreamlike_pc.buildconfig");
+	Response<BuildConfigReadRequest> buildConfig = request_send(req);
 	HINFO("Platform: {0}", (int)buildConfig.data->platform());
 	auto end = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
