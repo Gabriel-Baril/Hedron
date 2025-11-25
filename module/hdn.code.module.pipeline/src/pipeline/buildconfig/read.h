@@ -2,7 +2,7 @@
 
 #include "core/core_define.h"
 
-#if USING(SYM_BUILDCONFIG)
+#if USING(HDN_SYM_BUILDCONFIG)
 #include "core/core.h"
 #include "pipeline/generated/buildconfig_generated.h"
 #include "pipeline/buildconfig/xasset.h"

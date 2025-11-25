@@ -47,7 +47,7 @@ namespace hdn
 			ESymbolType type = symdb_get_source_file_type(path);
 			if (type != ESymbolType::unknown)
 			{
-				HTRACE("Source '{0}'", path.string().c_str());
+				HDN_TRACE_LOG("Source '{0}'", path.string().c_str());
 				SourceParseCallback parseCallback = symdb_get_parse_callback(type);
 				if (parseCallback)
 				{

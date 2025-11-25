@@ -28,15 +28,11 @@ namespace hdn
 		auto payloadVec = builder.CreateVector(reinterpret_cast<const u8*>(meta.data), meta.size);
 		builder.Finish(hdn::CreateCacheObject(builder, pathDepsVec, objDepsVec, payloadVec));
 	}
-	
-	static void create_meta_from_cache(ObjectMetadata& meta)
-	{
-	}
 
 	static void cache_file_write(const std::string& path, const u8* buffer, size_t size)
 	{
 		std::ofstream outFile(path, std::ios::out | std::ios::binary | std::ios::trunc);
-		HASSERT(outFile.is_open(), "Failed to cache object '{0}'", path.c_str());
+		HDN_CORE_ASSERT(outFile.is_open(), "Failed to cache object '{0}'", path.c_str());
 		outFile.write(reinterpret_cast<const char*>(buffer), size);
 		outFile.close();
 	}
@@ -46,7 +42,7 @@ namespace hdn
 		std::ifstream inFile(path, std::ios::binary | std::ios::ate);
 		if (!inFile)
 		{
-			HERR("Could not open file '{0}' for reading", path);
+			HDN_ERROR_LOG("Could not open file '{0}' for reading", path);
 			return false;
 		}
 
@@ -58,7 +54,7 @@ namespace hdn
 		out.reserve(fileSize);
 		if (!inFile.read(out.data(), fileSize))
 		{
-			HERR("Failed to read the file", path);
+			HDN_ERROR_LOG("Failed to read the file", path);
 			return false;
 		}
 		return true;
@@ -108,8 +104,8 @@ namespace hdn
 		ObjectMetadata* meta = cache_obj_meta(id);
 		if (meta)
 		{
-#if USING(CACHE_VERBOSE_WARN)
-			HWARN("Deleting object {0} from hot cache", id);
+#if USING(HDN_CACHE_VERBOSE_WARN)
+			HDN_WARNING_LOG("Deleting object {0} from hot cache", id);
 #endif
 			heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->pathDependencies);
 			heap_allocator_deallocate(s_CacheGlob.metadataAllocator, meta->objDependencies);
@@ -170,7 +166,7 @@ namespace hdn
 	bool cache_init()
 	{
 		s_CacheGlob.cachePath = config_get_config_variable(CONFIG_SECTION_PIPELINE, CONFIG_KEY_CACHE_PATH, "");
-		HINFO("Cache Path: {0}", s_CacheGlob.cachePath.c_str());
+		HDN_INFO_LOG("Cache Path: {0}", s_CacheGlob.cachePath.c_str());
 		filesystem_create_directory(s_CacheGlob.cachePath);
 
 		u8* metadataMemory = new u8[METADATA_MEMORY_POOL_SIZE];
@@ -203,7 +199,7 @@ namespace hdn
 
 	ObjectMetadata& cache_obj_meta_create(obj_t id)
 	{
-		HASSERT(!cache_obj_hot_cached(id), "Trying to create an object that already exists in the cache!");
+		HDN_CORE_ASSERT(!cache_obj_hot_cached(id), "Trying to create an object that already exists in the cache!");
 		return s_CacheGlob.meta[id];
 	}
 
@@ -229,25 +225,25 @@ namespace hdn
 	void cache_obj_objdep(obj_t id, obj_t objDepId)
 	{
 		ObjectMetadata* meta = cache_obj_meta(id);
-		HASSERT(meta, "cache_add_objdep called on a non-existing object!");
-		HASSERT(!meta->built, "Cannot add dependency to object that are already built!");
-		HASSERT(meta->currentObjDep < meta->totalObjDep, "Exceeded object dependency capacity for object '{0}'", id);
+		HDN_CORE_ASSERT(meta, "cache_add_objdep called on a non-existing object!");
+		HDN_CORE_ASSERT(!meta->built, "Cannot add dependency to object that are already built!");
+		HDN_CORE_ASSERT(meta->currentObjDep < meta->totalObjDep, "Exceeded object dependency capacity for object '{0}'", id);
 		meta->objDependencies[meta->currentObjDep++] = CObjDep(objDepId);
 	}
 
 	void cache_obj_pathdep(obj_t id, fspath pathdep)
 	{
 		ObjectMetadata* meta = cache_obj_meta(id);
-		HASSERT(meta, "cache_add_pathdep called on a non-existing object!");
-		HASSERT(!meta->built, "Cannot add dependency to object that are already built!");
-		HASSERT(meta->currentPathDep < meta->totalPathDep, "Exceeded path dependency capacity for object '{0}'", id);
+		HDN_CORE_ASSERT(meta, "cache_add_pathdep called on a non-existing object!");
+		HDN_CORE_ASSERT(!meta->built, "Cannot add dependency to object that are already built!");
+		HDN_CORE_ASSERT(meta->currentPathDep < meta->totalPathDep, "Exceeded path dependency capacity for object '{0}'", id);
 		meta->pathDependencies[meta->currentPathDep++] = CPathDep(0, 0);
 	}
 
 	void cache_obj_payload(obj_t id, const void* payload, u64 payloadSize)
 	{
 		ObjectMetadata* meta = cache_obj_meta(id);
-		HASSERT(meta, "Trying to store an object before calling cache_obj_begin");
+		HDN_CORE_ASSERT(meta, "Trying to store an object before calling cache_obj_begin");
 
 		void* objData = heap_allocator_allocate(s_CacheGlob.objectAllocator, payloadSize, alignof(u8));
 		core_memcpy(objData, payload, payloadSize);
@@ -258,16 +254,16 @@ namespace hdn
 	void cache_obj_end(obj_t id)
 	{
 		ObjectMetadata* meta = cache_obj_meta(id);
-		HASSERT(meta, "Trying to end an object before calling cache_obj_begin");
-		HASSERT(meta->currentPathDep == meta->totalPathDep, "cache_obj_end: mismatch in path dependency count for object '{0}'", id);
-		HASSERT(meta->currentObjDep == meta->totalObjDep, "cache_obj_end: mismatch in object dependency count for object '{0}'", id);
+		HDN_CORE_ASSERT(meta, "Trying to end an object before calling cache_obj_begin");
+		HDN_CORE_ASSERT(meta->currentPathDep == meta->totalPathDep, "cache_obj_end: mismatch in path dependency count for object '{0}'", id);
+		HDN_CORE_ASSERT(meta->currentObjDep == meta->totalObjDep, "cache_obj_end: mismatch in object dependency count for object '{0}'", id);
 		meta->built = true;
 	}
 
 	void cache_obj_save(obj_t id)
 	{
 		ObjectMetadata* meta = cache_obj_meta(id);
-		HASSERT(meta->built, "Cannot save an unfinished object");
+		HDN_CORE_ASSERT(meta->built, "Cannot save an unfinished object");
 
 		// For now the cold-cache is just a 1:1 mapping between file and id for simplicity
 		flatbuffers::FlatBufferBuilder builder(meta->size + 1 * KB);
@@ -329,7 +325,7 @@ namespace hdn
 		{
 			core_memcpy(meta.pathDependencies, obj->path_dependencies(), obj->path_dependencies()->size() * sizeof(CPathDep));
 		}
-		HASSERT(obj->payload(), "A serialized object need to have a payload");
+		HDN_CORE_ASSERT(obj->payload(), "A serialized object need to have a payload");
 		void* objData = heap_allocator_allocate(s_CacheGlob.objectAllocator, obj->payload()->size(), alignof(u8));
 		core_memcpy(objData, obj->payload(), obj->payload()->size());
 		meta.data = objData;

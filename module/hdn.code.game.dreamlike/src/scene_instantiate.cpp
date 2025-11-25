@@ -32,7 +32,7 @@ namespace hdn
 
 	void entity_instantiate_prefab(Scene* scene, Entity* ent, const PrefabDef* pDef)
 	{
-		HASSERT(ent);
+		HDN_CORE_ASSERT(ent);
 		for (int i = 0; i < pDef->componentCount; i++)
 		{
 			const ComponentDef* component = pDef->components[i];
@@ -42,11 +42,11 @@ namespace hdn
 		for (int i = 0; i < pDef->prefabCount; i++)
 		{
 			const PrefabDef* childPrefab = pDef->childPrefabs[i];
-			HASSERT(childPrefab);
+			HDN_CORE_ASSERT(childPrefab);
 
 			Entity* childEnt = nullptr;
 			scene_create_entity(scene, childEnt);
-			HASSERT(ent);
+			HDN_CORE_ASSERT(ent);
 			entity_set_parent(childEnt, ent);
 			entity_instantiate_prefab(scene, childEnt, childPrefab);
 		}
@@ -57,14 +57,14 @@ namespace hdn
 		Scene scene;
 		for (int i = 0; i < sceneDef->entityCount; i++)
 		{
-			HASSERT(sceneDef->entities[i]);
+			HDN_CORE_ASSERT(sceneDef->entities[i]);
 			const EntityDef& eDef = sceneDef->entities[i];
 			Entity* ent = nullptr;
 			scene_create_entity(scene, ent);
 
-			HASSERT(ent);
-			HASSERT(eDef - < prefab);
-			HASSERT(eDef - < prefab->parent == nullptr); // Make sure the prefab is the one from a top level entity
+			HDN_CORE_ASSERT(ent);
+			HDN_CORE_ASSERT(eDef - < prefab);
+			HDN_CORE_ASSERT(eDef - < prefab->parent == nullptr); // Make sure the prefab is the one from a top level entity
 			entity_instantiate_prefab(&scene, ent, eDef - < prefab);
 		}
 	}

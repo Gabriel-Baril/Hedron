@@ -82,7 +82,7 @@ namespace hdn
 
 	bool filesystem_is_socket(const fspath& path)
 	{
-		MAYBE_UNUSED(path);
+		HDN_MAYBE_UNUSED(path);
 #if USING(HDN_PLATFORM_WINDOWS)
 		// Sockets as filesystem objects are not a common concept on Windows.
 		// You can throw an exception or return false here.
@@ -320,7 +320,7 @@ namespace hdn
 			return filesystem_parent(realpath(buffer, NULL));
 		}
 #else
-		HFATAL("The current platform cannot retreive the executable path");
+		HDN_FATAL_LOG("The current platform cannot retreive the executable path");
 #endif
 		return "";
 	}
@@ -393,7 +393,7 @@ namespace hdn
 
 	void filesystem_iterate(const fspath& path, const std::function<void(const fspath& path)>& predicate, bool recursive)
 	{
-		HASSERT(predicate, "Predicate cannot be null");
+		HDN_CORE_ASSERT(predicate, "Predicate cannot be null");
 		if (!filesystem_exists(path) || !filesystem_is_directory(path))
 		{
 			return;

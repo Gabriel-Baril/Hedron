@@ -2,7 +2,7 @@
 
 #include "core/core_define.h"
 
-#if USING(SYM_BUILDCONFIG)
+#if USING(HDN_SYM_BUILDCONFIG)
 #include "pipeline/object_get.h"
 #include "pipeline/symdb.h"
 #include "pipeline/generated/buildconfig_generated.h"

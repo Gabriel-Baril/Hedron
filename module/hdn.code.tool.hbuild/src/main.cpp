@@ -19,8 +19,8 @@ void test_request()
 	Response<BuildConfigReadRequest> buildConfig = request_send(req);
 	char buffer[512];
 	request_get_slug(req, buffer, 512);
-	HINFO("Request -> {0}", buffer);
-	HINFO("Platform: {0}", (int)buildConfig.data->platform());
+	HDN_INFO_LOG("Request -> {0}", buffer);
+	HDN_INFO_LOG("Platform: {0}", (int)buildConfig.data->platform());
 	const auto* vec = buildConfig.data->features();
 	if (vec)
 	{
@@ -29,13 +29,13 @@ void test_request()
 			const char* featureName = vec->Get(i)->c_str();
 			if (featureName)
 			{
-				HINFO("Feature[{0}]: {1}", i, featureName);
+				HDN_INFO_LOG("Feature[{0}]: {1}", i, featureName);
 			}
 		}
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-	HINFO("test_request took {0} nanoseconds.", duration.count());
+	HDN_INFO_LOG("test_request took {0} nanoseconds.", duration.count());
 }
 
 void test_request_noprint()
@@ -44,10 +44,10 @@ void test_request_noprint()
 	auto start = std::chrono::high_resolution_clock::now();
 	Request<BuildConfigReadRequest> req("dreamlike_pc.buildconfig");
 	Response<BuildConfigReadRequest> buildConfig = request_send(req);
-	HINFO("Platform: {0}", (int)buildConfig.data->platform());
+	HDN_INFO_LOG("Platform: {0}", (int)buildConfig.data->platform());
 	auto end = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-	HINFO("test_request_noprint took {0} nanoseconds.", duration.count());
+	HDN_INFO_LOG("test_request_noprint took {0} nanoseconds.", duration.count());
 }
 
 int main(int argc, char *argv[])
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 	signature_init();
 	strdb_init();
 
-	HINFO("hbuild started");
+	HDN_INFO_LOG("hbuild started");
 
 	const HBuildCmdArgs &args = args_get();
 
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 	symdb_explore_sources(dataModulePath);
 	auto end = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-	HINFO("symdb_explore_sources took {0} nanoseconds.", duration.count());
+	HDN_INFO_LOG("symdb_explore_sources took {0} nanoseconds.", duration.count());
 
 	test_request();
 	test_request_noprint();

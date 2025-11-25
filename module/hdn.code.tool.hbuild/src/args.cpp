@@ -17,7 +17,7 @@ namespace hdn
 		}
 		catch (const CLI::ParseError& e)
 		{
-			HCRIT("Error parsing cmd args: {0}", e.what());
+			HDN_CRITICAL_LOG("Error parsing cmd args: {0}", e.what());
 			return false;
 		}
 	}

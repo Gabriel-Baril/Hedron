@@ -2,6 +2,6 @@
 
 #include "core/core_define.h"
 
-#if USING(SYM_BUILDCONFIG)
+#if USING(HDN_SYM_BUILDCONFIG)
 #include "read.h"
 #endif

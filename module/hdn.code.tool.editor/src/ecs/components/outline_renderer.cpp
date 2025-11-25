@@ -27,10 +27,10 @@ namespace hdn
 
 		if (ImGui::Button(resetLabelName, buttonSize))
 		{
-			HINFO("Value Changed: {0}", *valueChanged);
+			HDN_INFO_LOG("Value Changed: {0}", *valueChanged);
 			if (valueChanged != nullptr && !(*valueChanged))
 			{
-				HINFO("IN");
+				HDN_INFO_LOG("IN");
 				*valueChanged = true;
 				*valueToChange = resetValue;
 			}

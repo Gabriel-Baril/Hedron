@@ -11,7 +11,7 @@ int main()
 	}
 	catch (const std::exception& e)
 	{
-		HERR("{0}", e.what());
+		HDN_ERROR_LOG("{0}", e.what());
 		return EXIT_FAILURE;
 	}
 

@@ -53,7 +53,7 @@ namespace hdn
 
 	void ITaskGraph::PreExecute()
 	{
-		HASSERT(!HasCycle(), "The provided task graph has a circular dependency!");
+		HDN_CORE_ASSERT(!HasCycle(), "The provided task graph has a circular dependency!");
 		ITask::PreExecute();
 
 		// Find the source nodes in set of internal dependencies
@@ -76,8 +76,8 @@ namespace hdn
 
 	void ITaskGraph::DependencyCompletionNotification(ITask* task)
 	{
-		HASSERT_TASK(task);
-		HASSERT(task->Completed(), "The task notified was not completed");
+		HDN_TASK_ASSERT(task);
+		HDN_CORE_ASSERT(task->Completed(), "The task notified was not completed");
 		if (Completed())
 		{
 			ITask::Complete();

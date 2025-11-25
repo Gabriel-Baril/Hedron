@@ -2,7 +2,7 @@
 
 #include "core/core_define.h"
 
-#if USING(SYM_FEATURE)
+#if USING(HDN_SYM_FEATURE)
 #include "pipeline/generated/feature_generated.h"
 #include "pipeline/xml_util.h"
 #include "pipeline/fbs_util.h"

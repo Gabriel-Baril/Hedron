@@ -105,7 +105,7 @@ namespace hdn {
 		vkResetFences(m_Device.get_device(), 1, &m_InFlightFences[m_CurrentFrame]);
 		if (vkQueueSubmit(m_Device.get_graphics_queue(), 1, &submitInfo, m_InFlightFences[m_CurrentFrame]) !=
 			VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to submit draw command buffer!");
+			HDN_CORE_THROW(std::runtime_error, "failed to submit draw command buffer!");
 		}
 
 		VkPresentInfoKHR presentInfo = {};
@@ -174,7 +174,7 @@ namespace hdn {
 		createInfo.oldSwapchain = m_OldSwapChain == nullptr ? VK_NULL_HANDLE : m_OldSwapChain->m_SwapChain;
 
 		if (vkCreateSwapchainKHR(m_Device.get_device(), &createInfo, nullptr, &m_SwapChain) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to create swap chain!");
+			HDN_CORE_THROW(std::runtime_error, "failed to create swap chain!");
 		}
 
 		// we only specified a minimum number of images in the swap chain, so the implementation is
@@ -205,7 +205,7 @@ namespace hdn {
 
 			if (vkCreateImageView(m_Device.get_device(), &viewInfo, nullptr, &m_SwapChainImageViews[i]) !=
 				VK_SUCCESS) {
-				HTHROW(std::runtime_error, "failed to create texture image view!");
+				HDN_CORE_THROW(std::runtime_error, "failed to create texture image view!");
 			}
 		}
 	}
@@ -267,7 +267,7 @@ namespace hdn {
 		renderPassInfo.pDependencies = &dependency;
 
 		if (vkCreateRenderPass(m_Device.get_device(), &renderPassInfo, nullptr, &m_RenderPass) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to create render pass!");
+			HDN_CORE_THROW(std::runtime_error, "failed to create render pass!");
 		}
 	}
 
@@ -291,7 +291,7 @@ namespace hdn {
 				&framebufferInfo,
 				nullptr,
 				&m_SwapChainFramebuffers[i]) != VK_SUCCESS) {
-				HTHROW(std::runtime_error, "failed to create framebuffer!");
+				HDN_CORE_THROW(std::runtime_error, "failed to create framebuffer!");
 			}
 		}
 	}
@@ -340,7 +340,7 @@ namespace hdn {
 			viewInfo.subresourceRange.layerCount = 1;
 
 			if (vkCreateImageView(m_Device.get_device(), &viewInfo, nullptr, &m_DepthImageViews[i]) != VK_SUCCESS) {
-				HTHROW(std::runtime_error, "failed to create texture image view!");
+				HDN_CORE_THROW(std::runtime_error, "failed to create texture image view!");
 			}
 		}
 	}
@@ -364,7 +364,7 @@ namespace hdn {
 				vkCreateSemaphore(m_Device.get_device(), &semaphoreInfo, nullptr, &m_RenderFinishedSemaphores[i]) !=
 				VK_SUCCESS ||
 				vkCreateFence(m_Device.get_device(), &fenceInfo, nullptr, &m_InFlightFences[i]) != VK_SUCCESS) {
-				HTHROW(std::runtime_error, "failed to create synchronization objects for a frame!");
+				HDN_CORE_THROW(std::runtime_error, "failed to create synchronization objects for a frame!");
 			}
 		}
 	}
@@ -386,19 +386,19 @@ namespace hdn {
 		const vector<VkPresentModeKHR>& availablePresentModes) {
 		for (const auto& availablePresentMode : availablePresentModes) {
 			if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
-				HINFO("Present mode: Mailbox");
+				HDN_INFO_LOG("Present mode: Mailbox");
 				return availablePresentMode;
 			}
 		}
 
 		// for (const auto &availablePresentMode : availablePresentModes) {
 		//   if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
-		//	   HINFO("Present mode: Immediate");
+		//	   HDN_INFO_LOG("Present mode: Immediate");
 		//     return availablePresentMode;
 		//   }
 		// }
 
-		HINFO("Present mode: V-Sync");
+		HDN_INFO_LOG("Present mode: V-Sync");
 		return VK_PRESENT_MODE_FIFO_KHR; // Vsync
 	}
 

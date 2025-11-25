@@ -33,8 +33,8 @@ namespace hdn
 
 	void ITaskQueue::DependencyCompletionNotification(ITask* task)
 	{
-		HASSERT_TASK(task);
-		HASSERT(task->Completed(), "The task notified was not completed");
+		HDN_TASK_ASSERT(task);
+		HDN_CORE_ASSERT(task->Completed(), "The task notified was not completed");
 		if (Completed())
 		{
 			ITask::Complete();

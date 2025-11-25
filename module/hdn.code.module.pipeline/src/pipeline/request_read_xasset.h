@@ -22,7 +22,7 @@ namespace hdn
 	static i32 request_get_generic_xasset_slug(const Request<T>& req, char* buffer, u64 count)
 	{
 		char objectSlugBuffer[512];
-		i32 objectSlugLen = object_get_slug(req.sig, objectSlugBuffer, ARRLEN(objectSlugBuffer));
+		object_get_slug(req.sig, objectSlugBuffer, HDN_ARRLEN(objectSlugBuffer));
 		return core_snprintf(buffer, count, "%s(object=%s) [reqid=%zu]", requet_get_type_name(req), objectSlugBuffer, request_get_id(req));
 	}
 

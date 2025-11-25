@@ -5,7 +5,7 @@
 
 #include <chrono>
 
-#define HASSERT_TASK(task) HASSERT(task, "Task cannot be null!")
+#define HDN_TASK_ASSERT(task) HDN_CORE_ASSERT(task, "Task cannot be null!")
 
 namespace hdn
 {
@@ -53,7 +53,7 @@ namespace hdn
 		void PrintTimeHierarchy(int tabCount = 0)
 		{
 			string tabs(tabCount, ' ');
-			HINFO("{0}{1}: {2}ms", tabs, GetName(), GetExecutionTime<std::chrono::milliseconds>());
+			HDN_INFO_LOG("{0}{1}: {2}ms", tabs, GetName(), GetExecutionTime<std::chrono::milliseconds>());
 			for (const auto& internalDep : m_InternalDep)
 			{
 				internalDep->PrintTimeHierarchy(tabCount + 1);

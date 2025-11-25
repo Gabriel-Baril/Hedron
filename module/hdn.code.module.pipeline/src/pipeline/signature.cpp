@@ -60,7 +60,7 @@ namespace hdn
 
 	void* signature_get(obj_t id)
 	{
-		HASSERT(signature_initialized(), "The signature system must be initialized");
+		HDN_CORE_ASSERT(signature_initialized(), "The signature system must be initialized");
 		if (s_SignatureGlob.signatures.contains(id))
 		{
 			return s_SignatureGlob.signatures.at(id).data;
@@ -77,7 +77,7 @@ namespace hdn
 	{
 		if (!signature_contains(id))
 		{
-			HASSERT(signature_initialized(), "The signature system must be initialized");
+			HDN_CORE_ASSERT(signature_initialized(), "The signature system must be initialized");
 			void* dst = signature_allocate(size, alignment);
 			core_memcpy(dst, data, size);
 

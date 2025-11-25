@@ -8,11 +8,11 @@
 #define NOT_IN_USE	&&!
 #define USE_IF( x )	&&((x) ? 1 : 0)&&
 #define USING( x )	(1 x 1)
-#define MAYBE_UNUSED(x) ((void)x)
 
-#define BIT(x) (1 << x)
-#define ARRLEN(arr) (sizeof(arr) / sizeof(*arr))
-#define NAMEOF(type) #type
+#define HDN_MAYBE_UNUSED(x) ((void)x)
+#define HDN_BIT(x) (1 << x)
+#define HDN_ARRLEN(arr) (sizeof(arr) / sizeof(*arr))
+#define HDN_NAMEOF(type) #type
 
 #ifdef _HDN_DEBUG
 #define HDN_DEBUG IN_USE
@@ -73,30 +73,30 @@
 #endif
 
 #ifdef _MSC_VER
-#define DISABLE_OPTIMIZATION __pragma(optimize("", off))
-#define ENABLE_OPTIMIZATION  __pragma(optimize("", on))
+#define HDN_DISABLE_OPTIMIZATION __pragma(optimize("", off))
+#define HDN_ENABLE_OPTIMIZATION  __pragma(optimize("", on))
 #elif defined(__GNUC__) || defined(__clang__)
-#define DISABLE_OPTIMIZATION __attribute__((optimize("O0")))
-#define ENABLE_OPTIMIZATION
+#define HDN_DISABLE_OPTIMIZATION __attribute__((optimize("O0")))
+#define HDN_ENABLE_OPTIMIZATION
 #else
-#define DISABLE_OPTIMIZATION
-#define ENABLE_OPTIMIZATION
+#define HDN_DISABLE_OPTIMIZATION
+#define HDN_ENABLE_OPTIMIZATION
 #endif
 
-#define DEV					USE_IF( USING(HDN_DEBUG) )
+#define HDN_DEV					USE_IF( USING(HDN_DEBUG) )
 
-#define LOG_ENABLE			USE_IF( USING(DEV) )
-#define LOG_CONSOLE_ENABLE  USE_IF( USING(LOG_ENABLE) )
-#define LOG_FILE_ENABLE     USE_IF( USING(LOG_ENABLE) )
-#define LOG_ALWAYS_FLUSH	USE_IF( USING(LOG_ENABLE) )
+#define HDN_LOG_ENABLE			USE_IF( USING(HDN_DEV) )
+#define HDN_LOG_CONSOLE_ENABLE  USE_IF( USING(HDN_LOG_ENABLE) )
+#define HDN_LOG_FILE_ENABLE     USE_IF( USING(HDN_LOG_ENABLE) )
+#define HDN_LOG_ALWAYS_FLUSH	USE_IF( USING(HDN_LOG_ENABLE) )
 
-#define PIPELINE_MODULE     NOT_IN_USE
-#define CACHE_VERBOSE_WARN  USE_IF( USING(LOG_CONSOLE_ENABLE) )
-#define SYM_BUILDCONFIG		IN_USE
-#define SYM_FEATURE			IN_USE
-#define DREAMLIKE_BUILD		IN_USE
+#define HDN_PIPELINE_MODULE     NOT_IN_USE
+#define HDN_CACHE_VERBOSE_WARN  USE_IF( USING(HDN_LOG_CONSOLE_ENABLE) )
+#define HDN_SYM_BUILDCONFIG		IN_USE
+#define HDN_SYM_FEATURE			IN_USE
+#define HDN_DREAMLIKE_BUILD		IN_USE
 
-#define ASSERT_ENABLE		USE_IF( USING(DEV) )
-#define THROW_ENABLE		NOT_IN_USE //USE_IF( USING(DEV) )
+#define HDN_ASSERT_ENABLE		USE_IF( USING(HDN_DEV) )
+#define HDN_THROW_ENABLE		NOT_IN_USE // USE_IF( USING(DEV) )
 
-#define PERF_PROFILE        NOT_IN_USE
+#define HDN_PERF_PROFILE        NOT_IN_USE

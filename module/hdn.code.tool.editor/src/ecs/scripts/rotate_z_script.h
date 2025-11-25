@@ -18,7 +18,7 @@ namespace hdn
 		{
 			TransformComponent* transformC = m_Entity.get_mut<TransformComponent>();
 			transformC->rotation.z += dt;
-			HWARN("RotateZScript: {0}", transformC->rotation.z);
+			HDN_WARNING_LOG("RotateZScript: {0}", transformC->rotation.z);
 		}
 	};
 }

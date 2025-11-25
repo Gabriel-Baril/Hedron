@@ -11,17 +11,17 @@ namespace hdn
 
 	enum class HsonFieldFlag : u32
 	{
-		HSON_REF = BIT(0),
-		HSON_LREF = BIT(1),
-		HSON_VALUE = BIT(2),
+		HSON_REF = HDN_BIT(0),
+		HSON_LREF = HDN_BIT(1),
+		HSON_VALUE = HDN_BIT(2),
 
-		HSON_ARRAY = BIT(3),
+		HSON_ARRAY = HDN_BIT(3),
 
-		HSON_INDEX_KEY = BIT(4),
-		HSON_STRING_KEY = BIT(5),
+		HSON_INDEX_KEY = HDN_BIT(4),
+		HSON_STRING_KEY = HDN_BIT(5),
 
-		HSON_PUBLIC = BIT(6),
-		HSON_PRIVATE = BIT(7)
+		HSON_PUBLIC = HDN_BIT(6),
+		HSON_PRIVATE = HDN_BIT(7)
 	};
 
 	enum class HsonField : u8

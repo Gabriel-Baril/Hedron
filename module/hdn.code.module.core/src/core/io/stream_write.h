@@ -68,7 +68,7 @@ namespace hdn
 		{
 			if (offset + byteSize > m_Buffer.size())
 			{
-				HWARN("Failed to write {0} bytes to buffer", byteSize);
+				HDN_WARNING_LOG("Failed to write {0} bytes to buffer", byteSize);
 				return 0;
 			}
 			std::memcpy(m_Buffer.data() + offset, data, byteSize);

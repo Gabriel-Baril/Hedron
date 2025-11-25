@@ -82,7 +82,7 @@ namespace hdn
 
 			int spaceCount = s.size();
 			std::string space(spaceCount, '\t');  // Use tabs for indentation
-			HINFO("({2}) {0}{1}", space.c_str(), get_field_name(fieldHash), entry->fieldChildCount);
+			HDN_INFO_LOG("({2}) {0}{1}", space.c_str(), get_field_name(fieldHash), entry->fieldChildCount);
 
 			if (entry->fieldChildCount > 0)
 			{
@@ -178,7 +178,7 @@ namespace hdn
 			return nullptr; // Safeguard against invalid memory access
 		}
 
-		HINFO("Field (Name: {0}) (Type: {1}) (Payload Size: {2}) (Payload Offset: {3})", get_field_name(hash), hson_field_to_string(*get_field_type(hash)), *get_field_payload_size(hash), *get_field_payload_offset(hash));
+		HDN_INFO_LOG("Field (Name: {0}) (Type: {1}) (Payload Size: {2}) (Payload Offset: {3})", get_field_name(hash), hson_field_to_string(*get_field_type(hash)), *get_field_payload_size(hash), *get_field_payload_offset(hash));
 
 		i64 index = get_field_index(hash);
 		if (index != -1)

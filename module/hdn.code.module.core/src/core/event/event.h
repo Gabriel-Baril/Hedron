@@ -22,13 +22,13 @@ namespace hdn
 	enum class EventCategory : u8
 	{
 		NONE = 0,
-		APPLICATION = BIT( 0 ),
-		INPUT = BIT( 1 ),
-		KEYBOARD = BIT( 2 ),
-		MOUSE = BIT( 3 ),
-		MOUSE_BUTTON = BIT( 4 )
+		APPLICATION = HDN_BIT( 0 ),
+		INPUT = HDN_BIT( 1 ),
+		KEYBOARD = HDN_BIT( 2 ),
+		MOUSE = HDN_BIT( 3 ),
+		MOUSE_BUTTON = HDN_BIT( 4 )
 	};
-	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(EventCategory)
+	HDN_DEFINE_ENUM_CLASS_BITWISE_OPERATIONS(EventCategory)
 
 	class Event
 	{

@@ -2,7 +2,7 @@
 
 #include "core/core_define.h"
 
-#if USING(SYM_FEATURE)
+#if USING(HDN_SYM_FEATURE)
 #include "core/core.h"
 
 #include "pipeline/feature/xasset.h"

@@ -13,11 +13,11 @@ namespace hdn {
 		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 		void* pUserData)
 	{
-		MAYBE_UNUSED(messageSeverity);
-		MAYBE_UNUSED(messageType);
-		MAYBE_UNUSED(pUserData);
+		HDN_MAYBE_UNUSED(messageSeverity);
+		HDN_MAYBE_UNUSED(messageType);
+		HDN_MAYBE_UNUSED(pUserData);
 
-		HERR("Validation Layer: {0}", pCallbackData->pMessage);
+		HDN_ERROR_LOG("Validation Layer: {0}", pCallbackData->pMessage);
 		return VK_FALSE;
 	}
 
@@ -73,7 +73,7 @@ namespace hdn {
 
 	void VulkanDevice::create_instance() {
 		if (enableValidationLayers && !check_validation_layer_support()) {
-			HTHROW(std::runtime_error, "validation layers requested, but not available!");
+			HDN_CORE_THROW(std::runtime_error, "validation layers requested, but not available!");
 		}
 
 		VkApplicationInfo appInfo = {};
@@ -106,7 +106,7 @@ namespace hdn {
 		}
 
 		if (vkCreateInstance(&createInfo, nullptr, &m_Instance) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to create instance!");
+			HDN_CORE_THROW(std::runtime_error, "failed to create instance!");
 		}
 
 		has_gflw_required_instance_extensions();
@@ -116,9 +116,9 @@ namespace hdn {
 		uint32_t deviceCount = 0;
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
 		if (deviceCount == 0) {
-			HTHROW(std::runtime_error, "failed to find GPUs with Vulkan support!");
+			HDN_CORE_THROW(std::runtime_error, "failed to find GPUs with Vulkan support!");
 		}
-		HINFO("Device Count: {0}", deviceCount);
+		HDN_INFO_LOG("Device Count: {0}", deviceCount);
 		vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
 
@@ -130,11 +130,11 @@ namespace hdn {
 		}
 
 		if (m_PhysicalDevice == VK_NULL_HANDLE) {
-			HTHROW(std::runtime_error, "failed to find a suitable GPU!");
+			HDN_CORE_THROW(std::runtime_error, "failed to find a suitable GPU!");
 		}
 
 		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &m_Properties);
-		HINFO("Physical Device: {0}", deviceCount);
+		HDN_INFO_LOG("Physical Device: {0}", deviceCount);
 	}
 
 	void VulkanDevice::create_logical_device() {
@@ -177,7 +177,7 @@ namespace hdn {
 		}
 
 		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to create logical device!");
+			HDN_CORE_THROW(std::runtime_error, "failed to create logical device!");
 		}
 
 		vkGetDeviceQueue(m_Device, indices.graphicsFamily, 0, &m_GraphicsQueue);
@@ -194,7 +194,7 @@ namespace hdn {
 			VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
 		if (vkCreateCommandPool(m_Device, &poolInfo, nullptr, &m_CommandPool) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to create command pool!");
+			HDN_CORE_THROW(std::runtime_error, "failed to create command pool!");
 		}
 	}
 
@@ -236,7 +236,7 @@ namespace hdn {
 		VkDebugUtilsMessengerCreateInfoEXT createInfo;
 		populate_debug_messenger_create_info(createInfo);
 		if (create_debug_utils_messenger_ext(m_Instance, &createInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to set up debug messenger!");
+			HDN_CORE_THROW(std::runtime_error, "failed to set up debug messenger!");
 		}
 	}
 
@@ -285,19 +285,19 @@ namespace hdn {
 		vector<VkExtensionProperties> extensions(extensionCount);
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-		HINFO("Available Extensions:");
+		HDN_INFO_LOG("Available Extensions:");
 		unordered_set<string> available;
 		for (const auto& extension : extensions) {
-			HINFO("\t{0}", extension.extensionName);
+			HDN_INFO_LOG("\t{0}", extension.extensionName);
 			available.insert(extension.extensionName);
 		}
 
-		HINFO("Required Extensions:");
+		HDN_INFO_LOG("Required Extensions:");
 		auto requiredExtensions = get_required_extensions();
 		for (const auto& required : requiredExtensions) {
-			HINFO("\t{0}", required);
+			HDN_INFO_LOG("\t{0}", required);
 			if (available.find(required) == available.end()) {
-				HTHROW(std::runtime_error, "Missing required glfw extension");
+				HDN_CORE_THROW(std::runtime_error, "Missing required glfw extension");
 			}
 		}
 	}
@@ -393,7 +393,7 @@ namespace hdn {
 				return format;
 			}
 		}
-		HTHROW(std::runtime_error, "failed to find supported format!");
+		HDN_CORE_THROW(std::runtime_error, "failed to find supported format!");
 		return VK_FORMAT_UNDEFINED;
 	}
 
@@ -406,7 +406,7 @@ namespace hdn {
 				return i;
 			}
 		}
-		HTHROW(std::runtime_error, "failed to find suitable memory type!");
+		HDN_CORE_THROW(std::runtime_error, "failed to find suitable memory type!");
 		return 0; // Will never reach
 	}
 
@@ -423,7 +423,7 @@ namespace hdn {
 		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
 		if (vkCreateBuffer(m_Device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to create vertex buffer!");
+			HDN_CORE_THROW(std::runtime_error, "failed to create vertex buffer!");
 		}
 
 		VkMemoryRequirements memRequirements;
@@ -435,7 +435,7 @@ namespace hdn {
 		allocInfo.memoryTypeIndex = find_memory_type(memRequirements.memoryTypeBits, properties);
 
 		if (vkAllocateMemory(m_Device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to allocate vertex buffer memory!");
+			HDN_CORE_THROW(std::runtime_error, "failed to allocate vertex buffer memory!");
 		}
 
 		vkBindBufferMemory(m_Device, buffer, bufferMemory, 0);
@@ -518,7 +518,7 @@ namespace hdn {
 		VkImage& image,
 		VkDeviceMemory& imageMemory) {
 		if (vkCreateImage(m_Device, &imageInfo, nullptr, &image) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to create image!");
+			HDN_CORE_THROW(std::runtime_error, "failed to create image!");
 		}
 
 		VkMemoryRequirements memRequirements;
@@ -530,11 +530,11 @@ namespace hdn {
 		allocInfo.memoryTypeIndex = find_memory_type(memRequirements.memoryTypeBits, properties);
 
 		if (vkAllocateMemory(m_Device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to allocate image memory!");
+			HDN_CORE_THROW(std::runtime_error, "failed to allocate image memory!");
 		}
 
 		if (vkBindImageMemory(m_Device, image, imageMemory, 0) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to bind image memory!");
+			HDN_CORE_THROW(std::runtime_error, "failed to bind image memory!");
 		}
 	}
 

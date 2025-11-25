@@ -102,18 +102,18 @@ namespace hdn
 	template<typename T>
 	void object_request_failure_generic(const Signature<T>& sig, ObjectRequestResult result)
 	{
-		MAYBE_UNUSED(result);
+		HDN_MAYBE_UNUSED(result);
 
 		char slug[512];
-		object_get_slug(sig, slug, ARRLEN(slug));
-		HERR("Failed to request object '{0}'. Did you forget to store the result while requesting the object?", slug);
+		object_get_slug(sig, slug, HDN_ARRLEN(slug));
+		HDN_ERROR_LOG("Failed to request object '{0}'. Did you forget to store the result while requesting the object?", slug);
 	}
 	
 	template<typename T>
 	void object_load_failure_generic(const Signature<T>& sig)
 	{
 		char slug[512];
-		object_get_slug(sig, slug, ARRLEN(slug));
-		HERR("Failed to fetch object '{0}'", slug);
+		object_get_slug(sig, slug, HDN_ARRLEN(slug));
+		HDN_ERROR_LOG("Failed to fetch object '{0}'", slug);
 	}
 }

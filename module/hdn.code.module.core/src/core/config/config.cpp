@@ -37,7 +37,7 @@ namespace hdn
 
 	string config_get_config_variable(const string& section, const string& name, const string& defaultValue)
 	{
-		HASSERT(config_initialized(), "Config needs to be initialized");
+		HDN_CORE_ASSERT(config_initialized(), "Config needs to be initialized");
 
 		INIReader* reader = s_Config.reader;
 		return ini_get_variable(*reader, section, name, defaultValue);

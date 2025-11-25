@@ -8,13 +8,13 @@ namespace hdn
 	{
 		if (used)
 		{
-			HINFO("Found Active Allocation %p, %llu", ptr, size);
+			HDN_INFO_LOG("Found Active Allocation %p, %llu", ptr, size);
 		}
 	}
 
 	void heap_allocator_init(HeapAllocator& allocator, void* memory, u64 size)
 	{
-		HASSERT(memory && size > 0, "Memory cannot be nullptr");
+		HDN_CORE_ASSERT(memory && size > 0, "Memory cannot be nullptr");
 		allocator.memory = memory;
 		allocator.maxSize = size;
 		allocator.TLSFHandle = tlsf_create_with_pool(memory, size);
@@ -30,7 +30,7 @@ namespace hdn
 	void* heap_allocator_allocate(HeapAllocator& allocator, u64 size, u64 alignment)
 	{
 		void* mem = alignment == 1 ? tlsf_malloc(allocator.TLSFHandle, size) : tlsf_memalign(allocator.TLSFHandle, alignment, size);
-		HASSERT(mem, "Failed to allocate memory!");
+		HDN_CORE_ASSERT(mem, "Failed to allocate memory!");
 		core_memzero(mem, size);
 		const u64 actualSize = tlsf_block_size(mem);
 		allocator.allocatedSize += actualSize;

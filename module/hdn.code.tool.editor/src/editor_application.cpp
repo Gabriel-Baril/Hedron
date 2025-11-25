@@ -52,7 +52,7 @@ namespace hdn
 
 	bool EditorApplication::on_key_pressed(KeyPressedEvent& event)
 	{
-		// HINFO("EditorApplication::OnKeyPressed - Pressed!");
+		// HDN_INFO_LOG("EditorApplication::OnKeyPressed - Pressed!");
 		return false;
 	}
 

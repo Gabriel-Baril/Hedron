@@ -13,7 +13,7 @@ namespace hdn
 	const char* get_xml_attr(const pugi::xml_node &node, const char* attr)
 	{
 		const char* attrValue = try_get_xml_attr(node, attr);
-		HASSERT(attrValue, "'{0}' attibute cannot be found. Use try_get_xml_attr instead if you can omit the attribute", attr);
+		HDN_CORE_ASSERT(attrValue, "'{0}' attibute cannot be found. Use try_get_xml_attr instead if you can omit the attribute", attr);
 		return attrValue;
 	}
 }

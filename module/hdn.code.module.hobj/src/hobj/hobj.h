@@ -18,7 +18,7 @@ namespace hdn
 		VIRTUALIZED = 1,
 		REALIZED = 2
 	};
-	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectLoadState)
+	HDN_DEFINE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectLoadState)
 
 	template<typename T>
 	using HRef = Ref<T>;
@@ -40,7 +40,7 @@ namespace hdn
 
 			if (m_Object.magicNumber != HOBJ_FILE_MAGIC_NUMBER)
 			{
-				HFATAL("Invalid deserialization instruction: Trying to deserialize a non hobj stream!");
+				HDN_FATAL_LOG("Invalid deserialization instruction: Trying to deserialize a non hobj stream!");
 			}
 
 			// TODO: We should instead check if the serializedTypeHash is a descendant of typeHash
@@ -49,7 +49,7 @@ namespace hdn
 			// const hash64_t typeHash = GetTypeHash();
 			// if (typeHash != m_Object.typeHash)
 			// {
-			// 	HFATAL("Invalid deserialization instruction: trying to interpret and object of type '{0}' with an object of type '{1}'!", serializedTypeHash, typeHash);
+			// 	HDN_FATAL_LOG("Invalid deserialization instruction: trying to interpret and object of type '{0}' with an object of type '{1}'!", serializedTypeHash, typeHash);
 			// }
 		}
 

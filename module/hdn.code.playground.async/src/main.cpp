@@ -18,7 +18,7 @@ namespace hdn
 		{
 			for (int i = 0;i < 10000;i++)
 			{
-				HWARN("[{0}]", m_PrefixMessage.c_str());
+				HDN_WARNING_LOG("[{0}]", m_PrefixMessage.c_str());
 			}
 			Complete();
 		}
@@ -154,14 +154,14 @@ int main()
 			std::this_thread::sleep_for(2000ms);
 		}
 
-		HINFO("-----------------------");
+		HDN_INFO_LOG("-----------------------");
 
 		task.PrintTimeHierarchy();
 
 		AsyncOrchestrator::Get().Shutdown();
 	}
 
-	HINFO("Allocation Byte: {0}", GetMemStat().allocated);
-	HINFO("Allocation Count: {0}", GetMemStat().allocationCount);
-	HINFO("Deallocation Count: {0}", GetMemStat().deallocationCount);
+	HDN_INFO_LOG("Allocation Byte: {0}", GetMemStat().allocated);
+	HDN_INFO_LOG("Allocation Count: {0}", GetMemStat().allocationCount);
+	HDN_INFO_LOG("Deallocation Count: {0}", GetMemStat().deallocationCount);
 }

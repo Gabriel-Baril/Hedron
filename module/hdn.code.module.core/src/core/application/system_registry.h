@@ -14,7 +14,7 @@ namespace hdn
 		Ref<T> get(const char* name)
 		{
 			u64 nameHash = get_system_name_hash(name);
-			HASSERT(m_Systems.contains(nameHash), "The requested system '{0}' does not exist", name);
+			HDN_CORE_ASSERT(m_Systems.contains(nameHash), "The requested system '{0}' does not exist", name);
 			return std::static_pointer_cast<T>(m_Systems[nameHash]);
 		}
 
@@ -22,7 +22,7 @@ namespace hdn
 		Ref<T> register_system(const char* name, Args&&... args)
 		{
 			u64 nameHash = get_system_name_hash(name);
-			HASSERT(!m_Systems.contains(nameHash), "Cannot add the same system twice");
+			HDN_CORE_ASSERT(!m_Systems.contains(nameHash), "Cannot add the same system twice");
 			m_Systems[nameHash] = make_ref<T>(std::forward<Args>(args)...);
 			return std::static_pointer_cast<T>(m_Systems[nameHash]);
 		}

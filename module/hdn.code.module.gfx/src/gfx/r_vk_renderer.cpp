@@ -31,7 +31,7 @@ namespace hdn
 		}
 		if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 		{
-			HTHROW(std::runtime_error, "Failed to acquire the next swapchain image");
+			HDN_CORE_THROW(std::runtime_error, "Failed to acquire the next swapchain image");
 		}
 		m_IsFrameStarted = true;
 		auto commandBuffer = get_current_command_buffer();
@@ -39,7 +39,7 @@ namespace hdn
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS)
 		{
-			HTHROW(std::runtime_error, "Failed to begin recording command buffer");
+			HDN_CORE_THROW(std::runtime_error, "Failed to begin recording command buffer");
 		}
 		return commandBuffer;
 	}
@@ -50,7 +50,7 @@ namespace hdn
 		auto commandBuffer = get_current_command_buffer();
 		if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
 		{
-			HTHROW(std::runtime_error, "Failed to end command buffer");
+			HDN_CORE_THROW(std::runtime_error, "Failed to end command buffer");
 		}
 		auto result = m_Swapchain->submit_command_buffers(&commandBuffer, &m_CurrentImageIndex); // It will submit command buffer to the device graphics queue while handling cpu and gpu synchronization
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_Window->was_window_resized())
@@ -60,7 +60,7 @@ namespace hdn
 		}
 		else if (result != VK_SUCCESS)
 		{
-			HTHROW(std::runtime_error, "Failed to present swapchain image");
+			HDN_CORE_THROW(std::runtime_error, "Failed to present swapchain image");
 		}
 
 		m_IsFrameStarted = false;
@@ -118,7 +118,7 @@ namespace hdn
 		allocInfo.commandBufferCount = static_cast<u32>(m_CommandBuffers.size());
 		if (vkAllocateCommandBuffers(m_Device->get_device(), &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
 		{
-			HTHROW(std::runtime_error, "Failed to allocate command buffer");
+			HDN_CORE_THROW(std::runtime_error, "Failed to allocate command buffer");
 		}
 
 	}
@@ -151,7 +151,7 @@ namespace hdn
 
 			if (!oldSwapChain->compare_swap_format(*m_Swapchain.get()))
 			{
-				HTHROW(std::runtime_error, "Swap chain image(or depth) format has changed");
+				HDN_CORE_THROW(std::runtime_error, "Swap chain image(or depth) format has changed");
 			}
 		}
 

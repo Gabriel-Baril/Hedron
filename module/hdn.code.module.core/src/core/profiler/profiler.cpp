@@ -2,7 +2,7 @@
 
 #include "profiler.h"
 
-#if USING( PERF_PROFILE )
+#if USING( HDN_PERF_PROFILE )
 namespace hdn
 {
 	struct Instrumentor

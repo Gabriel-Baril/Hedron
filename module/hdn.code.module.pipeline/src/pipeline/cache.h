@@ -37,12 +37,12 @@ namespace hdn
 
 	enum class ObjectCacheState
 	{
-		COLD = BIT(0),
-		HOT = BIT(1),
+		COLD = HDN_BIT(0),
+		HOT = HDN_BIT(1),
 		COUNT,
 		NOT_CACHED = 0,
 	};
-	ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(ObjectCacheState);
+	HDN_DEFINE_ENUM_CLASS_BITWISE_OPERATIONS(ObjectCacheState);
 
 	bool cache_init();
 	void cache_shutdown();

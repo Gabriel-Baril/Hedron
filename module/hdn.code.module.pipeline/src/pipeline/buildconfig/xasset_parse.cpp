@@ -1,6 +1,6 @@
 #include "xasset_parse.h"
 
-#if USING(SYM_BUILDCONFIG)
+#if USING(HDN_SYM_BUILDCONFIG)
 #include "pugixml/pugixml.hpp"
 
 #include "core/hash.h"
@@ -36,12 +36,12 @@ namespace hdn
 	{
 		// Name & id
 		const char *nameStr = get_xml_attr(node, "name");
-		HASSERT_PTR(nameStr, "xsymbol require a name");
+		HDN_CORE_ASSERT_PTR(nameStr, "xsymbol require a name");
 		auto fbName = builder.CreateString(nameStr);
 
 		// CPlatform
 		auto nPlatform = node.child("Platform");
-		HASSERT_PTR(nPlatform, "buildconfig symbol require a platform node");
+		HDN_CORE_ASSERT_PTR(nPlatform, "buildconfig symbol require a platform node");
 		const pugi::char_t *platformStr = nPlatform.attribute("platform").as_string();
 		CPlatform platform = buildconfig_str_to_platform(platformStr);
 
@@ -53,7 +53,7 @@ namespace hdn
 			for (const auto &nFeature : nFeatures.children("Feature"))
 			{
 				const pugi::char_t *featureSymbolStr = nFeature.attribute("feature").as_string();
-				HASSERT_PTR(featureSymbolStr, "scene attibute cannot be ommited");
+				HDN_CORE_ASSERT_PTR(featureSymbolStr, "scene attibute cannot be ommited");
 				auto fbFeatureName = builder.CreateString(featureSymbolStr);
 				fbFeaturesVector.emplace_back(fbFeatureName);
 			}

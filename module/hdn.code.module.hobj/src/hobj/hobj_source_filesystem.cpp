@@ -17,7 +17,7 @@ namespace hdn
 	HObject* FilesystemObjectSource::get(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_GET, id);
-		HASSERT(m_LoadedObjects.at(id) != nullptr, "The requested object is not loaded yet");
+		HDN_CORE_ASSERT(m_LoadedObjects.at(id) != nullptr, "The requested object is not loaded yet");
 		HObject* object = m_LoadedObjects.at(id);
 		HOBJ_METRIC_END();
 		return object;
@@ -26,12 +26,12 @@ namespace hdn
 	void FilesystemObjectSource::load(const char* path, HObject* outObject)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_LOAD);
-		HASSERT(outObject != nullptr, "outObject cannot be null when loading");
+		HDN_CORE_ASSERT(outObject != nullptr, "outObject cannot be null when loading");
 
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_FILE_OPEN);
 		std::ifstream inFile(path, std::ios::binary | std::ios::ate);
 		if (!inFile) {
-			HERR("Could not open file '{0}' for reading", path);
+			HDN_ERROR_LOG("Could not open file '{0}' for reading", path);
 			return;
 		}
 
@@ -44,7 +44,7 @@ namespace hdn
 
 		// Read the file into the buffer
 		if (!inFile.read(buffer.data(), fileSize)) {
-			HERR("Failed to read the file", path);
+			HDN_ERROR_LOG("Failed to read the file", path);
 			return;
 		}
 		HOBJ_METRIC_FILE_PATH(path);
@@ -71,7 +71,7 @@ namespace hdn
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_LOAD, id);
 		string absoluteSavePath = filesystem_to_absolute(m_ObjectPaths[id]).string();
 		load(absoluteSavePath.c_str(), outObject);
-		HASSERT(!m_LoadedObjects.contains(id), "Cannot register an object more than once!");
+		HDN_CORE_ASSERT(!m_LoadedObjects.contains(id), "Cannot register an object more than once!");
 		m_LoadedObjects[id] = outObject;
 		HOBJ_METRIC_END();
 	}
@@ -87,7 +87,7 @@ namespace hdn
 		const uuid64 objectID = object->id();
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_SAVE, objectID);
 
-		HASSERT(object, "object cannot be null");
+		HDN_CORE_ASSERT(object, "object cannot be null");
 		fspath absoluteSavePath;
 		bool shouldDeleteOldPath = false;
 		if (userData)
@@ -105,7 +105,7 @@ namespace hdn
 		}
 		else
 		{
-			HFATAL("No user data provided and the object to save was not found in the manifest (likely an in-memory object not yet serialized on disk)");
+			HDN_FATAL_LOG("No user data provided and the object to save was not found in the manifest (likely an in-memory object not yet serialized on disk)");
 		}
 
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_SERIALIZE);
@@ -133,14 +133,14 @@ namespace hdn
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_DELETE, id);
 		if (!m_ObjectPaths.contains(id))
 		{
-			HWARN("The object {0} was requested for deletion but not found in the manifest", id);
+			HDN_WARNING_LOG("The object {0} was requested for deletion but not found in the manifest", id);
 			return false;
 		}
 
 		bool deleted = filesystem_delete(m_ObjectPaths.at(id), true) > 0; // Delete
 		if (!deleted)
 		{
-			HWARN("Failed to delete object {0}", id);
+			HDN_WARNING_LOG("Failed to delete object {0}", id);
 			return false;
 		}
 
@@ -179,7 +179,7 @@ namespace hdn
 	void FilesystemObjectSource::manifest_create_entry(uuid64 id, const fspath& path)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_MANIFEST_CREATE_ENTRY);
-		HASSERT(!m_ObjectPaths.contains(id), "");
+		HDN_CORE_ASSERT(!m_ObjectPaths.contains(id), "");
 		fspath absolutePath = filesystem_to_absolute(path);
 		m_ObjectPaths[id] = absolutePath;
 		HOBJ_METRIC_END();

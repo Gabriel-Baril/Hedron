@@ -100,7 +100,7 @@ namespace hdn
 		vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, m_QueueFamily, wd->Surface, &res);
 		if (res != VK_TRUE)
 		{
-			HERR("Error no WSI support on physical device 0");
+			HDN_ERROR_LOG("Error no WSI support on physical device 0");
 			exit(-1);
 		}
 
@@ -162,8 +162,8 @@ namespace hdn
 
 	void ImguiSystem::frame_render(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
 	{
-		MAYBE_UNUSED(wd);
-		MAYBE_UNUSED(draw_data);
+		HDN_MAYBE_UNUSED(wd);
+		HDN_MAYBE_UNUSED(draw_data);
 		// Record dear imgui primitives into command buffer
 	}
 

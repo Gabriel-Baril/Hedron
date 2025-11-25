@@ -2,7 +2,7 @@
 
 #include "core/core_define.h"
 
-#if USING(DREAMLIKE_BUILD)
+#if USING(HDN_DREAMLIKE_BUILD)
 #include "core/core.h"
 #include "pipeline/generated/buildconfig_generated.h"
 #include "pipeline/buildconfig/xasset.h"

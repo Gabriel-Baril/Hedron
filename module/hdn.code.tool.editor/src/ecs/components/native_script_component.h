@@ -41,7 +41,7 @@ namespace hdn
 		{
 			for (const auto& script : scripts)
 			{
-				HINFO("Freed script: '{0}'", script->name());
+				HDN_INFO_LOG("Freed script: '{0}'", script->name());
 				delete script;
 			}
 		}

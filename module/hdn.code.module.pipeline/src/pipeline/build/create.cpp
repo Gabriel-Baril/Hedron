@@ -1,6 +1,6 @@
 #include "create.h"
 
-#if USING(DREAMLIKE_BUILD)
+#if USING(HDN_DREAMLIKE_BUILD)
 #include "pipeline/cache.h"
 #include "pipeline/request_read_xasset.h"
 
@@ -15,13 +15,13 @@ namespace hdn
 
 	const char* requet_get_type_name(const Request<DreamlikeBuildCreateRequest>& req)
 	{
-		MAYBE_UNUSED(req);
-		return NAMEOF(BuildConfigReadRequest);
+		HDN_MAYBE_UNUSED(req);
+		return HDN_NAMEOF(BuildConfigReadRequest);
 	}
 
 	bool request_valid(const Request<DreamlikeBuildCreateRequest>& req)
 	{
-		MAYBE_UNUSED(req);
+		HDN_MAYBE_UNUSED(req);
 		return true;
 	}
 
@@ -35,6 +35,10 @@ namespace hdn
 
 	i32 request_get_slug(const Request<DreamlikeBuildCreateRequest>& req, char* buffer, u64 count)
 	{
+		HDN_MAYBE_UNUSED(req);
+		HDN_MAYBE_UNUSED(buffer);
+		HDN_MAYBE_UNUSED(count);
+		HDN_CORE_UNIMPLEMENTED();
 		return 0;
 	}
 

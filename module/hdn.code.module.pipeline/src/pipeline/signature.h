@@ -19,7 +19,7 @@ namespace hdn
 		noexcept(std::is_nothrow_constructible_v<T, Args&&...>)
 		-> Signature<T>
 	{
-		HASSERT(signature_initialized(), "The signature system must be initialized");
+		HDN_CORE_ASSERT(signature_initialized(), "The signature system must be initialized");
 		const auto sig = Signature<T>(std::forward<Args>(args)...);
 		signature_register(object_get_id(sig), reinterpret_cast<const void*>(&sig), sizeof(decltype(sig)), alignof(decltype(sig)));
 		return sig;

@@ -8,8 +8,6 @@
 
 #include <stdio.h>
 
-#define SYMTOSTR(var) #var
-
 namespace hdn
 {
 	HDN_MODULE_CORE_API void str_copy(char* dest, const char* src);

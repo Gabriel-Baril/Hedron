@@ -55,7 +55,7 @@ namespace hdn
 	bool HObjectRegistry::object_save(HObject* object, const string& name, const void* userData, u64 userDataByteSize)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_SAVE, object->id());
-		HASSERT(m_Sources.contains(name), "The source {0} was not found!", name.c_str());
+		HDN_CORE_ASSERT(m_Sources.contains(name), "The source {0} was not found!", name.c_str());
 		const uuid64 objectID = object->id();
 		bool saved = m_Sources[name]->save(object, userData, userDataByteSize);
 		if (manifest_lookup_entry(objectID) && manifest_get_entry(objectID) != m_Sources[name].get())
@@ -75,7 +75,7 @@ namespace hdn
 		{
 			return manifest_get_entry(objectID)->save(object, userData, userDataByteSize);
 		}
-		HWARN("The object was not found in any sources! Do you meant to save to a specific source instead?");
+		HDN_WARNING_LOG("The object was not found in any sources! Do you meant to save to a specific source instead?");
 		HOBJ_METRIC_END();
 		return false;
 	}

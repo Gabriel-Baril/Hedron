@@ -2,7 +2,7 @@
 
 #include "core/core_define.h"
 
-#if USING(SYM_FEATURE)
+#if USING(HDN_SYM_FEATURE)
 #include "pipeline/cache.h"
 #include "pipeline/request_read_xasset.h"
 
@@ -17,8 +17,8 @@ namespace hdn
 
 	const char* requet_get_type_name(const Request<FeatureReadRequest>& req)
 	{
-		MAYBE_UNUSED(req);
-		return NAMEOF(FeatureReadRequest);
+		HDN_MAYBE_UNUSED(req);
+		return HDN_NAMEOF(FeatureReadRequest);
 	}
 
 	bool request_valid(const Request<FeatureReadRequest> &req)

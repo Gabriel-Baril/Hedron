@@ -1,6 +1,6 @@
 #include "module.h"
 
-#if USING(PIPELINE_MODULE)
+#if USING(HDN_PIPELINE_MODULE)
 #include "core/stl/unordered_map.h"
 #include "core/hash.h"
 #include "core/ini/ini.h"
@@ -117,7 +117,7 @@ namespace hdn
 						auto ext = subEntry.path().extension();
 						if (ext == ".module")
 						{
-							HINFO("Found module folder: {0}", entry.path().string().c_str());
+							HDN_INFO_LOG("Found module folder: {0}", entry.path().string().c_str());
 							Module module;
 							parse_module_file(subEntry.path(), module);
 

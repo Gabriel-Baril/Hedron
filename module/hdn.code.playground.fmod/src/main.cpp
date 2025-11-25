@@ -16,25 +16,25 @@ int main()
 
 	result = FMOD::System_Create(&system);
 	if (result != FMOD_OK) {
-		HERR("FMOD error: {0}", FMOD_ErrorString(result));
+		HDN_ERROR_LOG("FMOD error: {0}", FMOD_ErrorString(result));
 		return -1;
 	}
 
 	result = system->init(512, FMOD_INIT_NORMAL, nullptr);
 	if (result != FMOD_OK) {
-		HERR("FMOD init error: {0}", FMOD_ErrorString(result));
+		HDN_ERROR_LOG("FMOD init error: {0}", FMOD_ErrorString(result));
 		return -1;
 	}
 
 	result = system->createSound("wave.mp3", FMOD_DEFAULT, nullptr, &sound);
 	if (result != FMOD_OK) {
-		HERR("Sound load error: {0}", FMOD_ErrorString(result));
+		HDN_ERROR_LOG("Sound load error: {0}", FMOD_ErrorString(result));
 		return -1;
 	}
 
 	result = system->playSound(sound, nullptr, false, &channel);
 	if (result != FMOD_OK) {
-		HERR("Play error: {0}", FMOD_ErrorString(result));
+		HDN_ERROR_LOG("Play error: {0}", FMOD_ErrorString(result));
 		return -1;
 	}
 

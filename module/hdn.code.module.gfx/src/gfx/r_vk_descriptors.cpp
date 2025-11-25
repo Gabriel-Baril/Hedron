@@ -43,7 +43,7 @@ namespace hdn {
 			&descriptorSetLayoutInfo,
 			nullptr,
 			&m_DescriptorSetLayout) != VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to create descriptor set layout!");
+			HDN_CORE_THROW(std::runtime_error, "failed to create descriptor set layout!");
 		}
 	}
 
@@ -90,7 +90,7 @@ namespace hdn {
 
 		if (vkCreateDescriptorPool(m_Device.get_device(), &descriptorPoolInfo, nullptr, &m_DescriptorPool) !=
 			VK_SUCCESS) {
-			HTHROW(std::runtime_error, "failed to create descriptor pool!");
+			HDN_CORE_THROW(std::runtime_error, "failed to create descriptor pool!");
 		}
 	}
 

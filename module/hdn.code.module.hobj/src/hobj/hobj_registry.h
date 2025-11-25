@@ -134,7 +134,7 @@ namespace hdn
 			HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_GET, id);
 			if (!manifest_lookup_entry(id))
 			{
-				HWARN("Object with id '{0}' was not found in the manifest!", id);
+				HDN_WARNING_LOG("Object with id '{0}' was not found in the manifest!", id);
 				return nullptr;
 			}
 
@@ -154,7 +154,7 @@ namespace hdn
 			h64 nameHash = hash_generate(name);
 			if (!m_ObjectName.contains(nameHash))
 			{
-				HWARN("Object with name '{0}' was not found in the manifest!", name);
+				HDN_WARNING_LOG("Object with name '{0}' was not found in the manifest!", name);
 				return nullptr;
 			}
 			const uuid64 objectID = m_ObjectName[nameHash];
@@ -169,7 +169,7 @@ namespace hdn
 		template<typename T, typename... Args>
 		Ref<T> registry_add_source(const string& sourceName, Args&&... args)
 		{
-			HASSERT(!m_Sources.contains(sourceName), "Cannot add 2 sources with the same name!");
+			HDN_CORE_ASSERT(!m_Sources.contains(sourceName), "Cannot add 2 sources with the same name!");
 			Ref<T> source = make_ref<T>(std::forward<Args>(args)...);
 			m_Sources[sourceName] = source;
 			return source;

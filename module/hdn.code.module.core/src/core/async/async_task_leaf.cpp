@@ -19,7 +19,7 @@ namespace hdn
 
 	void ITaskLeaf::DependencyCompletionNotification(ITask* task)
 	{
-		MAYBE_UNUSED(task);
+		HDN_MAYBE_UNUSED(task);
 		if (!IsEnqueued() && AreInDepResolved())
 		{
 			Enqueue();

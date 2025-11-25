@@ -1,6 +1,6 @@
 #include "read.h"
 
-#if USING(SYM_BUILDCONFIG)
+#if USING(HDN_SYM_BUILDCONFIG)
 #include "pipeline/cache.h"
 #include "pipeline/request_read_xasset.h"
 
@@ -15,13 +15,13 @@ namespace hdn
 
 	const char* requet_get_type_name(const Request<BuildConfigReadRequest>& req)
 	{
-		MAYBE_UNUSED(req);
-		return NAMEOF(BuildConfigReadRequest);
+		HDN_MAYBE_UNUSED(req);
+		return HDN_NAMEOF(BuildConfigReadRequest);
 	}
 
 	bool request_valid(const Request<BuildConfigReadRequest> &req)
 	{
-		MAYBE_UNUSED(req);
+		HDN_MAYBE_UNUSED(req);
 		return true;
 	}
 

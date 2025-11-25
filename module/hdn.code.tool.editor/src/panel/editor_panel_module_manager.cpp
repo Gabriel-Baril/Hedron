@@ -133,7 +133,7 @@ namespace hdn
 
 	void ModuleManagerPanel::parse_test_case_node(const pugi::xml_node& testCase, TestCaseResult& testCaseResult)
 	{
-		HASSERT(str_equals(testCase.name(), TEST_CASE_NODE_NAME), "Invalid Test Case Node");
+		HDN_CORE_ASSERT(str_equals(testCase.name(), TEST_CASE_NODE_NAME), "Invalid Test Case Node");
 
 		for (const auto& attribute : testCase.attributes())
 		{
@@ -180,7 +180,7 @@ namespace hdn
 
 	void ModuleManagerPanel::parse_root_node(const pugi::xml_node& root, TestResult& out)
 	{
-		HASSERT(str_equals(root.name(), ROOT_NODE_NAME), "Invalid Root Node");
+		HDN_CORE_ASSERT(str_equals(root.name(), ROOT_NODE_NAME), "Invalid Root Node");
 
 		out.context.testExecutableName = root.attribute("name").as_string();
 		out.context.rngSeed = root.attribute("rng-seed").as_uint();
@@ -362,7 +362,7 @@ namespace hdn
 			// 1. Run build_test_projects.py
 			if (!m_RunningTests)
 			{
-				HWARN("build_test_projects.py started...");
+				HDN_WARNING_LOG("build_test_projects.py started...");
 
 				// TODO: Refactor, proper multhreading management
 				m_WaitThread = std::thread([this]() {
@@ -386,16 +386,16 @@ namespace hdn
 					int exitStatus = process.get_exit_status();
 					if (exitStatus != 0)
 					{
-						HERR("Process terminated with errors");
+						HDN_ERROR_LOG("Process terminated with errors");
 					}
-					HWARN("----------- Finished Running build_test_projects.py -----------");
+					HDN_WARNING_LOG("----------- Finished Running build_test_projects.py -----------");
 
 					// 3. Run the test project executable with the right arguments (--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml)
 					const string executableListFilePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_TEST, CONFIG_KEY_EXECUTABLE_LIST_PATH, "");
 					std::ifstream inputFile(executableListFilePath);
 					if (!inputFile.is_open())
 					{
-						HERR("Error: Could not open the file '{0}'", executableListFilePath.c_str());
+						HDN_ERROR_LOG("Error: Could not open the file '{0}'", executableListFilePath.c_str());
 					}
 
 					string line;
@@ -405,7 +405,7 @@ namespace hdn
 					{
 						string executableCommand = fmt::format("{0} --success --durations yes --verbosity high --allow-running-no-tests --reporter xml", line);
 						executableCommands.push_back(executableCommand);
-						HINFO("Executable -> '{0}' '{1}'", line.c_str(), executableCommand.c_str());
+						HDN_INFO_LOG("Executable -> '{0}' '{1}'", line.c_str(), executableCommand.c_str());
 					}
 
 					// TODO: Make this concurrent
@@ -413,7 +413,7 @@ namespace hdn
 					testResultsStrs.reserve(10);
 					for (const auto& testCommand : executableCommands)
 					{
-						HINFO("Running -> '{0}'", testCommand);
+						HDN_INFO_LOG("Running -> '{0}'", testCommand);
 						testResultsStrs.emplace_back(string{});
 						string& testResultXML = testResultsStrs.back();
 						TinyProcessLib::Process testExecutableProcess(
@@ -426,18 +426,18 @@ namespace hdn
 							[](const char* error, size_t n) {
 								for (int i = 0; i < n; i++)
 								{
-									HERR("{0}", error[i]);
+									HDN_ERROR_LOG("{0}", error[i]);
 								}
 							}
 						);
 						int status = process.get_exit_status();
 						if (status != 0)
 						{
-							HERR("Process terminated with errors");
+							HDN_ERROR_LOG("Process terminated with errors");
 						}
 					}
 
-					HWARN("Tests Results Finished!");
+					HDN_WARNING_LOG("Tests Results Finished!");
 
 					m_TestResults.clear();
 					for (const auto& testResultsStr : testResultsStrs)
@@ -445,7 +445,7 @@ namespace hdn
 						TestResult result;
 						// 5. Parse the generated test output
 						this->load_test_result_from_memory(testResultsStr, result);
-						HINFO("RESULT: {0}", result.context.testExecutableName.c_str());
+						HDN_INFO_LOG("RESULT: {0}", result.context.testExecutableName.c_str());
 						m_TestResults.emplace_back(result);
 					}
 					this->m_RunningTests = false;
@@ -455,7 +455,7 @@ namespace hdn
 			}
 			else
 			{
-				HWARN("Test already running");
+				HDN_WARNING_LOG("Test already running");
 			}
 		}
 

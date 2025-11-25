@@ -23,7 +23,7 @@ namespace hdn
 		// Notify all the tasks that depend on this one, the let the dependencies enqueue themselve in the orchestrator
 		for (ITask* task : m_OutDep)
 		{
-			HASSERT_TASK(task);
+			HDN_TASK_ASSERT(task);
 			task->DependencyCompletionNotification(this);
 		}
 	}
@@ -35,7 +35,7 @@ namespace hdn
 
 	void ITask::Enqueue()
 	{
-		// HASSERT(!IsEnqueued(), "Cannot enqueue the same task two times!");
+		// HDN_CORE_ASSERT(!IsEnqueued(), "Cannot enqueue the same task two times!");
 		if (IsEnqueued())
 		{
 			return;
@@ -75,7 +75,7 @@ namespace hdn
 	{
 		for (ITask* task : m_InDep)
 		{
-			HASSERT_TASK(task);
+			HDN_TASK_ASSERT(task);
 			if (!task->Completed())
 			{
 				return false;
@@ -88,7 +88,7 @@ namespace hdn
 	{
 		for (ITask* task : m_InternalDep)
 		{
-			HASSERT_TASK(task);
+			HDN_TASK_ASSERT(task);
 			if (!task->Completed())
 			{
 				return false;

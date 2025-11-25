@@ -55,21 +55,21 @@ namespace hdn
 	}
 	ObjectMetricEntry& ObjectMetricTracker::get_latest_metric()
 	{
-		HASSERT(!m_MetricStack.empty(), "Empty stack!");
+		HDN_CORE_ASSERT(!m_MetricStack.empty(), "Empty stack!");
 		u64 completedMetricIndex = m_MetricStack.top();
 		return m_StoredMetrics.at(completedMetricIndex);
 	}
 
 	void ObjectMetricTracker::print_stats()
 	{
-		HINFO("Metric Entry Count: {0}", m_StoredMetrics.size());
+		HDN_INFO_LOG("Metric Entry Count: {0}", m_StoredMetrics.size());
 		for (int i = 0; i < m_StoredMetrics.size(); i++)
 		{
 			const auto& current = m_StoredMetrics[i];
 
 			float timeMS = (current.transactionTimeNano / 1000.0f) / 1000.0f;
 
-			HINFO("Operation({0}), ObjectID({1}), Time({2}ms)", object_operation_type_to_string(current.opType), current.objectID, timeMS);
+			HDN_INFO_LOG("Operation({0}), ObjectID({1}), Time({2}ms)", object_operation_type_to_string(current.opType), current.objectID, timeMS);
 		}
 	}
 }

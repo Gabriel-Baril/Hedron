@@ -120,7 +120,7 @@ namespace hdn
 		std::ifstream file(filepath, std::ios::ate | std::ios::binary); // std::ios::ate -> When the file open we seek to the end immediately
 		if (!file.is_open())
 		{
-			HTHROW_FMT(std::runtime_error, "Failed to open file: {0}", filepath);
+			HDN_CORE_THROW_FMT(std::runtime_error, "Failed to open file: {0}", filepath);
 		}
 		size_t fileSize = static_cast<size_t>(file.tellg());
 		vector<char> buffer(fileSize);
@@ -191,7 +191,7 @@ namespace hdn
 
 		if (vkCreateGraphicsPipelines(m_Device->get_device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline) != VK_SUCCESS)
 		{
-			HTHROW(std::runtime_error, "Failed to create graphics pipeline");
+			HDN_CORE_THROW(std::runtime_error, "Failed to create graphics pipeline");
 		}
 	}
 
@@ -203,7 +203,7 @@ namespace hdn
 		createInfo.pCode = reinterpret_cast<const u32*>(code.data()); // Since vector take into account the worst case alignment scenario, thisd reinterpret_cast is valid. It wouldn't be true for a c-style array
 		if (vkCreateShaderModule(m_Device->get_device(), &createInfo, nullptr, module) != VK_SUCCESS)
 		{
-			HTHROW(std::runtime_error, "Failed to create shader module");
+			HDN_CORE_THROW(std::runtime_error, "Failed to create shader module");
 		}
 	}
 }

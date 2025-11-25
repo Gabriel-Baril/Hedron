@@ -6,7 +6,7 @@ namespace hdn
 {
 	void PhysicsWorldSystem::init()
 	{
-		HINFO("physicsWorld->init");
+		HDN_INFO_LOG("physicsWorld->init");
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_AllocatorCallback, m_ErrorCallback);
 		m_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale{}, true);
 		m_Dispatcher = PxDefaultCpuDispatcherCreate(2);

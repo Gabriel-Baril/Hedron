@@ -9,7 +9,7 @@ namespace hdn
 		std::ofstream outFile(savePath, std::ios::binary);
 		if (!outFile)
 		{
-			HERR("Could not open file '{0}' for writing", savePath);
+			HDN_ERROR_LOG("Could not open file '{0}' for writing", savePath);
 			return false;
 		}
 
@@ -17,7 +17,7 @@ namespace hdn
 		outFile.close();
 		if (outFile.fail())
 		{
-			HERR("Failed to write to file '{0}'", savePath);
+			HDN_ERROR_LOG("Failed to write to file '{0}'", savePath);
 			return false;
 		}
 		return true;

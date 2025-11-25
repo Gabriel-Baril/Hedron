@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 
-#if USING(PIPELINE_MODULE)
+#if USING(HDN_PIPELINE_MODULE)
 #include "core/core_filesystem.h"
 
 // A module refer to a folder in \module containing a .module file. This file offer reflection mechanisms on modules.

@@ -1,6 +1,6 @@
 #include "core/core_log.h"
 
-#if USING(LOG_ENABLE)
+#if USING(HDN_LOG_ENABLE)
 #include "core/core_macro.h"
 #include "core/stl/vector.h"
 
@@ -17,13 +17,13 @@
 
 namespace hdn
 {
-#if USING(LOG_ENABLE)
+#if USING(HDN_LOG_ENABLE)
 	static Ref<spdlog::logger> s_CoreLogger;
 
 	class CustomLevelFormatter : public spdlog::custom_flag_formatter {
 	public:
 		void format(const spdlog::details::log_msg& msg, const std::tm& tm_time, spdlog::memory_buf_t& dest) override {
-			MAYBE_UNUSED(tm_time);
+			HDN_MAYBE_UNUSED(tm_time);
 			const char* level_map[] = { "TRACE", "DEBUG", "INFO ", "WARN ", "ERR  ", "CRIT ", "OFF  " }; // Make sure each level have 5 characters to make the messages aligned in the console
 			auto level = static_cast<size_t>(msg.level);
 			if (level < sizeof(level_map) / sizeof(level_map[0])) {
@@ -37,7 +37,7 @@ namespace hdn
 	};
 
 	void signal_handler_callback(int signal) {
-		HWARN("Received signal: {}", signal);
+		HDN_WARNING_LOG("Received signal: {}", signal);
 		spdlog::shutdown();  // Flush and clean up
 		std::exit(signal);   // Exit gracefully
 	}
@@ -45,7 +45,7 @@ namespace hdn
 #if USING(HDN_PLATFORM_WINDOWS)
 	BOOL WINAPI console_handler_callback(DWORD signal) {
 		if (signal == CTRL_CLOSE_EVENT || signal == CTRL_C_EVENT) {
-			HWARN("Console is closing or interrupted!");
+			HDN_WARNING_LOG("Console is closing or interrupted!");
 			spdlog::shutdown();  // Flush logs before termination
 		}
 		return TRUE;  // Indicate signal was handled
@@ -61,7 +61,7 @@ namespace hdn
 
 	void log_init()
 	{
-#if USING(LOG_ENABLE)
+#if USING(HDN_LOG_ENABLE)
 		try
 		{
 			std::signal(SIGINT, signal_handler_callback);
@@ -73,7 +73,7 @@ namespace hdn
 
 			vector<spdlog::sink_ptr> sinks;
 
-#if USING(LOG_CONSOLE_ENABLE)
+#if USING(HDN_LOG_CONSOLE_ENABLE)
 			auto consoleSink = make_ref<spdlog::sinks::stdout_color_sink_mt>();
 			consoleSink->set_level(spdlog::level::trace);
 			auto formatter = std::make_unique<spdlog::pattern_formatter>();
@@ -83,7 +83,7 @@ namespace hdn
 			sinks.push_back(consoleSink);
 #endif
 
-#if USING(LOG_FILE_ENABLE)
+#if USING(HDN_LOG_FILE_ENABLE)
 
 			auto fileSink = make_ref<spdlog::sinks::basic_file_sink_mt>("console.log", true); // The true make sure we append to the file instead of overwriting it
 			fileSink->set_level(spdlog::level::trace);
@@ -99,7 +99,7 @@ namespace hdn
 
 			spdlog::set_default_logger(s_CoreLogger);
 			spdlog::set_level(spdlog::level::trace);
-#if USING(LOG_ALWAYS_FLUSH)
+#if USING(HDN_LOG_ALWAYS_FLUSH)
 			spdlog::flush_on(spdlog::level::trace);
 #endif
 		}

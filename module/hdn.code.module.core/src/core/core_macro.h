@@ -7,8 +7,8 @@ namespace hdn
 {
 #define HDN_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
-	// Macro to enable bitwise operations for an enum class
-#define ENABLE_ENUM_CLASS_BITWISE_OPERATIONS(EnumType)                                      \
+// Macro to enable bitwise operations for an enum class
+#define HDN_DEFINE_ENUM_CLASS_BITWISE_OPERATIONS(EnumType)                                      \
 	inline EnumType operator|(EnumType lhs, EnumType rhs) {                                 \
 		return static_cast<EnumType>(                                                       \
 			static_cast<std::underlying_type_t<EnumType>>(lhs) |                            \

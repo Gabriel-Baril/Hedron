@@ -8,7 +8,7 @@ namespace hdn
 	{
 		fspath name = filesystem_filename(path);
 		ESymbolType type = symdb_str_to_sym(filesystem_extension(path).string().c_str() + 1);
-		HINFO("nxsymbol ({0}) '{1}' ({2}) registered", symdb_sym_to_str(type), name.string().c_str(),
+		HDN_INFO_LOG("nxsymbol ({0}) '{1}' ({2}) registered", symdb_sym_to_str(type), name.string().c_str(),
 			get_symbol_from_name(name.string().c_str()));
 		return true;
 	}

@@ -45,7 +45,7 @@ namespace hdn
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // A way to push a very small amount of data to our shader
 		if (vkCreatePipelineLayout(m_Device->get_device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
 		{
-			HTHROW(std::runtime_error, "Failed to create pipeline layout");
+			HDN_CORE_THROW(std::runtime_error, "Failed to create pipeline layout");
 		}
 	}
 

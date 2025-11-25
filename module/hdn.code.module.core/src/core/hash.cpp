@@ -28,7 +28,7 @@ namespace hdn
 
 	h64 hash_generate(const void* buffer, u64 length, u64 seed)
 	{
-		HASSERT(buffer != nullptr && length != 0, "Invalid inputs provided to GenerateHash");
+		HDN_CORE_ASSERT(buffer != nullptr && length != 0, "Invalid inputs provided to GenerateHash");
 		if (!buffer || !length)
 		{
 			return 0;

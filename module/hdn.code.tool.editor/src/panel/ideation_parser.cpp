@@ -39,16 +39,16 @@ namespace hdn
 					string author = metadata.value("Author", "Unknown");
 					int createdDate = metadata.value("CreatedDate", 0);
 					bool inlineFlag = metadata.value("Inline", false);
-					MAYBE_UNUSED(author);
-					MAYBE_UNUSED(createdDate);
-					MAYBE_UNUSED(inlineFlag);
+					HDN_MAYBE_UNUSED(author);
+					HDN_MAYBE_UNUSED(createdDate);
+					HDN_MAYBE_UNUSED(inlineFlag);
 
 					// Handle dependencies
 					if (metadata.contains("Dependencies")) {
 						const auto& dependencies = metadata["Dependencies"];
 						for (const auto& dependency : dependencies)
 						{
-							MAYBE_UNUSED(dependency);
+							HDN_MAYBE_UNUSED(dependency);
 						}
 					}
 				}

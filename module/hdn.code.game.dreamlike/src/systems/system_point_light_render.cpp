@@ -44,13 +44,13 @@ namespace hdn
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // A way to push a very small amount of data to our shader
 		if (vkCreatePipelineLayout(s_PointLightGlob.device->get_device(), &pipelineLayoutInfo, nullptr, &s_PointLightGlob.layout) != VK_SUCCESS)
 		{
-			HTHROW(std::runtime_error, "Failed to create pipeline layout");
+			HDN_CORE_THROW(std::runtime_error, "Failed to create pipeline layout");
 		}
 	}
 
 	static void create_pipeline(VkRenderPass renderPass)
 	{
-		HASSERT(s_PointLightGlob.layout, "");
+		HDN_CORE_ASSERT(s_PointLightGlob.layout, "");
 
 		PipelineConfigInfo pipelineConfig{};
 		VulkanPipeline::default_pipeline_config_info(pipelineConfig);

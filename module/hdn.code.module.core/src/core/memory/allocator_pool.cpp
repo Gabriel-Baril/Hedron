@@ -4,7 +4,7 @@ namespace hdn
 {
 	void pool_allocator_init(PoolAllocator& allocator, u64 blockSize, u64 blockCount, void* memory)
 	{
-		HASSERT(memory, "The memory pool start needs cannot be nullptr!");
+		HDN_CORE_ASSERT(memory, "The memory pool start needs cannot be nullptr!");
 
 		allocator.blockSize = blockSize;
 		allocator.blockCount = blockCount;
@@ -28,7 +28,7 @@ namespace hdn
 	{
 		if (!allocator.freeList)
 		{
-			HWARN("No more space available in the memory pool");
+			HDN_WARNING_LOG("No more space available in the memory pool");
 		}
 		void* allocatedBlock = allocator.freeList;
 		allocator.freeList = *reinterpret_cast<void**>(allocator.freeList);
@@ -37,7 +37,7 @@ namespace hdn
 
 	void pool_allocator_deallocate(PoolAllocator& allocator, void* block)
 	{
-		HASSERT(block != nullptr, "Cannot deallocate nullptr");
+		HDN_CORE_ASSERT(block != nullptr, "Cannot deallocate nullptr");
 		*reinterpret_cast<void**>(block) = allocator.freeList;
 		allocator.freeList = block;
 	}

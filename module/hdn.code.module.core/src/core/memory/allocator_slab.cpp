@@ -24,7 +24,7 @@ namespace hdn
 
 	void slab_allocator_shutdown(SlabAllocator& allocator)
 	{
-		MAYBE_UNUSED(allocator);
+		HDN_MAYBE_UNUSED(allocator);
 	}
 
 	void* slab_allocator_allocate(SlabAllocator& allocator)
@@ -40,7 +40,7 @@ namespace hdn
 
 	void slab_allocator_deallocate(SlabAllocator& allocator, void* block)
 	{
-		HASSERT(block != nullptr, "No allocation to deallocate");
+		HDN_CORE_ASSERT(block != nullptr, "No allocation to deallocate");
 		*reinterpret_cast<void**>(block) = allocator.freeList;
 		allocator.freeList = block;
 	}

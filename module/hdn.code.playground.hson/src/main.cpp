@@ -64,7 +64,7 @@ int main()
 
 	HHson* hson = registry.get<HHson>("player_profile");
 	Hson& h = hson->get_hson();
-	HINFO("Name: {0}", h["name"].as<char>());
+	HDN_INFO_LOG("Name: {0}", h["name"].as<char>());
 
 	registry.stats();
 

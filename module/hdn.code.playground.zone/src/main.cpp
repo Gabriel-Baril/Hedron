@@ -60,7 +60,7 @@ namespace hdn
 	{
 		const u64 memSize = sizeof(T) * count;
 		void* mem = linear_allocator_allocate(s_dbGlob.dbStreamAllocator, memSize, alignof(T));
-		HASSERT(!s_dbGlob.entries.contains(mem), "Trying to add a pointer already there in the db stream");
+		HDN_CORE_ASSERT(!s_dbGlob.entries.contains(mem), "Trying to add a pointer already there in the db stream");
 		auto& allocEntry = s_dbGlob.entries[mem];
 		allocEntry.ptr = mem;
 		allocEntry.size = memSize;

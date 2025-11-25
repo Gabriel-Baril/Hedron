@@ -178,7 +178,7 @@ namespace hdn
 		string warns, errors;
 		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warns, &errors, filepath.c_str()))
 		{
-			HTHROW(std::runtime_error, warns + errors);
+			HDN_CORE_THROW(std::runtime_error, warns + errors);
 		}
 
 		vertices.clear();
@@ -239,7 +239,7 @@ namespace hdn
 		std::ifstream file(filepath.c_str(), std::ios::binary | std::ios::ate);
 		if (!file)
 		{
-			HTHROW_FMT(std::runtime_error, "Failed to open file '{0}'", filepath.c_str());
+			HDN_CORE_THROW_FMT(std::runtime_error, "Failed to open file '{0}'", filepath.c_str());
 		}
 
 		size_t fileSize = file.tellg();
@@ -247,7 +247,7 @@ namespace hdn
 		vector<u8> buffer(fileSize);
 		if (!file.read(reinterpret_cast<char*>(buffer.data()), fileSize))
 		{
-			HTHROW_FMT(std::runtime_error, "Failed to read file '{0}'", filepath.c_str());
+			HDN_CORE_THROW_FMT(std::runtime_error, "Failed to read file '{0}'", filepath.c_str());
 		}
 
 		vertices.clear();

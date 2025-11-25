@@ -6,11 +6,11 @@ namespace hdn
 	{
 		if (field.keyKind == HsonFieldDefinition::KeyKind::STRING)
 		{
-			HINFO(field.key.name);
+			HDN_INFO_LOG(field.key.name);
 		}
 		else if (field.keyKind == HsonFieldDefinition::KeyKind::INTEGER)
 		{
-			HINFO(field.key.index);
+			HDN_INFO_LOG(field.key.index);
 		}
 	}
 
@@ -52,7 +52,7 @@ namespace hdn
 	static void build_field_hierarchy(HsonFieldDefinition& field, const vector<const HsonFieldDefinition*>& hsonFields, hostream& hierarchyStream)
 	{
 		const i64 fieldIndex = get_field_index_from_hash(field.hash, hsonFields);
-		HASSERT(fieldIndex >= 0, "The field was not found");
+		HDN_CORE_ASSERT(fieldIndex >= 0, "The field was not found");
 
 		FieldHierarchyEntry entry;
 		entry.fieldChildCount = static_cast<u32>(field.fields.size());

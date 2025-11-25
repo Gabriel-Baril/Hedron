@@ -14,7 +14,7 @@ namespace hdn
 	WorkerSystem::WorkerSystem(u64 numWorkers)
 		: m_StopFlag{ false }
 	{
-		HINFO("Worker Count: {0}", numWorkers);
+		HDN_INFO_LOG("Worker Count: {0}", numWorkers);
 
 		for (size_t i = 0; i < numWorkers; ++i)
 		{
@@ -32,7 +32,7 @@ namespace hdn
 		{
 			std::lock_guard<std::mutex> lock(m_QueueMutex);
 			InsertTaskSorted(task);
-			HDEBUG("Task Enqueued: {0}", task->GetName());
+			HDN_DEBUG_LOG("Task Enqueued: {0}", task->GetName());
 		}
 		m_Condition.notify_one();
 	}

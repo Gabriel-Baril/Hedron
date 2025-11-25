@@ -4,7 +4,7 @@ namespace hdn
 {
 	void double_stack_allocator_init(DoubleStackAllocator& allocator, void* memory, u64 size)
 	{
-		HASSERT(memory && size > 0, "Memory cannot be nullptr");
+		HDN_CORE_ASSERT(memory && size > 0, "Memory cannot be nullptr");
 		allocator.memory = memory;
 		allocator.top = size;
 		allocator.bottom = 0;
@@ -17,19 +17,19 @@ namespace hdn
 
 	void* double_stack_allocator_allocate_top(DoubleStackAllocator& allocator, u64 size, u64 alignment)
 	{
-		HASSERT(size > 0, "Size needs to be greater than 0");
+		HDN_CORE_ASSERT(size > 0, "Size needs to be greater than 0");
 		const u64 newStart = core_memalign(allocator.top - size, alignment);
-		HASSERT(newStart < allocator.bottom, "Overflow Crossing!");
+		HDN_CORE_ASSERT(newStart < allocator.bottom, "Overflow Crossing!");
 		allocator.top = newStart;
 		return (u8*)allocator.memory + newStart;
 	}
 
 	void* double_stack_allocator_allocate_bottom(DoubleStackAllocator& allocator, u64 size, u64 alignment)
 	{
-		HASSERT(size > 0, "Size needs to be greater than 0");
+		HDN_CORE_ASSERT(size > 0, "Size needs to be greater than 0");
 		const u64 newStart = core_memalign(allocator.bottom - size, alignment);
 		const u64 newAllocatedSize = newStart + size;
-		HASSERT(newAllocatedSize < allocator.top, "Overflow Crossing!");
+		HDN_CORE_ASSERT(newAllocatedSize < allocator.top, "Overflow Crossing!");
 		allocator.bottom = newAllocatedSize;
 		return (u8*)allocator.memory + newStart;
 	}

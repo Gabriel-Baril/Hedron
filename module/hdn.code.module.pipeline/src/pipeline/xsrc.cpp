@@ -29,7 +29,7 @@ namespace hdn
 		{
 			return callback(symbolNode, ctx);
 		}
-		HWARN("Callback not found for type '{0}'", symdb_sym_to_str(type));
+		HDN_WARNING_LOG("Callback not found for type '{0}'", symdb_sym_to_str(type));
 		return false;
 	}
 
@@ -43,7 +43,7 @@ namespace hdn
 		}
 
 		pugi::xml_node symbolsNode = doc.child("Symbols");
-		HASSERT(symbolsNode, "Symbols node does not exists in {0}, every xsymbol requires a <Symbols> root", path.string().c_str());
+		HDN_CORE_ASSERT(symbolsNode, "Symbols node does not exists in {0}, every xsymbol requires a <Symbols> root", path.string().c_str());
 
 		for (const pugi::xml_node& symbolNode : symbolsNode.children())
 		{
@@ -61,16 +61,16 @@ namespace hdn
 				if (ok)
 				{
 					symdb_register(symbol, symbolName, type, ctx.path);
-					HINFO("xsymbol ({0}) '{1}' ({2}) registered", symdb_sym_to_str(type), symbolName, symbol);
+					HDN_INFO_LOG("xsymbol ({0}) '{1}' ({2}) registered", symdb_sym_to_str(type), symbolName, symbol);
 				}
 			}
 			else if (type != ESymbolType::unknown)
 			{
-				HWARN("Symbols of type '{0}' detected in xsymbol, only xsymbol types can be declared within an xsymbol", symdb_sym_to_str(type));
+				HDN_WARNING_LOG("Symbols of type '{0}' detected in xsymbol, only xsymbol types can be declared within an xsymbol", symdb_sym_to_str(type));
 			}
 			else
 			{
-				HWARN("Unknown symbol of type '{0}'. Did you forget to register your new symbol type?", symbolType);
+				HDN_WARNING_LOG("Unknown symbol of type '{0}'. Did you forget to register your new symbol type?", symbolType);
 			}
 		}
 	}

@@ -23,19 +23,19 @@ namespace hdn
 
 	static bool is_ptr_aligned(void* address, u64 alignment)
 	{
-		HASSERT(is_power_2(alignment), "Alignment is not a power of 2");
+		HDN_CORE_ASSERT(is_power_2(alignment), "Alignment is not a power of 2");
 		return (reinterpret_cast<uintptr_t>(address) & (alignment - 1)) == 0;
 	}
 
 	bool is_size_aligned(u64 size, u64 alignment)
 	{
-		HASSERT(is_power_2(alignment), "Alignment is not a power of 2");
+		HDN_CORE_ASSERT(is_power_2(alignment), "Alignment is not a power of 2");
 		return (size & (alignment - 1)) == 0;
 	}
 
 	static void* get_page_address(void* addr, u64 pageSize)
 	{
-		HASSERT(is_power_2(pageSize), "pageSize is not a power of 2");
+		HDN_CORE_ASSERT(is_power_2(pageSize), "pageSize is not a power of 2");
 		return reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & ~(pageSize - 1));
 	}
 
@@ -46,8 +46,8 @@ namespace hdn
 		GetSystemInfo(&si);
 		s_MemVirtualGlob.osPageMemorySizeByte = si.dwPageSize;
 		s_MemVirtualGlob.osAllocationGranularity = si.dwAllocationGranularity;
-		HASSERT(is_power_2(s_MemVirtualGlob.osPageMemorySizeByte), "os page size is not a power of 2");
-		HASSERT(is_power_2(s_MemVirtualGlob.osAllocationGranularity), "os allocation granularity is not a power of 2");
+		HDN_CORE_ASSERT(is_power_2(s_MemVirtualGlob.osPageMemorySizeByte), "os page size is not a power of 2");
+		HDN_CORE_ASSERT(is_power_2(s_MemVirtualGlob.osAllocationGranularity), "os allocation granularity is not a power of 2");
 #else
 #error "No implementation for zone_init_os_page_size for the currently selected platform!"
 #endif
@@ -71,12 +71,12 @@ namespace hdn
 	void* mem_virtual_reserve(u64 reservationSizeByte)
 	{
 		const SIZE_T bytesToReserve = reservationSizeByte;
-		HASSERT(is_size_aligned(bytesToReserve, s_MemVirtualGlob.osPageMemorySizeByte), "Alignment error");
+		HDN_CORE_ASSERT(is_size_aligned(bytesToReserve, s_MemVirtualGlob.osPageMemorySizeByte), "Alignment error");
 		
 #if USING(HDN_PLATFORM_WINDOWS)
 		LPVOID reservedMemory = VirtualAlloc(NULL, bytesToReserve, MEM_RESERVE, PAGE_NOACCESS);
-		HASSERT(reservedMemory, "Failed to allocate virtual memory");
-		HASSERT(is_ptr_aligned(reservedMemory, s_MemVirtualGlob.osAllocationGranularity), "Base reserve address is not a multiple of os allocation granularity");
+		HDN_CORE_ASSERT(reservedMemory, "Failed to allocate virtual memory");
+		HDN_CORE_ASSERT(is_ptr_aligned(reservedMemory, s_MemVirtualGlob.osAllocationGranularity), "Base reserve address is not a multiple of os allocation granularity");
 		return reservedMemory;
 #else
 #error "No implementation for mem_virtual_reserve for the currently selected platform!"
@@ -86,8 +86,8 @@ namespace hdn
 
 	void* mem_virtual_commit(void* pageAddress, u64 commitSize)
 	{
-		HASSERT(is_ptr_aligned(pageAddress, s_MemVirtualGlob.osPageMemorySizeByte), "Alignment error");
-		HASSERT(is_size_aligned(commitSize, s_MemVirtualGlob.osPageMemorySizeByte), "Alignment error");
+		HDN_CORE_ASSERT(is_ptr_aligned(pageAddress, s_MemVirtualGlob.osPageMemorySizeByte), "Alignment error");
+		HDN_CORE_ASSERT(is_size_aligned(commitSize, s_MemVirtualGlob.osPageMemorySizeByte), "Alignment error");
 		LPVOID commitedMemory = VirtualAlloc(pageAddress, commitSize, MEM_COMMIT, PAGE_READWRITE);
 		return commitedMemory;
 	}

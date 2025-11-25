@@ -17,7 +17,7 @@ namespace hdn
 		{
 			return;
 		}
-		HASSERT(mem_virtual_initialized(), "Trying to use zone before mem_virtual initialization");
+		HDN_CORE_ASSERT(mem_virtual_initialized(), "Trying to use zone before mem_virtual initialization");
 
 		s_ZoneGlob.initialized = true;
 	}
@@ -29,8 +29,8 @@ namespace hdn
 
 	void zone_reserve_virtual_range(u64 totalZoneMemory)
 	{
-		HASSERT(zone_initialized(), "Trying to use zone system before initialization");
-		HASSERT(is_size_aligned(totalZoneMemory, ZONE_BLOCK_SIZE), "totalZoneMemory should be a multiple of ZONE_BLOCK_SIZE");
+		HDN_CORE_ASSERT(zone_initialized(), "Trying to use zone system before initialization");
+		HDN_CORE_ASSERT(is_size_aligned(totalZoneMemory, ZONE_BLOCK_SIZE), "totalZoneMemory should be a multiple of ZONE_BLOCK_SIZE");
 		s_ZoneGlob.zoneVirtualMemoryBase = mem_virtual_reserve(totalZoneMemory);
 	}
 
