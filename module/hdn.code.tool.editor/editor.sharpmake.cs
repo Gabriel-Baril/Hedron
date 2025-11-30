@@ -6,7 +6,7 @@ public class HdnCodeToolEditorProject : BaseCppProject
 {
     public HdnCodeToolEditorProject()
     {
-        Name = "hdn.code.tool.editor";
+        Name = "dm.code.tool.editor";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -21,7 +21,7 @@ public class HdnCodeToolEditorProject : BaseCppProject
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
-        
+
         string physxSDK = System.Environment.GetEnvironmentVariable(Constants.PHYSX_SDK_ENV);
         if (string.IsNullOrEmpty(physxSDK))
         {

@@ -6,7 +6,7 @@ public class HdnCodeModuleGfxProject : BaseCppProject
 {
     public HdnCodeModuleGfxProject()
     {
-        Name = "hdn.code.module.gfx";
+        Name = "dm.code.module.gfx";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

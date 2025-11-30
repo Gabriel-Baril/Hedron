@@ -1,78 +1,78 @@
-[submodule "module/hdn.code.external.imgui"]
-	path = module/hdn.code.external.imgui
+[submodule "module/dm.code.external.imgui"]
+	path = module/dm.code.external.imgui
 	url = https://github.com/Gabriel-Baril/imgui/
-[submodule "module/hdn.code.external.glm"]
-	path = module/hdn.code.external.glm
+[submodule "module/dm.code.external.glm"]
+	path = module/dm.code.external.glm
 	url = https://github.com/Gabriel-Baril/glm/
-[submodule "module/hdn.code.external.spdlog"]
-	path = module/hdn.code.external.spdlog
+[submodule "module/dm.code.external.spdlog"]
+	path = module/dm.code.external.spdlog
 	url = https://github.com/Gabriel-Baril/spdlog/
-[submodule "module/hdn.code.external.octree-cpp"]
-	path = module/hdn.code.external.octree-cpp
+[submodule "module/dm.code.external.octree-cpp"]
+	path = module/dm.code.external.octree-cpp
 	url = https://github.com/Gabriel-Baril/octree-cpp/
-[submodule "module/hdn.code.external.glfw"]
-	path = module/hdn.code.external.glfw
+[submodule "module/dm.code.external.glfw"]
+	path = module/dm.code.external.glfw
 	url = https://github.com/Gabriel-Baril/glfw/
-[submodule "module/hdn.code.external.tinyobjloader"]
-	path = module/hdn.code.external.tinyobjloader
+[submodule "module/dm.code.external.tinyobjloader"]
+	path = module/dm.code.external.tinyobjloader
 	url = https://github.com/Gabriel-Baril/tinyobjloader/
-[submodule "module/hdn.code.external.sheredom-json"]
-	path = module/hdn.code.external.sheredom-json
+[submodule "module/dm.code.external.sheredom-json"]
+	path = module/dm.code.external.sheredom-json
 	url = https://github.com/Gabriel-Baril/sheredom-json/
-[submodule "module/hdn.code.external.catch2"]
-	path = module/hdn.code.external.catch2
+[submodule "module/dm.code.external.catch2"]
+	path = module/dm.code.external.catch2
 	url = https://github.com/Gabriel-Baril/catch2
-[submodule "module/hdn.code.external.pugixml"]
-	path = module/hdn.code.external.pugixml
+[submodule "module/dm.code.external.pugixml"]
+	path = module/dm.code.external.pugixml
 	url = https://github.com/Gabriel-Baril/pugixml.git
-[submodule "module/hdn.code.external.tiny-process-library"]
-	path = module/hdn.code.external.tiny-process-library
+[submodule "module/dm.code.external.tiny-process-library"]
+	path = module/dm.code.external.tiny-process-library
 	url = https://gitlab.com/Gabriel-Baril/tiny-process-library
-[submodule "module/hdn.code.external.inih"]
-	path = module/hdn.code.external.inih
+[submodule "module/dm.code.external.inih"]
+	path = module/dm.code.external.inih
 	url = https://github.com/Gabriel-Baril/inih.git
-[submodule "module/hdn.code.external.cli11"]
-	path = module/hdn.code.external.cli11
+[submodule "module/dm.code.external.cli11"]
+	path = module/dm.code.external.cli11
 	url = https://github.com/Gabriel-Baril/CLI11.git
-[submodule "module/hdn.code.external.fmt"]
-	path = module/hdn.code.external.fmt
+[submodule "module/dm.code.external.fmt"]
+	path = module/dm.code.external.fmt
 	url = https://github.com/Gabriel-Baril/fmt.git
-[submodule "module/hdn.code.external.stb"]
-	path = module/hdn.code.external.stb
+[submodule "module/dm.code.external.stb"]
+	path = module/dm.code.external.stb
 	url = https://github.com/Gabriel-Baril/stb.git
-[submodule "module/hdn.code.external.xxhash"]
-	path = module/hdn.code.external.xxhash
+[submodule "module/dm.code.external.xxhash"]
+	path = module/dm.code.external.xxhash
 	url = https://github.com/Gabriel-Baril/xxHash.git
-[submodule "module/hdn.code.external.flatbuffers"]
-	path = module/hdn.code.external.flatbuffers
+[submodule "module/dm.code.external.flatbuffers"]
+	path = module/dm.code.external.flatbuffers
 	url = https://github.com/Gabriel-Baril/flatbuffers.git
-[submodule "module/hdn.code.external.nlohmann-json"]
-	path = module/hdn.code.external.nlohmann-json
+[submodule "module/dm.code.external.nlohmann-json"]
+	path = module/dm.code.external.nlohmann-json
 	url = https://github.com/Gabriel-Baril/nlohmann-json.git
-[submodule "module/hdn.code.external.openfbx"]
-	path = module/hdn.code.external.openfbx
+[submodule "module/dm.code.external.openfbx"]
+	path = module/dm.code.external.openfbx
 	url = https://github.com/Gabriel-Baril/OpenFBX.git
-[submodule "module/hdn.code.external.eastl"]
-	path = module/hdn.code.external.eastl
+[submodule "module/dm.code.external.eastl"]
+	path = module/dm.code.external.eastl
 	url = https://github.com/Gabriel-Baril/EASTL.git
-[submodule "module/hdn.code.external.eabase"]
-	path = module/hdn.code.external.eabase
+[submodule "module/dm.code.external.eabase"]
+	path = module/dm.code.external.eabase
 	url = https://github.com/Gabriel-Baril/EABase.git
-[submodule "module/hdn.code.external.tree-sitter"]
-	path = module/hdn.code.external.tree-sitter
+[submodule "module/dm.code.external.tree-sitter"]
+	path = module/dm.code.external.tree-sitter
 	url = https://github.com/Gabriel-Baril/tree-sitter
-[submodule "module/hdn.code.external.tree-sitter-cpp"]
-	path = module/hdn.code.external.tree-sitter-cpp
+[submodule "module/dm.code.external.tree-sitter-cpp"]
+	path = module/dm.code.external.tree-sitter-cpp
 	url = https://github.com/Gabriel-Baril/tree-sitter-cpp
-[submodule "module/hdn.code.external.flecs"]
-	path = module/hdn.code.external.flecs
+[submodule "module/dm.code.external.flecs"]
+	path = module/dm.code.external.flecs
 	url = https://github.com/Gabriel-Baril/flecs
-[submodule "module/hdn.code.external.google-benchmark"]
-	path = module/hdn.code.external.google-benchmark
+[submodule "module/dm.code.external.google-benchmark"]
+	path = module/dm.code.external.google-benchmark
 	url = https://github.com/Gabriel-Baril/google-benchmark.git
-[submodule "module/hdn.code.external.tlsf"]
-	path = module/hdn.code.external.tlsf
+[submodule "module/dm.code.external.tlsf"]
+	path = module/dm.code.external.tlsf
 	url = https://github.com/Gabriel-Baril/tlsf
-[submodule "module/hdn.code.external.tracy"]
-	path = module/hdn.code.external.tracy
+[submodule "module/dm.code.external.tracy"]
+	path = module/dm.code.external.tracy
 	url = https://github.com/Gabriel-Baril/tracy

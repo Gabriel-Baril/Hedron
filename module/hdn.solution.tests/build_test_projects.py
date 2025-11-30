@@ -9,7 +9,7 @@ def write_project_executable(filepath, project_executable_list):
             file.write(str(project_executable) + '\n')  # Add a newline character after each line
 
 # Specify the solution file and the target folder name
-solution_file = "D:/CLOUD/OneDrive/DEV/module/hdn.solution.tests/tests.sln"
+solution_file = "D:/CLOUD/OneDrive/DEV/module/dm.solution.tests/tests.sln"
 folder_name = "test"
 
 # Regex pattern to match projects in the solution file
@@ -37,14 +37,14 @@ for project in projects_to_build:
 
     print(f"Building project: {project_path} ({project_name})")
     project_folder_path = os.path.dirname(project_path)
-    executable_path = Path(os.path.join("D:/CLOUD/OneDrive/DEV/HEDRON/module/hdn.solution.tests/", f"{project_folder_path}/out/bin/win64-release/{project_name}.exe")).resolve(strict=False)
+    executable_path = Path(os.path.join("D:/CLOUD/OneDrive/DEV/HEDRON/module/dm.solution.tests/", f"{project_folder_path}/out/bin/win64-release/{project_name}.exe")).resolve(strict=False)
 
     try:
         subprocess.run(
             [
-                "msbuild", 
-                project_path, 
-                "/t:Build", 
+                "msbuild",
+                project_path,
+                "/t:Build",
                 "/p:Configuration=Release",
                 "/p:Platform=x64"
             ],
@@ -55,4 +55,4 @@ for project in projects_to_build:
     except subprocess.CalledProcessError as e:
         print(f"Error building project {project_path}: {e}")
 
-write_project_executable("D:/CLOUD/OneDrive/DEV/HEDRON/module/hdn.solution.tests/test_executable_list.txt", project_executable_list)
+write_project_executable("D:/CLOUD/OneDrive/DEV/HEDRON/module/dm.solution.tests/test_executable_list.txt", project_executable_list)

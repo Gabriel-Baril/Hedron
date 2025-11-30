@@ -5,7 +5,7 @@ public class HdnCodePlaygroundZoneProject : BaseCppProject
 {
     public HdnCodePlaygroundZoneProject()
     {
-        Name = "hdn.code.playground.zone";
+        Name = "dm.code.playground.zone";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -16,7 +16,7 @@ public class HdnCodePlaygroundZoneProject : BaseCppProject
         base.ConfigureAll(conf, target);
 
         conf.SolutionFolder = Constants.PLAYGROUND_VS_CATEGORY;
-        
+
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";

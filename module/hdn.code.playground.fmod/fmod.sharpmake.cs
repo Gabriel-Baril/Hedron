@@ -6,7 +6,7 @@ public class HdnCodePlaygroundFmodProject : BaseCppProject
 {
     public HdnCodePlaygroundFmodProject()
     {
-        Name = "hdn.code.playground.fmod";
+        Name = "dm.code.playground.fmod";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -17,7 +17,7 @@ public class HdnCodePlaygroundFmodProject : BaseCppProject
         base.ConfigureAll(conf, target);
 
         conf.SolutionFolder = Constants.PLAYGROUND_VS_CATEGORY;
-        
+
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
@@ -28,7 +28,7 @@ public class HdnCodePlaygroundFmodProject : BaseCppProject
             throw new System.Exception("FMOD SDK not found!");
         }
         conf.IncludePaths.Add(Path.Combine(fmodSDK, "api\\core\\inc"));
-        
+
         if (target.Platform == Platform.win64)
         {
             if (target.Optimization == Optimization.Debug)

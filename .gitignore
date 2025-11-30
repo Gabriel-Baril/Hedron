@@ -416,6 +416,6 @@ FodyWeavers.xsd
 **/*.drawio.bkp
 **/*.drawio.dtmp
 
-module/hdn.cache
+module/dm.cache
 
 console.log

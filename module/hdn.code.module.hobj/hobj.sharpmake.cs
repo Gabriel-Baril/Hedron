@@ -5,7 +5,7 @@ public class HdnCodeModuleHobjProject : BaseCppProject
 {
     public HdnCodeModuleHobjProject()
     {
-        Name = "hdn.code.module.hobj";
+        Name = "dm.code.module.hobj";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

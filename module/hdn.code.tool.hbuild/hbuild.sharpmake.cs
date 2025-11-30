@@ -5,7 +5,7 @@ public class HdnCodeToolHBuildProject : BaseCppProject
 {
     public HdnCodeToolHBuildProject()
     {
-        Name = "hdn.code.tool.hbuild";
+        Name = "dm.code.tool.hbuild";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

@@ -6,7 +6,7 @@ public class HdnCodeModuleCoreProject : BaseCppProject
 {
     public HdnCodeModuleCoreProject()
     {
-        Name = "hdn.code.module.core";
+        Name = "dm.code.module.core";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

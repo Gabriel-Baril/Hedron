@@ -5,7 +5,7 @@ public class HdnTestModuleCore : BaseCppTestProject
 {
     public HdnTestModuleCore()
     {
-        Name = "hdn.test.module.core";
+        Name = "dm.test.module.core";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

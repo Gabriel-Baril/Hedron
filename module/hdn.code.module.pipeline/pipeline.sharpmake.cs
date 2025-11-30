@@ -5,7 +5,7 @@ public class HdnCodeModulePipelineProject : BaseCppProject
 {
     public HdnCodeModulePipelineProject()
     {
-        Name = "hdn.code.module.pipeline";
+        Name = "dm.code.module.pipeline";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

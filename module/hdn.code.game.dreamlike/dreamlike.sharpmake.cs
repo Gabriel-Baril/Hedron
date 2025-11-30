@@ -6,7 +6,7 @@ public class HdnCodeGameDreamlikeProject : BaseCppProject
 {
     public HdnCodeGameDreamlikeProject()
     {
-        Name = "hdn.code.game.dreamlike";
+        Name = "dm.code.game.dreamlike";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -28,7 +28,7 @@ public class HdnCodeGameDreamlikeProject : BaseCppProject
             throw new System.Exception("PHYSX SDK not found!");
         }
         conf.IncludePaths.Add(Path.Combine(physxSDK, "include"));
-        
+
         if (target.Platform == Platform.win32 || target.Platform == Platform.win64)
         {
             if (target.Optimization == Optimization.Debug)
@@ -50,7 +50,7 @@ public class HdnCodeGameDreamlikeProject : BaseCppProject
         }
 
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
-        
+
         conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
         conf.AddPublicDependency<HdnCodeModuleSharedProject>(target);
         conf.AddPublicDependency<HdnCodeExternalImguiProject>(target);

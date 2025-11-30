@@ -5,7 +5,7 @@ public class HdnCodePlaygroundEcsProject : BaseCppProject
 {
     public HdnCodePlaygroundEcsProject()
     {
-        Name = "hdn.code.playground.ecs";
+        Name = "dm.code.playground.ecs";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
@@ -16,7 +16,7 @@ public class HdnCodePlaygroundEcsProject : BaseCppProject
         base.ConfigureAll(conf, target);
 
         conf.SolutionFolder = Constants.PLAYGROUND_VS_CATEGORY;
-        
+
         conf.Output = Project.Configuration.OutputType.Exe;
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";

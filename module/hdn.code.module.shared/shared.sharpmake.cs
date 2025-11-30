@@ -6,7 +6,7 @@ public class HdnCodeModuleSharedProject : BaseCppProject
 {
     public HdnCodeModuleSharedProject()
     {
-        Name = "hdn.code.module.shared";
+        Name = "dm.code.module.shared";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }

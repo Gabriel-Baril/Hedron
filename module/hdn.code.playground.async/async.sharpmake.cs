@@ -5,7 +5,7 @@ public class HdnCodePlaygroundAsyncProject : BaseCppProject
 {
     public HdnCodePlaygroundAsyncProject()
     {
-        Name = "hdn.code.playground.async";
+        Name = "dm.code.playground.async";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
         AddTargets(TargetUtil.DefaultTarget);
     }
