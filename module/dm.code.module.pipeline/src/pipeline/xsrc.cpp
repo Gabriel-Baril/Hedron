@@ -51,7 +51,7 @@ namespace dm
 			if (symdb_is_xsymbol(type))
 			{
 				const pugi::char_t *symbolName = symbolNode.attribute("name").as_string(); // Every xsymbol node has a name
-				sym_t symbol = get_symbol_from_name(symbolName);
+				sym_t symbol = symbolName;
 
 				SourceContext ctx;
 				ctx.path = path;
@@ -60,7 +60,7 @@ namespace dm
 				if (ok)
 				{
 					symdb_register(symbol, symbolName, type, ctx.path);
-					DM_INFO_LOG("xsymbol ({0}) '{1}' ({2}) registered", symdb_sym_to_str(type), symbolName, symbol);
+					DM_INFO_LOG("xsymbol ({0}) '{1}' ({2}) registered", symdb_sym_to_str(type), symbolName, static_cast<u64>(symbol));
 				}
 			}
 			else if (type != ESymbolType::unknown)

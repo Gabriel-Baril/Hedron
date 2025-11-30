@@ -10,23 +10,25 @@
 
 namespace dm
 {
+	enum class BuildStatus
+	{
+		SUCCESS,
+		FAILED
+	};
+
 	struct DreamlikeBuildCreateRequest;
 
 	template <>
 	struct Request<DreamlikeBuildCreateRequest>
 	{
-		Request(const char *name)
-				: sig{make_signature<XBuildConfigAssetObject>(name)}
-		{
-		}
-
-		Signature<XBuildConfigAssetObject> sig;
+		Request(sym_t sym) : builconfigSym{ sym } {}
+		sym_t builconfigSym;
 	};
 
 	template <>
 	struct Response<DreamlikeBuildCreateRequest>
 	{
-		Handle<XBuildConfigAssetObject> data;
+		BuildStatus buildStatus;
 	};
 
 	u64 request_get_id(const Request<DreamlikeBuildCreateRequest> &req);

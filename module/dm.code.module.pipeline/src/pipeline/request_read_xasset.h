@@ -5,6 +5,9 @@
 
 namespace dm
 {
+#define DEFINE_XASSET_READ_CONSTRUCTORS(XAssetObjectType)							\
+	Request(sym_t sym) : sig{ make_signature<XAssetObjectType>(sym) } {}			\
+
 	template <typename T>
 	struct is_signature : std::false_type
 	{

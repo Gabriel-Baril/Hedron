@@ -82,11 +82,6 @@ namespace dm
 		return s_SourceParseCallbacks[underlying(type)];
 	}
 
-	sym_t get_symbol_from_name(const char *symbol)
-	{
-		return hash_generate(symbol);
-	}
-
 	bool symdb_is_xsymbol(ESymbolType type)
 	{
 		return type >= ESymbolType::xsymbol_begin && type <= ESymbolType::xsymbol_end;

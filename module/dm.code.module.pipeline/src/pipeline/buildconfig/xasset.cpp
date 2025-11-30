@@ -11,7 +11,7 @@ namespace dm
 		HashBuilder hb;
 		hb.add_type<XBuildConfigAssetObject>();
 		hb.add(XASSET_CODE_VERSION_BUILDCONFIG);
-		hb.add(sig.symbol);
+		hb.add(static_cast<u64>(sig.symbol));
 		return hb.get();
 	}
 

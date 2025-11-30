@@ -3,13 +3,10 @@
 #include "core/core.h"
 #include "core/core_filesystem.h"
 
+#include "sym.h"
+
 namespace dm
 {
-	using sym_t = u64;
-	constexpr u64 SYMNULL = 0;
-	constexpr u32 SYMBOL_TYPE_MAX_LENGTH = 255;
-	constexpr u32 SYMBOL_ATTRIBUTE_VALUE_MAX_LENGTH = 512;
-
 	// The symbol types supported by the pipeline
 	enum class ESymbolType
 	{
@@ -47,7 +44,6 @@ namespace dm
 
 	SourceParseCallback symdb_get_parse_callback(ESymbolType type);
 
-	sym_t get_symbol_from_name(const char *symbol);
 	bool symdb_is_xsymbol(ESymbolType type);
 	bool symdb_is_nxsymbol(ESymbolType type);
 	ESymbolType symdb_get_source_file_type(const fspath &path);

@@ -7,6 +7,7 @@
 #include "pipeline/generated/buildconfig_generated.h"
 #include "pipeline/buildconfig/xasset.h"
 #include "pipeline/request.h"
+#include "pipeline/request_read_xasset.h"
 
 namespace dm
 {
@@ -15,10 +16,7 @@ namespace dm
 	template <>
 	struct Request<BuildConfigReadRequest>
 	{
-		Request(const char *name)
-				: sig{make_signature<XBuildConfigAssetObject>(name)}
-		{
-		}
+		DEFINE_XASSET_READ_CONSTRUCTORS(XBuildConfigAssetObject);
 
 		Signature<XBuildConfigAssetObject> sig;
 	};

@@ -24,11 +24,6 @@ namespace dm
 		{
 		}
 
-		Signature(const char *name)
-				: symbol{get_symbol_from_name(name)}
-		{
-		}
-
 		sym_t symbol;
 	};
 

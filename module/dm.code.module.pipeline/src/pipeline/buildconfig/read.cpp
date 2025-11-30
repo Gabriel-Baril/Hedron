@@ -2,7 +2,6 @@
 
 #if USING(DM_SYM_BUILDCONFIG)
 #include "pipeline/cache.h"
-#include "pipeline/request_read_xasset.h"
 
 namespace dm
 {

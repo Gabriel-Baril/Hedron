@@ -87,7 +87,7 @@ namespace dm
 			// cache_obj_unload(objectId);
 		}
 
-		obj_t objectId = 0;
+		obj_t objectId = NULL_OBJ;
 	};
 
 	bool request_success(ObjectRequestResult result);

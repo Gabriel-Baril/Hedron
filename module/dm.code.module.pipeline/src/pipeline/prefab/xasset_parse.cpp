@@ -14,7 +14,7 @@ namespace dm
 	{
 		const pugi::char_t *nameStr = node.attribute("name").as_string();
 		DM_CORE_ASSERT(nameStr, "xsymbol require a name");
-		def.name = get_symbol_from_name(nameStr);
+		def.name = nameStr;
 
 		for (pugi::xml_node entityNode : node.children("Entity"))
 		{
