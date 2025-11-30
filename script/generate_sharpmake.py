@@ -107,7 +107,7 @@ def clean_output_files(base_path, allowed_folders):
 def main():
     # Define the base path and Sharpmake executable path
     base_path = os.getcwd()  # Current directory or specify a path
-    parser = argparse.ArgumentParser(description="A script to generate & clean module within /Hedron")
+    parser = argparse.ArgumentParser(description="A script to generate & clean module within /DREAM")
     parser.add_argument("--sharppath", type=str, help="The sharpmake path to use during generation")
     parser.add_argument("--clean", action="store_true", help="Clean sharpmake generated files")
 

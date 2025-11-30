@@ -6,7 +6,7 @@ from ui_main import MainUI
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Hedron Launcher")
+        self.setWindowTitle("Dream Launcher")
         self.resize(600, 400)
 
         self.main_ui = MainUI()
@@ -26,9 +26,9 @@ class MainWindow(QMainWindow):
         about_action = QAction("About", self)
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
-        
+
     def show_about(self):
-        print("This is a simple launcher to orchestrate builds in the hedron ecosystem")
+        print("This is a simple launcher to orchestrate builds in the dream ecosystem")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -32,7 +32,7 @@ class MainUI(QWidget):
         layout.addWidget(tabs)
 
     def compile_pipeline(self):
-        pipeline_root_path = "D:/CLOUD/OneDrive/DEV/HEDRON/module/dm.tool.pipeline" # TODO: Make it based on .ini
+        pipeline_root_path = "D:/CLOUD/OneDrive/DEV/DREAM/module/dm.tool.pipeline" # TODO: Make it based on .ini
         project_path = f"{pipeline_root_path}/pipeline.vcxproj"
         try:
             subprocess.run(
@@ -54,7 +54,7 @@ class MainUI(QWidget):
         return True
 
     def build(self):
-        pipeline_exe_path = "D:/CLOUD/OneDrive/DEV/HEDRON/module/dm.tool.pipeline/out/bin/win64-debug/pipeline.exe"
+        pipeline_exe_path = "D:/CLOUD/OneDrive/DEV/DREAM/module/dm.tool.pipeline/out/bin/win64-debug/pipeline.exe"
         scene_path = self.scene_prefab_path_input.text()
         try:
             subprocess.run(
@@ -72,7 +72,7 @@ class MainUI(QWidget):
         return True
 
     def compile_game(self):
-        root_path = "D:/CLOUD/OneDrive/DEV/HEDRON/module/dm.game.dreamlike" # TODO: Make it based on .ini
+        root_path = "D:/CLOUD/OneDrive/DEV/DREAM/module/dm.game.dreamlike" # TODO: Make it based on .ini
         project_path = f"{root_path}/dreamlike.vcxproj"
         try:
             subprocess.run(
@@ -98,11 +98,11 @@ class MainUI(QWidget):
         shutil.copytree(folder_to_package, os.path.join(build_output_path, folder_name), dirs_exist_ok=True)
 
     def package_build(self):
-        build_repo_folder = "D:/CLOUD/OneDrive/DEV/HEDRON_BUILD"
+        build_repo_folder = "D:/CLOUD/OneDrive/DEV/DREAM_BUILD"
         build_output_path = os.path.join(build_repo_folder, self.build_name_input.text())
         os.makedirs(build_output_path, exist_ok=True)
 
-        game_root_folder = "D:/CLOUD/OneDrive/DEV/HEDRON/module/dm.game.dreamlike"
+        game_root_folder = "D:/CLOUD/OneDrive/DEV/DREAM/module/dm.game.dreamlike"
         # Copy required code modules
         game_code_module_folder = os.path.join(game_root_folder,"out/bin/win64-debug")
         shutil.copytree(game_code_module_folder, build_output_path, dirs_exist_ok=True)
