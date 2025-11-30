@@ -2,7 +2,7 @@
 
 #include <EASTL/optional.h>
 
-namespace hdn
+namespace dm
 {
 	template <typename T>
 	using optional = eastl::optional<T>;

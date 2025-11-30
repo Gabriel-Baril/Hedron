@@ -3,7 +3,7 @@
 #include "event.h"
 #include "key_code.h"
 
-namespace hdn
+namespace dm
 {
 	class KeyEvent : public Event
 	{
@@ -11,9 +11,10 @@ namespace hdn
 		inline KeyCode get_key_code() const { return m_KeyCode; }
 		inline virtual std::string to_string() const = 0;
 
-		EVENT_CLASS_CATEGORY( EventCategory::KEYBOARD | EventCategory::INPUT )
+		EVENT_CLASS_CATEGORY(EventCategory::KEYBOARD | EventCategory::INPUT)
 	protected:
-		KeyEvent( KeyCode keyCode ) : m_KeyCode( keyCode ) {}
+		KeyEvent(KeyCode keyCode) : m_KeyCode(keyCode) {}
+
 	protected:
 		KeyCode m_KeyCode;
 	};

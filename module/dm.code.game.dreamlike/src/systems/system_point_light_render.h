@@ -6,9 +6,9 @@
 #include "flecs/flecs.h"
 #include "core/stl/vector.h"
 
-namespace hdn
+namespace dm
 {
-	void system_point_light_init(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout, VulkanDevice* device);
+	void system_point_light_init(VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout, VulkanDevice *device);
 	void system_point_light_shutdown();
 
 	void system_point_light_render(VkCommandBuffer commandBuffer, VkDescriptorSet globalDescriptorSet);

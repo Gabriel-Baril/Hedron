@@ -2,6 +2,6 @@
 
 #include "core/core_define.h"
 
-#if USING(HDN_DREAMLIKE_BUILD)
+#if USING(DM_DREAMLIKE_BUILD)
 #include "create.h"
 #endif

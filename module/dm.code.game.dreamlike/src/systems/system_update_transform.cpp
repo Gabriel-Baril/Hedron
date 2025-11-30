@@ -2,12 +2,13 @@
 
 #include "hobj/scene/transform_component.h"
 
-namespace hdn
+namespace dm
 {
 	void UpdateTransformSystem::update(flecs::world world)
 	{
 		auto query = world.query<TransformComponent>();
-		query.each([&](flecs::entity e, TransformComponent& transformC) {
+		query.each([&](flecs::entity e, TransformComponent &transformC)
+							 {
 			transformC.worldMatrix = transformC.to_mat();
 			if (e.parent())
 			{
@@ -15,7 +16,6 @@ namespace hdn
 				if (parent.has<TransformComponent>()) {
 					transformC.worldMatrix = parent.get<TransformComponent>()->worldMatrix * transformC.worldMatrix;
 				}
-			}
-		});
+			} });
 	}
 }

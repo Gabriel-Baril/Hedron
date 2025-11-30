@@ -2,7 +2,7 @@
 
 #include "async_orchestrator.h"
 
-namespace hdn
+namespace dm
 {
 	static std::mutex m_EnqueueFuncMutex;
 
@@ -21,9 +21,9 @@ namespace hdn
 		}
 
 		// Notify all the tasks that depend on this one, the let the dependencies enqueue themselve in the orchestrator
-		for (ITask* task : m_OutDep)
+		for (ITask *task : m_OutDep)
 		{
-			HDN_TASK_ASSERT(task);
+			DM_TASK_ASSERT(task);
 			task->DependencyCompletionNotification(this);
 		}
 	}
@@ -35,7 +35,7 @@ namespace hdn
 
 	void ITask::Enqueue()
 	{
-		// HDN_CORE_ASSERT(!IsEnqueued(), "Cannot enqueue the same task two times!");
+		// DM_CORE_ASSERT(!IsEnqueued(), "Cannot enqueue the same task two times!");
 		if (IsEnqueued())
 		{
 			return;
@@ -51,31 +51,31 @@ namespace hdn
 		return m_Enqueued;
 	}
 
-	void ITask::AddInDependency(ITask* task)
+	void ITask::AddInDependency(ITask *task)
 	{
 		m_InDep.insert(task);
 	}
 
-	void ITask::AddOutDependency(ITask* task)
+	void ITask::AddOutDependency(ITask *task)
 	{
 		m_OutDep.insert(task);
 	}
 
-	void ITask::AddInternalDependency(ITask* task)
+	void ITask::AddInternalDependency(ITask *task)
 	{
 		m_InternalDep.insert(task);
 	}
 
-	void ITask::SetParent(ITask* parent)
+	void ITask::SetParent(ITask *parent)
 	{
 		m_Parent = parent;
 	}
 
 	bool ITask::AreInDepResolved() const
 	{
-		for (ITask* task : m_InDep)
+		for (ITask *task : m_InDep)
 		{
-			HDN_TASK_ASSERT(task);
+			DM_TASK_ASSERT(task);
 			if (!task->Completed())
 			{
 				return false;
@@ -86,9 +86,9 @@ namespace hdn
 
 	bool ITask::AreInternalDepResolved() const
 	{
-		for (ITask* task : m_InternalDep)
+		for (ITask *task : m_InternalDep)
 		{
-			HDN_TASK_ASSERT(task);
+			DM_TASK_ASSERT(task);
 			if (!task->Completed())
 			{
 				return false;
@@ -97,17 +97,17 @@ namespace hdn
 		return true;
 	}
 
-	const unordered_set<ITask*>& ITask::GetInternalDependencies() const
+	const unordered_set<ITask *> &ITask::GetInternalDependencies() const
 	{
 		return m_InternalDep;
 	}
 
-	const unordered_set<ITask*>& ITask::GetInDependencies() const
+	const unordered_set<ITask *> &ITask::GetInDependencies() const
 	{
 		return m_InDep;
 	}
 
-	const unordered_set<ITask*>& ITask::GetOutDependencies() const
+	const unordered_set<ITask *> &ITask::GetOutDependencies() const
 	{
 		return m_OutDep;
 	}

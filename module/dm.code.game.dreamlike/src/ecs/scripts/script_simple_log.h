@@ -2,18 +2,18 @@
 
 #include "ecs/components/native_script_component.h"
 
-namespace hdn
+namespace dm
 {
 	class SimpleLogScript : public INativeScript
 	{
-		virtual const char* name()
-		{ 
+		virtual const char *name()
+		{
 			return "SimpleLogScript";
 		}
 
 		virtual void on_update(float dt) override
 		{
-			HDN_WARNING_LOG("SimpleLogScript");
+			DM_WARNING_LOG("SimpleLogScript");
 		}
 	};
 }

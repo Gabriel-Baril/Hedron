@@ -3,7 +3,7 @@
 #include "core/core.h"
 #include "async_task.h"
 
-namespace hdn
+namespace dm
 {
 	class ITaskLeaf : public ITask
 	{
@@ -12,9 +12,10 @@ namespace hdn
 		virtual ~ITaskLeaf() = default;
 		virtual bool Completed() const override;
 		virtual void Complete() override;
-		virtual void DependencyCompletionNotification(ITask* task) override;
+		virtual void DependencyCompletionNotification(ITask *task) override;
 
-		virtual const char* GetName() const override;
+		virtual const char *GetName() const override;
+
 	private:
 		bool m_Completed = false;
 	};

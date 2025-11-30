@@ -2,7 +2,7 @@
 
 #include <thread>
 
-namespace hdn
+namespace dm
 {
 	class IThread
 	{
@@ -11,8 +11,10 @@ namespace hdn
 		void Start();
 		bool Joinable();
 		void Join();
+
 	protected:
 		virtual void Run() = 0;
+
 	private:
 		std::thread m_Thread;
 	};

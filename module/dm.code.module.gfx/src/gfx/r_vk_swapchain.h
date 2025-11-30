@@ -7,21 +7,23 @@
 // vulkan headers
 #include <vulkan/vulkan.h>
 
-namespace hdn {
+namespace dm
+{
 
-	class VulkanSwapChain {
+	class VulkanSwapChain
+	{
 	public:
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
 		// TODO: Convert deviceRef to ptr
-		VulkanSwapChain(VulkanDevice& deviceRef, VkExtent2D windowExtent);
-		VulkanSwapChain(VulkanDevice& deviceRef, VkExtent2D windowExtent, std::shared_ptr<VulkanSwapChain> previous);
+		VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D windowExtent);
+		VulkanSwapChain(VulkanDevice &deviceRef, VkExtent2D windowExtent, std::shared_ptr<VulkanSwapChain> previous);
 		~VulkanSwapChain();
 
-		VulkanSwapChain(const VulkanSwapChain&) = delete;
-		VulkanSwapChain& operator=(const VulkanSwapChain&) = delete;
-		VulkanSwapChain(VulkanSwapChain&&) = delete;
-		VulkanSwapChain& operator=(VulkanSwapChain&&) = delete;
+		VulkanSwapChain(const VulkanSwapChain &) = delete;
+		VulkanSwapChain &operator=(const VulkanSwapChain &) = delete;
+		VulkanSwapChain(VulkanSwapChain &&) = delete;
+		VulkanSwapChain &operator=(VulkanSwapChain &&) = delete;
 
 		VkFramebuffer get_frame_buffer(int index) { return m_SwapChainFramebuffers[index]; }
 		VkRenderPass get_render_pass() { return m_RenderPass; }
@@ -32,18 +34,19 @@ namespace hdn {
 		uint32_t get_width() { return m_SwapChainExtent.width; }
 		uint32_t get_height() { return m_SwapChainExtent.height; }
 
-		float extent_aspect_ratio() {
+		float extent_aspect_ratio()
+		{
 			return static_cast<float>(m_SwapChainExtent.width) / static_cast<float>(m_SwapChainExtent.height);
 		}
 		VkFormat find_depth_format();
 
-		VkResult acquire_next_image(uint32_t* imageIndex);
-		VkResult submit_command_buffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
+		VkResult acquire_next_image(uint32_t *imageIndex);
+		VkResult submit_command_buffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
 
-		bool compare_swap_format(const VulkanSwapChain& swapChain) const
+		bool compare_swap_format(const VulkanSwapChain &swapChain) const
 		{
-			return swapChain.m_SwapChainDepthFormat == m_SwapChainDepthFormat && 
-				   swapChain.m_SwapChainImageFormat == m_SwapChainImageFormat;
+			return swapChain.m_SwapChainDepthFormat == m_SwapChainDepthFormat &&
+						 swapChain.m_SwapChainImageFormat == m_SwapChainImageFormat;
 		}
 
 	private:
@@ -56,10 +59,11 @@ namespace hdn {
 		void create_sync_objects();
 		// Helper functions
 		VkSurfaceFormatKHR choose_swap_surface_format(
-			const vector<VkSurfaceFormatKHR>& availableFormats);
+				const vector<VkSurfaceFormatKHR> &availableFormats);
 		VkPresentModeKHR choose_swap_present_mode(
-			const vector<VkPresentModeKHR>& availablePresentModes);
-		VkExtent2D choose_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities);
+				const vector<VkPresentModeKHR> &availablePresentModes);
+		VkExtent2D choose_swap_extent(const VkSurfaceCapabilitiesKHR &capabilities);
+
 	private:
 		VkFormat m_SwapChainImageFormat;
 		VkFormat m_SwapChainDepthFormat;
@@ -74,7 +78,7 @@ namespace hdn {
 		vector<VkImage> m_SwapChainImages;
 		vector<VkImageView> m_SwapChainImageViews;
 
-		VulkanDevice& m_Device;
+		VulkanDevice &m_Device;
 		VkExtent2D m_WindowExtent;
 
 		VkSwapchainKHR m_SwapChain;
@@ -87,4 +91,4 @@ namespace hdn {
 		size_t m_CurrentFrame = 0;
 	};
 
-}  // namespace lve
+} // namespace lve

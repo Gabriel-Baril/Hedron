@@ -2,16 +2,17 @@
 
 #include "core/event/event.h"
 
-namespace hdn
+namespace dm
 {
-	// 
+	//
 	class ISystem
 	{
 	public:
 		virtual void init() {};
 		virtual void update() {};
 		virtual void shutdown() {};
-		virtual void on_event(Event& event) {}
+		virtual void on_event(Event &event) {}
+
 	private:
 		// System dependencies
 	};

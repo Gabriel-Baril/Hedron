@@ -2,12 +2,12 @@
 
 #include "event.h"
 
-namespace hdn
+namespace dm
 {
 	class WindowResizedEvent : public Event
 	{
 	public:
-		WindowResizedEvent( u32 width, u32 height ) : m_Width( width ), m_Height( height ) {}
+		WindowResizedEvent(u32 width, u32 height) : m_Width(width), m_Height(height) {}
 
 		inline u32 get_width() const { return m_Width; }
 		inline u32 get_height() const { return m_Height; }

@@ -2,7 +2,7 @@
 
 #include <EASTL/tuple.h>
 
-namespace hdn
+namespace dm
 {
 	template <typename... Ts>
 	using tuple = eastl::tuple<Ts...>;

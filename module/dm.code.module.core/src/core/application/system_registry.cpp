@@ -2,9 +2,9 @@
 
 #include "core/hash.h"
 
-namespace hdn
+namespace dm
 {
-	u64 SystemRegistry::get_system_name_hash(const char* name)
+	u64 SystemRegistry::get_system_name_hash(const char *name)
 	{
 		return hash_generate(name);
 	}

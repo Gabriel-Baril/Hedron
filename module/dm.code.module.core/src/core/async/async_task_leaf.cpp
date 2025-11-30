@@ -1,6 +1,6 @@
 #include "async_task_leaf.h"
 
-namespace hdn
+namespace dm
 {
 	ITaskLeaf::ITaskLeaf()
 	{
@@ -17,16 +17,16 @@ namespace hdn
 		ITask::Complete();
 	}
 
-	void ITaskLeaf::DependencyCompletionNotification(ITask* task)
+	void ITaskLeaf::DependencyCompletionNotification(ITask *task)
 	{
-		HDN_MAYBE_UNUSED(task);
+		DM_MAYBE_UNUSED(task);
 		if (!IsEnqueued() && AreInDepResolved())
 		{
 			Enqueue();
 		}
 	}
 
-	const char* ITaskLeaf::GetName() const
+	const char *ITaskLeaf::GetName() const
 	{
 		return "ITaskLeaf";
 	}

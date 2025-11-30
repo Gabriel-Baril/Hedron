@@ -2,12 +2,12 @@
 
 #include "core/core_define.h"
 
-#if USING(HDN_SYM_BUILDCONFIG)
+#if USING(DM_SYM_BUILDCONFIG)
 #include "pipeline/object_get.h"
 #include "pipeline/symdb.h"
 #include "pipeline/generated/buildconfig_generated.h"
 
-namespace hdn
+namespace dm
 {
 	static constexpr u64 XASSET_CODE_VERSION_BUILDCONFIG = 1;
 
@@ -20,7 +20,7 @@ namespace hdn
 	struct Signature<XBuildConfigAssetObject>
 	{
 		Signature(sym_t _symbol)
-			: symbol{ _symbol }
+				: symbol{_symbol}
 		{
 		}
 

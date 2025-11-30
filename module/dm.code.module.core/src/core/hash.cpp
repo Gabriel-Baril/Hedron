@@ -2,9 +2,9 @@
 
 #include <xxhash/xxhash.h>
 
-namespace hdn
+namespace dm
 {
-	h64 const_hash64(const char* str)
+	h64 const_hash64(const char *str)
 	{
 		h64 hash = 1469598103934665603ULL; // FNV offset basis
 		while (*str)
@@ -21,14 +21,14 @@ namespace hdn
 		return a;
 	}
 
-	h64 hash_generate(const char* str, u64 seed)
+	h64 hash_generate(const char *str, u64 seed)
 	{
-		return str ? XXH64(str,  strlen(str), seed) : 0;
+		return str ? XXH64(str, strlen(str), seed) : 0;
 	}
 
-	h64 hash_generate(const void* buffer, u64 length, u64 seed)
+	h64 hash_generate(const void *buffer, u64 length, u64 seed)
 	{
-		HDN_CORE_ASSERT(buffer != nullptr && length != 0, "Invalid inputs provided to GenerateHash");
+		DM_CORE_ASSERT(buffer != nullptr && length != 0, "Invalid inputs provided to GenerateHash");
 		if (!buffer || !length)
 		{
 			return 0;
@@ -37,12 +37,12 @@ namespace hdn
 		return XXH64(buffer, length, seed);
 	}
 
-	h64 hash_generate(h64 typeHash, const void* buffer, u64 length, u64 seed)
+	h64 hash_generate(h64 typeHash, const void *buffer, u64 length, u64 seed)
 	{
 		return hash_combine(typeHash, hash_generate(buffer, length, seed));
 	}
 
-	u64 str_uuid_to_u64(const char* uuid)
+	u64 str_uuid_to_u64(const char *uuid)
 	{
 		return XXH64(uuid, strlen(uuid), 0); // TODO: Fix
 	}

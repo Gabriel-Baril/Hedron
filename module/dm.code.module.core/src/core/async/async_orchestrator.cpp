@@ -1,19 +1,19 @@
 #include "async_orchestrator.h"
 
-namespace hdn
+namespace dm
 {
-	AsyncOrchestrator& AsyncOrchestrator::Get()
+	AsyncOrchestrator &AsyncOrchestrator::Get()
 	{
 		static AsyncOrchestrator s_Instance;
 		return s_Instance;
 	}
 
 	AsyncOrchestrator::AsyncOrchestrator()
-		: m_WorkerSystem{ WorkerSystem::OptimalWorkerCount(true) }
+			: m_WorkerSystem{WorkerSystem::OptimalWorkerCount(true)}
 	{
 	}
 
-	void AsyncOrchestrator::AddPendingTask(ITask* task)
+	void AsyncOrchestrator::AddPendingTask(ITask *task)
 	{
 		m_WorkerSystem.AddPendingTask(task);
 	}

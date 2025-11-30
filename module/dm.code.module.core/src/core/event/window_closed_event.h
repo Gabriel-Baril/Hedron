@@ -2,14 +2,14 @@
 
 #include "event.h"
 
-namespace hdn
+namespace dm
 {
 	class WindowClosedEvent : public Event
 	{
 	public:
 		WindowClosedEvent() = default;
 
-		EVENT_CLASS_TYPE( EventType::WINDOW_CLOSE )
-		EVENT_CLASS_CATEGORY( EventCategory::APPLICATION )
+		EVENT_CLASS_TYPE(EventType::WINDOW_CLOSE)
+		EVENT_CLASS_CATEGORY(EventCategory::APPLICATION)
 	};
 }

@@ -9,7 +9,7 @@
 
 #include "pipeline/symdb.h"
 
-namespace hdn
+namespace dm
 {
 	struct SPrefabDef
 	{

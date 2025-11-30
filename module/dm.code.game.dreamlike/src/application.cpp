@@ -23,7 +23,7 @@
 #include "hobj/scene/scene_hobj.h"
 #include "systems/system_camera.h"
 
-namespace hdn
+namespace dm
 {
 	static constexpr f32 MAX_FRAME_TIME = 0.5f;
 
@@ -36,13 +36,13 @@ namespace hdn
 
 		m_Renderer = make_ref<VulkanRenderer>(config);
 
-		VulkanDevice& device = get_device();
+		VulkanDevice &device = get_device();
 		m_Scene = create_scene();
-		
+
 		m_GlobalPool = VulkanDescriptorPool::Builder(device)
-			.set_max_sets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The maximum amount of sets in the pools
-			.add_pool_size(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
-			.build();
+											 .set_max_sets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT)																			// The maximum amount of sets in the pools
+											 .add_pool_size(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT) // The number of uniform descriptor in the descriptor pool
+											 .build();
 
 		Ref<PhysicsWorldSystem> physicsWorld = m_SystemRegistry.register_system<PhysicsWorldSystem>(NAME_PHYSICS_WORLD_SYSTEM);
 		physicsWorld->init();
@@ -59,23 +59,23 @@ namespace hdn
 		m_SystemRegistry.unregister_system(NAME_PHYSICS_WORLD_SYSTEM);
 	}
 
-	Application& Application::get()
+	Application &Application::get()
 	{
 		static Application s_Instance{};
 		return s_Instance;
 	}
 
-	void Application::on_event(Event& event)
+	void Application::on_event(Event &event)
 	{
 		IApplication::on_event(event);
 
 		EventDispatcher dispatcher(event);
-		dispatcher.dispatch<WindowResizedEvent>(HDN_BIND_EVENT_FN(Application::on_window_resized));
-		dispatcher.dispatch<KeyPressedEvent>(HDN_BIND_EVENT_FN(Application::on_key_pressed));
-		dispatcher.dispatch<MouseButtonPressedEvent>(HDN_BIND_EVENT_FN(Application::on_mouse_button_pressed));
+		dispatcher.dispatch<WindowResizedEvent>(DM_BIND_EVENT_FN(Application::on_window_resized));
+		dispatcher.dispatch<KeyPressedEvent>(DM_BIND_EVENT_FN(Application::on_key_pressed));
+		dispatcher.dispatch<MouseButtonPressedEvent>(DM_BIND_EVENT_FN(Application::on_mouse_button_pressed));
 	}
 
-	bool Application::on_window_resized(WindowResizedEvent& event)
+	bool Application::on_window_resized(WindowResizedEvent &event)
 	{
 		if (m_Scene)
 		{
@@ -84,12 +84,12 @@ namespace hdn
 		return false;
 	}
 
-	bool Application::on_key_pressed(KeyPressedEvent& event)
+	bool Application::on_key_pressed(KeyPressedEvent &event)
 	{
 		return false;
 	}
 
-	bool Application::on_mouse_button_pressed(MouseButtonPressedEvent& event)
+	bool Application::on_mouse_button_pressed(MouseButtonPressedEvent &event)
 	{
 		return false;
 	}
@@ -102,54 +102,52 @@ namespace hdn
 
 	void Application::run()
 	{
-		VulkanWindow& window = get_window();
-		VulkanDevice& device = get_device();
+		VulkanWindow &window = get_window();
+		VulkanDevice &device = get_device();
 
 		for (int i = 0; i < m_UboBuffers.size(); i++)
 		{
 			m_UboBuffers[i] = make_scope<VulkanBuffer>(
-				&device,
-				sizeof(GlobalUbo),
-				1,
-				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
-			);
+					&device,
+					sizeof(GlobalUbo),
+					1,
+					VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 			m_UboBuffers[i]->map();
 		}
 
 		m_GlobalSetLayout = VulkanDescriptorSetLayout::Builder(device)
-			.add_binding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
-			.build();
+														.add_binding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+														.build();
 
 		for (int i = 0; i < m_GlobalDescriptorSets.size(); i++)
 		{
 			auto bufferInfo = m_UboBuffers[i]->build_descriptor_info();
 			VulkanDescriptorWriter(*m_GlobalSetLayout, *m_GlobalPool)
-				.write_buffer(0, &bufferInfo)
-				.build(m_GlobalDescriptorSets[i]);
+					.write_buffer(0, &bufferInfo)
+					.build(m_GlobalDescriptorSets[i]);
 		}
 
-#if USING(HDN_DEBUG)
+#if USING(DM_DEBUG)
 		ImguiSystem imguiSystem;
 
 		m_ImguiDescriptorPool = VulkanDescriptorPool::Builder(device)
-			.set_pool_flags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
-			.set_max_sets(1)
-			.add_pool_size(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
-			.build();
+																.set_pool_flags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
+																.set_max_sets(1)
+																.add_pool_size(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1)
+																.build();
 
 		m_QueueFamilyIndices = device.find_physical_queue_families();
 
 		imguiSystem.init(
-			window.get_glfw_window(),
-			device.get_surface(),
-			device.get_instance(),
-			device.get_physical_device(),
-			device.get_device(),
-			m_QueueFamilyIndices.graphicsFamily,
-			device.get_graphics_queue(),
-			m_ImguiDescriptorPool->get_descriptor()
-		);
+				window.get_glfw_window(),
+				device.get_surface(),
+				device.get_instance(),
+				device.get_physical_device(),
+				device.get_device(),
+				m_QueueFamilyIndices.graphicsFamily,
+				device.get_graphics_queue(),
+				m_ImguiDescriptorPool->get_descriptor());
 #endif
 
 		m_SystemRegistry.register_system<SimpleRenderSystem>(NAME_SIMPLE_RENDER_SYSTEM, &device, m_Renderer->get_swap_chain_render_pass(), m_GlobalSetLayout->get_descriptor_set_layout());
@@ -198,7 +196,7 @@ namespace hdn
 				// Scene Update
 				m_Scene->update(frameInfo);
 
-				m_UboBuffers[frameIndex]->write_to_buffer((void*)&ubo);
+				m_UboBuffers[frameIndex]->write_to_buffer((void *)&ubo);
 				m_UboBuffers[frameIndex]->flush();
 
 				// render
@@ -207,7 +205,7 @@ namespace hdn
 				// Order Here Matters
 				m_Scene->render(frameInfo);
 
-#if USING(HDN_DEBUG)
+#if USING(DM_DEBUG)
 				imguiSystem.begin_frame();
 				ImGui::Begin("Hello, world!");
 				ImGui::Text("This is some useful text.");
@@ -226,6 +224,5 @@ namespace hdn
 
 	void Application::frame()
 	{
-
 	}
 }

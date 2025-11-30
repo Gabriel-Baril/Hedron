@@ -1,10 +1,10 @@
 #include "read.h"
 
-#if USING(HDN_SYM_BUILDCONFIG)
+#if USING(DM_SYM_BUILDCONFIG)
 #include "pipeline/cache.h"
 #include "pipeline/request_read_xasset.h"
 
-namespace hdn
+namespace dm
 {
 	Response<BuildConfigReadRequest> request_handle(const Request<BuildConfigReadRequest> &req)
 	{
@@ -13,15 +13,15 @@ namespace hdn
 		return res;
 	}
 
-	const char* requet_get_type_name(const Request<BuildConfigReadRequest>& req)
+	const char *requet_get_type_name(const Request<BuildConfigReadRequest> &req)
 	{
-		HDN_MAYBE_UNUSED(req);
-		return HDN_NAMEOF(BuildConfigReadRequest);
+		DM_MAYBE_UNUSED(req);
+		return DM_NAMEOF(BuildConfigReadRequest);
 	}
 
 	bool request_valid(const Request<BuildConfigReadRequest> &req)
 	{
-		HDN_MAYBE_UNUSED(req);
+		DM_MAYBE_UNUSED(req);
 		return true;
 	}
 
@@ -33,7 +33,7 @@ namespace hdn
 		return hb.get();
 	}
 
-	i32 request_get_slug(const Request<BuildConfigReadRequest>& req, char *buffer, u64 count)
+	i32 request_get_slug(const Request<BuildConfigReadRequest> &req, char *buffer, u64 count)
 	{
 		return request_get_generic_xasset_slug(req, buffer, count);
 	}

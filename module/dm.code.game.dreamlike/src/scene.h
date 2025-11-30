@@ -13,7 +13,7 @@
 #include "systems/system_update_script.h"
 #include "systems/system_physics_world.h"
 
-namespace hdn
+namespace dm
 {
 	class RuntimeScene
 	{
@@ -22,11 +22,12 @@ namespace hdn
 
 		void init();
 
-		bool on_window_resized(WindowResizedEvent& event);
+		bool on_window_resized(WindowResizedEvent &event);
 		void load_example_scene();
-		void update(FrameInfo& frameInfo);
-		void render(FrameInfo& frameInfo);
-		Entity create_entity(const char* name = nullptr);
+		void update(FrameInfo &frameInfo);
+		void render(FrameInfo &frameInfo);
+		Entity create_entity(const char *name = nullptr);
+
 	private:
 		flecs::world m_EcsWorld;
 

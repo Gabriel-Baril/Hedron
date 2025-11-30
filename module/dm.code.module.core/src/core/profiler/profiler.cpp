@@ -2,8 +2,8 @@
 
 #include "profiler.h"
 
-#if USING( HDN_PERF_PROFILE )
-namespace hdn
+#if USING(DM_PERF_PROFILE)
+namespace dm
 {
 	struct Instrumentor
 	{
@@ -14,19 +14,19 @@ namespace hdn
 
 	static Instrumentor s_Instrumentor;
 
-	static void instrumentor_begin_session_internal( Instrumentor &instance, const std::string &name, const std::string &filepath )
+	static void instrumentor_begin_session_internal(Instrumentor &instance, const std::string &name, const std::string &filepath)
 	{
-		instance.outputStream.open( filepath );
+		instance.outputStream.open(filepath);
 		instrumentor_write_header();
-		instance.currentSession = new InstrumentationSession{ name };
+		instance.currentSession = new InstrumentationSession{name};
 	}
 
-	void instrumentor_begin_session( const std::string &name, const std::string &filepath )
+	void instrumentor_begin_session(const std::string &name, const std::string &filepath)
 	{
-		instrumentor_begin_session_internal( s_Instrumentor, name, filepath );
+		instrumentor_begin_session_internal(s_Instrumentor, name, filepath);
 	}
 
-	static void instrumentor_end_session_internal( Instrumentor &instance )
+	static void instrumentor_end_session_internal(Instrumentor &instance)
 	{
 		instrumentor_write_footer();
 		instance.outputStream.close();
@@ -37,16 +37,16 @@ namespace hdn
 
 	void instrumentor_end_session()
 	{
-		instrumentor_end_session_internal( s_Instrumentor );
+		instrumentor_end_session_internal(s_Instrumentor);
 	}
 
-	static void instrumentor_write_profile_internal( Instrumentor &instance, const ProfileResult &result )
+	static void instrumentor_write_profile_internal(Instrumentor &instance, const ProfileResult &result)
 	{
-		if ( instance.profileCount++ > 0 )
+		if (instance.profileCount++ > 0)
 			instance.outputStream << ",";
 
 		std::string name = result.name;
-		std::replace( name.begin(), name.end(), '"', '\'' );
+		std::replace(name.begin(), name.end(), '"', '\'');
 
 		instance.outputStream << "{";
 		instance.outputStream << "\"cat\":\"function\",";
@@ -61,12 +61,12 @@ namespace hdn
 		instance.outputStream.flush();
 	}
 
-	void instrumentor_write_profile( const ProfileResult &result )
+	void instrumentor_write_profile(const ProfileResult &result)
 	{
-		instrumentor_write_profile_internal( s_Instrumentor, result );
+		instrumentor_write_profile_internal(s_Instrumentor, result);
 	}
 
-	static void instrumentor_write_header_internal( Instrumentor &instance )
+	static void instrumentor_write_header_internal(Instrumentor &instance)
 	{
 		instance.outputStream << "{\"otherData\": {},\"traceEvents\":[";
 		instance.outputStream.flush();
@@ -74,10 +74,10 @@ namespace hdn
 
 	void instrumentor_write_header()
 	{
-		instrumentor_write_header_internal( s_Instrumentor );
+		instrumentor_write_header_internal(s_Instrumentor);
 	}
 
-	static void instrumentor_write_footer_internal( Instrumentor &instance )
+	static void instrumentor_write_footer_internal(Instrumentor &instance)
 	{
 		instance.outputStream << "]}";
 		instance.outputStream.flush();
@@ -85,18 +85,18 @@ namespace hdn
 
 	void instrumentor_write_footer()
 	{
-		instrumentor_write_footer_internal( s_Instrumentor );
+		instrumentor_write_footer_internal(s_Instrumentor);
 	}
 
-	InstrumentationTimer::InstrumentationTimer( const char *name )
-		: m_Name( name ), m_Stopped( false )
+	InstrumentationTimer::InstrumentationTimer(const char *name)
+			: m_Name(name), m_Stopped(false)
 	{
 		m_StartTimePoint = std::chrono::high_resolution_clock::now();
 	}
 
 	InstrumentationTimer::~InstrumentationTimer()
 	{
-		if ( !m_Stopped )
+		if (!m_Stopped)
 			this->stop();
 	}
 
@@ -108,7 +108,7 @@ namespace hdn
 		long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimePoint).time_since_epoch().count();
 
 		size_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
-		instrumentor_write_profile( ProfileResult{ m_Name, start, end, threadID } );
+		instrumentor_write_profile(ProfileResult{m_Name, start, end, threadID});
 
 		m_Stopped = true;
 	}

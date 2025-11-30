@@ -10,16 +10,16 @@
 
 #include "core/application/application.h"
 
-namespace hdn
+namespace dm
 {
 
 	class VulkanRenderer
 	{
 	public:
-		VulkanRenderer(const ApplicationConfig& config);
+		VulkanRenderer(const ApplicationConfig &config);
 		virtual ~VulkanRenderer();
-		VulkanRenderer(const VulkanRenderer&) = delete;
-		VulkanRenderer& operator=(const VulkanRenderer&) = delete;
+		VulkanRenderer(const VulkanRenderer &) = delete;
+		VulkanRenderer &operator=(const VulkanRenderer &) = delete;
 
 		VkRenderPass get_swap_chain_render_pass() const { return m_Swapchain->get_render_pass(); }
 		f32 get_aspect_ratio() const { return m_Swapchain->extent_aspect_ratio(); }
@@ -44,10 +44,12 @@ namespace hdn
 		void end_frame();
 		void begin_swap_chain_render_pass(VkCommandBuffer commandBuffer);
 		void end_swap_chain_render_pass(VkCommandBuffer commandBuffer);
+
 	private:
 		void create_command_buffers();
 		void free_command_buffers();
 		void recreate_swapchain();
+
 	private:
 		Ref<VulkanWindow> m_Window;
 		Ref<VulkanDevice> m_Device;

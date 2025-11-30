@@ -2,12 +2,12 @@
 
 #include "key_event.h"
 
-namespace hdn
+namespace dm
 {
 	class KeyTypedEvent : public KeyEvent
 	{
 	public:
-		KeyTypedEvent( KeyCode keyCode ) : KeyEvent( keyCode ) {}
+		KeyTypedEvent(KeyCode keyCode) : KeyEvent(keyCode) {}
 
 		std::string to_string() const override
 		{
@@ -16,6 +16,6 @@ namespace hdn
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE( EventType::KEY_TYPED )
+		EVENT_CLASS_TYPE(EventType::KEY_TYPED)
 	};
 }

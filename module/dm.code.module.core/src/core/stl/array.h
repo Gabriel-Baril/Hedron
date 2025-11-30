@@ -2,7 +2,7 @@
 
 #include <EASTL/array.h>
 
-namespace hdn
+namespace dm
 {
 	template <typename T, size_t N = 1>
 	using array = eastl::array<T, N>;

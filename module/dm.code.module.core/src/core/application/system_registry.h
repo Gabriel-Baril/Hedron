@@ -5,29 +5,29 @@
 
 #include "system.h"
 
-namespace hdn
+namespace dm
 {
 	class SystemRegistry
 	{
 	public:
-		template<typename T>
-		Ref<T> get(const char* name)
+		template <typename T>
+		Ref<T> get(const char *name)
 		{
 			u64 nameHash = get_system_name_hash(name);
-			HDN_CORE_ASSERT(m_Systems.contains(nameHash), "The requested system '{0}' does not exist", name);
+			DM_CORE_ASSERT(m_Systems.contains(nameHash), "The requested system '{0}' does not exist", name);
 			return std::static_pointer_cast<T>(m_Systems[nameHash]);
 		}
 
-		template<typename T, typename... Args>
-		Ref<T> register_system(const char* name, Args&&... args)
+		template <typename T, typename... Args>
+		Ref<T> register_system(const char *name, Args &&...args)
 		{
 			u64 nameHash = get_system_name_hash(name);
-			HDN_CORE_ASSERT(!m_Systems.contains(nameHash), "Cannot add the same system twice");
+			DM_CORE_ASSERT(!m_Systems.contains(nameHash), "Cannot add the same system twice");
 			m_Systems[nameHash] = make_ref<T>(std::forward<Args>(args)...);
 			return std::static_pointer_cast<T>(m_Systems[nameHash]);
 		}
 
-		void unregister_system(const char* name)
+		void unregister_system(const char *name)
 		{
 			u64 nameHash = get_system_name_hash(name);
 			if (m_Systems.contains(nameHash))
@@ -36,8 +36,10 @@ namespace hdn
 				m_Systems.erase(nameHash);
 			}
 		}
+
 	private:
-		u64 get_system_name_hash(const char* name);
+		u64 get_system_name_hash(const char *name);
+
 	private:
 		unordered_map<u64, Ref<ISystem>> m_Systems;
 	};

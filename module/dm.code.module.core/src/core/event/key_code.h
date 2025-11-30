@@ -2,18 +2,18 @@
 
 #include "core/core.h"
 
-namespace hdn
+namespace dm
 {
 
 	enum class KeyCode : u32
 	{
 		// From glfw3.h
 		Space = 32,
-		Apostrophe = 39,  /* ' */
-		Comma = 44,  /* , */
-		Minus = 45,  /* - */
-		Period = 46,  /* . */
-		Slash = 47,  /* / */
+		Apostrophe = 39, /* ' */
+		Comma = 44,			 /* , */
+		Minus = 45,			 /* - */
+		Period = 46,		 /* . */
+		Slash = 47,			 /* / */
 
 		D0 = 48,
 		D1 = 49,
@@ -26,8 +26,8 @@ namespace hdn
 		D8 = 56,
 		D9 = 57,
 
-		Semicolon = 59,  /* ; */
-		Equal = 61,  /* = */
+		Semicolon = 59, /* ; */
+		Equal = 61,			/* = */
 
 		A = 65,
 		B = 66,
@@ -55,12 +55,12 @@ namespace hdn
 		X = 88,
 		Y = 89,
 		Z = 90,
-		LeftBracket = 91,  /* [ */
-		Backslash = 92,  /* \ */
-		RightBracket = 93,  /* ] */
-		GraveAccent = 96,  /* ` */
-		World1 = 161, /* non-US #1 */
-		World2 = 162, /* non-US #2 */
+		LeftBracket = 91,	 /* [ */
+		Backslash = 92,		 /* \ */
+		RightBracket = 93, /* ] */
+		GraveAccent = 96,	 /* ` */
+		World1 = 161,			 /* non-US #1 */
+		World2 = 162,			 /* non-US #2 */
 
 		/* Function keys */
 		Escape = 256,
@@ -140,7 +140,7 @@ namespace hdn
 		InvalidKeyCode
 	};
 
-	inline std::ostream &operator<<( std::ostream &os, KeyCode keyCode )
+	inline std::ostream &operator<<(std::ostream &os, KeyCode keyCode)
 	{
 		os << keyCode;
 		return os;

@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 
-namespace hdn
+namespace dm
 {
 	struct PrefabHierarchyComponent
 	{
@@ -17,7 +17,7 @@ namespace hdn
 	struct PrefabTransformComponent
 	{
 		vec3f32 position{};
-		vec3f32 scale{ 1.0f, 1.0f, 1.0f };
+		vec3f32 scale{1.0f, 1.0f, 1.0f};
 		vec3f32 rotation{}; // In radians (Euler YXZ)
 	};
 

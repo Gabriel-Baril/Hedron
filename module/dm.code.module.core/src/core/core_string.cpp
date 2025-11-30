@@ -2,33 +2,33 @@
 
 #include <string.h>
 #include <ctype.h>
-#include <cstdarg>   // va_list, va_start, va_end
-#include <cstdio>    // vsnprintf
+#include <cstdarg> // va_list, va_start, va_end
+#include <cstdio>	 // vsnprintf
 
-namespace hdn
+namespace dm
 {
-	void str_copy(char* dest, const char* src)
+	void str_copy(char *dest, const char *src)
 	{
 		strcpy(dest, src);
 	}
 
-	bool str_endswith(const char* str, const char* suffix)
-    {
+	bool str_endswith(const char *str, const char *suffix)
+	{
 		const u64 strLen = strlen(str);
 		const u64 suffixLen = strlen(suffix);
 		if (strLen >= suffixLen)
 		{
 			return memcmp(str + (strLen - suffixLen), suffix, suffixLen) == 0;
 		}
-        return false;
-    }
+		return false;
+	}
 
-    bool str_equals(const char* s1, const char* s2)
-    {
-        return strcmp(s1, s2) == 0;
-    }
+	bool str_equals(const char *s1, const char *s2)
+	{
+		return strcmp(s1, s2) == 0;
+	}
 
-	bool str_partial_equals(const char* str1, const char* str2, size_t offset1, size_t offset2, size_t count)
+	bool str_partial_equals(const char *str1, const char *str2, size_t offset1, size_t offset2, size_t count)
 	{
 		for (int i = 0; i < count; i++)
 		{
@@ -45,8 +45,8 @@ namespace hdn
 		}
 		return true;
 	}
-	
-	bool str_only_contains_whitespace(const char* str)
+
+	bool str_only_contains_whitespace(const char *str)
 	{
 		while (*str != '\0')
 		{
@@ -59,7 +59,7 @@ namespace hdn
 		return true;
 	}
 
-	int str_to_lowercase(char* buffer, size_t count)
+	int str_to_lowercase(char *buffer, size_t count)
 	{
 		str_transform(buffer, count, char_to_lowercase);
 		return 0;
@@ -70,7 +70,7 @@ namespace hdn
 		return tolower(c);
 	}
 
-	bool str_has_uppercase(const char* str)
+	bool str_has_uppercase(const char *str)
 	{
 		while (*str != '\0')
 		{
@@ -83,7 +83,7 @@ namespace hdn
 		return false;
 	}
 
-	void str_transform(char* buffer, size_t count, char(*operation)(char))
+	void str_transform(char *buffer, size_t count, char (*operation)(char))
 	{
 		for (size_t i = 0; i < count; i++)
 		{
@@ -95,7 +95,7 @@ namespace hdn
 		}
 	}
 
-	const char* str_find_first_of(const char* str, char c)
+	const char *str_find_first_of(const char *str, char c)
 	{
 		while (*str != '\0')
 		{
@@ -108,7 +108,7 @@ namespace hdn
 		return nullptr;
 	}
 
-	const char* str_find_first_not_of(const char* str, char c)
+	const char *str_find_first_not_of(const char *str, char c)
 	{
 		while (*str != '\0')
 		{
@@ -121,7 +121,7 @@ namespace hdn
 		return nullptr;
 	}
 
-	int str_count_occurences(const char* str, char c)
+	int str_count_occurences(const char *str, char c)
 	{
 		int count = 0;
 		while (*str != '\0')
@@ -134,9 +134,9 @@ namespace hdn
 		return count;
 	}
 
-	i64 str_find_first_not_of_index(const char* str, char c)
+	i64 str_find_first_not_of_index(const char *str, char c)
 	{
-		const char* result = str_find_first_not_of(str, c);
+		const char *result = str_find_first_not_of(str, c);
 		if (result)
 		{
 			return result - str;
@@ -145,7 +145,7 @@ namespace hdn
 		return -1;
 	}
 
-	void str_copy_substring(char* dest, const char* begin, const char* end)
+	void str_copy_substring(char *dest, const char *begin, const char *end)
 	{
 		if (end)
 		{
@@ -157,7 +157,7 @@ namespace hdn
 		strcpy(dest, begin);
 	}
 
-	i32 core_snprintf(char* buffer, size_t bufferCount, const char* format, ...)
+	i32 core_snprintf(char *buffer, size_t bufferCount, const char *format, ...)
 	{
 		va_list args;
 		va_start(args, format);
@@ -166,7 +166,7 @@ namespace hdn
 		return r;
 	}
 
-	string trim(const string& str)
+	string trim(const string &str)
 	{
 		auto start = str.begin();
 		while (start != str.end() && std::isspace(*start))
@@ -182,7 +182,7 @@ namespace hdn
 
 		return string(start, end + 1);
 	}
-	constexpr HDN_MODULE_CORE_API std::size_t strlen_ct(const char* str)
+	constexpr DM_MODULE_CORE_API std::size_t strlen_ct(const char *str)
 	{
 		std::size_t length = 0;
 		while (str[length] != '\0')

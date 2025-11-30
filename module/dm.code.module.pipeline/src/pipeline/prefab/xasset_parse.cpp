@@ -8,27 +8,27 @@
 #include "prefab_component.h"
 #include "prefab_component_parse.h"
 
-namespace hdn
+namespace dm
 {
 	bool prefab_parse(SPrefabDef &def, const pugi::xml_node &node)
 	{
 		const pugi::char_t *nameStr = node.attribute("name").as_string();
-		HDN_CORE_ASSERT(nameStr, "xsymbol require a name");
+		DM_CORE_ASSERT(nameStr, "xsymbol require a name");
 		def.name = get_symbol_from_name(nameStr);
 
 		for (pugi::xml_node entityNode : node.children("Entity"))
 		{
 			const pugi::char_t *uuid = entityNode.attribute("uuid").as_string();
-			HDN_CORE_ASSERT(uuid, "Entity without uuid found");
+			DM_CORE_ASSERT(uuid, "Entity without uuid found");
 
 			const pugi::char_t *name = entityNode.attribute("name").as_string();
 			if (name)
 			{
-				HDN_WARNING_LOG("Entity: '{0}' ({1})", name, uuid);
+				DM_WARNING_LOG("Entity: '{0}' ({1})", name, uuid);
 			}
 			else
 			{
-				HDN_WARNING_LOG("Entity: '<unnamed>' ({0})", uuid);
+				DM_WARNING_LOG("Entity: '<unnamed>' ({0})", uuid);
 			}
 
 			u64 id = str_uuid_to_u64(uuid);
@@ -42,11 +42,11 @@ namespace hdn
 			{
 				if (entity_parse_component(childNode, ent))
 				{
-					HDN_WARNING_LOG("Parsed '{0}' component", childNode.name());
+					DM_WARNING_LOG("Parsed '{0}' component", childNode.name());
 				}
 				else
 				{
-					HDN_WARNING_LOG("Failed to parse '{0}' component", childNode.name());
+					DM_WARNING_LOG("Failed to parse '{0}' component", childNode.name());
 				}
 			}
 		}

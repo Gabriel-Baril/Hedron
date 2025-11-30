@@ -9,8 +9,8 @@
 
 #include "core/core_define.h"
 
-#if USING( HDN_PERF_PROFILE )
-namespace hdn
+#if USING(DM_PERF_PROFILE)
+namespace dm
 {
 	struct ProfileResult
 	{
@@ -25,18 +25,19 @@ namespace hdn
 		std::string name;
 	};
 
-	void instrumentor_begin_session( const std::string &name, const std::string &filepath = "result.json" );
+	void instrumentor_begin_session(const std::string &name, const std::string &filepath = "result.json");
 	void instrumentor_end_session();
-	void instrumentor_write_profile( const ProfileResult &result );
+	void instrumentor_write_profile(const ProfileResult &result);
 	void instrumentor_write_header();
 	void instrumentor_write_footer();
 
 	class InstrumentationTimer
 	{
 	public:
-		InstrumentationTimer( const char *name );
+		InstrumentationTimer(const char *name);
 		~InstrumentationTimer();
 		void stop();
+
 	private:
 		const char *m_Name;
 		std::chrono::time_point<std::chrono::steady_clock> m_StartTimePoint;
@@ -45,9 +46,9 @@ namespace hdn
 
 }
 
-#define HDR_PROFILE_BEGIN_SESSION(name, filepath) ::hdn::instrumentor_begin_session(name, filepath);
-#define HDR_PROFILE_END_SESSION() ::hdn::instrumentor_end_session();
-#define HDR_PROFILE_SCOPE(name) ::hdn::InstrumentationTimer timer##__LINE__(name);
+#define HDR_PROFILE_BEGIN_SESSION(name, filepath) ::dm::instrumentor_begin_session(name, filepath);
+#define HDR_PROFILE_END_SESSION() ::dm::instrumentor_end_session();
+#define HDR_PROFILE_SCOPE(name) ::dm::InstrumentationTimer timer##__LINE__(name);
 #define HDR_PROFILE_FUNCTION() HDR_PROFILE_SCOPE(__FUNCSIG__)
 #else
 #define HDR_PROFILE_BEGIN_SESSION(name, filepath)

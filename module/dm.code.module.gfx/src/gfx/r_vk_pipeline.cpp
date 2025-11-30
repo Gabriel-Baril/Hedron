@@ -5,10 +5,10 @@
 
 #include "r_vk_model.h"
 
-namespace hdn
+namespace dm
 {
-	VulkanPipeline::VulkanPipeline(VulkanDevice* device, const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
-		: m_Device{ device }
+	VulkanPipeline::VulkanPipeline(VulkanDevice *device, const string &vertFilepath, const string &fragFilepath, const PipelineConfigInfo &configInfo)
+			: m_Device{device}
 	{
 		create_graphics_pipeline(vertFilepath, fragFilepath, configInfo);
 	}
@@ -25,7 +25,7 @@ namespace hdn
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline); // Signal that we want to bind a graphics pipeline
 	}
 
-	void VulkanPipeline::default_pipeline_config_info(PipelineConfigInfo& configInfo)
+	void VulkanPipeline::default_pipeline_config_info(PipelineConfigInfo &configInfo)
 	{
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; // Define how our vertex are related topologically
@@ -39,35 +39,35 @@ namespace hdn
 
 		// Breaks up our geometry into fragment
 		configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-		configInfo.rasterizationInfo.depthClampEnable = VK_FALSE; // Force the Z of gl_Position to be between 0 and 1 (require a gpu feature to be activated to work)
-		configInfo.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE; // 
+		configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;				 // Force the Z of gl_Position to be between 0 and 1 (require a gpu feature to be activated to work)
+		configInfo.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE; //
 		configInfo.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
 		configInfo.rasterizationInfo.lineWidth = 1.0f;
 		configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_NONE; // Discard triangle based on their apparent facing (winding order)
-		configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE; 
-		configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE; // Used to alter depth values
+		configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+		configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE;		 // Used to alter depth values
 		configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f; // Optional
-		configInfo.rasterizationInfo.depthBiasClamp = 0.0f; // Optional
-		configInfo.rasterizationInfo.depthBiasSlopeFactor = 0.0f; // Optional
+		configInfo.rasterizationInfo.depthBiasClamp = 0.0f;					 // Optional
+		configInfo.rasterizationInfo.depthBiasSlopeFactor = 0.0f;		 // Optional
 
 		// Relates on how the rasterized handle edges, without multi sampling a fragment is either considered completely in or completely out of a triangle. MSAA
 		configInfo.multisampleInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 		configInfo.multisampleInfo.sampleShadingEnable = VK_FALSE;
 		configInfo.multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-		configInfo.multisampleInfo.minSampleShading = 1.0f; // Optional
-		configInfo.multisampleInfo.pSampleMask = nullptr; // Optional
+		configInfo.multisampleInfo.minSampleShading = 1.0f;					 // Optional
+		configInfo.multisampleInfo.pSampleMask = nullptr;						 // Optional
 		configInfo.multisampleInfo.alphaToCoverageEnable = VK_FALSE; // Optional
-		configInfo.multisampleInfo.alphaToOneEnable = VK_FALSE; // Optional
+		configInfo.multisampleInfo.alphaToOneEnable = VK_FALSE;			 // Optional
 
 		// Color blending controls how we combine color in our framebuffer. If two triangle overlap with each other then our fragment shader will return multiple color for our pixel
 		configInfo.colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-		configInfo.colorBlendAttachment.blendEnable = VK_FALSE; // Do we want to mix the current output with the color value already in the framebuffer if any
-		configInfo.colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
+		configInfo.colorBlendAttachment.blendEnable = VK_FALSE;											// Do we want to mix the current output with the color value already in the framebuffer if any
+		configInfo.colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;	// Optional
 		configInfo.colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
-		configInfo.colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD; // Optional
-		configInfo.colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
+		configInfo.colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;							// Optional
+		configInfo.colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;	// Optional
 		configInfo.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
-		configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD; // Optional
+		configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;							// Optional
 
 		configInfo.colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 		configInfo.colorBlendInfo.logicOpEnable = VK_FALSE;
@@ -79,7 +79,7 @@ namespace hdn
 		configInfo.colorBlendInfo.blendConstants[2] = 0.0f; // Optional
 		configInfo.colorBlendInfo.blendConstants[3] = 0.0f; // Optional
 
-		// Depth buffer is an additional attachment to our framebuffer that store the depth of each pixel 
+		// Depth buffer is an additional attachment to our framebuffer that store the depth of each pixel
 		configInfo.depthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 		configInfo.depthStencilInfo.depthTestEnable = VK_TRUE;
 		configInfo.depthStencilInfo.depthWriteEnable = VK_TRUE;
@@ -89,9 +89,9 @@ namespace hdn
 		configInfo.depthStencilInfo.maxDepthBounds = 1.0f; // Optional
 		configInfo.depthStencilInfo.stencilTestEnable = VK_FALSE;
 		configInfo.depthStencilInfo.front = {}; // Optional
-		configInfo.depthStencilInfo.back = {}; // Optional
+		configInfo.depthStencilInfo.back = {};	// Optional
 
-		configInfo.dynamicStateEnables = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+		configInfo.dynamicStateEnables = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 		configInfo.dynamicStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 		configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
 		configInfo.dynamicStateInfo.dynamicStateCount = static_cast<u32>(configInfo.dynamicStateEnables.size());
@@ -101,7 +101,7 @@ namespace hdn
 		configInfo.attributeDescriptions = VulkanModel::Vertex::get_attribute_descriptions();
 	}
 
-	void VulkanPipeline::enable_alpha_blending(PipelineConfigInfo& configInfo)
+	void VulkanPipeline::enable_alpha_blending(PipelineConfigInfo &configInfo)
 	{
 		configInfo.colorBlendAttachment.blendEnable = VK_TRUE; // Do we want to mix the current output with the color value already in the framebuffer if any
 
@@ -115,12 +115,12 @@ namespace hdn
 		configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 	}
 
-	vector<char> VulkanPipeline::read_file(const string& filepath)
+	vector<char> VulkanPipeline::read_file(const string &filepath)
 	{
 		std::ifstream file(filepath, std::ios::ate | std::ios::binary); // std::ios::ate -> When the file open we seek to the end immediately
 		if (!file.is_open())
 		{
-			HDN_CORE_THROW_FMT(std::runtime_error, "Failed to open file: {0}", filepath);
+			DM_CORE_THROW_FMT(std::runtime_error, "Failed to open file: {0}", filepath);
 		}
 		size_t fileSize = static_cast<size_t>(file.tellg());
 		vector<char> buffer(fileSize);
@@ -130,7 +130,7 @@ namespace hdn
 		return buffer;
 	}
 
-	void VulkanPipeline::create_graphics_pipeline(const string& vertFilepath, const string& fragFilepath, const PipelineConfigInfo& configInfo)
+	void VulkanPipeline::create_graphics_pipeline(const string &vertFilepath, const string &fragFilepath, const PipelineConfigInfo &configInfo)
 	{
 		assert(configInfo.pipelineLayout != VK_NULL_HANDLE);
 		assert(configInfo.renderPass != VK_NULL_HANDLE);
@@ -159,8 +159,8 @@ namespace hdn
 		shaderStages[1].pSpecializationInfo = nullptr;
 
 		// Controls how we interpret our vertex buffer data (which the initial info in our graphics pipeline)
-		auto& attributeDescriptions = configInfo.attributeDescriptions;
-		auto& bindingDescriptions = configInfo.bindingDescriptions;
+		auto &attributeDescriptions = configInfo.attributeDescriptions;
+		auto &bindingDescriptions = configInfo.bindingDescriptions;
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<u32>(attributeDescriptions.size());
@@ -191,19 +191,19 @@ namespace hdn
 
 		if (vkCreateGraphicsPipelines(m_Device->get_device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline) != VK_SUCCESS)
 		{
-			HDN_CORE_THROW(std::runtime_error, "Failed to create graphics pipeline");
+			DM_CORE_THROW(std::runtime_error, "Failed to create graphics pipeline");
 		}
 	}
 
-	void VulkanPipeline::create_shader_module(const vector<char>& code, VkShaderModule* module)
+	void VulkanPipeline::create_shader_module(const vector<char> &code, VkShaderModule *module)
 	{
 		VkShaderModuleCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = code.size();
-		createInfo.pCode = reinterpret_cast<const u32*>(code.data()); // Since vector take into account the worst case alignment scenario, thisd reinterpret_cast is valid. It wouldn't be true for a c-style array
+		createInfo.pCode = reinterpret_cast<const u32 *>(code.data()); // Since vector take into account the worst case alignment scenario, thisd reinterpret_cast is valid. It wouldn't be true for a c-style array
 		if (vkCreateShaderModule(m_Device->get_device(), &createInfo, nullptr, module) != VK_SUCCESS)
 		{
-			HDN_CORE_THROW(std::runtime_error, "Failed to create shader module");
+			DM_CORE_THROW(std::runtime_error, "Failed to create shader module");
 		}
 	}
 }

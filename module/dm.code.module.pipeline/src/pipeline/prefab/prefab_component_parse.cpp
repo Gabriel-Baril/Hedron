@@ -4,29 +4,27 @@
 
 #include "prefab_component.h"
 
-namespace hdn
+namespace dm
 {
 	bool component_parse_uuid(pugi::xml_node componentNode, flecs::entity ent);
 	bool component_parse_transform(pugi::xml_node componentNode, flecs::entity ent);
 	bool component_parse_model(pugi::xml_node componentNode, flecs::entity ent);
 	bool component_parse_hierarchy(pugi::xml_node componentNode, flecs::entity ent);
 
-	using ParseComponentFunc = bool(*)(pugi::xml_node, flecs::entity);
+	using ParseComponentFunc = bool (*)(pugi::xml_node, flecs::entity);
 	static ParseComponentFunc s_ComponentFuncs[underlying(PrefabComponentType::COUNT)] = {
-		component_parse_uuid,
-		component_parse_transform,
-		component_parse_model,
-		component_parse_hierarchy
-	};
+			component_parse_uuid,
+			component_parse_transform,
+			component_parse_model,
+			component_parse_hierarchy};
 
-	static constexpr const char* s_ComponentNames[underlying(PrefabComponentType::COUNT)] = {
-		"UUIDComponent",
-		"TransformComponent",
-		"ModelComponent",
-		"HierarchyComponent"
-	};
+	static constexpr const char *s_ComponentNames[underlying(PrefabComponentType::COUNT)] = {
+			"UUIDComponent",
+			"TransformComponent",
+			"ModelComponent",
+			"HierarchyComponent"};
 
-	PrefabComponentType component_name_to_enum(const char* name)
+	PrefabComponentType component_name_to_enum(const char *name)
 	{
 		for (int i = 0; i < underlying(PrefabComponentType::COUNT); i++)
 		{
@@ -85,7 +83,6 @@ namespace hdn
 		ent.set(component);
 		return true;
 	}
-
 
 	bool component_parse_hierarchy(pugi::xml_node componentNode, flecs::entity ent)
 	{

@@ -3,9 +3,9 @@
 #include "core/core.h"
 #include "core/stl/array.h"
 
-namespace hdn
+namespace dm
 {
-	VulkanRenderer::VulkanRenderer(const ApplicationConfig& config)
+	VulkanRenderer::VulkanRenderer(const ApplicationConfig &config)
 	{
 		m_Window = make_ref<VulkanWindow>(config.windowWidth, config.windowHeight, config.applicationName);
 		m_Device = make_ref<VulkanDevice>(m_Window);
@@ -31,7 +31,7 @@ namespace hdn
 		}
 		if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 		{
-			HDN_CORE_THROW(std::runtime_error, "Failed to acquire the next swapchain image");
+			DM_CORE_THROW(std::runtime_error, "Failed to acquire the next swapchain image");
 		}
 		m_IsFrameStarted = true;
 		auto commandBuffer = get_current_command_buffer();
@@ -39,7 +39,7 @@ namespace hdn
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS)
 		{
-			HDN_CORE_THROW(std::runtime_error, "Failed to begin recording command buffer");
+			DM_CORE_THROW(std::runtime_error, "Failed to begin recording command buffer");
 		}
 		return commandBuffer;
 	}
@@ -50,7 +50,7 @@ namespace hdn
 		auto commandBuffer = get_current_command_buffer();
 		if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
 		{
-			HDN_CORE_THROW(std::runtime_error, "Failed to end command buffer");
+			DM_CORE_THROW(std::runtime_error, "Failed to end command buffer");
 		}
 		auto result = m_Swapchain->submit_command_buffers(&commandBuffer, &m_CurrentImageIndex); // It will submit command buffer to the device graphics queue while handling cpu and gpu synchronization
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_Window->was_window_resized())
@@ -60,7 +60,7 @@ namespace hdn
 		}
 		else if (result != VK_SUCCESS)
 		{
-			HDN_CORE_THROW(std::runtime_error, "Failed to present swapchain image");
+			DM_CORE_THROW(std::runtime_error, "Failed to present swapchain image");
 		}
 
 		m_IsFrameStarted = false;
@@ -76,12 +76,12 @@ namespace hdn
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = m_Swapchain->get_render_pass();
 		renderPassInfo.framebuffer = m_Swapchain->get_frame_buffer(m_CurrentImageIndex);
-		renderPassInfo.renderArea.offset = { 0, 0 };
+		renderPassInfo.renderArea.offset = {0, 0};
 		renderPassInfo.renderArea.extent = m_Swapchain->get_swap_chain_extent();
 
 		array<VkClearValue, 2> clearValues{}; // Control what should be the initial value of our attachment
-		clearValues[0].color = { 0.1f, 0.1f, 0.1f, 0.1f };
-		clearValues[1].depthStencil = { 1.0f, 0 };
+		clearValues[0].color = {0.1f, 0.1f, 0.1f, 0.1f};
+		clearValues[1].depthStencil = {1.0f, 0};
 		renderPassInfo.clearValueCount = static_cast<u32>(clearValues.size());
 		renderPassInfo.pClearValues = clearValues.data();
 
@@ -94,10 +94,9 @@ namespace hdn
 		viewport.height = static_cast<float>(m_Swapchain->get_swap_chain_extent().height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		VkRect2D scissor({ 0, 0 }, m_Swapchain->get_swap_chain_extent());
+		VkRect2D scissor({0, 0}, m_Swapchain->get_swap_chain_extent());
 		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-
 	}
 
 	void VulkanRenderer::end_swap_chain_render_pass(VkCommandBuffer commandBuffer)
@@ -118,9 +117,8 @@ namespace hdn
 		allocInfo.commandBufferCount = static_cast<u32>(m_CommandBuffers.size());
 		if (vkAllocateCommandBuffers(m_Device->get_device(), &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
 		{
-			HDN_CORE_THROW(std::runtime_error, "Failed to allocate command buffer");
+			DM_CORE_THROW(std::runtime_error, "Failed to allocate command buffer");
 		}
-
 	}
 
 	void VulkanRenderer::free_command_buffers()
@@ -151,7 +149,7 @@ namespace hdn
 
 			if (!oldSwapChain->compare_swap_format(*m_Swapchain.get()))
 			{
-				HDN_CORE_THROW(std::runtime_error, "Swap chain image(or depth) format has changed");
+				DM_CORE_THROW(std::runtime_error, "Swap chain image(or depth) format has changed");
 			}
 		}
 

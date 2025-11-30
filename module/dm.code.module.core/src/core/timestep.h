@@ -4,13 +4,13 @@
 #include "core/core_type.h"
 #include "core/core_internal_api.h"
 
-namespace hdn
+namespace dm
 {
-	class HDN_MODULE_CORE_API Timestep
+	class DM_MODULE_CORE_API Timestep
 	{
 	public:
 		Timestep(f32 time = 0.0f)
-			: m_Time(time)
+				: m_Time(time)
 		{
 		}
 
@@ -18,6 +18,7 @@ namespace hdn
 		f32 milliseconds() const { return m_Time * 1000; }
 
 		operator f32() { return m_Time; }
+
 	private:
 		f32 m_Time;
 	};

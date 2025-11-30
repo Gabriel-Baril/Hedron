@@ -1,12 +1,12 @@
 #include "async_task_graph.h"
 
-namespace hdn
+namespace dm
 {
 	ITaskGraph::ITaskGraph()
 	{
 	}
 
-	void ITaskGraph::AddEdge(ITask* from, ITask* to)
+	void ITaskGraph::AddEdge(ITask *from, ITask *to)
 	{
 		AddInternalDependency(from);
 		AddInternalDependency(to);
@@ -19,18 +19,23 @@ namespace hdn
 
 	bool ITaskGraph::HasCycle() const
 	{
-		unordered_set<ITask*> visited;
-		unordered_set<ITask*> recStack;
+		unordered_set<ITask *> visited;
+		unordered_set<ITask *> recStack;
 
-		auto dfs = [&](ITask* task, auto& dfs_ref) -> bool {
-			if (recStack.count(task)) return true;
-			if (visited.count(task)) return false;
+		auto dfs = [&](ITask *task, auto &dfs_ref) -> bool
+		{
+			if (recStack.count(task))
+				return true;
+			if (visited.count(task))
+				return false;
 
 			visited.insert(task);
 			recStack.insert(task);
 
-			for (auto& dependent : task->GetOutDependencies()) {
-				if (dfs_ref(dependent, dfs_ref)) {
+			for (auto &dependent : task->GetOutDependencies())
+			{
+				if (dfs_ref(dependent, dfs_ref))
+				{
 					return true;
 				}
 			}
@@ -38,8 +43,10 @@ namespace hdn
 			return false;
 		};
 
-		for (const auto& task : GetInternalDependencies()) {
-			if (dfs(task, dfs)) {
+		for (const auto &task : GetInternalDependencies())
+		{
+			if (dfs(task, dfs))
+			{
 				return true;
 			}
 		}
@@ -53,11 +60,11 @@ namespace hdn
 
 	void ITaskGraph::PreExecute()
 	{
-		HDN_CORE_ASSERT(!HasCycle(), "The provided task graph has a circular dependency!");
+		DM_CORE_ASSERT(!HasCycle(), "The provided task graph has a circular dependency!");
 		ITask::PreExecute();
 
 		// Find the source nodes in set of internal dependencies
-		for (const auto& task : GetInternalDependencies())
+		for (const auto &task : GetInternalDependencies())
 		{
 			if (task->Independent())
 			{
@@ -68,16 +75,16 @@ namespace hdn
 
 	void ITaskGraph::Execute()
 	{
-		for (const auto& task : m_SourceTasks)
+		for (const auto &task : m_SourceTasks)
 		{
 			task->Enqueue();
 		}
 	}
 
-	void ITaskGraph::DependencyCompletionNotification(ITask* task)
+	void ITaskGraph::DependencyCompletionNotification(ITask *task)
 	{
-		HDN_TASK_ASSERT(task);
-		HDN_CORE_ASSERT(task->Completed(), "The task notified was not completed");
+		DM_TASK_ASSERT(task);
+		DM_CORE_ASSERT(task->Completed(), "The task notified was not completed");
 		if (Completed())
 		{
 			ITask::Complete();
@@ -89,7 +96,7 @@ namespace hdn
 		}
 	}
 
-	const char* ITaskGraph::GetName() const
+	const char *ITaskGraph::GetName() const
 	{
 		return "ITaskGraph";
 	}

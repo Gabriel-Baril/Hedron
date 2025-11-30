@@ -4,13 +4,13 @@
 
 #include "r_vk_device.h"
 
-namespace hdn
+namespace dm
 {
 	struct PipelineConfigInfo
 	{
 		PipelineConfigInfo() = default;
-		PipelineConfigInfo(const PipelineConfigInfo&) = delete;
-		PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
+		PipelineConfigInfo(const PipelineConfigInfo &) = delete;
+		PipelineConfigInfo &operator=(const PipelineConfigInfo &) = delete;
 
 		vector<VkVertexInputBindingDescription> bindingDescriptions{};
 		vector<VkVertexInputAttributeDescription> attributeDescriptions{};
@@ -34,29 +34,31 @@ namespace hdn
 	{
 	public:
 		VulkanPipeline(
-			VulkanDevice* device, 
-			const string& vertFilepath, 
-			const string& fragFilepath, 
-			const PipelineConfigInfo& configInfo);
+				VulkanDevice *device,
+				const string &vertFilepath,
+				const string &fragFilepath,
+				const PipelineConfigInfo &configInfo);
 		virtual ~VulkanPipeline();
 		VulkanPipeline() = default;
-		VulkanPipeline(const VulkanPipeline&) = delete;
-		VulkanPipeline& operator=(const VulkanPipeline&) = delete;
-		VulkanPipeline(VulkanPipeline&&) = delete;
-		VulkanPipeline& operator=(VulkanPipeline&&) = delete;
+		VulkanPipeline(const VulkanPipeline &) = delete;
+		VulkanPipeline &operator=(const VulkanPipeline &) = delete;
+		VulkanPipeline(VulkanPipeline &&) = delete;
+		VulkanPipeline &operator=(VulkanPipeline &&) = delete;
 
 		void bind(VkCommandBuffer commandBuffer);
-		static void default_pipeline_config_info(PipelineConfigInfo& configInfo);
-		static void enable_alpha_blending(PipelineConfigInfo& configInfo);
+		static void default_pipeline_config_info(PipelineConfigInfo &configInfo);
+		static void enable_alpha_blending(PipelineConfigInfo &configInfo);
+
 	private:
-		static vector<char> read_file(const string& filepath);
+		static vector<char> read_file(const string &filepath);
 		void create_graphics_pipeline(
-			const string& vertFilepath,
-			const string& fragFilepath,
-			const PipelineConfigInfo& configInfo);
-		void create_shader_module(const vector<char>& code, VkShaderModule* module);
+				const string &vertFilepath,
+				const string &fragFilepath,
+				const PipelineConfigInfo &configInfo);
+		void create_shader_module(const vector<char> &code, VkShaderModule *module);
+
 	private:
-		VulkanDevice* m_Device;
+		VulkanDevice *m_Device;
 		VkPipeline m_GraphicsPipeline;
 		VkShaderModule m_VertShaderModule;
 		VkShaderModule m_FragShaderModule;

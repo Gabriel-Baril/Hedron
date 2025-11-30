@@ -3,9 +3,9 @@
 #include "frame_info.h"
 #include "core/application/system.h"
 
-namespace hdn
+namespace dm
 {
-	inline static constexpr const char* NAME_UPDATE_TRANSFORM_SYSTEM = "UpdateTransformSystem";
+	inline static constexpr const char *NAME_UPDATE_TRANSFORM_SYSTEM = "UpdateTransformSystem";
 
 	class UpdateTransformSystem : public ISystem
 	{

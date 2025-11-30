@@ -2,13 +2,13 @@
 
 #include "async_orchestrator.h"
 
-namespace hdn
+namespace dm
 {
 	ITaskParallel::ITaskParallel()
 	{
 	}
 
-	void ITaskParallel::AddTask(ITask* task)
+	void ITaskParallel::AddTask(ITask *task)
 	{
 		AddInternalDependency(task);
 		task->SetParent(this);
@@ -22,16 +22,16 @@ namespace hdn
 
 	void ITaskParallel::Execute()
 	{
-		for (const auto& task : m_Tasks)
+		for (const auto &task : m_Tasks)
 		{
 			task->Enqueue();
 		}
 	}
 
-	void ITaskParallel::DependencyCompletionNotification(ITask* task)
+	void ITaskParallel::DependencyCompletionNotification(ITask *task)
 	{
-		HDN_TASK_ASSERT(task);
-		HDN_CORE_ASSERT(task->Completed(), "The task notified was not completed");
+		DM_TASK_ASSERT(task);
+		DM_CORE_ASSERT(task->Completed(), "The task notified was not completed");
 		if (Completed())
 		{
 			ITask::Complete();
@@ -43,7 +43,7 @@ namespace hdn
 		}
 	}
 
-	const char* ITaskParallel::GetName() const
+	const char *ITaskParallel::GetName() const
 	{
 		return "ITaskParallel";
 	}

@@ -5,13 +5,13 @@
 
 #include "core/application/system.h"
 
-namespace hdn
+namespace dm
 {
-	inline static constexpr const char* NAME_PHYSICS_GAMEOBJECT_SYSTEM = "PhysicsGameObjectSystem";
+	inline static constexpr const char *NAME_PHYSICS_GAMEOBJECT_SYSTEM = "PhysicsGameObjectSystem";
 
 	class PhysicsGameObjectSystem : public ISystem
 	{
 	public:
-		void update(FrameInfo& frameInfo, flecs::world world);
+		void update(FrameInfo &frameInfo, flecs::world world);
 	};
 }

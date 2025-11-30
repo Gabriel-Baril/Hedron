@@ -2,11 +2,11 @@
 
 using namespace physx;
 
-namespace hdn
+namespace dm
 {
 	void PhysicsWorldSystem::init()
 	{
-		HDN_INFO_LOG("physicsWorld->init");
+		DM_INFO_LOG("physicsWorld->init");
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_AllocatorCallback, m_ErrorCallback);
 		m_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale{}, true);
 		m_Dispatcher = PxDefaultCpuDispatcherCreate(2);
@@ -19,11 +19,11 @@ namespace hdn
 		m_Material = m_Physics->createMaterial(0.5f, 0.5f, 0.5f);
 	}
 
-	PxRigidDynamic* PhysicsWorldSystem::create_dynamic_actor(const PxVec3& position, const PxVec3& dimension)
+	PxRigidDynamic *PhysicsWorldSystem::create_dynamic_actor(const PxVec3 &position, const PxVec3 &dimension)
 	{
 		PxTransform transform(position);
-		PxShape* shape = m_Physics->createShape(PxBoxGeometry(dimension), *m_Material);
-		PxRigidDynamic* dynamicActor = m_Physics->createRigidDynamic(transform);
+		PxShape *shape = m_Physics->createShape(PxBoxGeometry(dimension), *m_Material);
+		PxRigidDynamic *dynamicActor = m_Physics->createRigidDynamic(transform);
 		dynamicActor->attachShape(*shape);
 		PxRigidBodyExt::updateMassAndInertia(*dynamicActor, 10.0f);
 		m_Scene->addActor(*dynamicActor);
@@ -31,11 +31,11 @@ namespace hdn
 		return dynamicActor;
 	}
 
-	physx::PxRigidStatic* PhysicsWorldSystem::create_static_actor(const physx::PxVec3& position, const physx::PxVec3& dimension)
+	physx::PxRigidStatic *PhysicsWorldSystem::create_static_actor(const physx::PxVec3 &position, const physx::PxVec3 &dimension)
 	{
 		PxTransform transform(position);
-		PxShape* shape = m_Physics->createShape(PxBoxGeometry(dimension), *m_Material);
-		PxRigidStatic* staticActor = m_Physics->createRigidStatic(transform);
+		PxShape *shape = m_Physics->createShape(PxBoxGeometry(dimension), *m_Material);
+		PxRigidStatic *staticActor = m_Physics->createRigidStatic(transform);
 		staticActor->attachShape(*shape);
 		m_Scene->addActor(*staticActor);
 		shape->release();

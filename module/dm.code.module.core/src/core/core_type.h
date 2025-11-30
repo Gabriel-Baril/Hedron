@@ -9,7 +9,7 @@
 #include <glm/detail/type_quat.hpp>
 #include <glm/glm.hpp>
 
-namespace hdn
+namespace dm
 {
 	using i8 = signed char;
 	using u8 = unsigned char;

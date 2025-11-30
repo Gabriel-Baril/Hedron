@@ -13,49 +13,51 @@
 
 namespace std
 {
-	template<>
-	struct hash<hdn::VulkanModel::Vertex>
+	template <>
+	struct hash<dm::VulkanModel::Vertex>
 	{
-		size_t operator()(const hdn::VulkanModel::Vertex& vertex) const
+		size_t operator()(const dm::VulkanModel::Vertex &vertex) const
 		{
 			size_t seed = 0;
-			hdn::hash_merge(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+			dm::hash_merge(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
 			return seed;
 		}
 	};
 }
 
-namespace eastl {
+namespace eastl
+{
 	template <>
-	struct hash<hdn::VulkanModel::Vertex> {
-		size_t operator()(const hdn::VulkanModel::Vertex& vertex) const noexcept {
-			return std::hash<hdn::VulkanModel::Vertex>()(vertex);
+	struct hash<dm::VulkanModel::Vertex>
+	{
+		size_t operator()(const dm::VulkanModel::Vertex &vertex) const noexcept
+		{
+			return std::hash<dm::VulkanModel::Vertex>()(vertex);
 		}
 	};
 }
 
-namespace hdn
+namespace dm
 {
-	VulkanModel::VulkanModel(VulkanDevice* device, const VulkanModel::Builder& builder)
-		: m_Device{device}
+	VulkanModel::VulkanModel(VulkanDevice *device, const VulkanModel::Builder &builder)
+			: m_Device{device}
 	{
 		create_vertex_buffers(builder.vertices);
 		create_index_buffers(builder.indices);
 	}
 
-
 	VulkanModel::~VulkanModel()
 	{
 	}
 
-	Scope<VulkanModel> VulkanModel::create_model_from_obj_file(VulkanDevice* device, const string& filepath)
+	Scope<VulkanModel> VulkanModel::create_model_from_obj_file(VulkanDevice *device, const string &filepath)
 	{
 		Builder builder{};
 		builder.load_obj_model(filepath);
 		return make_scope<VulkanModel>(device, builder);
 	}
 
-	Scope<VulkanModel> VulkanModel::create_model_from_fbx_file(VulkanDevice* device, const string& filepath)
+	Scope<VulkanModel> VulkanModel::create_model_from_fbx_file(VulkanDevice *device, const string &filepath)
 	{
 		Builder builder{};
 		builder.load_fbx_model(filepath);
@@ -64,8 +66,8 @@ namespace hdn
 
 	void VulkanModel::bind(VkCommandBuffer commandBuffer)
 	{
-		VkBuffer buffers[] = { m_VertexBuffer->get_buffer()};
-		VkDeviceSize offsets[] = { 0 };
+		VkBuffer buffers[] = {m_VertexBuffer->get_buffer()};
+		VkDeviceSize offsets[] = {0};
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
 		if (m_HasIndexBuffer)
 		{
@@ -85,7 +87,7 @@ namespace hdn
 		}
 	}
 
-	void VulkanModel::create_vertex_buffers(const vector<Vertex>& vertices)
+	void VulkanModel::create_vertex_buffers(const vector<Vertex> &vertices)
 	{
 		m_VertexCount = static_cast<u32>(vertices.size());
 		assert(m_VertexCount >= 3 && "Vertex count must be at least 3");
@@ -93,28 +95,26 @@ namespace hdn
 
 		const u32 vertexSize = sizeof(vertices[0]);
 		VulkanBuffer stagingBuffer{
-			m_Device,
-			vertexSize,
-			m_VertexCount,
-			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-		};
+				m_Device,
+				vertexSize,
+				m_VertexCount,
+				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT};
 
 		stagingBuffer.map();
-		stagingBuffer.write_to_buffer((void*)vertices.data());
+		stagingBuffer.write_to_buffer((void *)vertices.data());
 
 		m_VertexBuffer = make_scope<VulkanBuffer>(
-			m_Device,
-			vertexSize,
-			m_VertexCount,
-			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-		);
+				m_Device,
+				vertexSize,
+				m_VertexCount,
+				VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 		m_Device->copy_buffer(stagingBuffer.get_buffer(), m_VertexBuffer->get_buffer(), bufferSize);
 	}
 
-	void VulkanModel::create_index_buffers(const vector<u32>& indices)
+	void VulkanModel::create_index_buffers(const vector<u32> &indices)
 	{
 		m_IndexCount = static_cast<u32>(indices.size());
 		m_HasIndexBuffer = m_IndexCount > 0;
@@ -127,23 +127,21 @@ namespace hdn
 		u32 indexSize = sizeof(indices[0]);
 
 		VulkanBuffer stagingBuffer{
-			m_Device,
-			indexSize,
-			m_IndexCount,
-			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-		};
+				m_Device,
+				indexSize,
+				m_IndexCount,
+				VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT};
 
 		stagingBuffer.map();
-		stagingBuffer.write_to_buffer((void*)indices.data());
+		stagingBuffer.write_to_buffer((void *)indices.data());
 
 		m_IndexBuffer = make_scope<VulkanBuffer>(
-			m_Device,
-			indexSize,
-			m_IndexCount,
-			VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-		);
+				m_Device,
+				indexSize,
+				m_IndexCount,
+				VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
 		m_Device->copy_buffer(stagingBuffer.get_buffer(), m_IndexBuffer->get_buffer(), bufferSize);
 	}
@@ -161,24 +159,23 @@ namespace hdn
 	{
 		vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 		attributeDescriptions.reserve(4);
-		attributeDescriptions.push_back({ 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position) });
-		attributeDescriptions.push_back({ 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) });
-		attributeDescriptions.push_back({ 2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal) });
-		attributeDescriptions.push_back({ 3, 0, VK_FORMAT_R32G32_SFLOAT	  , offsetof(Vertex, uv) });
-
+		attributeDescriptions.push_back({0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)});
+		attributeDescriptions.push_back({1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)});
+		attributeDescriptions.push_back({2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)});
+		attributeDescriptions.push_back({3, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, uv)});
 
 		return attributeDescriptions;
 	}
 
-	void VulkanModel::Builder::load_obj_model(const string& filepath)
+	void VulkanModel::Builder::load_obj_model(const string &filepath)
 	{
-		tinyobj::attrib_t attrib; // Store positions, colors, uvs
+		tinyobj::attrib_t attrib;							// Store positions, colors, uvs
 		std::vector<tinyobj::shape_t> shapes; // Index values for each elements
 		std::vector<tinyobj::material_t> materials;
 		string warns, errors;
 		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warns, &errors, filepath.c_str()))
 		{
-			HDN_CORE_THROW(std::runtime_error, warns + errors);
+			DM_CORE_THROW(std::runtime_error, warns + errors);
 		}
 
 		vertices.clear();
@@ -186,42 +183,38 @@ namespace hdn
 
 		unordered_map<Vertex, u32> uniqueVertices;
 
-		for (const auto& shape : shapes)
+		for (const auto &shape : shapes)
 		{
-			for (const auto& index : shape.mesh.indices) // Loop in each face element in the model
+			for (const auto &index : shape.mesh.indices) // Loop in each face element in the model
 			{
 				Vertex vertex{};
-				
+
 				if (index.vertex_index >= 0)
 				{
 					vertex.position = {
-						attrib.vertices[3 * index.vertex_index + 0],
-						attrib.vertices[3 * index.vertex_index + 1],
-						attrib.vertices[3 * index.vertex_index + 2]
-					};
+							attrib.vertices[3 * index.vertex_index + 0],
+							attrib.vertices[3 * index.vertex_index + 1],
+							attrib.vertices[3 * index.vertex_index + 2]};
 
 					vertex.color = {
-						attrib.colors[3 * index.vertex_index + 0],
-						attrib.colors[3 * index.vertex_index + 1],
-						attrib.colors[3 * index.vertex_index + 2]
-					};
+							attrib.colors[3 * index.vertex_index + 0],
+							attrib.colors[3 * index.vertex_index + 1],
+							attrib.colors[3 * index.vertex_index + 2]};
 				}
 
 				if (index.normal_index >= 0)
 				{
 					vertex.normal = {
-						attrib.normals[3 * index.normal_index + 0],
-						attrib.normals[3 * index.normal_index + 1],
-						attrib.normals[3 * index.normal_index + 2]
-					};
+							attrib.normals[3 * index.normal_index + 0],
+							attrib.normals[3 * index.normal_index + 1],
+							attrib.normals[3 * index.normal_index + 2]};
 				}
 
 				if (index.texcoord_index >= 0)
 				{
 					vertex.uv = {
-						attrib.texcoords[2 * index.texcoord_index + 0],
-						attrib.texcoords[2 * index.texcoord_index + 1]
-					};
+							attrib.texcoords[2 * index.texcoord_index + 0],
+							attrib.texcoords[2 * index.texcoord_index + 1]};
 				}
 
 				if (!uniqueVertices.contains(vertex))
@@ -234,32 +227,32 @@ namespace hdn
 		}
 	}
 
-	void VulkanModel::Builder::load_fbx_model(const string& filepath)
+	void VulkanModel::Builder::load_fbx_model(const string &filepath)
 	{
 		std::ifstream file(filepath.c_str(), std::ios::binary | std::ios::ate);
 		if (!file)
 		{
-			HDN_CORE_THROW_FMT(std::runtime_error, "Failed to open file '{0}'", filepath.c_str());
+			DM_CORE_THROW_FMT(std::runtime_error, "Failed to open file '{0}'", filepath.c_str());
 		}
 
 		size_t fileSize = file.tellg();
 		file.seekg(0, std::ios::beg);
 		vector<u8> buffer(fileSize);
-		if (!file.read(reinterpret_cast<char*>(buffer.data()), fileSize))
+		if (!file.read(reinterpret_cast<char *>(buffer.data()), fileSize))
 		{
-			HDN_CORE_THROW_FMT(std::runtime_error, "Failed to read file '{0}'", filepath.c_str());
+			DM_CORE_THROW_FMT(std::runtime_error, "Failed to read file '{0}'", filepath.c_str());
 		}
 
 		vertices.clear();
 		indices.clear();
 
 		unordered_map<Vertex, u32> uniqueVertices;
-		const ofbx::IScene* scene = ofbx::load(buffer.data(), fileSize, static_cast<ofbx::u16>(ofbx::LoadFlags::NONE));
+		const ofbx::IScene *scene = ofbx::load(buffer.data(), fileSize, static_cast<ofbx::u16>(ofbx::LoadFlags::NONE));
 		HDEBUG("Mesh Count: {0}", scene->getMeshCount());
-		for (int i = 0;i < scene->getMeshCount(); i++)
+		for (int i = 0; i < scene->getMeshCount(); i++)
 		{
-			const ofbx::Mesh* fbxMesh = scene->getMesh(i);
-			const ofbx::Geometry* geom = fbxMesh->getGeometry();
+			const ofbx::Mesh *fbxMesh = scene->getMesh(i);
+			const ofbx::Geometry *geom = fbxMesh->getGeometry();
 			if (!geom)
 			{
 				continue;
@@ -281,29 +274,25 @@ namespace hdn
 
 				ofbx::Vec3 position = positions.get(j);
 				vertex.position = {
-					position.x,
-					position.y,
-					position.z
-				};
+						position.x,
+						position.y,
+						position.z};
 
 				ofbx::Vec3 normal = normals.get(j);
 				vertex.normal = {
-					normal.x,
-					normal.y,
-					normal.z
-				};
+						normal.x,
+						normal.y,
+						normal.z};
 
 				ofbx::Vec2 uv = uvs.get(j);
 				vertex.uv = {
-					uv.x,
-					uv.y
-				};
+						uv.x,
+						uv.y};
 
 				vertex.color = {
-					1.0f,
-					1.0f,
-					1.0f
-				};
+						1.0f,
+						1.0f,
+						1.0f};
 
 				if (!uniqueVertices.contains(vertex))
 				{

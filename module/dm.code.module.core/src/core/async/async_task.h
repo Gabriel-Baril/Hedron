@@ -5,14 +5,13 @@
 
 #include <chrono>
 
-#define HDN_TASK_ASSERT(task) HDN_CORE_ASSERT(task, "Task cannot be null!")
+#define DM_TASK_ASSERT(task) DM_CORE_ASSERT(task, "Task cannot be null!")
 
-namespace hdn
+namespace dm
 {
 	class ITask
 	{
 	public:
-
 		virtual ~ITask() = default;
 
 		virtual void PreExecute();
@@ -29,11 +28,11 @@ namespace hdn
 		// Complexity cannot be 0
 		virtual u32 Complexity() const { return 1; }
 		float Importance() const { return static_cast<float>(Priority()) / static_cast<float>(Complexity()); }
-		
-		// TODO: Remove symbols from release build
-		virtual const char* GetName() const { return "ITask"; }
 
-		template<typename T>
+		// TODO: Remove symbols from release build
+		virtual const char *GetName() const { return "ITask"; }
+
+		template <typename T>
 		long long GetExecutionTime() const
 		{
 			std::chrono::steady_clock::time_point endTime;
@@ -53,8 +52,8 @@ namespace hdn
 		void PrintTimeHierarchy(int tabCount = 0)
 		{
 			string tabs(tabCount, ' ');
-			HDN_INFO_LOG("{0}{1}: {2}ms", tabs, GetName(), GetExecutionTime<std::chrono::milliseconds>());
-			for (const auto& internalDep : m_InternalDep)
+			DM_INFO_LOG("{0}{1}: {2}ms", tabs, GetName(), GetExecutionTime<std::chrono::milliseconds>());
+			for (const auto &internalDep : m_InternalDep)
 			{
 				internalDep->PrintTimeHierarchy(tabCount + 1);
 			}
@@ -63,25 +62,27 @@ namespace hdn
 		void Enqueue();
 		bool IsEnqueued();
 
-		void AddInDependency(ITask* task);
-		void AddOutDependency(ITask* task);
-		void AddInternalDependency(ITask* task);
-		void SetParent(ITask* parent);
+		void AddInDependency(ITask *task);
+		void AddOutDependency(ITask *task);
+		void AddInternalDependency(ITask *task);
+		void SetParent(ITask *parent);
 
 		// This function is called each time a task is completed to let the out dependencies that the task is completed
-		virtual void DependencyCompletionNotification(ITask* task) = 0;
+		virtual void DependencyCompletionNotification(ITask *task) = 0;
 
-		const unordered_set<ITask*>& GetInternalDependencies() const;
-		const unordered_set<ITask*>& GetInDependencies() const;
-		const unordered_set<ITask*>& GetOutDependencies() const;
+		const unordered_set<ITask *> &GetInternalDependencies() const;
+		const unordered_set<ITask *> &GetInDependencies() const;
+		const unordered_set<ITask *> &GetOutDependencies() const;
+
 	protected:
 		bool AreInDepResolved() const;
 		bool AreInternalDepResolved() const;
+
 	private:
-		unordered_set<ITask*> m_InDep;
-		unordered_set<ITask*> m_OutDep;
-		unordered_set<ITask*> m_InternalDep;
-		ITask* m_Parent = nullptr;
+		unordered_set<ITask *> m_InDep;
+		unordered_set<ITask *> m_OutDep;
+		unordered_set<ITask *> m_InternalDep;
+		ITask *m_Parent = nullptr;
 		bool m_Enqueued = false;
 
 		std::chrono::steady_clock::time_point m_StartTime;

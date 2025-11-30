@@ -8,7 +8,7 @@
 #include "prefab.h"
 #include "pipeline/xsrc.h"
 
-namespace hdn
+namespace dm
 {
 	bool prefab_parse(SPrefabDef &def, const pugi::xml_node &node);
 	bool xasset_parse_prefab(const pugi::xml_node &symbolNode, const SourceContext &ctx);

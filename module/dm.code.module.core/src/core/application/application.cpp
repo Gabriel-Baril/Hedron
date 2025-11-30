@@ -1,10 +1,10 @@
 #include "application.h"
 
-namespace hdn
+namespace dm
 {
 	void IApplication::on_update(float dt)
 	{
-		for (const auto& layer : m_ApplicationLayerStack)
+		for (const auto &layer : m_ApplicationLayerStack)
 		{
 			if (!layer->enabled())
 			{
@@ -16,7 +16,7 @@ namespace hdn
 		}
 	}
 
-	void IApplication::on_event(Event& event)
+	void IApplication::on_event(Event &event)
 	{
 		EventDispatcher dispatcher(event);
 		// dispatcher.Dispatch<WindowClosedEvent>( HDR_BIND_EVENT_FN( Application::OnWindowClosed ) );
@@ -24,7 +24,7 @@ namespace hdn
 		// dispatcher.Dispatch<KeyTypedEvent>( HDR_BIND_EVENT_FN( Application::OnKeyTyped ) );
 		// dispatcher.Dispatch<KeyReleasedEvent>( HDR_BIND_EVENT_FN( Application::OnKeyReleased ) );
 
-		for (auto it = m_ApplicationLayerStack.end(); it != m_ApplicationLayerStack.begin(); )
+		for (auto it = m_ApplicationLayerStack.end(); it != m_ApplicationLayerStack.begin();)
 		{
 			if (event.Handled)
 				break;

@@ -2,23 +2,25 @@
 
 #include <algorithm> // For std::lower_bound
 
-namespace hdn
+namespace dm
 {
 	struct SortTaskByImportance
 	{
-		bool operator()(ITask* lhs, ITask* rhs) const {
+		bool operator()(ITask *lhs, ITask *rhs) const
+		{
 			return lhs->Importance() < rhs->Importance();
 		}
 	};
 
 	WorkerSystem::WorkerSystem(u64 numWorkers)
-		: m_StopFlag{ false }
+			: m_StopFlag{false}
 	{
-		HDN_INFO_LOG("Worker Count: {0}", numWorkers);
+		DM_INFO_LOG("Worker Count: {0}", numWorkers);
 
 		for (size_t i = 0; i < numWorkers; ++i)
 		{
-			m_Workers.emplace_back([this]() { this->WorkerThread(); });
+			m_Workers.emplace_back([this]()
+														 { this->WorkerThread(); });
 		}
 	}
 
@@ -27,12 +29,12 @@ namespace hdn
 		Shutdown();
 	}
 
-	void WorkerSystem::AddPendingTask(ITask* task)
+	void WorkerSystem::AddPendingTask(ITask *task)
 	{
 		{
 			std::lock_guard<std::mutex> lock(m_QueueMutex);
 			InsertTaskSorted(task);
-			HDN_DEBUG_LOG("Task Enqueued: {0}", task->GetName());
+			DM_DEBUG_LOG("Task Enqueued: {0}", task->GetName());
 		}
 		m_Condition.notify_one();
 	}
@@ -45,7 +47,7 @@ namespace hdn
 		}
 		m_Condition.notify_all();
 
-		for (std::thread& worker : m_Workers)
+		for (std::thread &worker : m_Workers)
 		{
 			if (worker.joinable())
 			{
@@ -64,7 +66,7 @@ namespace hdn
 		return ioBound ? 2 * hardwareThreads : hardwareThreads;
 	}
 
-	void WorkerSystem::InsertTaskSorted(ITask* task)
+	void WorkerSystem::InsertTaskSorted(ITask *task)
 	{
 		auto pos = std::lower_bound(m_PendingTasks.begin(), m_PendingTasks.end(), task, SortTaskByImportance{});
 		m_PendingTasks.insert(pos, task);
@@ -74,12 +76,11 @@ namespace hdn
 	{
 		while (true)
 		{
-			ITask* task = nullptr;
+			ITask *task = nullptr;
 			{
 				std::unique_lock<std::mutex> lock(m_QueueMutex);
-				m_Condition.wait(lock, [this]() {
-					return !m_PendingTasks.empty() || m_StopFlag;
-					});
+				m_Condition.wait(lock, [this]()
+												 { return !m_PendingTasks.empty() || m_StopFlag; });
 
 				if (m_StopFlag && m_PendingTasks.empty())
 				{
@@ -93,6 +94,5 @@ namespace hdn
 			task->Execute();
 		}
 	}
-
 
 }
