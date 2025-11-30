@@ -2,11 +2,11 @@
 
 #include "core/core_define.h"
 
-#if USING(HDN_SYM_FEATURE)
+#if USING(DM_SYM_FEATURE)
 #include "pipeline/cache.h"
 #include "pipeline/xsrc_request.h"
 
-namespace hdn
+namespace dm
 {
 	u64 object_get_id(const Signature<XFeatureAssetObject> &sig)
 	{
@@ -20,7 +20,7 @@ namespace hdn
 	i32 object_get_slug(const Signature<XFeatureAssetObject> &sig, char *buffer, u64 count)
 	{
 		const SymbolMetadata *meta = symdb_get_meta(sig.symbol);
-		HDN_CORE_ASSERT(meta, "symbol not found");
+		DM_CORE_ASSERT(meta, "symbol not found");
 
 		return core_snprintf(buffer, count, "[%s, v%zu]", meta->name, XASSET_CODE_VERSION_FEATURE);
 	}

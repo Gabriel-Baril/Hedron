@@ -2,36 +2,37 @@
 #include "hobj_registry.h"
 #include "core/io/stream_save.h"
 
-namespace hdn
+namespace dm
 {
-	bool is_object_file(const fspath& path)
+	bool is_object_file(const fspath &path)
 	{
 		return filesystem_extension(path) == HOBJ_FILE_EXT;
 	}
 
-	FilesystemObjectSource::FilesystemObjectSource(const string& sourcePath)
-		: m_SourcePath{ sourcePath }
+	FilesystemObjectSource::FilesystemObjectSource(const string &sourcePath)
+			: m_SourcePath{sourcePath}
 	{
 	}
 
-	HObject* FilesystemObjectSource::get(uuid64 id)
+	HObject *FilesystemObjectSource::get(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_GET, id);
-		HDN_CORE_ASSERT(m_LoadedObjects.at(id) != nullptr, "The requested object is not loaded yet");
-		HObject* object = m_LoadedObjects.at(id);
+		DM_CORE_ASSERT(m_LoadedObjects.at(id) != nullptr, "The requested object is not loaded yet");
+		HObject *object = m_LoadedObjects.at(id);
 		HOBJ_METRIC_END();
 		return object;
 	}
 
-	void FilesystemObjectSource::load(const char* path, HObject* outObject)
+	void FilesystemObjectSource::load(const char *path, HObject *outObject)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_LOAD);
-		HDN_CORE_ASSERT(outObject != nullptr, "outObject cannot be null when loading");
+		DM_CORE_ASSERT(outObject != nullptr, "outObject cannot be null when loading");
 
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_FILE_OPEN);
 		std::ifstream inFile(path, std::ios::binary | std::ios::ate);
-		if (!inFile) {
-			HDN_ERROR_LOG("Could not open file '{0}' for reading", path);
+		if (!inFile)
+		{
+			DM_ERROR_LOG("Could not open file '{0}' for reading", path);
 			return;
 		}
 
@@ -43,8 +44,9 @@ namespace hdn
 		std::vector<char> buffer(fileSize);
 
 		// Read the file into the buffer
-		if (!inFile.read(buffer.data(), fileSize)) {
-			HDN_ERROR_LOG("Failed to read the file", path);
+		if (!inFile.read(buffer.data(), fileSize))
+		{
+			DM_ERROR_LOG("Failed to read the file", path);
 			return;
 		}
 		HOBJ_METRIC_FILE_PATH(path);
@@ -57,8 +59,8 @@ namespace hdn
 		HOBJ_METRIC_END();
 
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_DESERIALIZE);
-		DynamicMemoryBuffer dynamicBuffer{ buffer };
-		histream reader{ &dynamicBuffer };
+		DynamicMemoryBuffer dynamicBuffer{buffer};
+		histream reader{&dynamicBuffer};
 		dynamicBuffer.reset();
 		outObject->deserialize(reader);
 		HOBJ_METRIC_END();
@@ -66,12 +68,12 @@ namespace hdn
 		HOBJ_METRIC_END();
 	}
 
-	void FilesystemObjectSource::load(uuid64 id, HObject* outObject)
+	void FilesystemObjectSource::load(uuid64 id, HObject *outObject)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_LOAD, id);
 		string absoluteSavePath = filesystem_to_absolute(m_ObjectPaths[id]).string();
 		load(absoluteSavePath.c_str(), outObject);
-		HDN_CORE_ASSERT(!m_LoadedObjects.contains(id), "Cannot register an object more than once!");
+		DM_CORE_ASSERT(!m_LoadedObjects.contains(id), "Cannot register an object more than once!");
 		m_LoadedObjects[id] = outObject;
 		HOBJ_METRIC_END();
 	}
@@ -82,17 +84,17 @@ namespace hdn
 		m_ObjectPaths.erase(id);
 	}
 
-	bool FilesystemObjectSource::save(HObject* object, const void* userData, u64 userDataByteSize)
+	bool FilesystemObjectSource::save(HObject *object, const void *userData, u64 userDataByteSize)
 	{
 		const uuid64 objectID = object->id();
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_SAVE, objectID);
 
-		HDN_CORE_ASSERT(object, "object cannot be null");
+		DM_CORE_ASSERT(object, "object cannot be null");
 		fspath absoluteSavePath;
 		bool shouldDeleteOldPath = false;
 		if (userData)
 		{
-			const HObjectFilesystemData* data = static_cast<const HObjectFilesystemData*>(userData);
+			const HObjectFilesystemData *data = static_cast<const HObjectFilesystemData *>(userData);
 			absoluteSavePath = filesystem_to_absolute(m_SourcePath) / data->path;
 			if (m_ObjectPaths.contains(objectID) && absoluteSavePath != m_ObjectPaths.at(objectID))
 			{
@@ -105,7 +107,7 @@ namespace hdn
 		}
 		else
 		{
-			HDN_FATAL_LOG("No user data provided and the object to save was not found in the manifest (likely an in-memory object not yet serialized on disk)");
+			DM_FATAL_LOG("No user data provided and the object to save was not found in the manifest (likely an in-memory object not yet serialized on disk)");
 		}
 
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_OBJECT_SERIALIZE);
@@ -133,14 +135,14 @@ namespace hdn
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::SOURCE_OBJECT_DELETE, id);
 		if (!m_ObjectPaths.contains(id))
 		{
-			HDN_WARNING_LOG("The object {0} was requested for deletion but not found in the manifest", id);
+			DM_WARNING_LOG("The object {0} was requested for deletion but not found in the manifest", id);
 			return false;
 		}
 
 		bool deleted = filesystem_delete(m_ObjectPaths.at(id), true) > 0; // Delete
 		if (!deleted)
 		{
-			HDN_WARNING_LOG("Failed to delete object {0}", id);
+			DM_WARNING_LOG("Failed to delete object {0}", id);
 			return false;
 		}
 
@@ -160,26 +162,26 @@ namespace hdn
 		return contain;
 	}
 
-	void FilesystemObjectSource::populate(HObjectRegistry* registry)
+	void FilesystemObjectSource::populate(HObjectRegistry *registry)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_MANIFEST_POPULATE);
 		vector<fspath> files = filesystem_walk(m_SourcePath, is_object_file);
-		for (const auto& file : files)
+		for (const auto &file : files)
 		{
 			HObject object;
 			load(file.string().c_str(), &object);
 			const uuid64 objectID = object.id();
-			const char* objectName = object.name();
+			const char *objectName = object.name();
 			manifest_create_entry(objectID, file);
 			registry->manifest_create_entry(objectID, objectName, this);
 		}
 		HOBJ_METRIC_END();
 	}
 
-	void FilesystemObjectSource::manifest_create_entry(uuid64 id, const fspath& path)
+	void FilesystemObjectSource::manifest_create_entry(uuid64 id, const fspath &path)
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::SOURCE_MANIFEST_CREATE_ENTRY);
-		HDN_CORE_ASSERT(!m_ObjectPaths.contains(id), "");
+		DM_CORE_ASSERT(!m_ObjectPaths.contains(id), "");
 		fspath absolutePath = filesystem_to_absolute(path);
 		m_ObjectPaths[id] = absolutePath;
 		HOBJ_METRIC_END();

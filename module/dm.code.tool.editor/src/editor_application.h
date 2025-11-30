@@ -29,35 +29,36 @@
 
 #include "scene.h"
 
-namespace hdn
+namespace dm
 {
 	class EditorApplication : public IApplication
 	{
 	public:
 		static constexpr u32 DEFAULT_WINDOW_WIDTH = 1280;
 		static constexpr u32 DEFAULT_WINDOW_HEIGHT = 720;
-	public:
-		static EditorApplication& get();
-		VulkanWindow& get_window() { return m_Window; }
 
-		void on_event(Event& event) override;
-		bool on_window_resized(WindowResizedEvent& event);
-		bool on_key_pressed(KeyPressedEvent& event);
-		bool on_mouse_button_pressed(MouseButtonPressedEvent& event);
+	public:
+		static EditorApplication &get();
+		VulkanWindow &get_window() { return m_Window; }
+
+		void on_event(Event &event) override;
+		bool on_window_resized(WindowResizedEvent &event);
+		bool on_key_pressed(KeyPressedEvent &event);
+		bool on_mouse_button_pressed(MouseButtonPressedEvent &event);
 
 		EditorApplication();
 		virtual ~EditorApplication();
-		EditorApplication(const EditorApplication&) = delete;
-		EditorApplication& operator=(const EditorApplication&) = delete;
+		EditorApplication(const EditorApplication &) = delete;
+		EditorApplication &operator=(const EditorApplication &) = delete;
 
-		template<typename T, typename... Args>
-		T* register_panel(Args&&... args)
+		template <typename T, typename... Args>
+		T *register_panel(Args &&...args)
 		{
 			m_Panels.push_back(make_ref<T>(std::forward<Args>(args)...));
-			return static_cast<T*>(m_Panels.back().get());
+			return static_cast<T *>(m_Panels.back().get());
 		}
 
-		template<typename T>
+		template <typename T>
 		void unregister()
 		{
 			// TODO: Unregister layer of the same type (The layer type is defined by the class type)
@@ -68,27 +69,29 @@ namespace hdn
 			// TODO: Unregister layer by it's id
 		}
 		void run();
+
 	private:
 		void load_game_objects();
+
 	private:
-		VulkanWindow m_Window{ DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, "First App" };
-		VulkanDevice m_Device{ m_Window };
-		VulkanRenderer m_Renderer{ &m_Window, &m_Device };
+		VulkanWindow m_Window{DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, "First App"};
+		VulkanDevice m_Device{m_Window};
+		VulkanRenderer m_Renderer{&m_Window, &m_Device};
 
 		// Order of declarations matters
-		Scope<VulkanDescriptorPool> m_GlobalPool{}; // System that require descriptors only relevant to their work should create their own HDNDescriptorPool
+		Scope<VulkanDescriptorPool> m_GlobalPool{}; // System that require descriptors only relevant to their work should create their own DMDescriptorPool
 
 		PhysicsWorldSystem m_PhysicsWorld;
 
 		Ref<Scene> m_ActiveScene;
 
 		vector<Ref<IEditorPanel>> m_Panels;
-		ViewportPanel* m_ViewportPanel = nullptr;
+		ViewportPanel *m_ViewportPanel = nullptr;
 
 		// ------------
-		vector<Scope<VulkanBuffer>> m_UboBuffers{ VulkanSwapChain::MAX_FRAMES_IN_FLIGHT };
+		vector<Scope<VulkanBuffer>> m_UboBuffers{VulkanSwapChain::MAX_FRAMES_IN_FLIGHT};
 		Scope<VulkanDescriptorSetLayout> m_GlobalSetLayout;
-		vector<VkDescriptorSet> m_GlobalDescriptorSets{ VulkanSwapChain::MAX_FRAMES_IN_FLIGHT }; // One descriptor set per frame
+		vector<VkDescriptorSet> m_GlobalDescriptorSets{VulkanSwapChain::MAX_FRAMES_IN_FLIGHT}; // One descriptor set per frame
 
 		UpdateTransformSystem m_UpdateTransformSystem{};
 		UpdateScriptSystem m_UpdateScriptSystem{};

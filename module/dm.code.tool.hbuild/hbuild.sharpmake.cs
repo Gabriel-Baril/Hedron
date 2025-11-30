@@ -1,9 +1,9 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeToolHBuildProject : BaseCppProject
+public class DmCodeToolHBuildProject : BaseCppProject
 {
-    public HdnCodeToolHBuildProject()
+    public DmCodeToolHBuildProject()
     {
         Name = "dm.code.tool.hbuild";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -21,13 +21,13 @@ public class HdnCodeToolHBuildProject : BaseCppProject
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleSharedProject>(target);
-        conf.AddPublicDependency<HdnCodeModulePipelineProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalCLI11Project>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeModuleSharedProject>(target);
+        conf.AddPublicDependency<DmCodeModulePipelineProject>(target);
+        conf.AddPublicDependency<DmCodeExternalPugiXMLProject>(target);
+        conf.AddPublicDependency<DmCodeExternalFlecsProject>(target);
+        conf.AddPublicDependency<DmCodeModuleHobjProject>(target);
+        conf.AddPublicDependency<DmCodeExternalCLI11Project>(target);
 
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
     }

@@ -2,9 +2,9 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeModuleCoreProject : BaseCppProject
+public class DmCodeModuleCoreProject : BaseCppProject
 {
-    public HdnCodeModuleCoreProject()
+    public DmCodeModuleCoreProject()
     {
         Name = "dm.code.module.core";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -25,11 +25,11 @@ public class HdnCodeModuleCoreProject : BaseCppProject
 
         conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
 
-        conf.AddPublicDependency<HdnCodeExternalGlmProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalSpdlogProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalEASTLProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalXXHashProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalTLSFProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalINIHProject>(target);
+        conf.AddPublicDependency<DmCodeExternalGlmProject>(target);
+        conf.AddPublicDependency<DmCodeExternalSpdlogProject>(target);
+        conf.AddPublicDependency<DmCodeExternalEASTLProject>(target);
+        conf.AddPublicDependency<DmCodeExternalXXHashProject>(target);
+        conf.AddPublicDependency<DmCodeExternalTLSFProject>(target);
+        conf.AddPublicDependency<DmCodeExternalINIHProject>(target);
     }
 }

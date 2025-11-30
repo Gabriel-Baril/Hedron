@@ -4,43 +4,43 @@
 
 #include "core/config/config.h"
 
-namespace hdn
+namespace dm
 {
 	bool predicate(const fspath &path)
 	{
 		auto s = filesystem_filename(path).string();
-		HDN_WARNING_LOG(s.c_str());
+		DM_WARNING_LOG(s.c_str());
 		return str_equals(s.c_str(), ".module");
 	}
 }
 
 int main()
 {
-	using namespace hdn;
+	using namespace dm;
 	log_init();
 
 	fspath rootConfig = Configuration::get_root_config_path();
-	HDN_INFO_LOG("HDN_ROOT={0}", rootConfig.string().c_str());
+	DM_INFO_LOG("DM_ROOT={0}", rootConfig.string().c_str());
 
 	string testSolution = Configuration::get().get_root_config_variable(CONFIG_SECTION_TEST, CONFIG_KEY_EXECUTABLE_LIST_PATH, "");
-	HDN_INFO_LOG(testSolution.c_str());
+	DM_INFO_LOG(testSolution.c_str());
 
 	string moduleFolder = Configuration::get().get_root_config_variable(CONFIG_SECTION_PATH, CONFIG_KEY_MODULE_FOLDER_PATH, "");
 
-	HDN_INFO_LOG("Module Folder -> '{0}'", moduleFolder.c_str());
+	DM_INFO_LOG("Module Folder -> '{0}'", moduleFolder.c_str());
 
 	fspath corePath = "dm.code.module.core";
 
 	try
 	{
-		vector<fspath> paths = filesystem_walk(moduleFolder, hdn::predicate, true);
+		vector<fspath> paths = filesystem_walk(moduleFolder, dm::predicate, true);
 		for (const auto &path : paths)
 		{
-			HDN_INFO_LOG("{0}", path.filename().string().c_str());
+			DM_INFO_LOG("{0}", path.filename().string().c_str());
 		}
 	}
 	catch (const std::exception &e)
 	{
-		HDN_ERROR_LOG("FS error {0}", e.what());
+		DM_ERROR_LOG("FS error {0}", e.what());
 	}
 }

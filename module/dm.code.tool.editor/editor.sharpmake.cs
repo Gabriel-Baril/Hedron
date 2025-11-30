@@ -2,9 +2,9 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 using System.IO; // For Path.Combine
 
 [Generate]
-public class HdnCodeToolEditorProject : BaseCppProject
+public class DmCodeToolEditorProject : BaseCppProject
 {
-    public HdnCodeToolEditorProject()
+    public DmCodeToolEditorProject()
     {
         Name = "dm.code.tool.editor";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -51,19 +51,19 @@ public class HdnCodeToolEditorProject : BaseCppProject
 
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalTinyObjLoaderProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalOpenFBXProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalGLFWProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalImguiProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleGfxProject>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeExternalTinyObjLoaderProject>(target);
+        conf.AddPublicDependency<DmCodeExternalOpenFBXProject>(target);
+        conf.AddPublicDependency<DmCodeExternalGLFWProject>(target);
+        conf.AddPublicDependency<DmCodeExternalImguiProject>(target);
+        conf.AddPublicDependency<DmCodeExternalFlecsProject>(target);
+        conf.AddPublicDependency<DmCodeModuleGfxProject>(target);
 
-        conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalTinyProcessLibraryProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalINIHProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalCLI11Project>(target);
-        conf.AddPublicDependency<HdnCodeExternalFmtProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalNlohmannJsonProject>(target);
+        conf.AddPublicDependency<DmCodeExternalPugiXMLProject>(target);
+        conf.AddPublicDependency<DmCodeExternalTinyProcessLibraryProject>(target);
+        conf.AddPublicDependency<DmCodeExternalINIHProject>(target);
+        conf.AddPublicDependency<DmCodeExternalCLI11Project>(target);
+        conf.AddPublicDependency<DmCodeExternalFmtProject>(target);
+        conf.AddPublicDependency<DmCodeExternalNlohmannJsonProject>(target);
     }
 }

@@ -1,11 +1,11 @@
 #include "zone.h"
 #include "mem_virtual.h"
 
-namespace hdn
+namespace dm
 {
 	struct ZoneGlob
 	{
-		void* zoneVirtualMemoryBase = nullptr;
+		void *zoneVirtualMemoryBase = nullptr;
 		bool initialized = false;
 	};
 
@@ -17,7 +17,7 @@ namespace hdn
 		{
 			return;
 		}
-		HDN_CORE_ASSERT(mem_virtual_initialized(), "Trying to use zone before mem_virtual initialization");
+		DM_CORE_ASSERT(mem_virtual_initialized(), "Trying to use zone before mem_virtual initialization");
 
 		s_ZoneGlob.initialized = true;
 	}
@@ -29,12 +29,12 @@ namespace hdn
 
 	void zone_reserve_virtual_range(u64 totalZoneMemory)
 	{
-		HDN_CORE_ASSERT(zone_initialized(), "Trying to use zone system before initialization");
-		HDN_CORE_ASSERT(is_size_aligned(totalZoneMemory, ZONE_BLOCK_SIZE), "totalZoneMemory should be a multiple of ZONE_BLOCK_SIZE");
+		DM_CORE_ASSERT(zone_initialized(), "Trying to use zone system before initialization");
+		DM_CORE_ASSERT(is_size_aligned(totalZoneMemory, ZONE_BLOCK_SIZE), "totalZoneMemory should be a multiple of ZONE_BLOCK_SIZE");
 		s_ZoneGlob.zoneVirtualMemoryBase = mem_virtual_reserve(totalZoneMemory);
 	}
 
-	void zone_load(const char* zone)
+	void zone_load(const char *zone)
 	{
 	}
 }

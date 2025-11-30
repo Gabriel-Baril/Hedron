@@ -3,7 +3,7 @@
 #include "ecs/components/transform_component.h"
 #include "ecs/components/outline_renderer.h"
 
-namespace hdn
+namespace dm
 {
 	void InspectorPanel::on_update(f32 dt)
 	{

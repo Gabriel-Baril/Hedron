@@ -5,20 +5,20 @@
 
 #include <glm/gtc/constants.hpp>
 
-namespace hdn
+namespace dm
 {
 	class RotateZScript : public INativeScript
 	{
-		virtual const char* name()
+		virtual const char *name()
 		{
 			return "RotateZScript";
 		}
 
 		virtual void on_update(float dt) override
 		{
-			TransformComponent* transformC = m_Entity.get_mut<TransformComponent>();
+			TransformComponent *transformC = m_Entity.get_mut<TransformComponent>();
 			transformC->rotation.z += dt;
-			HDN_WARNING_LOG("RotateZScript: {0}", transformC->rotation.z);
+			DM_WARNING_LOG("RotateZScript: {0}", transformC->rotation.z);
 		}
 	};
 }

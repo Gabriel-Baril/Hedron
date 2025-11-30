@@ -1,6 +1,6 @@
 #include "native_script_component.h"
 
-namespace hdn
+namespace dm
 {
 
 	void INativeScript::bind(flecs::entity e)

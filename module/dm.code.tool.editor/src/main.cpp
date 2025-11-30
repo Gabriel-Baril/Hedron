@@ -2,16 +2,16 @@
 
 int main()
 {
-	using namespace hdn;
+	using namespace dm;
 	log_init();
 
 	try
 	{
-		hdn::EditorApplication::get().run();
+		dm::EditorApplication::get().run();
 	}
-	catch (const std::exception& e)
+	catch (const std::exception &e)
 	{
-		HDN_ERROR_LOG("{0}", e.what());
+		DM_ERROR_LOG("{0}", e.what());
 		return EXIT_FAILURE;
 	}
 

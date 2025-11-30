@@ -79,13 +79,13 @@ public abstract class BaseCppProject : Project
         switch (target.Optimization)
         {
             case Optimization.Debug:
-                conf.Defines.Add("_HDN_DEBUG");
+                conf.Defines.Add("_DM_DEBUG");
                 break;
             case Optimization.Release:
-                conf.Defines.Add("_HDN_RELEASE");
+                conf.Defines.Add("_DM_RELEASE");
                 break;
             case Optimization.Retail:
-                conf.Defines.Add("_HDN_RETAIL");
+                conf.Defines.Add("_DM_RETAIL");
                 break;
         }
     }

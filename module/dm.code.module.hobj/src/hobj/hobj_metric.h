@@ -6,7 +6,7 @@
 
 #include "hobj_metric_operation.h"
 
-namespace hdn
+namespace dm
 {
 	struct ObjectMetricEntry
 	{
@@ -17,7 +17,7 @@ namespace hdn
 		int processId = 0;
 		u64 transactionTimeNano = 0;
 		ObjectOperationType opType = ObjectOperationType::UNDEFINED;
-		
+
 		u64 fileByteRead = 0;
 		u64 fileByteWrite = 0;
 		string filePath = "";
@@ -26,14 +26,15 @@ namespace hdn
 	class ObjectMetricTracker
 	{
 	public:
-		static ObjectMetricTracker& get();
+		static ObjectMetricTracker &get();
 		void begin(ObjectOperationType type, u64 objectID = 0);
-		void file_path(const char* path);
+		void file_path(const char *path);
 		void file_byte_read(u64 byteCount);
 		void file_byte_write(u64 byteCount);
 		void end();
-		ObjectMetricEntry& get_latest_metric();
+		ObjectMetricEntry &get_latest_metric();
 		void print_stats();
+
 	private:
 		stack<u64> m_MetricStack;
 		vector<ObjectMetricEntry> m_StoredMetrics;

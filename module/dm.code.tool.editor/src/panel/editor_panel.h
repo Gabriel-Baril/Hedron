@@ -3,13 +3,13 @@
 #include "imgui.h"
 #include "core/core.h"
 
-namespace hdn
+namespace dm
 {
 	class IEditorPanel
 	{
 	public:
 		IEditorPanel(const string name)
-			: m_Name{name}
+				: m_Name{name}
 		{
 		}
 
@@ -17,7 +17,7 @@ namespace hdn
 		{
 			ImGui::Begin(m_Name.c_str());
 		}
-		virtual void on_update( f32 dt ) = 0;
+		virtual void on_update(f32 dt) = 0;
 		virtual void end()
 		{
 			ImGui::End();
@@ -37,6 +37,7 @@ namespace hdn
 		{
 			return m_Enabled;
 		}
+
 	private:
 		bool m_Enabled = true;
 		string m_Name;

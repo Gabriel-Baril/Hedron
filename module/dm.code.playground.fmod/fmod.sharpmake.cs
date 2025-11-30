@@ -2,9 +2,9 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 using System.IO; // For Path.Combine
 
 [Generate]
-public class HdnCodePlaygroundFmodProject : BaseCppProject
+public class DmCodePlaygroundFmodProject : BaseCppProject
 {
-    public HdnCodePlaygroundFmodProject()
+    public DmCodePlaygroundFmodProject()
     {
         Name = "dm.code.playground.fmod";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -57,8 +57,8 @@ public class HdnCodePlaygroundFmodProject : BaseCppProject
 
         }
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalXXHashProject>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeModuleHobjProject>(target);
+        conf.AddPublicDependency<DmCodeExternalXXHashProject>(target);
     }
 }

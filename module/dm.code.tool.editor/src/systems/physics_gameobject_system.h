@@ -3,11 +3,11 @@
 #include "core/core.h"
 #include "frame_info.h"
 
-namespace hdn
+namespace dm
 {
 	class PhysicsGameObjectSystem
 	{
 	public:
-		void update(FrameInfo& frameInfo);
+		void update(FrameInfo &frameInfo);
 	};
 }

@@ -3,10 +3,10 @@
 #include "core/core.h"
 #include <PxPhysicsAPI.h>
 
-namespace hdn
+namespace dm
 {
 	struct PhysicsComponent
 	{
-		physx::PxRigidActor* physicsActor;
+		physx::PxRigidActor *physicsActor;
 	};
 }

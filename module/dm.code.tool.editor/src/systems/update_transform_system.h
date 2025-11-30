@@ -2,11 +2,11 @@
 
 #include "frame_info.h"
 
-namespace hdn
+namespace dm
 {
 	class UpdateTransformSystem
 	{
 	public:
-		void update(FrameInfo& frameInfo);
+		void update(FrameInfo &frameInfo);
 	};
 }

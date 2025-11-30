@@ -4,13 +4,13 @@
 
 #include "editor_panel.h"
 
-namespace hdn
+namespace dm
 {
 	class PerformancePanel : public IEditorPanel
 	{
 	public:
 		PerformancePanel()
-			: IEditorPanel{ "performance" }
+				: IEditorPanel{"performance"}
 		{
 		}
 

@@ -7,19 +7,19 @@
 #include "ecs/components/model_component.h"
 #include "core/utils.h"
 
-namespace hdn
+namespace dm
 {
 	struct SimplePushConstantData
 	{
-		mat4f32 modelMatrix{ 1.0f };
-		mat4f32 normalMatrix{ 1.0f };
+		mat4f32 modelMatrix{1.0f};
+		mat4f32 normalMatrix{1.0f};
 	};
 
 	SimpleRenderSystem::SimpleRenderSystem()
 	{
 	}
 
-	SimpleRenderSystem::SimpleRenderSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+	SimpleRenderSystem::SimpleRenderSystem(VulkanDevice *device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
 	{
 		Init(device, renderPass, globalSetLayout);
 	}
@@ -36,7 +36,7 @@ namespace hdn
 		pushConstantRange.offset = 0;
 		pushConstantRange.size = sizeof(SimplePushConstantData);
 
-		vector<VkDescriptorSetLayout> descriptorSetLayouts{ globalSetLayout };
+		vector<VkDescriptorSetLayout> descriptorSetLayouts{globalSetLayout};
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -46,7 +46,7 @@ namespace hdn
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; // A way to push a very small amount of data to our shader
 		if (vkCreatePipelineLayout(m_Device->get_device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS)
 		{
-			HDN_CORE_THROW(std::runtime_error, "Failed to create pipeline layout");
+			DM_CORE_THROW(std::runtime_error, "Failed to create pipeline layout");
 		}
 	}
 
@@ -63,28 +63,27 @@ namespace hdn
 		m_Pipeline = make_scope<VulkanPipeline>(m_Device, get_data_path("shaders/simple_shader.vert.spv"), get_data_path("shaders/simple_shader.frag.spv"), pipelineConfig);
 	}
 
-	void SimpleRenderSystem::render(FrameInfo& frameInfo)
+	void SimpleRenderSystem::render(FrameInfo &frameInfo)
 	{
 		m_Pipeline->bind(frameInfo.commandBuffer);
 
 		vkCmdBindDescriptorSets(
-			frameInfo.commandBuffer,
-			VK_PIPELINE_BIND_POINT_GRAPHICS,
-			m_PipelineLayout,
-			0, 1,
-			&frameInfo.globalDescriptorSet,
-			0, nullptr
-		); // Low frequency descriptor sets needs to occupy the lowest index
+				frameInfo.commandBuffer,
+				VK_PIPELINE_BIND_POINT_GRAPHICS,
+				m_PipelineLayout,
+				0, 1,
+				&frameInfo.globalDescriptorSet,
+				0, nullptr); // Low frequency descriptor sets needs to occupy the lowest index
 
 		auto query = frameInfo.scene->World()->query<TransformComponent, ModelComponent>();
-		query.each([&](flecs::entity e, TransformComponent& transformC, ModelComponent& modelC) {
+		query.each([&](flecs::entity e, TransformComponent &transformC, ModelComponent &modelC)
+							 {
 
 			SimplePushConstantData push{};
 			push.modelMatrix = transformC.to_mat(); // Will be done in the shader once we have uniform buffer
 			push.normalMatrix = transformC.normal_matrix();
 			vkCmdPushConstants(frameInfo.commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
 			modelC.model->bind(frameInfo.commandBuffer);
-			modelC.model->draw(frameInfo.commandBuffer);
-		});
+			modelC.model->draw(frameInfo.commandBuffer); });
 	}
 }

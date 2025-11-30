@@ -1,13 +1,13 @@
 #include "hgen_hobj.h"
 
-namespace hdn
+namespace dm
 {
-	void HGeneratedObject::serialize(hostream& stream)
+	void HGeneratedObject::serialize(hostream &stream)
 	{
 		HObject::serialize(stream);
 	}
 
-	void HGeneratedObject::deserialize(histream& stream)
+	void HGeneratedObject::deserialize(histream &stream)
 	{
 		HObject::deserialize(stream);
 	}

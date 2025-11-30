@@ -3,7 +3,7 @@
 #include "core/core.h"
 #include "gfx/r_vk_model.h"
 
-namespace hdn
+namespace dm
 {
 	struct ModelComponent
 	{

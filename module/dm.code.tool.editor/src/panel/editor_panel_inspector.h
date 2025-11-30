@@ -4,17 +4,18 @@
 #include "flecs/flecs.h"
 #include "editor_panel.h"
 
-namespace hdn
+namespace dm
 {
 	class InspectorPanel : public IEditorPanel
 	{
 	public:
 		InspectorPanel()
-			: IEditorPanel{ "inspector" }
+				: IEditorPanel{"inspector"}
 		{
 		}
 
 		void on_update(f32 dt);
+
 	private:
 	};
 }

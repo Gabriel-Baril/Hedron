@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 
-namespace hdn
+namespace dm
 {
 	struct Ideation
 	{
@@ -16,7 +16,8 @@ namespace hdn
 	class IdeationParser
 	{
 	public:
-		void parse_ideation_file(const string& path, Ideation& ideation);
+		void parse_ideation_file(const string &path, Ideation &ideation);
+
 	private:
 	};
 }

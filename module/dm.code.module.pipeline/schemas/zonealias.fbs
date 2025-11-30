@@ -1,6 +1,6 @@
 include "core.fbs";
 
-namespace hdn;
+namespace dm;
 
 table XZoneAliasAsset {
     id: ulong;

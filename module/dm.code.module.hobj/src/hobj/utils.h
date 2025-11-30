@@ -4,7 +4,7 @@
 #include "core/config/config.h"
 #include "xxhash/xxhash.h"
 
-namespace hdn
+namespace dm
 {
-	string get_data_path(const string& relativeDataPath);
+	string get_data_path(const string &relativeDataPath);
 }

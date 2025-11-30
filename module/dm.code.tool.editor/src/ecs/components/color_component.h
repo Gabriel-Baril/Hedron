@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 
-namespace hdn
+namespace dm
 {
 	struct ColorComponent
 	{

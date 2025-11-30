@@ -1,9 +1,9 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnTestModuleCore : BaseCppTestProject
+public class DmTestModuleCore : BaseCppTestProject
 {
-    public HdnTestModuleCore()
+    public DmTestModuleCore()
     {
         Name = "dm.test.module.core";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -23,7 +23,7 @@ public class HdnTestModuleCore : BaseCppTestProject
         // conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\include");
         // conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
 
-        conf.AddPublicDependency<HdnCodeExternalCatch2Project>(target);
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeExternalCatch2Project>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
     }
 }

@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 
-namespace hdn
+namespace dm
 {
 	struct Vertex
 	{
@@ -11,13 +11,12 @@ namespace hdn
 		vec3f32 normal{};
 		vec2f32 uv{};
 
-		bool operator==(const Vertex& other) const
+		bool operator==(const Vertex &other) const
 		{
-			return
-				position == other.position &&
-				color == other.color &&
-				normal == other.normal &&
-				uv == other.uv;
+			return position == other.position &&
+						 color == other.color &&
+						 normal == other.normal &&
+						 uv == other.uv;
 		}
 	};
 
@@ -25,7 +24,7 @@ namespace hdn
 	{
 		u32 vertexCount;
 		u32 indexCount;
-		Vertex* vertices;
-		u32* indices;
+		Vertex *vertices;
+		u32 *indices;
 	};
 }

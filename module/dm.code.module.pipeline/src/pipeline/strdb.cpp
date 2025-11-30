@@ -3,10 +3,10 @@
 #include "core/memory/allocator_heap_string.h"
 #include "core/memory/core_memory.h"
 
-namespace hdn
+namespace dm
 {
 	static constexpr u64 STRDB_MEMORY_POOL_SIZE = 50 * MB;
-	
+
 	struct StrDBGlob
 	{
 		bool initialized = false;
@@ -20,7 +20,7 @@ namespace hdn
 			return;
 		}
 
-		u8* strMemory = new u8[STRDB_MEMORY_POOL_SIZE];
+		u8 *strMemory = new u8[STRDB_MEMORY_POOL_SIZE];
 		core_memset(strMemory, 0, STRDB_MEMORY_POOL_SIZE);
 		str_heap_allocator_init(s_StrDBGlob.strAllocator, strMemory, STRDB_MEMORY_POOL_SIZE);
 		s_StrDBGlob.initialized = true;
@@ -38,18 +38,18 @@ namespace hdn
 		s_StrDBGlob.initialized = false;
 	}
 
-	char* strdb_allocate(const char* source, u64 len)
+	char *strdb_allocate(const char *source, u64 len)
 	{
 		return str_heap_allocator_allocate(s_StrDBGlob.strAllocator, source, len); // str_heap_allocator_allocate already core_memcpy the data into the dst string
 	}
 
-	char* strdb_allocate(const char* source)
+	char *strdb_allocate(const char *source)
 	{
 		const size_t len = strlen(source) + 1;
 		return strdb_allocate(source, len);
 	}
 
-	void strdb_deallocate(char* source)
+	void strdb_deallocate(char *source)
 	{
 		str_heap_allocator_deallocate(s_StrDBGlob.strAllocator, source);
 	}

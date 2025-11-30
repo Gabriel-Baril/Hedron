@@ -4,10 +4,10 @@
 
 #include "flecs/flecs.h"
 
-namespace hdn
+namespace dm
 {
-	void inspector_component_render(TransformComponent& component);
+	void inspector_component_render(TransformComponent &component);
 
 	// template<typename Component>
-	void render_with_header(flecs::entity& entity, const char* controlLabel);
+	void render_with_header(flecs::entity &entity, const char *controlLabel);
 }

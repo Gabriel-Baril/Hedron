@@ -1,13 +1,13 @@
 #include "hdef_hobj.h"
 
-namespace hdn
+namespace dm
 {
-	void HDefinition::serialize(hostream& stream)
+	void HDefinition::serialize(hostream &stream)
 	{
 		HObject::serialize(stream);
 	}
 
-	void HDefinition::deserialize(histream& stream)
+	void HDefinition::deserialize(histream &stream)
 	{
 		HObject::deserialize(stream);
 	}

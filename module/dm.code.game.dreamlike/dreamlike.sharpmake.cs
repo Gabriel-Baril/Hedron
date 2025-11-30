@@ -2,9 +2,9 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 using System.IO; // For Path.Combine
 
 [Generate]
-public class HdnCodeGameDreamlikeProject : BaseCppProject
+public class DmCodeGameDreamlikeProject : BaseCppProject
 {
-    public HdnCodeGameDreamlikeProject()
+    public DmCodeGameDreamlikeProject()
     {
         Name = "dm.code.game.dreamlike";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -51,11 +51,11 @@ public class HdnCodeGameDreamlikeProject : BaseCppProject
 
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleSharedProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalImguiProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleGfxProject>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeModuleSharedProject>(target);
+        conf.AddPublicDependency<DmCodeExternalImguiProject>(target);
+        conf.AddPublicDependency<DmCodeExternalFlecsProject>(target);
+        conf.AddPublicDependency<DmCodeModuleHobjProject>(target);
+        conf.AddPublicDependency<DmCodeModuleGfxProject>(target);
     }
 }

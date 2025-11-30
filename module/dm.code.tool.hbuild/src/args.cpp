@@ -2,29 +2,28 @@
 
 #include "CLI/CLI.hpp"
 
-namespace hdn
+namespace dm
 {
 	static HBuildCmdArgs s_PipelineCmdArgs;
 
-	bool args_init(int argc, char* argv[])
+	bool args_init(int argc, char *argv[])
 	{
-		CLI::App app{ "pipeline" };
+		CLI::App app{"pipeline"};
 		app.add_option("-b,--buildconfig", s_PipelineCmdArgs.buildConfigPath, "Build Config Path");
 		try
 		{
-			app.parse(argc, argv);               
+			app.parse(argc, argv);
 			return true;
 		}
-		catch (const CLI::ParseError& e)
+		catch (const CLI::ParseError &e)
 		{
-			HDN_CRITICAL_LOG("Error parsing cmd args: {0}", e.what());
+			DM_CRITICAL_LOG("Error parsing cmd args: {0}", e.what());
 			return false;
 		}
 	}
 
-	const HBuildCmdArgs& args_get()
+	const HBuildCmdArgs &args_get()
 	{
 		return s_PipelineCmdArgs;
 	}
 }
-

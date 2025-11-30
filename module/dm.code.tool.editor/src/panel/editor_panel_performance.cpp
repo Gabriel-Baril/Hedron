@@ -1,6 +1,6 @@
 #include "editor_panel_performance.h"
 
-namespace hdn
+namespace dm
 {
 	void PerformancePanel::on_update(f32 dt)
 	{

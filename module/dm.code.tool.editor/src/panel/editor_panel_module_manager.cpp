@@ -9,23 +9,22 @@
 
 #include "core/config/config.h"
 
-
-namespace hdn
+namespace dm
 {
-	inline static constexpr const char* ROOT_NODE_NAME = "Catch2TestRun";
-	inline static constexpr const char* TEST_CASE_NODE_NAME = "TestCase";
-	inline static constexpr const char* SECTION_NODE_NAME = "Section";
-	inline static constexpr const char* EXPRESSION_NODE_NAME = "Expression";
-	inline static constexpr const char* ORIGINAL_NODE_NAME = "Original";
-	inline static constexpr const char* EXPANDED_NODE_NAME = "Expanded";
-	inline static constexpr const char* BENCHMARK_NODE_NAME = "BenchmarkResults";
-	inline static constexpr const char* OVERALL_RESULTS_NODE_NAME = "OverallResults";
-	inline static constexpr const char* OVERALL_RESULTS_CASES_NODE_NAME = "OverallResultsCases";
-	inline static constexpr const char* OVERALL_RESULT_NODE_NAME = "OverallResult";
+	inline static constexpr const char *ROOT_NODE_NAME = "Catch2TestRun";
+	inline static constexpr const char *TEST_CASE_NODE_NAME = "TestCase";
+	inline static constexpr const char *SECTION_NODE_NAME = "Section";
+	inline static constexpr const char *EXPRESSION_NODE_NAME = "Expression";
+	inline static constexpr const char *ORIGINAL_NODE_NAME = "Original";
+	inline static constexpr const char *EXPANDED_NODE_NAME = "Expanded";
+	inline static constexpr const char *BENCHMARK_NODE_NAME = "BenchmarkResults";
+	inline static constexpr const char *OVERALL_RESULTS_NODE_NAME = "OverallResults";
+	inline static constexpr const char *OVERALL_RESULTS_CASES_NODE_NAME = "OverallResultsCases";
+	inline static constexpr const char *OVERALL_RESULT_NODE_NAME = "OverallResult";
 
-	void ModuleManagerPanel::parse_overall_result_node(const pugi::xml_node& resultNode, OverallResult& overallResult)
+	void ModuleManagerPanel::parse_overall_result_node(const pugi::xml_node &resultNode, OverallResult &overallResult)
 	{
-		for (const auto& attribute : resultNode.attributes())
+		for (const auto &attribute : resultNode.attributes())
 		{
 			if (str_equals(attribute.name(), "success"))
 			{
@@ -37,9 +36,9 @@ namespace hdn
 			}
 		}
 	}
-	void ModuleManagerPanel::parse_overall_results_node(const pugi::xml_node& resultNode, OverallResults& overallResults)
+	void ModuleManagerPanel::parse_overall_results_node(const pugi::xml_node &resultNode, OverallResults &overallResults)
 	{
-		for (const auto& attribute : resultNode.attributes())
+		for (const auto &attribute : resultNode.attributes())
 		{
 			if (str_equals(attribute.name(), "successes"))
 			{
@@ -56,9 +55,9 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::parse_section_node(const pugi::xml_node& sectionNode, SectionResult& sectionResult)
+	void ModuleManagerPanel::parse_section_node(const pugi::xml_node &sectionNode, SectionResult &sectionResult)
 	{
-		for (const auto& attribute : sectionNode.attributes())
+		for (const auto &attribute : sectionNode.attributes())
 		{
 			if (str_equals(attribute.name(), "name"))
 			{
@@ -87,9 +86,9 @@ namespace hdn
 			}
 		}
 	}
-	void ModuleManagerPanel::parse_expression_node(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult)
+	void ModuleManagerPanel::parse_expression_node(const pugi::xml_node &expressionNode, ExpressionResult &expressionResult)
 	{
-		for (const auto& attribute : expressionNode.attributes())
+		for (const auto &attribute : expressionNode.attributes())
 		{
 			if (str_equals(attribute.name(), "success"))
 			{
@@ -97,7 +96,7 @@ namespace hdn
 			}
 			else if (str_equals(attribute.name(), "type"))
 			{
-				const char* typeStr = attribute.as_string();
+				const char *typeStr = attribute.as_string();
 				if (str_equals(typeStr, "REQUIRE"))
 				{
 					expressionResult.type = TestExpressionType::Require;
@@ -127,15 +126,14 @@ namespace hdn
 			{
 				expressionResult.expandedExpression = node.text().as_string();
 			}
-
 		}
 	}
 
-	void ModuleManagerPanel::parse_test_case_node(const pugi::xml_node& testCase, TestCaseResult& testCaseResult)
+	void ModuleManagerPanel::parse_test_case_node(const pugi::xml_node &testCase, TestCaseResult &testCaseResult)
 	{
-		HDN_CORE_ASSERT(str_equals(testCase.name(), TEST_CASE_NODE_NAME), "Invalid Test Case Node");
+		DM_CORE_ASSERT(str_equals(testCase.name(), TEST_CASE_NODE_NAME), "Invalid Test Case Node");
 
-		for (const auto& attribute : testCase.attributes())
+		for (const auto &attribute : testCase.attributes())
 		{
 			if (str_equals(attribute.name(), "name"))
 			{
@@ -178,9 +176,9 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::parse_root_node(const pugi::xml_node& root, TestResult& out)
+	void ModuleManagerPanel::parse_root_node(const pugi::xml_node &root, TestResult &out)
 	{
-		HDN_CORE_ASSERT(str_equals(root.name(), ROOT_NODE_NAME), "Invalid Root Node");
+		DM_CORE_ASSERT(str_equals(root.name(), ROOT_NODE_NAME), "Invalid Root Node");
 
 		out.context.testExecutableName = root.attribute("name").as_string();
 		out.context.rngSeed = root.attribute("rng-seed").as_uint();
@@ -203,7 +201,7 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::load_test_result_from_memory(const string& buffer, TestResult& testResult)
+	void ModuleManagerPanel::load_test_result_from_memory(const string &buffer, TestResult &testResult)
 	{
 		pugi::xml_document doc; // Already contains the root node (Catch2TestRun)
 		pugi::xml_parse_result result = doc.load_buffer(buffer.c_str(), buffer.size());
@@ -214,7 +212,7 @@ namespace hdn
 		parse_root_node(doc.first_child(), testResult);
 	}
 
-	void ModuleManagerPanel::display_test_node(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const ExpressionResult &expression, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		set_row_color(expression.success);
@@ -233,7 +231,7 @@ namespace hdn
 		ImGui::Text("%i", expression.line);
 	}
 
-	void ModuleManagerPanel::display_test_node(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const SectionResult &section, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		set_row_color(section.overallResults.failures <= 0);
@@ -253,7 +251,7 @@ namespace hdn
 
 		if (open)
 		{
-			for (const ExpressionResult& expression : section.expressionResults)
+			for (const ExpressionResult &expression : section.expressionResults)
 			{
 				display_test_node(expression, treeNodeFlags);
 			}
@@ -261,7 +259,7 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::display_test_node(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const TestCaseResult &testCase, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		set_row_color(testCase.overallResult.success);
@@ -281,11 +279,11 @@ namespace hdn
 
 		if (open)
 		{
-			for (const SectionResult& section : testCase.sectionResults)
+			for (const SectionResult &section : testCase.sectionResults)
 			{
 				display_test_node(section, treeNodeFlags);
 			}
-			for (const ExpressionResult& expression : testCase.expressionResults)
+			for (const ExpressionResult &expression : testCase.expressionResults)
 			{
 				display_test_node(expression, treeNodeFlags);
 			}
@@ -293,7 +291,7 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::display_test_node(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const TestResult &result, ImGuiTreeNodeFlags treeNodeFlags)
 	{
 		ImGui::TableNextRow();
 		set_row_color(result.overallResultsCases.failures <= 0);
@@ -313,7 +311,7 @@ namespace hdn
 
 		if (open)
 		{
-			for (const TestCaseResult& testCase : result.testCaseResults)
+			for (const TestCaseResult &testCase : result.testCaseResults)
 			{
 				display_test_node(testCase, treeNodeFlags);
 			}
@@ -321,9 +319,9 @@ namespace hdn
 		}
 	}
 
-	void ModuleManagerPanel::display_test_node(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags)
+	void ModuleManagerPanel::display_test_node(const vector<TestResult> &results, ImGuiTreeNodeFlags treeNodeFlags)
 	{
-		for (const TestResult& result : results)
+		for (const TestResult &result : results)
 		{
 			display_test_node(result, treeNodeFlags);
 		}
@@ -362,10 +360,11 @@ namespace hdn
 			// 1. Run build_test_projects.py
 			if (!m_RunningTests)
 			{
-				HDN_WARNING_LOG("build_test_projects.py started...");
+				DM_WARNING_LOG("build_test_projects.py started...");
 
 				// TODO: Refactor, proper multhreading management
-				m_WaitThread = std::thread([this]() {
+				m_WaitThread = std::thread([this]()
+																	 {
 					this->m_RunningTests = true;
 
 					const string testSolutionPath = Configuration::get().get_root_config_variable(CONFIG_SECTION_TEST, CONFIG_KEY_TEST_SOLUTION_PATH, "");
@@ -386,16 +385,16 @@ namespace hdn
 					int exitStatus = process.get_exit_status();
 					if (exitStatus != 0)
 					{
-						HDN_ERROR_LOG("Process terminated with errors");
+						DM_ERROR_LOG("Process terminated with errors");
 					}
-					HDN_WARNING_LOG("----------- Finished Running build_test_projects.py -----------");
+					DM_WARNING_LOG("----------- Finished Running build_test_projects.py -----------");
 
 					// 3. Run the test project executable with the right arguments (--success --durations yes --verbosity high --allow-running-no-tests --reporter xml > test_result.xml)
 					const string executableListFilePath = Configuration::get().get_root_config_variable(CONFIG_SECTION_TEST, CONFIG_KEY_EXECUTABLE_LIST_PATH, "");
 					std::ifstream inputFile(executableListFilePath);
 					if (!inputFile.is_open())
 					{
-						HDN_ERROR_LOG("Error: Could not open the file '{0}'", executableListFilePath.c_str());
+						DM_ERROR_LOG("Error: Could not open the file '{0}'", executableListFilePath.c_str());
 					}
 
 					string line;
@@ -405,7 +404,7 @@ namespace hdn
 					{
 						string executableCommand = fmt::format("{0} --success --durations yes --verbosity high --allow-running-no-tests --reporter xml", line);
 						executableCommands.push_back(executableCommand);
-						HDN_INFO_LOG("Executable -> '{0}' '{1}'", line.c_str(), executableCommand.c_str());
+						DM_INFO_LOG("Executable -> '{0}' '{1}'", line.c_str(), executableCommand.c_str());
 					}
 
 					// TODO: Make this concurrent
@@ -413,7 +412,7 @@ namespace hdn
 					testResultsStrs.reserve(10);
 					for (const auto& testCommand : executableCommands)
 					{
-						HDN_INFO_LOG("Running -> '{0}'", testCommand);
+						DM_INFO_LOG("Running -> '{0}'", testCommand);
 						testResultsStrs.emplace_back(string{});
 						string& testResultXML = testResultsStrs.back();
 						TinyProcessLib::Process testExecutableProcess(
@@ -426,18 +425,18 @@ namespace hdn
 							[](const char* error, size_t n) {
 								for (int i = 0; i < n; i++)
 								{
-									HDN_ERROR_LOG("{0}", error[i]);
+									DM_ERROR_LOG("{0}", error[i]);
 								}
 							}
 						);
 						int status = process.get_exit_status();
 						if (status != 0)
 						{
-							HDN_ERROR_LOG("Process terminated with errors");
+							DM_ERROR_LOG("Process terminated with errors");
 						}
 					}
 
-					HDN_WARNING_LOG("Tests Results Finished!");
+					DM_WARNING_LOG("Tests Results Finished!");
 
 					m_TestResults.clear();
 					for (const auto& testResultsStr : testResultsStrs)
@@ -445,17 +444,16 @@ namespace hdn
 						TestResult result;
 						// 5. Parse the generated test output
 						this->load_test_result_from_memory(testResultsStr, result);
-						HDN_INFO_LOG("RESULT: {0}", result.context.testExecutableName.c_str());
+						DM_INFO_LOG("RESULT: {0}", result.context.testExecutableName.c_str());
 						m_TestResults.emplace_back(result);
 					}
 					this->m_RunningTests = false;
-					m_RanTestsAtLeastOneTime = true;
-					});
+					m_RanTestsAtLeastOneTime = true; });
 				m_WaitThread.detach();
 			}
 			else
 			{
-				HDN_WARNING_LOG("Test already running");
+				DM_WARNING_LOG("Test already running");
 			}
 		}
 
@@ -497,7 +495,7 @@ namespace hdn
 			m_ModuleInfo.clear();
 			const string rootModuleFolder = Configuration::get().get_root_config_variable(CONFIG_SECTION_PATH, CONFIG_KEY_MODULE_FOLDER_PATH, "");
 			const vector<fspath> moduleFolders = filesystem_walk(rootModuleFolder);
-			for (const auto& modulefolder : moduleFolders)
+			for (const auto &modulefolder : moduleFolders)
 			{
 				fspath moduleFilename = ".module";
 				fspath moduleConfigFile = modulefolder / moduleFilename;
@@ -530,7 +528,7 @@ namespace hdn
 			ImGui::TableSetupColumn("Kind", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
 			ImGui::TableHeadersRow();
 
-			for (const auto& moduleInfo : m_ModuleInfo)
+			for (const auto &moduleInfo : m_ModuleInfo)
 			{
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();

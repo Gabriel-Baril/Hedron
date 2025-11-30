@@ -1,6 +1,6 @@
 #include "component_base.h"
 
-namespace hdn
+namespace dm
 {
 	ComponentBase::ComponentBase()
 	{

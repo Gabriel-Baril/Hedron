@@ -2,12 +2,13 @@
 
 #include "ecs/components/transform_component.h"
 
-namespace hdn
+namespace dm
 {
-	void UpdateTransformSystem::update(FrameInfo& frameInfo)
+	void UpdateTransformSystem::update(FrameInfo &frameInfo)
 	{
 		auto query = frameInfo.scene->World()->query<TransformComponent>();
-		query.each([&](flecs::entity e, TransformComponent& transformC) {
+		query.each([&](flecs::entity e, TransformComponent &transformC)
+							 {
 			// if (!transformC.Changed())
 			// {
 			// 	return;
@@ -22,7 +23,6 @@ namespace hdn
 				}
 			}
 
-			transformC.clear_change();
-		});
+			transformC.clear_change(); });
 	}
 }

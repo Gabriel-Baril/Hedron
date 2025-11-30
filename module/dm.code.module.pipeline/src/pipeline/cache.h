@@ -6,7 +6,7 @@
 
 #include "pipeline/generated/cache_generated.h"
 
-namespace hdn
+namespace dm
 {
 	using obj_t = u64;
 	using hpath = h64;
@@ -37,12 +37,12 @@ namespace hdn
 
 	enum class ObjectCacheState
 	{
-		COLD = HDN_BIT(0),
-		HOT = HDN_BIT(1),
+		COLD = DM_BIT(0),
+		HOT = DM_BIT(1),
 		COUNT,
 		NOT_CACHED = 0,
 	};
-	HDN_DEFINE_ENUM_CLASS_BITWISE_OPERATIONS(ObjectCacheState);
+	DM_DEFINE_ENUM_CLASS_BITWISE_OPERATIONS(ObjectCacheState);
 
 	bool cache_init();
 	void cache_shutdown();
@@ -58,7 +58,7 @@ namespace hdn
 	void cache_obj_save(obj_t id);
 
 	void cache_obj_path(obj_t id, std::string &path);
-	
+
 	bool cache_file_exist(obj_t id);
 	void cache_file_delete(obj_t id);
 	u64 cache_file_size(obj_t id);
@@ -74,6 +74,6 @@ namespace hdn
 	bool cache_obj_cold_cached(obj_t id);
 	bool cache_obj_hot_cached(obj_t id);
 	bool cache_obj_cached(obj_t id);
-	
+
 	ObjectCacheState cache_obj_cache_state(obj_t id);
 }

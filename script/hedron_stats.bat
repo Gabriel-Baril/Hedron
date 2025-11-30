@@ -1,1 +1,1 @@
-python %HDN_ROOT%\script\hedron_stats.py
+python %DM_ROOT%\script\hedron_stats.py

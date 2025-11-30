@@ -5,13 +5,13 @@
 #include "model_db.h"
 #include "physics_db.h"
 
-namespace hdn
+namespace dm
 {
 	struct TransformComponent
 	{
 		// TODO: Change to mat4 only
 		vec3f32 position{};
-		vec3f32 scale{ 1.0f, 1.0f, 1.0f };
+		vec3f32 scale{1.0f, 1.0f, 1.0f};
 		vec3f32 rotation{}; // In radians (Euler YXZ)
 
 		mat4f32 worldMatrix; // Populated at runtime
@@ -22,7 +22,7 @@ namespace hdn
 
 	struct ModelComponent
 	{
-		ModelAsset* model;
+		ModelAsset *model;
 	};
 
 	struct ColorComponent
@@ -43,7 +43,7 @@ namespace hdn
 
 	struct PhysicsComponent
 	{
-		PhysicsActorAsset* physicsActor;
+		PhysicsActorAsset *physicsActor;
 	};
 
 	enum SerializedComponentType
@@ -62,13 +62,13 @@ namespace hdn
 		SerializedComponentType type;
 		union
 		{
-			TransformComponent* transformC;
-			ModelComponent* modelC;
-			ColorComponent* colorC;
-			PointLightComponent* pointLightC;
-			NativeScriptComponent* nativeScriptC;
-			PhysicsComponent* physicsC;
-			void* data;
+			TransformComponent *transformC;
+			ModelComponent *modelC;
+			ColorComponent *colorC;
+			PointLightComponent *pointLightC;
+			NativeScriptComponent *nativeScriptC;
+			PhysicsComponent *physicsC;
+			void *data;
 		};
 	};
 
@@ -77,16 +77,16 @@ namespace hdn
 		u64 id;
 		int componentCount;
 		int prefabCount;
-		ComponentDef* components;
-		PrefabDef* parentPrefab = nullptr;
-		PrefabDef* childPrefabs = nullptr;
+		ComponentDef *components;
+		PrefabDef *parentPrefab = nullptr;
+		PrefabDef *childPrefabs = nullptr;
 	};
 
 	// This asset is used to instantiate a entity
 	struct EntityDef
 	{
 		u64 id;
-		PrefabDef* prefab = nullptr;
+		PrefabDef *prefab = nullptr;
 	};
 
 	// This asset is used to instantiate a scene (flecs::world)
@@ -94,6 +94,6 @@ namespace hdn
 	{
 		h64 name;
 		int entityCount;
-		EntityDef* entities; // Only top level entities
+		EntityDef *entities; // Only top level entities
 	};
 }

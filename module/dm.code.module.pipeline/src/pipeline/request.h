@@ -1,13 +1,17 @@
 #pragma once
 
-namespace hdn
+namespace dm
 {
 
-	template<typename T>
-	struct Request {};
+	template <typename T>
+	struct Request
+	{
+	};
 
-	template<typename T>
-	struct Response {};
+	template <typename T>
+	struct Response
+	{
+	};
 
 	enum class ResponseStatus
 	{
@@ -15,14 +19,14 @@ namespace hdn
 		FAILED,
 	};
 
-	template<typename T>
-	Response<T> request_send(const Request<T>& req)
+	template <typename T>
+	Response<T> request_send(const Request<T> &req)
 	{
 		return request_handle(req);
 	}
 
-	template<typename T, typename... Args>
-	Response<T> request_send(Args&&... args)
+	template <typename T, typename... Args>
+	Response<T> request_send(Args &&...args)
 	{
 		Request<T> req(std::forward<Args>(args)...);
 		return request_send(req);

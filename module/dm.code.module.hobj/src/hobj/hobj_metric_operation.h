@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 
-namespace hdn
+namespace dm
 {
 	enum class ObjectOperationType
 	{
@@ -40,5 +40,5 @@ namespace hdn
 		COUNT
 	};
 
-	const char* object_operation_type_to_string(ObjectOperationType type);
+	const char *object_operation_type_to_string(ObjectOperationType type);
 }

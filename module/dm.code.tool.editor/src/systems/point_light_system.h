@@ -7,30 +7,32 @@
 
 #include "core/stl/vector.h"
 
-namespace hdn
+namespace dm
 {
 
 	class PointLightSystem
 	{
 	public:
 		PointLightSystem() = default;
-		PointLightSystem(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+		PointLightSystem(VulkanDevice *device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		virtual ~PointLightSystem();
 
-		void Init(VulkanDevice* device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
+		void Init(VulkanDevice *device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout)
 		{
 			m_Device = device;
 			create_pipeline_layout(globalSetLayout);
 			create_pipeline(renderPass);
 		}
 
-		void update(FrameInfo& frameInfo, GlobalUbo& ubo);
-		void render(FrameInfo& frameInfo);
+		void update(FrameInfo &frameInfo, GlobalUbo &ubo);
+		void render(FrameInfo &frameInfo);
+
 	private:
 		void create_pipeline_layout(VkDescriptorSetLayout globalSetLayout);
 		void create_pipeline(VkRenderPass renderPass);
+
 	private:
-		VulkanDevice* m_Device;
+		VulkanDevice *m_Device;
 		Scope<VulkanPipeline> m_Pipeline;
 		VkPipelineLayout m_PipelineLayout;
 	};

@@ -1,8 +1,8 @@
 #include "zone.h"
 
-namespace hdn
+namespace dm
 {
-	void zone_serialize(hostream& stream, const Zone& zone)
+	void zone_serialize(hostream &stream, const Zone &zone)
 	{
 		stream << zone.keyCount;
 		stream << zone.typeCount;
@@ -13,8 +13,8 @@ namespace hdn
 		stream.write_pod<u64>(zone.dataOffsets, zone.keyCount);
 		stream.write_pod<u8>(zone.dataPayload, zone.payloadSize);
 	}
-	
-	void zone_deserialize(histream& stream, Zone& zone)
+
+	void zone_deserialize(histream &stream, Zone &zone)
 	{
 		stream >> zone.keyCount;
 		stream >> zone.typeCount;

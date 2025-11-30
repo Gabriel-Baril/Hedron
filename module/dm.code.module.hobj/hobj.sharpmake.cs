@@ -1,9 +1,9 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeModuleHobjProject : BaseCppProject
+public class DmCodeModuleHobjProject : BaseCppProject
 {
-    public HdnCodeModuleHobjProject()
+    public DmCodeModuleHobjProject()
     {
         Name = "dm.code.module.hobj";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -22,8 +22,8 @@ public class HdnCodeModuleHobjProject : BaseCppProject
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeExternalFlecsProject>(target);
+        conf.AddPublicDependency<DmCodeExternalPugiXMLProject>(target);
     }
 }

@@ -3,7 +3,7 @@
 #include "core/core.h"
 #include "core/core_filesystem.h"
 
-namespace hdn
+namespace dm
 {
 	using sym_t = u64;
 	constexpr u64 SYMNULL = 0;
@@ -27,7 +27,7 @@ namespace hdn
 
 		nxsymbol_begin = vert_shader, // non xsymbol
 		nxsymbol_end = obj,
-		xsymbol_begin = stringtable, // engine-specific xml-like symbol 
+		xsymbol_begin = stringtable, // engine-specific xml-like symbol
 		xsymbol_end = feature,
 
 		unknown
@@ -35,24 +35,24 @@ namespace hdn
 
 	struct SymbolMetadata
 	{
-		const char* name;
+		const char *name;
 		ESymbolType type;
 		fspath path;
 	};
 
-	using SourceParseCallback = bool(*)(const fspath& path);
+	using SourceParseCallback = bool (*)(const fspath &path);
 
-	const char* symdb_sym_to_str(ESymbolType type);
-	ESymbolType symdb_str_to_sym(const char* type);
+	const char *symdb_sym_to_str(ESymbolType type);
+	ESymbolType symdb_str_to_sym(const char *type);
 
 	SourceParseCallback symdb_get_parse_callback(ESymbolType type);
 
-	sym_t get_symbol_from_name(const char* symbol);
+	sym_t get_symbol_from_name(const char *symbol);
 	bool symdb_is_xsymbol(ESymbolType type);
 	bool symdb_is_nxsymbol(ESymbolType type);
-	ESymbolType symdb_get_source_file_type(const fspath& path);
-	void symdb_explore_sources(const fspath& path);
+	ESymbolType symdb_get_source_file_type(const fspath &path);
+	void symdb_explore_sources(const fspath &path);
 
-	const SymbolMetadata* symdb_get_meta(sym_t symbol);
-	void symdb_register(sym_t symbol, const char* name, ESymbolType type, const fspath& path);
+	const SymbolMetadata *symdb_get_meta(sym_t symbol);
+	void symdb_register(sym_t symbol, const char *name, ESymbolType type, const fspath &path);
 }

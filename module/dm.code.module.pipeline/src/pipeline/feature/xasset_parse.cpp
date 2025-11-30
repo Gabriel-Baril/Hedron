@@ -2,14 +2,14 @@
 
 #include "core/core_define.h"
 
-#if USING(HDN_SYM_FEATURE)
+#if USING(DM_SYM_FEATURE)
 #include "pipeline/generated/feature_generated.h"
 #include "pipeline/xml_util.h"
 #include "pipeline/fbs_util.h"
 
 #include "xasset.h"
 
-namespace hdn
+namespace dm
 {
 	static constexpr const char *XML_FEATURE_NODE_FEATURES_NAME = "Features";
 	static constexpr const char *XML_FEATURE_NODE_FEATURE_NAME = "Feature";

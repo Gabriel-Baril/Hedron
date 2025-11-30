@@ -2,7 +2,7 @@
 
 #include "core/core_define.h"
 
-#if USING(HDN_SYM_FEATURE)
+#if USING(DM_SYM_FEATURE)
 #include "pugixml/pugixml.hpp"
 
 #include "core/core.h"
@@ -11,7 +11,7 @@
 #include "pipeline/symdb.h"
 #include "pipeline/xsrc.h"
 
-namespace hdn
+namespace dm
 {
 	bool xasset_parse_feature(const pugi::xml_node &symbolNode, const SourceContext &ctx);
 }

@@ -1,6 +1,6 @@
 #include "hson.h"
 
-namespace hdn
+namespace dm
 {
 	Hson::Path Hson::Path::operator[](int index)
 	{
@@ -11,7 +11,7 @@ namespace hdn
 		return partial;
 	}
 
-	Hson::Path Hson::Path::operator[](const char* key)
+	Hson::Path Hson::Path::operator[](const char *key)
 	{
 		Path partial;
 		partial.root = root;
@@ -25,27 +25,27 @@ namespace hdn
 		return root->get_field_index(hash);
 	}
 
-	const char* Hson::Path::get_field_name() const
+	const char *Hson::Path::get_field_name() const
 	{
 		return root->get_field_name(hash);
 	}
 
-	const HsonField* Hson::Path::get_field_type() const
+	const HsonField *Hson::Path::get_field_type() const
 	{
 		return root->get_field_type(hash);
 	}
 
-	const u32* Hson::Path::get_field_payload_size() const
+	const u32 *Hson::Path::get_field_payload_size() const
 	{
 		return root->get_field_payload_size(hash);
 	}
 
-	const u32* Hson::Path::get_field_payload_offset() const
+	const u32 *Hson::Path::get_field_payload_offset() const
 	{
 		return root->get_field_payload_offset(hash);
 	}
 
-	const u8* Hson::Path::get_field_payload() const
+	const u8 *Hson::Path::get_field_payload() const
 	{
 		return root->get_field_payload(hash);
 	}

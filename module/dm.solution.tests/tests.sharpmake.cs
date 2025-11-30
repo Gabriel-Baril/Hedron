@@ -13,9 +13,9 @@ public class TestsSolution : Solution
     [Configure]
     public void ConfigureAll(Solution.Configuration conf, Target target)
     {
-        conf.AddProject<HdnCodeExternalCatch2Project>(target); // The test framework used for c++
-        conf.AddProject<HdnTestModuleCore>(target);
+        conf.AddProject<DmCodeExternalCatch2Project>(target); // The test framework used for c++
+        conf.AddProject<DmTestModuleCore>(target);
 
-        conf.SetStartupProject<HdnCodeExternalCatch2Project>();
+        conf.SetStartupProject<DmCodeExternalCatch2Project>();
     }
 }

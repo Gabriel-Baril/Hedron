@@ -7,24 +7,25 @@
 
 #include "core/stl/vector.h"
 
-namespace hdn
+namespace dm
 {
 
 	class ViewportPanel : public IEditorPanel
 	{
 	public:
 		ViewportPanel()
-			: IEditorPanel{ "viewport" }
+				: IEditorPanel{"viewport"}
 		{
 		}
 
-		void on_update( float dt ) override
+		void on_update(float dt) override
 		{
 			// Render Vulkan Scene Texture into ImGui
 			ImGui::Image((ImTextureID)sceneDescriptorSets[m_FrameIndex], ImVec2(1280, 720));
 		}
 
-		void transition_image(VkCommandBuffer commandBuffer, VkImageLayout oldLayout, VkImageLayout newLayout) {
+		void transition_image(VkCommandBuffer commandBuffer, VkImageLayout oldLayout, VkImageLayout newLayout)
+		{
 			VkImageMemoryBarrier barrier{};
 			barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 			barrier.oldLayout = oldLayout;
@@ -41,13 +42,15 @@ namespace hdn
 			VkPipelineStageFlags sourceStage;
 			VkPipelineStageFlags destinationStage;
 
-			if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
+			if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+			{
 				barrier.srcAccessMask = 0;
 				barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 				sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 				destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 			}
-			else if (oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+			else if (oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+			{
 				barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 				barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 				sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -55,21 +58,23 @@ namespace hdn
 			}
 
 			vkCmdPipelineBarrier(
-				commandBuffer,
-				sourceStage, destinationStage,
-				0,
-				0, nullptr,
-				0, nullptr,
-				1, &barrier
-			);
+					commandBuffer,
+					sourceStage, destinationStage,
+					0,
+					0, nullptr,
+					0, nullptr,
+					1, &barrier);
 		}
 
-		uint32_t find_memory_type(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+		uint32_t find_memory_type(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties)
+		{
 			VkPhysicalDeviceMemoryProperties memProperties;
 			vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
 
-			for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-				if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
+			for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++)
+			{
+				if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
+				{
 					return i; // Found a suitable memory type
 				}
 			}
@@ -77,7 +82,8 @@ namespace hdn
 			throw std::runtime_error("Failed to find suitable memory type!");
 		}
 
-		void create_offscreen_rendertarget(VkDevice device, VkPhysicalDevice physicalDevice, VkExtent2D extent, VkRenderPass renderPass) {
+		void create_offscreen_rendertarget(VkDevice device, VkPhysicalDevice physicalDevice, VkExtent2D extent, VkRenderPass renderPass)
+		{
 			VkImageCreateInfo imageCreateInfo = {};
 			imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 			imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -145,8 +151,9 @@ namespace hdn
 			vkCreateFramebuffer(device, &framebufferInfo, nullptr, &sceneFramebuffer);
 		}
 
-		void create_descriptor_set(VkDevice device) {
-			for (int i = 0;i < sceneDescriptorSets.size(); i++)
+		void create_descriptor_set(VkDevice device)
+		{
+			for (int i = 0; i < sceneDescriptorSets.size(); i++)
 			{
 				VkDescriptorSetLayoutBinding layoutBinding = {};
 				layoutBinding.binding = 0;
@@ -185,7 +192,8 @@ namespace hdn
 			}
 		}
 
-		void update_descriptor_set(VkDevice device, int frameIndex) {
+		void update_descriptor_set(VkDevice device, int frameIndex)
+		{
 			m_FrameIndex = frameIndex;
 
 			VkDescriptorImageInfo imageInfo = {};
@@ -204,6 +212,7 @@ namespace hdn
 
 			vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
 		}
+
 	private:
 		int m_FrameIndex;
 
@@ -213,7 +222,7 @@ namespace hdn
 		VkFramebuffer sceneFramebuffer;
 		VkSampler sceneSampler;
 
-		vector<VkDescriptorSet> sceneDescriptorSets{ VulkanSwapChain::MAX_FRAMES_IN_FLIGHT };
+		vector<VkDescriptorSet> sceneDescriptorSets{VulkanSwapChain::MAX_FRAMES_IN_FLIGHT};
 		VkDescriptorSetLayout sceneDescriptorSetLayout;
 		VkDescriptorPool descriptorPool;
 	};

@@ -8,7 +8,7 @@
 #include "core/io/stream_write.h"
 #include "core/io/stream_read.h"
 
-namespace hdn
+namespace dm
 {
 	using hkey = u64;
 	static constexpr hkey NULL_HKEY = 0;
@@ -19,17 +19,17 @@ namespace hdn
 		u64 typeCount;
 		u64 payloadSize;
 
-		hkey* sortedKeys; // keyCount
-		h64* sortedTypeHash; // typeCount
-		u64* keyMaxPerType; // typeCount
-		u64* dataOffsets; // keyCount
-		u8* dataPayload;
+		hkey *sortedKeys;		 // keyCount
+		h64 *sortedTypeHash; // typeCount
+		u64 *keyMaxPerType;	 // typeCount
+		u64 *dataOffsets;		 // keyCount
+		u8 *dataPayload;
 	};
 
-	void zone_alloc(const Zone& zone);
-	optional<u64> zone_get_key_index(Zone& object, hkey key);
-	const u8* zone_get_key_data(Zone& object, hkey key);
+	void zone_alloc(const Zone &zone);
+	optional<u64> zone_get_key_index(Zone &object, hkey key);
+	const u8 *zone_get_key_data(Zone &object, hkey key);
 
-	void zone_serialize(hostream& stream, const Zone& zone);
-	void zone_deserialize(histream& stream, Zone& zone);
+	void zone_serialize(hostream &stream, const Zone &zone);
+	void zone_deserialize(histream &stream, Zone &zone);
 }

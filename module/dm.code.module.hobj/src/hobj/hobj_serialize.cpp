@@ -1,8 +1,8 @@
 #include "hobj_api.h"
 
-namespace hdn
+namespace dm
 {
-	void hobj_serialize(hostream& stream, const hobj& object)
+	void hobj_serialize(hostream &stream, const hobj &object)
 	{
 		stream << object.magicNumber;
 		stream << object.version;
@@ -17,7 +17,7 @@ namespace hdn
 		}
 	}
 
-	void hobj_deserialize(histream& stream, hobj& object)
+	void hobj_deserialize(histream &stream, hobj &object)
 	{
 		stream >> object.magicNumber;
 		stream >> object.version;

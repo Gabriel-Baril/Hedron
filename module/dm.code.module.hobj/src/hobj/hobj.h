@@ -10,7 +10,7 @@
 
 #define HOBJ_FILE_EXT ".hobj"
 
-namespace hdn
+namespace dm
 {
 	enum class HObjectLoadState
 	{
@@ -18,9 +18,9 @@ namespace hdn
 		VIRTUALIZED = 1,
 		REALIZED = 2
 	};
-	HDN_DEFINE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectLoadState)
+	DM_DEFINE_ENUM_CLASS_BITWISE_OPERATIONS(HObjectLoadState)
 
-	template<typename T>
+	template <typename T>
 	using HRef = Ref<T>;
 
 	// Each hobj should override the get_hash() method
@@ -29,33 +29,32 @@ namespace hdn
 	public:
 		virtual ~HObject() = default;
 
-		virtual void serialize(hostream& stream)
+		virtual void serialize(hostream &stream)
 		{
 			hobj_serialize(stream, m_Object);
 		}
 
-		virtual void deserialize(histream& stream)
+		virtual void deserialize(histream &stream)
 		{
 			hobj_deserialize(stream, m_Object);
 
 			if (m_Object.magicNumber != HOBJ_FILE_MAGIC_NUMBER)
 			{
-				HDN_FATAL_LOG("Invalid deserialization instruction: Trying to deserialize a non hobj stream!");
+				DM_FATAL_LOG("Invalid deserialization instruction: Trying to deserialize a non hobj stream!");
 			}
 
 			// TODO: We should instead check if the serializedTypeHash is a descendant of typeHash
-			// 
+			//
 			// const hash64_t serializedTypeHash = m_Object.typeHash;
 			// const hash64_t typeHash = GetTypeHash();
 			// if (typeHash != m_Object.typeHash)
 			// {
-			// 	HDN_FATAL_LOG("Invalid deserialization instruction: trying to interpret and object of type '{0}' with an object of type '{1}'!", serializedTypeHash, typeHash);
+			// 	DM_FATAL_LOG("Invalid deserialization instruction: trying to interpret and object of type '{0}' with an object of type '{1}'!", serializedTypeHash, typeHash);
 			// }
 		}
 
 		virtual void realize()
 		{
-
 		}
 
 		uuid64 id()
@@ -63,7 +62,7 @@ namespace hdn
 			return m_Object.id;
 		}
 
-		const char* name()
+		const char *name()
 		{
 			if (m_Object.name.empty())
 			{
@@ -72,9 +71,10 @@ namespace hdn
 			return m_Object.name.c_str();
 		}
 
-		hobj& get_object() { return m_Object; };
-		const hobj& get_object() const { return m_Object; };
+		hobj &get_object() { return m_Object; };
+		const hobj &get_object() const { return m_Object; };
 		inline virtual h64 get_type_hash() const { return hash_generate_from_type<HObject>(); }
+
 	private:
 		hobj m_Object;
 		HObjectLoadState m_LoadState = HObjectLoadState::UNLOADED;

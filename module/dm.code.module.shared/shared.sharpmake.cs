@@ -2,9 +2,9 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeModuleSharedProject : BaseCppProject
+public class DmCodeModuleSharedProject : BaseCppProject
 {
-    public HdnCodeModuleSharedProject()
+    public DmCodeModuleSharedProject()
     {
         Name = "dm.code.module.shared";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -25,7 +25,7 @@ public class HdnCodeModuleSharedProject : BaseCppProject
 
         conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeExternalFlecsProject>(target);
     }
 }

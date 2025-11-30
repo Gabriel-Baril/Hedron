@@ -1,9 +1,9 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodePlaygroundAsyncProject : BaseCppProject
+public class DmCodePlaygroundAsyncProject : BaseCppProject
 {
-    public HdnCodePlaygroundAsyncProject()
+    public DmCodePlaygroundAsyncProject()
     {
         Name = "dm.code.playground.async";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -21,6 +21,6 @@ public class HdnCodePlaygroundAsyncProject : BaseCppProject
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
     }
 }

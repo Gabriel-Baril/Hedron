@@ -2,11 +2,11 @@
 
 #include "core/core_define.h"
 
-#if USING(HDN_SYM_FEATURE)
+#if USING(DM_SYM_FEATURE)
 #include "pipeline/cache.h"
 #include "pipeline/request_read_xasset.h"
 
-namespace hdn
+namespace dm
 {
 	Response<FeatureReadRequest> request_handle(const Request<FeatureReadRequest> &req)
 	{
@@ -15,10 +15,10 @@ namespace hdn
 		return res;
 	}
 
-	const char* requet_get_type_name(const Request<FeatureReadRequest>& req)
+	const char *requet_get_type_name(const Request<FeatureReadRequest> &req)
 	{
-		HDN_MAYBE_UNUSED(req);
-		return HDN_NAMEOF(FeatureReadRequest);
+		DM_MAYBE_UNUSED(req);
+		return DM_NAMEOF(FeatureReadRequest);
 	}
 
 	bool request_valid(const Request<FeatureReadRequest> &req)

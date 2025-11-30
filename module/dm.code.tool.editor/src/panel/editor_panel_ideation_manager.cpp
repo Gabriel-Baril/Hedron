@@ -3,13 +3,13 @@
 #include "core/stl/vector.h"
 #include "core/core_filesystem.h"
 
-namespace hdn
+namespace dm
 {
 	void IdeationManagerPanel::init()
 	{
 		vector<fspath> ideationFiles = filesystem_walk("ideations");
 
-		for (const auto& ideationFile : ideationFiles)
+		for (const auto &ideationFile : ideationFiles)
 		{
 			Ideation ideation;
 			HDEBUG("Parsing: '{0}'", ideationFile.string().c_str());
@@ -38,7 +38,7 @@ namespace hdn
 			ImGui::TableHeadersRow();
 
 			int i = 0;
-			for (const auto& ideation : m_Ideations)
+			for (const auto &ideation : m_Ideations)
 			{
 				i++;
 				ImGui::TableNextRow();

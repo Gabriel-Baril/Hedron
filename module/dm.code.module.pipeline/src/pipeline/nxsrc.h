@@ -3,7 +3,7 @@
 #include "core/core.h"
 #include "core/core_filesystem.h"
 
-namespace hdn
+namespace dm
 {
-	bool nxsrc_agnostic_parse(const fspath& path);
+	bool nxsrc_agnostic_parse(const fspath &path);
 }

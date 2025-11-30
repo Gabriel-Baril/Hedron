@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 
-namespace hdn
+namespace dm
 {
 	static constexpr u64 ZONE_BLOCK_SIZE = 4 * KB;
 
@@ -10,6 +10,6 @@ namespace hdn
 	bool zone_initialized();
 	void zone_reserve_virtual_range(u64 totalZoneMemory);
 
-	// void zone_populate_registry(); // Fill the zone registry (zoneName -> index), 
-	void zone_load(const char* zone);
+	// void zone_populate_registry(); // Fill the zone registry (zoneName -> index),
+	void zone_load(const char *zone);
 }

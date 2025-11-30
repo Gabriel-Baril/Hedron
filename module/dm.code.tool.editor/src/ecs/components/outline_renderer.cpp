@@ -2,21 +2,21 @@
 #include "imgui.h"
 #include "core/profiler/profiler.h"
 
-namespace hdn
+namespace dm
 {
-	static const ImVec4 BUTTON_COLOR_X = ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f };
-	static const ImVec4 BUTTON_COLOR_X_HOVERED = ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f };
-	static const ImVec4 BUTTON_COLOR_X_ACTIVE = ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f };
+	static const ImVec4 BUTTON_COLOR_X = ImVec4{0.8f, 0.1f, 0.15f, 1.0f};
+	static const ImVec4 BUTTON_COLOR_X_HOVERED = ImVec4{0.9f, 0.2f, 0.2f, 1.0f};
+	static const ImVec4 BUTTON_COLOR_X_ACTIVE = ImVec4{0.8f, 0.1f, 0.15f, 1.0f};
 
-	static const ImVec4 BUTTON_COLOR_Y = ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f };
-	static const ImVec4 BUTTON_COLOR_Y_HOVERED = ImVec4{ 0.3f, 0.8f, 0.2f, 1.0f };
-	static const ImVec4 BUTTON_COLOR_Y_ACTIVE = ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f };
+	static const ImVec4 BUTTON_COLOR_Y = ImVec4{0.2f, 0.7f, 0.2f, 1.0f};
+	static const ImVec4 BUTTON_COLOR_Y_HOVERED = ImVec4{0.3f, 0.8f, 0.2f, 1.0f};
+	static const ImVec4 BUTTON_COLOR_Y_ACTIVE = ImVec4{0.2f, 0.7f, 0.2f, 1.0f};
 
-	static const ImVec4 BUTTON_COLOR_Z = ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f };
-	static const ImVec4 BUTTON_COLOR_Z_HOVERED = ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f };
-	static const ImVec4 BUTTON_COLOR_Z_ACTIVE = ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f };
+	static const ImVec4 BUTTON_COLOR_Z = ImVec4{0.1f, 0.25f, 0.8f, 1.0f};
+	static const ImVec4 BUTTON_COLOR_Z_HOVERED = ImVec4{0.2f, 0.35f, 0.9f, 1.0f};
+	static const ImVec4 BUTTON_COLOR_Z_ACTIVE = ImVec4{0.1f, 0.25f, 0.8f, 1.0f};
 
-	static void render_vec_entry(float width, const char* resetLabelName, const char* dragLabelID, float* valueToChange, bool* valueChanged, float resetValue, ImFont* boldFont, ImVec2 buttonSize, ImVec4 buttonColor, ImVec4 hoveredButtonColor, ImVec4 activeButtonColor)
+	static void render_vec_entry(float width, const char *resetLabelName, const char *dragLabelID, float *valueToChange, bool *valueChanged, float resetValue, ImFont *boldFont, ImVec2 buttonSize, ImVec4 buttonColor, ImVec4 hoveredButtonColor, ImVec4 activeButtonColor)
 	{
 		ImGui::PushItemWidth(width);
 		ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
@@ -27,10 +27,10 @@ namespace hdn
 
 		if (ImGui::Button(resetLabelName, buttonSize))
 		{
-			HDN_INFO_LOG("Value Changed: {0}", *valueChanged);
+			DM_INFO_LOG("Value Changed: {0}", *valueChanged);
 			if (valueChanged != nullptr && !(*valueChanged))
 			{
-				HDN_INFO_LOG("IN");
+				DM_INFO_LOG("IN");
 				*valueChanged = true;
 				*valueToChange = resetValue;
 			}
@@ -48,9 +48,9 @@ namespace hdn
 		ImGui::PopStyleColor(3);
 	}
 
-	static void render(const char* labelName, vec3f32& values, bool* valueChanged, float resetValue = 0.0f, float columnWidth = 100.0f)
+	static void render(const char *labelName, vec3f32 &values, bool *valueChanged, float resetValue = 0.0f, float columnWidth = 100.0f)
 	{
-		ImGuiIO& io = ImGui::GetIO();
+		ImGuiIO &io = ImGui::GetIO();
 		auto boldFont = io.Fonts->Fonts[0];
 
 		ImGui::PushID(labelName);
@@ -61,10 +61,10 @@ namespace hdn
 		ImGui::NextColumn();
 
 		float individual_width = ImGui::CalcItemWidth() / 2.5f; // Divide for each item
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 3.0f, 0.0f });
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{3.0f, 0.0f});
 
 		float lineHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2.0f;
-		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+		ImVec2 buttonSize = {lineHeight + 3.0f, lineHeight};
 
 		render_vec_entry(individual_width, "X", "##X", &values.x, valueChanged, resetValue, boldFont, buttonSize, BUTTON_COLOR_X, BUTTON_COLOR_X_HOVERED, BUTTON_COLOR_X_ACTIVE);
 		render_vec_entry(individual_width, "Y", "##Y", &values.y, valueChanged, resetValue, boldFont, buttonSize, BUTTON_COLOR_Y, BUTTON_COLOR_Y_HOVERED, BUTTON_COLOR_Y_ACTIVE);
@@ -77,7 +77,7 @@ namespace hdn
 		ImGui::PopID();
 	}
 
-	void inspector_component_render(TransformComponent& component)
+	void inspector_component_render(TransformComponent &component)
 	{
 		// HDR_PROFILE_FUNCTION();
 		bool changed = false;
@@ -111,22 +111,23 @@ namespace hdn
 		}
 	}
 
-	void render_with_header(flecs::entity& entity, const char* controlLabel)
+	void render_with_header(flecs::entity &entity, const char *controlLabel)
 	{
 		using Component = TransformComponent; // TODO: Should be a template paramter in the futur
 
-		if (!entity.has<Component>()) return;
+		if (!entity.has<Component>())
+			return;
 
 		const ImGuiTreeNodeFlags tree_node_flags =
-			ImGuiTreeNodeFlags_DefaultOpen |
-			ImGuiTreeNodeFlags_AllowItemOverlap |
-			ImGuiTreeNodeFlags_SpanAvailWidth |
-			ImGuiTreeNodeFlags_Framed |
-			ImGuiTreeNodeFlags_FramePadding;
-		Component& component = *entity.get_mut<Component>();
+				ImGuiTreeNodeFlags_DefaultOpen |
+				ImGuiTreeNodeFlags_AllowItemOverlap |
+				ImGuiTreeNodeFlags_SpanAvailWidth |
+				ImGuiTreeNodeFlags_Framed |
+				ImGuiTreeNodeFlags_FramePadding;
+		Component &component = *entity.get_mut<Component>();
 		ImVec2 content_region_available = ImGui::GetContentRegionAvail();
 
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
 
 		float line_height = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2.0f;
 
@@ -140,11 +141,11 @@ namespace hdn
 		ImGui::SetColumnWidth(1, child_column_width);
 		ImGui::SetColumnWidth(2, child_column_width);
 
-		bool is_opened = ImGui::TreeNodeEx((void*)typeid(Component).hash_code(), tree_node_flags, controlLabel);
+		bool is_opened = ImGui::TreeNodeEx((void *)typeid(Component).hash_code(), tree_node_flags, controlLabel);
 
 		ImGui::NextColumn();
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 8.0f);
-		if (ImGui::Button("+", ImVec2{ line_height, line_height }))
+		if (ImGui::Button("+", ImVec2{line_height, line_height}))
 			ImGui::OpenPopup("ComponentSettings");
 
 		ImGui::NextColumn();
@@ -162,7 +163,7 @@ namespace hdn
 				remove_component = true;
 			}
 
-			const char* enable_label = component.enabled ? "Disable" : "Enable";
+			const char *enable_label = component.enabled ? "Disable" : "Enable";
 			if (ImGui::MenuItem(enable_label))
 			{
 				component.enabled = !component.enabled;

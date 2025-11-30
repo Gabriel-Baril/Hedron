@@ -1,6 +1,6 @@
 include "core.fbs";
 
-namespace hdn;
+namespace dm;
 // Define all component data tables
 
 table CTransformComponent {

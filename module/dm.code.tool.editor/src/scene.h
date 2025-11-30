@@ -4,22 +4,23 @@
 #include "flecs/flecs.h"
 #include "entity.h"
 
-namespace hdn
+namespace dm
 {
 	class Scene
 	{
 	public:
 		Scene();
 
-		Entity create(const char* name = nullptr)
+		Entity create(const char *name = nullptr)
 		{
 			flecs::entity e = m_Registry.entity(name);
-			return Entity{ e };
+			return Entity{e};
 		}
 
-		Entity make_point_light(f32 intensity = 10.0f, f32 radius = 0.1f, vec3f32 color = vec3f32{ 1.0f });
+		Entity make_point_light(f32 intensity = 10.0f, f32 radius = 0.1f, vec3f32 color = vec3f32{1.0f});
 
-		flecs::world* World() { return &m_Registry; }
+		flecs::world *World() { return &m_Registry; }
+
 	private:
 		flecs::world m_Registry;
 	};

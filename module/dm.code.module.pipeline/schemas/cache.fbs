@@ -1,4 +1,4 @@
-namespace hdn;
+namespace dm;
 
 struct CPathDep {
     path_hash: ulong;

@@ -9,15 +9,15 @@
 
 #include "core/profiler/profiler.h"
 
-namespace hdn
+namespace dm
 {
 	EditorCamera::EditorCamera(f32 fov, f32 aspect_ratio, f32 near_clip, f32 far_clip)
-		: m_FOV(fov), m_AspectRatio(aspect_ratio), m_NearClip(near_clip), m_FarClip(far_clip)
+			: m_FOV(fov), m_AspectRatio(aspect_ratio), m_NearClip(near_clip), m_FarClip(far_clip)
 	{
 		update_view_matrix();
 	}
 
-	void EditorCamera::on_update(Timestep ts, const UpdateState& updateState)
+	void EditorCamera::on_update(Timestep ts, const UpdateState &updateState)
 	{
 		HDR_PROFILE_FUNCTION();
 
@@ -37,12 +37,12 @@ namespace hdn
 		update_view_matrix();
 	}
 
-	void EditorCamera::on_event(Event& event)
+	void EditorCamera::on_event(Event &event)
 	{
 		HDR_PROFILE_FUNCTION();
 
 		EventDispatcher dispatcher(event);
-		dispatcher.dispatch<MouseScrolledEvent>(HDN_BIND_EVENT_FN(EditorCamera::on_mouse_scroll));
+		dispatcher.dispatch<MouseScrolledEvent>(DM_BIND_EVENT_FN(EditorCamera::on_mouse_scroll));
 	}
 
 	vec3f32 EditorCamera::get_up_direction() const
@@ -85,7 +85,7 @@ namespace hdn
 		m_ViewMatrix = glm::inverse(m_ViewMatrix);
 	}
 
-	bool EditorCamera::on_mouse_scroll(MouseScrolledEvent& e)
+	bool EditorCamera::on_mouse_scroll(MouseScrolledEvent &e)
 	{
 		HDR_PROFILE_FUNCTION();
 
@@ -95,7 +95,7 @@ namespace hdn
 		return false;
 	}
 
-	void EditorCamera::pan(const vec2f32& delta)
+	void EditorCamera::pan(const vec2f32 &delta)
 	{
 		HDR_PROFILE_FUNCTION();
 
@@ -104,13 +104,13 @@ namespace hdn
 		m_FocalPoint += get_up_direction() * delta.y * y_speed * m_Distance;
 	}
 
-	void EditorCamera::rotate(const vec2f32& delta)
+	void EditorCamera::rotate(const vec2f32 &delta)
 	{
 		HDR_PROFILE_FUNCTION();
 
 		f32 yaw_sign = get_up_direction().y < 0 ? -1.0f : 1.0f;
 		m_Yaw += yaw_sign * delta.x * get_rotation_speed(); // Y axis rotation
-		m_Pitch += delta.y * get_rotation_speed(); // X axis rotation
+		m_Pitch += delta.y * get_rotation_speed();					// X axis rotation
 	}
 
 	void EditorCamera::zoom(f32 delta)
@@ -142,7 +142,7 @@ namespace hdn
 		f32 y = std::min(m_ViewportHeight / 1000.0f, 2.4f); // max = 2.4f
 		f32 yFactor = 0.0366f * (y * y) - 0.1778f * y + 0.3021f;
 
-		return { xFactor, yFactor };
+		return {xFactor, yFactor};
 	}
 
 	f32 EditorCamera::get_rotation_speed() const

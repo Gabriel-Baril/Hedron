@@ -1,6 +1,6 @@
 #include "module.h"
 
-#if USING(HDN_PIPELINE_MODULE)
+#if USING(DM_PIPELINE_MODULE)
 #include "core/stl/unordered_map.h"
 #include "core/hash.h"
 #include "core/ini/ini.h"
@@ -8,7 +8,7 @@
 
 #include "strdb.h"
 
-namespace hdn
+namespace dm
 {
 	enum class ModuleProvenance
 	{
@@ -18,12 +18,11 @@ namespace hdn
 		UNKNOWN
 	};
 
-	static constexpr const char* s_ModuleProvenanceNames[underlying(ModuleProvenance::COUNT)] = {
-		"internal",
-		"external"
-	};
+	static constexpr const char *s_ModuleProvenanceNames[underlying(ModuleProvenance::COUNT)] = {
+			"internal",
+			"external"};
 
-	static ModuleProvenance module_provenance_from_str(const char* str)
+	static ModuleProvenance module_provenance_from_str(const char *str)
 	{
 		char lowerBuffer[16];
 		core_strcpy(lowerBuffer, str);
@@ -46,12 +45,11 @@ namespace hdn
 		UNKNOWN
 	};
 
-	static constexpr const char* s_ModuleKindNames[underlying(ModuleKind::COUNT)] = {
-		"code",
-		"data"
-	};
+	static constexpr const char *s_ModuleKindNames[underlying(ModuleKind::COUNT)] = {
+			"code",
+			"data"};
 
-	static ModuleKind module_kind_from_str(const char* str)
+	static ModuleKind module_kind_from_str(const char *str)
 	{
 		char lowerBuffer[16];
 		core_strcpy(lowerBuffer, str);
@@ -68,10 +66,10 @@ namespace hdn
 
 	struct HModuleGlob
 	{
-		unordered_map<hmod_t, Module*> modules;
+		unordered_map<hmod_t, Module *> modules;
 	} s_ModuleGlob;
 
-	static hmod_t module_get_handle(const char* name)
+	static hmod_t module_get_handle(const char *name)
 	{
 		HashBuilder hb;
 		hb.add_type<Module>();
@@ -79,24 +77,24 @@ namespace hdn
 		return static_cast<hmod_t>(hb.get());
 	}
 
-	static void parse_module_file(const fspath& moduleFilePath, Module& mod)
+	static void parse_module_file(const fspath &moduleFilePath, Module &mod)
 	{
 		INIReader reader(moduleFilePath.string());
 
 		std::string folderName = moduleFilePath.parent_path().filename().string();
 		mod.name = strdb_allocate(folderName.c_str());
 
-		hdn::string author = ini_get_variable(reader, "module", "Author", "");
+		dm::string author = ini_get_variable(reader, "module", "Author", "");
 		mod.author = strdb_allocate(author.c_str());
 
-		hdn::string source = ini_get_variable(reader, "module", "Source", "");
+		dm::string source = ini_get_variable(reader, "module", "Source", "");
 		mod.provenance = module_provenance_from_str(source.c_str());
 
-		hdn::string kind = ini_get_variable(reader, "module", "Kind", "");
+		dm::string kind = ini_get_variable(reader, "module", "Kind", "");
 		mod.kind = module_kind_from_str(kind.c_str());
 	}
 
-	static void find_modules_in_subfolders(const char* path)
+	static void find_modules_in_subfolders(const char *path)
 	{
 		fspath root(path);
 
@@ -105,22 +103,21 @@ namespace hdn
 			return;
 		}
 
-		for (const auto& entry : std::filesystem::directory_iterator(root))
+		for (const auto &entry : std::filesystem::directory_iterator(root))
 		{
 			if (entry.is_directory())
 			{
 				bool hasModule = false;
-				for (const auto& subEntry : std::filesystem::directory_iterator(entry))
+				for (const auto &subEntry : std::filesystem::directory_iterator(entry))
 				{
 					if (subEntry.is_regular_file())
 					{
 						auto ext = subEntry.path().extension();
 						if (ext == ".module")
 						{
-							HDN_INFO_LOG("Found module folder: {0}", entry.path().string().c_str());
+							DM_INFO_LOG("Found module folder: {0}", entry.path().string().c_str());
 							Module module;
 							parse_module_file(subEntry.path(), module);
-
 
 							break;
 						}
@@ -128,34 +125,31 @@ namespace hdn
 				}
 			}
 		}
-
-
 	}
 
-	void module_init(const char* modulePath)
+	void module_init(const char *modulePath)
 	{
 		find_modules_in_subfolders(modulePath);
 	}
 
-	void module_load(const char* name)
+	void module_load(const char *name)
 	{
 		h64 moduleHash = hash_generate(name);
-		Module& mod = s_ModuleGlob.modules[moduleHash];
+		Module &mod = s_ModuleGlob.modules[moduleHash];
 		mod.name = strdb_allocate(name);
-
 	}
 
-	Module* module_get(const char* name)
+	Module *module_get(const char *name)
 	{
 		return nullptr;
 	}
 
-	Module* module_get(hmod_t mod)
+	Module *module_get(hmod_t mod)
 	{
 		return nullptr;
 	}
 
-	const fspath& module_base_path(hmod_t mod)
+	const fspath &module_base_path(hmod_t mod)
 	{
 		// TODO: insert return statement here
 	}

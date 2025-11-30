@@ -8,18 +8,19 @@
 
 #include "editor_panel.h"
 
-namespace hdn
+namespace dm
 {
 	class IdeationManagerPanel : public IEditorPanel
 	{
 	public:
 		IdeationManagerPanel()
-			: IEditorPanel{ "ideation manager" }
+				: IEditorPanel{"ideation manager"}
 		{
 		}
 
 		void init();
 		void on_update(f32 dt);
+
 	private:
 		IdeationParser m_Parser;
 		vector<Ideation> m_Ideations;

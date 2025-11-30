@@ -145,5 +145,5 @@ def main():
     run_sharpmake(sharpmake_exe, sharpmake_files)
 
 if __name__ == "__main__":
-    os.chdir(os.environ['HDN_ROOT'])
+    os.chdir(os.environ['DM_ROOT'])
     main()

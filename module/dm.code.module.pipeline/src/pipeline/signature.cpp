@@ -4,13 +4,13 @@
 #include "core/memory/core_memory.h"
 #include "core/stl/unordered_map.h"
 
-namespace hdn
+namespace dm
 {
 	static constexpr u64 SIGNATURE_MEMORY_POOL_SIZE = 50 * MB;
 
 	struct SignatureMetadata
 	{
-		void* data;
+		void *data;
 		u64 size;
 	};
 
@@ -40,7 +40,7 @@ namespace hdn
 			return;
 		}
 
-		u8* sigMemory = new u8[SIGNATURE_MEMORY_POOL_SIZE];
+		u8 *sigMemory = new u8[SIGNATURE_MEMORY_POOL_SIZE];
 		core_memset(sigMemory, 0, SIGNATURE_MEMORY_POOL_SIZE);
 		heap_allocator_init(s_SignatureGlob.sigAllocator, sigMemory, SIGNATURE_MEMORY_POOL_SIZE);
 		s_SignatureGlob.initialized = true;
@@ -58,9 +58,9 @@ namespace hdn
 		s_SignatureGlob.initialized = false;
 	}
 
-	void* signature_get(obj_t id)
+	void *signature_get(obj_t id)
 	{
-		HDN_CORE_ASSERT(signature_initialized(), "The signature system must be initialized");
+		DM_CORE_ASSERT(signature_initialized(), "The signature system must be initialized");
 		if (s_SignatureGlob.signatures.contains(id))
 		{
 			return s_SignatureGlob.signatures.at(id).data;
@@ -68,20 +68,20 @@ namespace hdn
 		return nullptr;
 	}
 
-	void* signature_allocate(u64 size, u64 alignment)
+	void *signature_allocate(u64 size, u64 alignment)
 	{
 		return heap_allocator_allocate(s_SignatureGlob.sigAllocator, size, alignment);
 	}
 
-	void signature_register(obj_t id, const void* data, u64 size, u64 alignment)
+	void signature_register(obj_t id, const void *data, u64 size, u64 alignment)
 	{
 		if (!signature_contains(id))
 		{
-			HDN_CORE_ASSERT(signature_initialized(), "The signature system must be initialized");
-			void* dst = signature_allocate(size, alignment);
+			DM_CORE_ASSERT(signature_initialized(), "The signature system must be initialized");
+			void *dst = signature_allocate(size, alignment);
 			core_memcpy(dst, data, size);
 
-			SignatureMetadata& meta = s_SignatureGlob.signatures[id];
+			SignatureMetadata &meta = s_SignatureGlob.signatures[id];
 			meta.data = dst;
 			meta.size = size;
 		}

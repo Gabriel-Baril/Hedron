@@ -1,10 +1,10 @@
 #include "hson_pack.h"
 
-namespace hdn
+namespace dm
 {
 	namespace hson
 	{
-		HsonPackResult<char> pack(const char* data)
+		HsonPackResult<char> pack(const char *data)
 		{
 			HsonPackResult<char> result;
 			result.type = HsonFieldTraits<char>::type;
@@ -13,6 +13,6 @@ namespace hdn
 			result.dataPtr = data;
 			return result;
 		}
-	
+
 	}
 }

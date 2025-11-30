@@ -1,9 +1,9 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodePlaygroundEcsProject : BaseCppProject
+public class DmCodePlaygroundEcsProject : BaseCppProject
 {
-    public HdnCodePlaygroundEcsProject()
+    public DmCodePlaygroundEcsProject()
     {
         Name = "dm.code.playground.ecs";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -21,8 +21,8 @@ public class HdnCodePlaygroundEcsProject : BaseCppProject
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalNlohmannJsonProject>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeExternalFlecsProject>(target);
+        conf.AddPublicDependency<DmCodeExternalNlohmannJsonProject>(target);
     }
 }

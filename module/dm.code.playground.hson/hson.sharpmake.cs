@@ -1,9 +1,9 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodePlaygroundHsonProject : BaseCppProject
+public class DmCodePlaygroundHsonProject : BaseCppProject
 {
-    public HdnCodePlaygroundHsonProject()
+    public DmCodePlaygroundHsonProject()
     {
         Name = "dm.code.playground.hson";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -21,9 +21,9 @@ public class HdnCodePlaygroundHsonProject : BaseCppProject
         conf.TargetPath = @"[project.SharpmakeCsPath]\out\bin\[target.Platform]-[target.Optimization]";
         conf.IntermediatePath = @"[project.SharpmakeCsPath]\out\intermediate\[target.Platform]-[target.Optimization]";
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeModuleHobjProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalStbImageProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalXXHashProject>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeModuleHobjProject>(target);
+        conf.AddPublicDependency<DmCodeExternalStbImageProject>(target);
+        conf.AddPublicDependency<DmCodeExternalXXHashProject>(target);
     }
 }

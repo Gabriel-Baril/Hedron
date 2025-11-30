@@ -1,9 +1,9 @@
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class HdnCodeModulePipelineProject : BaseCppProject
+public class DmCodeModulePipelineProject : BaseCppProject
 {
-    public HdnCodeModulePipelineProject()
+    public DmCodeModulePipelineProject()
     {
         Name = "dm.code.module.pipeline";
         SourceRootPath = @"[project.SharpmakeCsPath]\src";
@@ -23,11 +23,11 @@ public class HdnCodeModulePipelineProject : BaseCppProject
 
         conf.Defines.Add("_CRT_SECURE_NO_WARNINGS");
 
-        conf.AddPublicDependency<HdnCodeModuleCoreProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalPugiXMLProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalFlecsProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalFlatbuffersProject>(target);
-        conf.AddPublicDependency<HdnCodeExternalTLSFProject>(target);
+        conf.AddPublicDependency<DmCodeModuleCoreProject>(target);
+        conf.AddPublicDependency<DmCodeExternalPugiXMLProject>(target);
+        conf.AddPublicDependency<DmCodeExternalFlecsProject>(target);
+        conf.AddPublicDependency<DmCodeExternalFlatbuffersProject>(target);
+        conf.AddPublicDependency<DmCodeExternalTLSFProject>(target);
 
         conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\src");
     }

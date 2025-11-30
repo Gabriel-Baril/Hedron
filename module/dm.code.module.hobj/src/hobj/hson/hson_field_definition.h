@@ -6,7 +6,7 @@
 #include "core/stl/vector.h"
 #include "core/io/stream_write.h"
 
-namespace hdn
+namespace dm
 {
 	struct HsonFieldDefinition
 	{
@@ -14,16 +14,15 @@ namespace hdn
 		{
 		}
 
-		HsonFieldDefinition& operator[](const char* key)
+		HsonFieldDefinition &operator[](const char *key)
 		{
-			auto it = std::find_if(fields.begin(), fields.end(), [&key](const HsonFieldDefinition& field)
-				{
+			auto it = std::find_if(fields.begin(), fields.end(), [&key](const HsonFieldDefinition &field)
+														 {
 					if (field.keyKind != KeyKind::STRING)
 					{
 						return false;
 					}
-					return field.key.name == key;
-				});
+					return field.key.name == key; });
 
 			if (it == fields.end())
 			{
@@ -39,16 +38,15 @@ namespace hdn
 			return *it;
 		}
 
-		HsonFieldDefinition& operator[](int index)
+		HsonFieldDefinition &operator[](int index)
 		{
-			auto it = std::find_if(fields.begin(), fields.end(), [&index](const HsonFieldDefinition& field)
-				{
+			auto it = std::find_if(fields.begin(), fields.end(), [&index](const HsonFieldDefinition &field)
+														 {
 					if (field.keyKind != KeyKind::INTEGER)
 					{
 						return false;
 					}
-					return field.key.index == index;
-				});
+					return field.key.index == index; });
 
 			if (it == fields.end())
 			{
@@ -64,8 +62,8 @@ namespace hdn
 			return *it;
 		}
 
-		template<typename T>
-		HsonFieldDefinition& operator=(const HsonPackResult<T>& result)
+		template <typename T>
+		HsonFieldDefinition &operator=(const HsonPackResult<T> &result)
 		{
 			fieldType = result.type;
 			count = result.count;

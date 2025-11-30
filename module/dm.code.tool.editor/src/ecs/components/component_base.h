@@ -1,6 +1,6 @@
 #pragma once
 
-namespace hdn
+namespace dm
 {
 	struct ComponentBase
 	{
@@ -9,6 +9,6 @@ namespace hdn
 
 		ComponentBase();
 
-		ComponentBase(const ComponentBase&) = default;
+		ComponentBase(const ComponentBase &) = default;
 	};
 }

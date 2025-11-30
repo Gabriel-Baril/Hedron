@@ -2,7 +2,7 @@
 
 #include "hson_field.h"
 
-namespace hdn
+namespace dm
 {
 	enum class HsonPackResultKind
 	{
@@ -10,7 +10,7 @@ namespace hdn
 		VALUE
 	};
 
-	template<typename T>
+	template <typename T>
 	struct HsonPackResult
 	{
 		HsonField type;
@@ -27,8 +27,8 @@ namespace hdn
 	namespace hson
 	{
 		// Convenience API
-		template<typename T>
-		HsonPackResult<T> pack( const T &data )
+		template <typename T>
+		HsonPackResult<T> pack(const T &data)
 		{
 			HsonPackResult<T> result;
 			result.type = HsonFieldTraits<T>::type;
@@ -38,8 +38,8 @@ namespace hdn
 			return result;
 		}
 
-		template<typename T>
-		HsonPackResult<T> pack( const T *data, int count = 1 )
+		template <typename T>
+		HsonPackResult<T> pack(const T *data, int count = 1)
 		{
 			HsonPackResult<T> result;
 			result.type = HsonFieldTraits<T>::type;
@@ -49,6 +49,6 @@ namespace hdn
 			return result;
 		}
 
-		HsonPackResult<char> pack(const char* data);
+		HsonPackResult<char> pack(const char *data);
 	}
 }

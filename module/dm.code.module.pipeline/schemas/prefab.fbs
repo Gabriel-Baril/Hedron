@@ -1,6 +1,6 @@
 include "prefab_component.fbs";
 
-namespace hdn;
+namespace dm;
 
 table CEntity {
     id: CUUID;

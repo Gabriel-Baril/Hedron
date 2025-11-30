@@ -1,6 +1,6 @@
 #include "object_get.h"
 
-namespace hdn
+namespace dm
 {
 	bool request_success(ObjectRequestResult result)
 	{

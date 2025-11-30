@@ -7,7 +7,7 @@
 #include "nxsrc.h"
 #include "strdb.h"
 
-namespace hdn
+namespace dm
 {
 	struct SymDBGlob
 	{
@@ -16,38 +16,37 @@ namespace hdn
 
 	static SymDBGlob s_SymDBGlob{};
 
-	static constexpr const char* s_SymTypeStr[underlying(ESymbolType::count)] = {
-		"vert",
-		"frag",
-		"fbx",
-		"obj",
-		"stringtable",
-		"text",
-		"prefab",
-		"buildconfig",
-		"feature"
-	};
+	static constexpr const char *s_SymTypeStr[underlying(ESymbolType::count)] = {
+			"vert",
+			"frag",
+			"fbx",
+			"obj",
+			"stringtable",
+			"text",
+			"prefab",
+			"buildconfig",
+			"feature"};
 
 	static constexpr SourceParseCallback s_SourceParseCallbacks[underlying(ESymbolType::count)] = {
-		nxsrc_agnostic_parse,
-		nxsrc_agnostic_parse,
-		nxsrc_agnostic_parse,
-		nxsrc_agnostic_parse,
-		xsrc_agnostic_parse,
-		xsrc_agnostic_parse,
-		xsrc_agnostic_parse,
-		xsrc_agnostic_parse,
-		xsrc_agnostic_parse,
+			nxsrc_agnostic_parse,
+			nxsrc_agnostic_parse,
+			nxsrc_agnostic_parse,
+			nxsrc_agnostic_parse,
+			xsrc_agnostic_parse,
+			xsrc_agnostic_parse,
+			xsrc_agnostic_parse,
+			xsrc_agnostic_parse,
+			xsrc_agnostic_parse,
 	};
 
-	static void explore_source(const fspath& path)
+	static void explore_source(const fspath &path)
 	{
 		if (!filesystem_is_directory(path))
 		{
 			ESymbolType type = symdb_get_source_file_type(path);
 			if (type != ESymbolType::unknown)
 			{
-				HDN_TRACE_LOG("Source '{0}'", path.string().c_str());
+				DM_TRACE_LOG("Source '{0}'", path.string().c_str());
 				SourceParseCallback parseCallback = symdb_get_parse_callback(type);
 				if (parseCallback)
 				{
@@ -57,12 +56,12 @@ namespace hdn
 		}
 	}
 
-	const char* symdb_sym_to_str(ESymbolType type)
+	const char *symdb_sym_to_str(ESymbolType type)
 	{
 		return s_SymTypeStr[underlying(type)];
 	}
 
-	ESymbolType symdb_str_to_sym(const char* type)
+	ESymbolType symdb_str_to_sym(const char *type)
 	{
 		char lowerCaseBuffer[SYMBOL_TYPE_MAX_LENGTH];
 		str_copy(lowerCaseBuffer, type);
@@ -83,7 +82,7 @@ namespace hdn
 		return s_SourceParseCallbacks[underlying(type)];
 	}
 
-	sym_t get_symbol_from_name(const char* symbol)
+	sym_t get_symbol_from_name(const char *symbol)
 	{
 		return hash_generate(symbol);
 	}
@@ -98,7 +97,7 @@ namespace hdn
 		return type >= ESymbolType::nxsymbol_begin && type <= ESymbolType::nxsymbol_end;
 	}
 
-	ESymbolType symdb_get_source_file_type(const fspath& path)
+	ESymbolType symdb_get_source_file_type(const fspath &path)
 	{
 		for (int i = 0; i < underlying(ESymbolType::count); i++)
 		{
@@ -112,12 +111,12 @@ namespace hdn
 		return ESymbolType::unknown;
 	}
 
-	void symdb_explore_sources(const fspath& path)
+	void symdb_explore_sources(const fspath &path)
 	{
 		filesystem_iterate(path, explore_source, true);
 	}
 
-	const SymbolMetadata* symdb_get_meta(sym_t symbol)
+	const SymbolMetadata *symdb_get_meta(sym_t symbol)
 	{
 		if (s_SymDBGlob.symmap.contains(symbol))
 		{
@@ -126,14 +125,14 @@ namespace hdn
 		return nullptr;
 	}
 
-	void symdb_register(sym_t symbol, const char* name, ESymbolType type, const fspath& path)
+	void symdb_register(sym_t symbol, const char *name, ESymbolType type, const fspath &path)
 	{
 		if (symdb_get_meta(symbol))
 		{
 			return;
 		}
-		
-		SymbolMetadata& meta = s_SymDBGlob.symmap[symbol];
+
+		SymbolMetadata &meta = s_SymDBGlob.symmap[symbol];
 		meta.name = strdb_allocate(name);
 		meta.type = type;
 		meta.path = path;

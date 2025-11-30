@@ -5,7 +5,7 @@
 
 #include "ecs/components/native_script_component.h"
 
-namespace hdn
+namespace dm
 {
 	// Abstraction layer over a flecs::entity
 	class Entity
@@ -13,32 +13,32 @@ namespace hdn
 	public:
 		using id_t = flecs::entity_t;
 
-		template<typename T>
-		const T* Get()
+		template <typename T>
+		const T *Get()
 		{
 			return m_Entity.get<T>();
 		}
 
-		template<typename T>
-		T* GetMut()
+		template <typename T>
+		T *GetMut()
 		{
 			return m_Entity.get_mut<T>();
 		}
 
-		template<typename T>
-		void Set(const T& component)
+		template <typename T>
+		void Set(const T &component)
 		{
 			m_Entity.set(component);
 		}
 
-		template<typename T>
+		template <typename T>
 		void AddNativeScript()
 		{
 			if (!m_Entity.has<NativeScriptComponent>())
 			{
 				m_Entity.add<NativeScriptComponent>();
 			}
-			INativeScript* script = new T;
+			INativeScript *script = new T;
 			script->bind(m_Entity);
 			m_Entity.get_mut<NativeScriptComponent>()->add(script);
 		}
@@ -53,12 +53,13 @@ namespace hdn
 			return m_Entity.id();
 		}
 
-		const char* Name()
+		const char *Name()
 		{
 			return m_Entity.name();
 		}
-		Entity() : m_Entity{ flecs::entity::null() } {}
-		Entity(flecs::entity e) : m_Entity{ e } {}
+		Entity() : m_Entity{flecs::entity::null()} {}
+		Entity(flecs::entity e) : m_Entity{e} {}
+
 	private:
 		flecs::entity m_Entity;
 	};

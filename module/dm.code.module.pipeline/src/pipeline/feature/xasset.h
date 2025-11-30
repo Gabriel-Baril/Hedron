@@ -2,12 +2,12 @@
 
 #include "core/core_define.h"
 
-#if USING(HDN_SYM_FEATURE)
+#if USING(DM_SYM_FEATURE)
 #include "pipeline/generated/feature_generated.h"
 #include "pipeline/object_get.h"
 #include "pipeline/symdb.h"
 
-namespace hdn
+namespace dm
 {
 	static constexpr u64 XASSET_CODE_VERSION_FEATURE = 1; // Initial feature version
 

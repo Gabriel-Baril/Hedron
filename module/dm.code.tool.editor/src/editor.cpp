@@ -1,14 +1,14 @@
 #include "editor.h"
 
-namespace hdn
+namespace dm
 {
-	Editor& Editor::get()
+	Editor &Editor::get()
 	{
 		static Editor s_Instance{};
 		return s_Instance;
 	}
 
-	void Editor::set_active_scene(const Ref<Scene>& scene)
+	void Editor::set_active_scene(const Ref<Scene> &scene)
 	{
 		m_ActiveScene = scene;
 	}

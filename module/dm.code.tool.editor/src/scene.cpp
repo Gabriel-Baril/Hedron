@@ -4,7 +4,7 @@
 #include "ecs/components/color_component.h"
 #include "ecs/components/point_light_component.h"
 
-namespace hdn
+namespace dm
 {
 	Scene::Scene()
 	{

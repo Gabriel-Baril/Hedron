@@ -1,8 +1,8 @@
 #include "hobj_registry.h"
 
-namespace hdn
+namespace dm
 {
-	HObjectRegistry& HObjectRegistry::get_instance()
+	HObjectRegistry &HObjectRegistry::get_instance()
 	{
 		static HObjectRegistry s_Instance;
 		return s_Instance;
@@ -11,14 +11,14 @@ namespace hdn
 	void HObjectRegistry::registry_populate()
 	{
 		HOBJ_METRIC_BEGIN(ObjectOperationType::REGISTRY_MANIFEST_POPULATE);
-		for (auto& [_, source] : m_Sources)
+		for (auto &[_, source] : m_Sources)
 		{
 			source->populate(this);
 		}
 		HOBJ_METRIC_END();
 	}
 
-	void HObjectRegistry::manifest_create_entry(uuid64 objectID, const char* objectName, IHObjectSource* source)
+	void HObjectRegistry::manifest_create_entry(uuid64 objectID, const char *objectName, IHObjectSource *source)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_MANIFEST_CREATE_ENTRY, objectID);
 		m_ObjectManifest[objectID] = source;
@@ -44,18 +44,18 @@ namespace hdn
 		return contained;
 	}
 
-	IHObjectSource* HObjectRegistry::manifest_get_entry(uuid64 id)
+	IHObjectSource *HObjectRegistry::manifest_get_entry(uuid64 id)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_MANIFEST_GET_ENTRY, id);
-		IHObjectSource* source = m_ObjectManifest[id];
+		IHObjectSource *source = m_ObjectManifest[id];
 		HOBJ_METRIC_END();
 		return source;
 	}
 
-	bool HObjectRegistry::object_save(HObject* object, const string& name, const void* userData, u64 userDataByteSize)
+	bool HObjectRegistry::object_save(HObject *object, const string &name, const void *userData, u64 userDataByteSize)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_SAVE, object->id());
-		HDN_CORE_ASSERT(m_Sources.contains(name), "The source {0} was not found!", name.c_str());
+		DM_CORE_ASSERT(m_Sources.contains(name), "The source {0} was not found!", name.c_str());
 		const uuid64 objectID = object->id();
 		bool saved = m_Sources[name]->save(object, userData, userDataByteSize);
 		if (manifest_lookup_entry(objectID) && manifest_get_entry(objectID) != m_Sources[name].get())
@@ -66,7 +66,7 @@ namespace hdn
 		return saved;
 	}
 
-	bool HObjectRegistry::object_save(HObject* object, const void* userData, u64 userDataByteSize)
+	bool HObjectRegistry::object_save(HObject *object, const void *userData, u64 userDataByteSize)
 	{
 		HOBJ_METRIC_BEGIN_ID(ObjectOperationType::REGISTRY_OBJECT_SAVE, object->id());
 		const uuid64 objectID = object->id();
@@ -75,7 +75,7 @@ namespace hdn
 		{
 			return manifest_get_entry(objectID)->save(object, userData, userDataByteSize);
 		}
-		HDN_WARNING_LOG("The object was not found in any sources! Do you meant to save to a specific source instead?");
+		DM_WARNING_LOG("The object was not found in any sources! Do you meant to save to a specific source instead?");
 		HOBJ_METRIC_END();
 		return false;
 	}
@@ -89,7 +89,7 @@ namespace hdn
 		return deleted;
 	}
 
-	bool HObjectRegistry::object_delete(HObject* object)
+	bool HObjectRegistry::object_delete(HObject *object)
 	{
 		return object_delete(object->id());
 	}

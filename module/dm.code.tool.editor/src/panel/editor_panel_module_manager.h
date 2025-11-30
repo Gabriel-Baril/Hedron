@@ -8,7 +8,7 @@
 
 #include "editor_panel.h"
 
-namespace hdn
+namespace dm
 {
 	enum class TestExpressionType
 	{
@@ -88,22 +88,22 @@ namespace hdn
 	{
 	public:
 		ModuleManagerPanel()
-			: IEditorPanel{"module manager"}
+				: IEditorPanel{"module manager"}
 		{
 		}
 
-		void parse_overall_result_node(const pugi::xml_node& resultNode, OverallResult& overallResult);
-		void parse_overall_results_node(const pugi::xml_node& resultNode, OverallResults& overallResults);
-		void parse_section_node(const pugi::xml_node& sectionNode, SectionResult& sectionResult);
-		void parse_expression_node(const pugi::xml_node& expressionNode, ExpressionResult& expressionResult);
-		void parse_test_case_node(const pugi::xml_node& testCase, TestCaseResult& testCaseResult);
-		void parse_root_node(const pugi::xml_node& root, TestResult& out);
-		void load_test_result_from_memory(const string& buffer, TestResult& testResult);
-		void display_test_node(const ExpressionResult& expression, ImGuiTreeNodeFlags treeNodeFlags);
-		void display_test_node(const SectionResult& section, ImGuiTreeNodeFlags treeNodeFlags);
-		void display_test_node(const TestCaseResult& testCase, ImGuiTreeNodeFlags treeNodeFlags);
-		void display_test_node(const TestResult& result, ImGuiTreeNodeFlags treeNodeFlags);
-		void display_test_node(const vector<TestResult>& results, ImGuiTreeNodeFlags treeNodeFlags);
+		void parse_overall_result_node(const pugi::xml_node &resultNode, OverallResult &overallResult);
+		void parse_overall_results_node(const pugi::xml_node &resultNode, OverallResults &overallResults);
+		void parse_section_node(const pugi::xml_node &sectionNode, SectionResult &sectionResult);
+		void parse_expression_node(const pugi::xml_node &expressionNode, ExpressionResult &expressionResult);
+		void parse_test_case_node(const pugi::xml_node &testCase, TestCaseResult &testCaseResult);
+		void parse_root_node(const pugi::xml_node &root, TestResult &out);
+		void load_test_result_from_memory(const string &buffer, TestResult &testResult);
+		void display_test_node(const ExpressionResult &expression, ImGuiTreeNodeFlags treeNodeFlags);
+		void display_test_node(const SectionResult &section, ImGuiTreeNodeFlags treeNodeFlags);
+		void display_test_node(const TestCaseResult &testCase, ImGuiTreeNodeFlags treeNodeFlags);
+		void display_test_node(const TestResult &result, ImGuiTreeNodeFlags treeNodeFlags);
+		void display_test_node(const vector<TestResult> &results, ImGuiTreeNodeFlags treeNodeFlags);
 		void colored_text_if_valid(bool condition, ImVec4 color, int value);
 		void set_row_color(bool condition);
 
